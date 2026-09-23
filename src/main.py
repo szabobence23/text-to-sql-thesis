@@ -40,7 +40,7 @@ def get_schema(conn):
         relationships = cur.fetchall()
 
     # Schema szöveg felépítése
-    schema = "Database: sales_db\n\n"
+    schema = "Database: olist_db\n\n"
 
     current_table = None
 
@@ -61,6 +61,13 @@ def get_schema(conn):
             f"-> {foreign_table}.{foreign_column}\n"
         )
 
+    schema += """
+Important notes:
+- product_category_name contains the original Portuguese product category names.
+- product_category_name_translation maps product_category_name to English using product_category_name_english.
+- When returning product category names, prefer product_category_name_english when available.
+"""
+
     return schema
 
 
@@ -69,7 +76,7 @@ def get_schema(conn):
 conn = psycopg.connect(
     host="localhost",
     port=5432,
-    dbname="sales_db",
+    dbname="olist_db",
     user="postgres",
     password="postgres"
 )
@@ -83,19 +90,57 @@ print("Adatbázis séma:")
 print(schema)
 
 
-# 3. Felhasználói kérdés
+# 3. Tesztkérdések
 
-question = "Mennyi volt a rendelések száma 2025 márciusában?"
+questions = [
+    "Hány rendelés van az adatbázisban?",
+    "Hány törölt rendelés van?",
+    "Mennyi az átlagos termékár?",
+    "Melyik államból származik a legtöbb vásárló?",
+    "Melyik eladó értékesítette a legtöbb terméket?",
+    "Melyik termékkategóriából származott a legtöbb eladás?",
+    "Hány rendelés történt 2017 januárjában?",
+    "Melyik az 5 legdrágább termék?",
+    "Melyik vásárló adta le a legtöbb rendelést?",
+    "Melyik termékből származott a legtöbb bevétel?"
+]
 
 
-# 4. SQL generálása az LLM-mel
+# 4. Eredmények fájl megnyitása
 
-response = chat(
-    model="qwen2.5-coder:7b",
-    messages=[
-        {
-            "role": "user",
-            "content": f"""
+with open("evaluation_results.txt", "w", encoding="utf-8") as file:
+
+    for i, question in enumerate(questions, start=1):
+
+        separator = "=" * 80
+
+        # ---------------------------------------------------------
+        # Teszt fejléc
+        # ---------------------------------------------------------
+
+        print("\n" + separator)
+        print(f"TESZT {i}")
+        print(separator)
+
+        print("\nKérdés:")
+        print(question)
+
+        file.write("\n" + separator + "\n")
+        file.write(f"TESZT {i}\n")
+        file.write(separator + "\n\n")
+
+        file.write("Kérdés:\n")
+        file.write(question + "\n\n")
+
+
+        # SQL generálása 
+
+        response = chat(
+            model="qwen2.5-coder:7b",
+            messages=[
+                {
+                    "role": "user",
+                    "content": f"""
 You are an expert PostgreSQL SQL generator.
 
 You MUST use ONLY the tables and columns defined in the schema below.
@@ -112,41 +157,79 @@ Instructions:
 - Do not invent columns.
 - Use only tables and columns from the provided schema.
 - Use the defined relationships when necessary.
+- When returning product category names, prefer the English translation table when available.
 - Return ONLY the SQL query.
 """
-        }
-    ]
-)
+                }
+            ]
+        )
+
+        # LLM válaszának megtisztítása
+
+        sql = response.message.content.strip()
+
+        if sql.startswith("```sql"):
+            sql = sql[len("```sql"):].strip()
+
+        if sql.endswith("```"):
+            sql = sql[:-3].strip()
 
 
-# 5. LLM válaszának megtisztítása
+        # SQL kiírása
 
-sql = response.message.content.strip()
+        print("\nGenerált SQL:")
+        print(sql)
 
-if sql.startswith("```sql"):
-    sql = sql[len("```sql"):].strip()
-
-if sql.endswith("```"):
-    sql = sql[:-3].strip()
+        file.write("Generált SQL:\n")
+        file.write(sql + "\n\n")
 
 
-print("Generált SQL:")
-print(sql)
+        # SQL végrehajtása
+
+        try:
+
+            with conn.cursor() as cur:
+                cur.execute(sql)
+                result = cur.fetchall()
 
 
-# 6. SQL végrehajtása
+            # Eredmény
 
-with conn.cursor() as cur:
-    cur.execute(sql)
-    result = cur.fetchall()
+            print("\nAdatbázis eredménye:")
+
+            if result:
+                for row in result:
+                    print(row)
+            else:
+                print("(Nincs eredmény)")
+
+            file.write("Adatbázis eredménye:\n")
+
+            if result:
+                for row in result:
+                    file.write(str(row) + "\n")
+            else:
+                file.write("(Nincs eredmény)\n")
+
+            file.write("\n")
+
+        except Exception as e:
+
+            # SQL hiba esetén ne álljon le az egész tesztelés
+            print("\nHIBA az SQL végrehajtásakor:")
+            print(e)
+
+            file.write("HIBA az SQL végrehajtásakor:\n")
+            file.write(str(e) + "\n\n")
+
+            conn.rollback()
 
 
-# 7. Eredmény
-
-print("\nAdatbázis eredménye:")
-
-for row in result:
-    print(row)
-
+# PostgreSQL kapcsolat bezárása
 
 conn.close()
+
+print("\n" + "=" * 80)
+print("A tesztelés befejeződött.")
+print("Eredmények mentve: evaluation_results.txt")
+print("=" * 80)
