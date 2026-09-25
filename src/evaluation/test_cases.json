@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "question": "Hány rendelés van az adatbázisban?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) FROM orders;"
+  },
+  {
+    "id": 2,
+    "question": "Hány törölt rendelés van?",
+    "category": "filtering",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) FROM orders WHERE order_status = 'canceled';"
+  },
+  {
+    "id": 3,
+    "question": "Mennyi az átlagos termékár?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT AVG(price) FROM order_items;"
+  },
+  {
+    "id": 4,
+    "question": "Melyik államból származik a legtöbb vásárló?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT customer_state FROM customers GROUP BY customer_state ORDER BY COUNT(*) DESC LIMIT 1;"
+  },
+  {
+    "id": 5,
+    "question": "Melyik eladó értékesítette a legtöbb terméket?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT seller_id, COUNT(*) AS total_products_sold FROM order_items GROUP BY seller_id ORDER BY total_products_sold DESC LIMIT 1;"
+  },
+  {
+    "id": 6,
+    "question": "Melyik termékkategóriából származott a legtöbb eladás?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, COUNT(*) AS total_sales FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY total_sales DESC LIMIT 1;"
+  },
+  {
+    "id": 7,
+    "question": "Hány rendelés történt 2017 januárjában?",
+    "category": "date",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) FROM orders WHERE order_purchase_timestamp >= '2017-01-01' AND order_purchase_timestamp < '2017-02-01';"
+  },
+  {
+    "id": 8,
+    "question": "Melyik az 5 legdrágább termék?",
+    "category": "sorting",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT product_id, MAX(price) AS price FROM order_items GROUP BY product_id ORDER BY price DESC LIMIT 5;"
+  },
+  {
+    "id": 9,
+    "question": "Melyik vásárló adta le a legtöbb rendelést?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT customer_id, COUNT(*) AS order_count FROM orders GROUP BY customer_id ORDER BY order_count DESC LIMIT 1;"
+  },
+  {
+    "id": 10,
+    "question": "Melyik termékből származott a legtöbb bevétel?",
+    "category": "join_aggregation",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT p.product_id, SUM(oi.price) AS total_revenue FROM order_items oi JOIN products p ON oi.product_id = p.product_id GROUP BY p.product_id ORDER BY total_revenue DESC LIMIT 1;"
+  }
+]

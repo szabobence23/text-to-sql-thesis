@@ -1,0 +1,219 @@
+{
+  "model": "qwen2.5-coder:7b",
+  "database": "olist_db",
+  "total_questions": 10,
+  "sql_execution_success": 6,
+  "sql_execution_success_rate": 0.6,
+  "correct_results": 4,
+  "execution_accuracy": 0.4,
+  "results": [
+    {
+      "id": 1,
+      "question": "Hány rendelés van az adatbázisban?",
+      "category": "aggregation",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT COUNT(*) FROM orders;",
+      "expected_result": [
+        [
+          99441
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(order_id) AS total_orders FROM orders;",
+      "generated_result": [
+        [
+          99441
+        ]
+      ],
+      "execution_success": true,
+      "execution_accuracy": true
+    },
+    {
+      "id": 2,
+      "question": "Hány törölt rendelés van?",
+      "category": "filtering",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT COUNT(*) FROM orders WHERE order_status = 'canceled';",
+      "expected_result": [
+        [
+          625
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(order_id) AS deleted_orders\nFROM orders\nWHERE order_status = 'canceled';",
+      "generated_result": [
+        [
+          625
+        ]
+      ],
+      "execution_success": true,
+      "execution_accuracy": true
+    },
+    {
+      "id": 3,
+      "question": "Mennyi az átlagos termékár?",
+      "category": "aggregation",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT AVG(price) FROM order_items;",
+      "expected_result": [
+        [
+          "120.6537390146471372"
+        ]
+      ],
+      "generated_sql": "SELECT AVG(products.price) AS average_product_price\nFROM products;",
+      "generated_result": null,
+      "execution_success": false,
+      "execution_accuracy": false
+    },
+    {
+      "id": 4,
+      "question": "Melyik államból származik a legtöbb vásárló?",
+      "category": "grouping",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT customer_state FROM customers GROUP BY customer_state ORDER BY COUNT(*) DESC LIMIT 1;",
+      "expected_result": [
+        [
+          "SP"
+        ]
+      ],
+      "generated_sql": "SELECT \n    c.customer_state AS state,\n    COUNT(c.customer_id) AS customer_count\nFROM \n    customers c\nJOIN \n    orders o ON c.customer_id = o.customer_id\nGROUP BY \n    c.customer_state\nORDER BY \n    customer_count DESC\nLIMIT 1;",
+      "generated_result": [
+        [
+          "SP",
+          41746
+        ]
+      ],
+      "execution_success": true,
+      "execution_accuracy": false
+    },
+    {
+      "id": 5,
+      "question": "Melyik eladó értékesítette a legtöbb terméket?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT seller_id, COUNT(*) AS total_products_sold FROM order_items GROUP BY seller_id ORDER BY total_products_sold DESC LIMIT 1;",
+      "expected_result": [
+        [
+          "6560211a19b47992c3666cc44a7e94c0",
+          2033
+        ]
+      ],
+      "generated_sql": "SELECT \n    s.seller_id,\n    s.seller_city,\n    s.seller_state,\n    p.product_category_name_english,\n    SUM(oi.quantity) AS total_quantity_sold\nFROM \n    sellers s\nJOIN \n    order_items oi ON s.seller_id = oi.seller_id\nJOIN \n    products p ON oi.product_id = p.product_id\nLEFT JOIN \n    product_category_name_translation pcat ON p.product_category_name = pcat.product_category_name\nGROUP BY \n    s.seller_id, s.seller_city, s.seller_state, p.product_category_name_english\nORDER BY \n    total_quantity_sold DESC\nLIMIT 1;",
+      "generated_result": null,
+      "execution_success": false,
+      "execution_accuracy": false
+    },
+    {
+      "id": 6,
+      "question": "Melyik termékkategóriából származott a legtöbb eladás?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, COUNT(*) AS total_sales FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY total_sales DESC LIMIT 1;",
+      "expected_result": [
+        [
+          "bed_bath_table",
+          11115
+        ]
+      ],
+      "generated_sql": "SELECT \n    COALESCE(pct.product_category_name_english, p.product_category_name) AS product_category,\n    COUNT(oi.product_id) AS total_sales\nFROM \n    order_items oi\nJOIN \n    products p ON oi.product_id = p.product_id\nLEFT JOIN \n    product_category_name_translation pct ON p.product_category_name = pct.product_category_name\nGROUP BY \n    product_category\nORDER BY \n    total_sales DESC\nLIMIT 1;",
+      "generated_result": [
+        [
+          "bed_bath_table",
+          11115
+        ]
+      ],
+      "execution_success": true,
+      "execution_accuracy": true
+    },
+    {
+      "id": 7,
+      "question": "Hány rendelés történt 2017 januárjában?",
+      "category": "date",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COUNT(*) FROM orders WHERE order_purchase_timestamp >= '2017-01-01' AND order_purchase_timestamp < '2017-02-01';",
+      "expected_result": [
+        [
+          800
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(order_id) AS order_count\nFROM orders\nWHERE EXTRACT(YEAR FROM order_purchase_timestamp) = 2017\n  AND EXTRACT(MONTH FROM order_purchase_timestamp) = 1;",
+      "generated_result": [
+        [
+          800
+        ]
+      ],
+      "execution_success": true,
+      "execution_accuracy": true
+    },
+    {
+      "id": 8,
+      "question": "Melyik az 5 legdrágább termék?",
+      "category": "sorting",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT product_id, MAX(price) AS price FROM order_items GROUP BY product_id ORDER BY price DESC LIMIT 5;",
+      "expected_result": [
+        [
+          "489ae2aa008f021502940f251d4cce7f",
+          "6735.00"
+        ],
+        [
+          "69c590f7ffc7bf8db97190b6cb6ed62e",
+          "6729.00"
+        ],
+        [
+          "1bdf5e6731585cf01aa8169c7028d6ad",
+          "6499.00"
+        ],
+        [
+          "a6492cc69376c469ab6f61d8f44de961",
+          "4799.00"
+        ],
+        [
+          "c3ed642d592594bb648ff4a04cee2747",
+          "4690.00"
+        ]
+      ],
+      "generated_sql": "SELECT \n    p.product_name_lenght,\n    p.product_description_lenght,\n    p.product_photos_qty,\n    p.product_weight_g,\n    p.product_length_cm,\n    p.product_height_cm,\n    p.product_width_cm,\n    COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category_name\nFROM \n    products p\nJOIN \n    order_items oi ON p.product_id = oi.product_id\nORDER BY \n    oi.price DESC\nLIMIT 5;",
+      "generated_result": null,
+      "execution_success": false,
+      "execution_accuracy": false
+    },
+    {
+      "id": 9,
+      "question": "Melyik vásárló adta le a legtöbb rendelést?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT customer_id, COUNT(*) AS order_count FROM orders GROUP BY customer_id ORDER BY order_count DESC LIMIT 1;",
+      "expected_result": [
+        [
+          "00012a2ce6f8dcda20d059ce98491703",
+          1
+        ]
+      ],
+      "generated_sql": "SELECT \n    c.customer_unique_id,\n    COUNT(o.order_id) AS order_count\nFROM \n    customers c\nJOIN \n    orders o ON c.customer_id = o.customer_id\nGROUP BY \n    c.customer_unique_id\nORDER BY \n    order_count DESC\nLIMIT 1;",
+      "generated_result": [
+        [
+          "8d50f5eadf50201ccdcedfb9e2ac8455",
+          17
+        ]
+      ],
+      "execution_success": true,
+      "execution_accuracy": false
+    },
+    {
+      "id": 10,
+      "question": "Melyik termékből származott a legtöbb bevétel?",
+      "category": "join_aggregation",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT p.product_id, SUM(oi.price) AS total_revenue FROM order_items oi JOIN products p ON oi.product_id = p.product_id GROUP BY p.product_id ORDER BY total_revenue DESC LIMIT 1;",
+      "expected_result": [
+        [
+          "bb50f2e236e5eea0100680137654686c",
+          "63885.00"
+        ]
+      ],
+      "generated_sql": "SELECT \n    p.product_name_lenght,\n    p.product_description_lenght,\n    p.product_photos_qty,\n    p.product_weight_g,\n    p.product_length_cm,\n    p.product_height_cm,\n    p.product_width_cm,\n    COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category_name\nFROM \n    products p\nJOIN \n    order_items oi ON p.product_id = oi.product_id\nLEFT JOIN \n    product_category_name_translation pt ON p.product_category_name = pt.product_category_name\nORDER BY \n    SUM(oi.price) DESC\nLIMIT 1;",
+      "generated_result": null,
+      "execution_success": false,
+      "execution_accuracy": false
+    }
+  ]
+}
