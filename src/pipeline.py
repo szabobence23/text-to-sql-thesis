@@ -4,7 +4,7 @@ from dataclasses import asdict, dataclass, field
 import psycopg
 
 from database import execute_query
-from llm import LLMSettings, generate_sql
+from llm import LLMSettings, correct_sql, generate_sql
 from schema import get_schema
 from sql_validator import validate_sql
 
@@ -21,6 +21,9 @@ class PipelineConfig:
     llm: LLMSettings = field(default_factory=LLMSettings)
     # Hand-written dataset notes appended to the schema text.
     schema_hints: bool = True
+    # How many times a query that failed validation or execution is sent
+    # back to the model with the error. 0 = no correction (baseline).
+    max_correction_rounds: int = 0
 
     def to_dict(self):
         return asdict(self)
@@ -33,7 +36,29 @@ def load_schema(conn, config: PipelineConfig) -> str:
 
 
 @dataclass
+class Attempt:
+    """One generated query and what happened to it."""
+    sql: str
+    raw_response: str
+    is_valid: bool
+    validation_error: str
+    executed: bool
+    execution_error: str
+    prompt_tokens: int
+    completion_tokens: int
+    timings: dict
+
+    @property
+    def error(self):
+        return self.validation_error or self.execution_error
+
+
+@dataclass
 class PipelineResult:
+    """
+    The top-level fields describe the final attempt; tokens and
+    timings are totals over all attempts (the real cost of an answer).
+    """
     question: str
     sql: str
     raw_response: str
@@ -44,25 +69,19 @@ class PipelineResult:
     execution_error: str
     prompt_tokens: int
     completion_tokens: int
-    timings: dict = field(default_factory=dict)
+    timings: dict
+    attempts: list[Attempt]
+
+    @property
+    def correction_rounds(self):
+        return len(self.attempts) - 1
 
     def to_dict(self):
         return asdict(self)
 
 
-def run_pipeline(conn, question, schema, config: PipelineConfig) -> PipelineResult:
-    """
-    Question -> SQL generation -> validation -> execution.
-
-    Shared by main.py and the evaluator, so what is measured is
-    exactly what runs. Invalid SQL is never executed.
-    schema must come from load_schema with the same config.
-    """
-    timings = {}
-
-    start = time.perf_counter()
-    generation = generate_sql(question, schema, config.llm)
-    timings["generation_s"] = time.perf_counter() - start
+def _run_attempt(conn, generation, generation_s):
+    timings = {"generation_s": generation_s}
 
     start = time.perf_counter()
     is_valid, validation_error = validate_sql(conn, generation.sql)
@@ -81,16 +100,62 @@ def run_pipeline(conn, question, schema, config: PipelineConfig) -> PipelineResu
             execution_error = str(e).strip()
         timings["execution_s"] = time.perf_counter() - start
 
-    return PipelineResult(
-        question=question,
+    attempt = Attempt(
         sql=generation.sql,
         raw_response=generation.raw_response,
         is_valid=is_valid,
         validation_error=validation_error,
         executed=executed,
-        rows=rows,
         execution_error=execution_error,
         prompt_tokens=generation.prompt_tokens,
         completion_tokens=generation.completion_tokens,
         timings=timings,
+    )
+
+    return attempt, rows
+
+
+def run_pipeline(conn, question, schema, config: PipelineConfig) -> PipelineResult:
+    """
+    Question -> SQL generation -> validation -> execution, and when the
+    query fails validation or execution, up to max_correction_rounds
+    corrections with the error fed back to the model.
+
+    Shared by main.py and the evaluator, so what is measured is
+    exactly what runs. Invalid SQL is never executed.
+    schema must come from load_schema with the same config.
+    """
+    attempts = []
+
+    start = time.perf_counter()
+    generation = generate_sql(question, schema, config.llm)
+    attempt, rows = _run_attempt(conn, generation, time.perf_counter() - start)
+    attempts.append(attempt)
+
+    while not attempt.executed and len(attempts) <= config.max_correction_rounds:
+        failed = [(a.raw_response, a.error) for a in attempts]
+
+        start = time.perf_counter()
+        generation = correct_sql(question, schema, failed, config.llm)
+        attempt, rows = _run_attempt(conn, generation, time.perf_counter() - start)
+        attempts.append(attempt)
+
+    timings = {}
+    for a in attempts:
+        for key, seconds in a.timings.items():
+            timings[key] = timings.get(key, 0.0) + seconds
+
+    return PipelineResult(
+        question=question,
+        sql=attempt.sql,
+        raw_response=attempt.raw_response,
+        is_valid=attempt.is_valid,
+        validation_error=attempt.validation_error,
+        executed=attempt.executed,
+        rows=rows,
+        execution_error=attempt.execution_error,
+        prompt_tokens=sum(a.prompt_tokens for a in attempts),
+        completion_tokens=sum(a.completion_tokens for a in attempts),
+        timings=timings,
+        attempts=attempts,
     )

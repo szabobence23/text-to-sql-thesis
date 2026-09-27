@@ -7,7 +7,7 @@ def main():
     conn = get_connection()
 
     try:
-        config = PipelineConfig()
+        config = PipelineConfig(max_correction_rounds=2)
         schema = load_schema(conn, config)
 
         question = "Melyik termékkategóriából adták el a legtöbb terméket?"
@@ -17,7 +17,15 @@ def main():
 
         result = run_pipeline(conn, question, schema, config)
 
-        print("\nGenerált SQL:")
+        for i, attempt in enumerate(result.attempts[:-1], start=1):
+            print(f"\n{i}. próbálkozás (hibás):")
+            print(attempt.sql)
+            print(f"Hiba: {attempt.error}")
+
+        if result.correction_rounds:
+            print(f"\nGenerált SQL ({result.correction_rounds}. javítás után):")
+        else:
+            print("\nGenerált SQL:")
         print(result.sql)
 
         if not result.is_valid:

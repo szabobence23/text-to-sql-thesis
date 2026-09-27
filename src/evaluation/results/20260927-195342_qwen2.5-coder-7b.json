@@ -1,0 +1,860 @@
+{
+  "run": {
+    "started_at": "2026-09-27T19:53:42",
+    "git": {
+      "commit": "e3b8b6a08498b3bdb9f0411880a70cfe487638db",
+      "dirty": true
+    },
+    "pipeline": {
+      "llm": {
+        "model": "qwen2.5-coder:7b",
+        "temperature": 0.0,
+        "seed": 42,
+        "num_ctx": 8192
+      },
+      "schema_hints": true,
+      "max_correction_rounds": 0
+    },
+    "model_digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+    "prompt_sha256": "1dc176a63d06de48214aed35f052e3a96a51fde59ddcd42447b9c659b06da2e6",
+    "correction_prompt_sha256": "18936e160c444acb215efe64089ac135fadb9dbaf3ddecba9dcd16f6af912024",
+    "database": "olist_db",
+    "db_user": "text2sql_reader",
+    "test_cases_file": "evaluation\\test_cases.json",
+    "test_cases_sha256": "d1c727e3377a4c3f218db576424006f3688179ff587e531ac08c45c1e834951d",
+    "schema_sha256": "ade3e057dafb74e87059a9ed236a9071884b969e69ded60aa513e16656ae38c5",
+    "schema_text": "Database: olist_db\n\nTable: customers\n- customer_id character varying\n- customer_unique_id character varying\n- customer_zip_code_prefix character varying\n- customer_city character varying\n- customer_state character varying\nTable: geolocation\n- geolocation_zip_code_prefix character varying\n- geolocation_lat numeric\n- geolocation_lng numeric\n- geolocation_city character varying\n- geolocation_state character varying\nTable: order_items\n- order_id character varying\n- order_item_id integer\n- product_id character varying\n- seller_id character varying\n- shipping_limit_date timestamp without time zone\n- price numeric\n- freight_value numeric\nTable: order_payments\n- order_id character varying\n- payment_sequential integer\n- payment_type character varying\n- payment_installments integer\n- payment_value numeric\nTable: order_reviews\n- review_id character varying\n- order_id character varying\n- review_score integer\n- review_comment_title character varying\n- review_comment_message text\n- review_creation_date timestamp without time zone\n- review_answer_timestamp timestamp without time zone\nTable: orders\n- order_id character varying\n- customer_id character varying\n- order_status character varying\n- order_purchase_timestamp timestamp without time zone\n- order_approved_at timestamp without time zone\n- order_delivered_carrier_date timestamp without time zone\n- order_delivered_customer_date timestamp without time zone\n- order_estimated_delivery_date timestamp without time zone\nTable: product_category_name_translation\n- product_category_name character varying\n- product_category_name_english character varying\nTable: products\n- product_id character varying\n- product_category_name character varying\n- product_name_lenght integer\n- product_description_lenght integer\n- product_photos_qty integer\n- product_weight_g integer\n- product_length_cm integer\n- product_height_cm integer\n- product_width_cm integer\nTable: sellers\n- seller_id character varying\n- seller_zip_code_prefix character varying\n- seller_city character varying\n- seller_state character varying\n\nRelationships:\n- order_items.order_id -> orders.order_id\n- order_items.product_id -> products.product_id\n- order_items.seller_id -> sellers.seller_id\n- order_payments.order_id -> orders.order_id\n- order_reviews.order_id -> orders.order_id\n- orders.customer_id -> customers.customer_id\n\nImportant notes:\n- product_category_name contains the original Portuguese product category names.\n- product_category_name_translation maps product_category_name to English using product_category_name_english.\n- When returning product category names, prefer product_category_name_english when available.\n"
+  },
+  "summary": {
+    "total_questions": 10,
+    "valid_sql": {
+      "count": 9,
+      "total": 10,
+      "rate": 0.9
+    },
+    "execution_success": {
+      "count": 9,
+      "total": 10,
+      "rate": 0.9
+    },
+    "strict_ex": {
+      "count": 5,
+      "total": 10,
+      "rate": 0.5
+    },
+    "relaxed_ex": {
+      "count": 7,
+      "total": 10,
+      "rate": 0.7
+    },
+    "first_attempt": {
+      "execution_success": {
+        "count": 9,
+        "total": 10,
+        "rate": 0.9
+      },
+      "strict_ex": {
+        "count": 5,
+        "total": 10,
+        "rate": 0.5
+      },
+      "relaxed_ex": {
+        "count": 7,
+        "total": 10,
+        "rate": 0.7
+      }
+    },
+    "correction": {
+      "triggered": 0,
+      "fixed_execution": 0,
+      "fixed_strict": 0,
+      "fixed_relaxed": 0,
+      "mean_rounds_when_triggered": 0
+    },
+    "by_category": {
+      "aggregation": {
+        "strict_ex": {
+          "count": 2,
+          "total": 2,
+          "rate": 1.0
+        },
+        "relaxed_ex": {
+          "count": 2,
+          "total": 2,
+          "rate": 1.0
+        }
+      },
+      "date": {
+        "strict_ex": {
+          "count": 1,
+          "total": 1,
+          "rate": 1.0
+        },
+        "relaxed_ex": {
+          "count": 1,
+          "total": 1,
+          "rate": 1.0
+        }
+      },
+      "filtering": {
+        "strict_ex": {
+          "count": 1,
+          "total": 1,
+          "rate": 1.0
+        },
+        "relaxed_ex": {
+          "count": 1,
+          "total": 1,
+          "rate": 1.0
+        }
+      },
+      "grouping": {
+        "strict_ex": {
+          "count": 0,
+          "total": 1,
+          "rate": 0.0
+        },
+        "relaxed_ex": {
+          "count": 1,
+          "total": 1,
+          "rate": 1.0
+        }
+      },
+      "join_aggregation": {
+        "strict_ex": {
+          "count": 1,
+          "total": 4,
+          "rate": 0.25
+        },
+        "relaxed_ex": {
+          "count": 1,
+          "total": 4,
+          "rate": 0.25
+        }
+      },
+      "sorting": {
+        "strict_ex": {
+          "count": 0,
+          "total": 1,
+          "rate": 0.0
+        },
+        "relaxed_ex": {
+          "count": 1,
+          "total": 1,
+          "rate": 1.0
+        }
+      }
+    },
+    "by_difficulty": {
+      "easy": {
+        "strict_ex": {
+          "count": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "relaxed_ex": {
+          "count": 3,
+          "total": 3,
+          "rate": 1.0
+        }
+      },
+      "hard": {
+        "strict_ex": {
+          "count": 0,
+          "total": 1,
+          "rate": 0.0
+        },
+        "relaxed_ex": {
+          "count": 0,
+          "total": 1,
+          "rate": 0.0
+        }
+      },
+      "medium": {
+        "strict_ex": {
+          "count": 2,
+          "total": 6,
+          "rate": 0.3333333333333333
+        },
+        "relaxed_ex": {
+          "count": 4,
+          "total": 6,
+          "rate": 0.6666666666666666
+        }
+      }
+    },
+    "mean_generation_s": 4.224759580002865,
+    "mean_prompt_tokens": 657.0,
+    "mean_completion_tokens": 86.8
+  },
+  "results": [
+    {
+      "id": 1,
+      "question": "Hány rendelés van az adatbázisban?",
+      "category": "aggregation",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT COUNT(*) FROM orders;",
+      "order_sensitive": false,
+      "expected_result": [
+        [
+          99441
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(order_id) AS total_orders FROM orders;",
+      "raw_response": "```sql\nSELECT COUNT(order_id) AS total_orders FROM orders;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          99441
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(order_id) AS total_orders FROM orders;",
+          "raw_response": "```sql\nSELECT COUNT(order_id) AS total_orders FROM orders;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 653,
+          "completion_tokens": 16,
+          "timings": {
+            "generation_s": 1.1584609000128694,
+            "validation_s": 0.005999499990139157,
+            "execution_s": 0.013386799953877926
+          }
+        }
+      ],
+      "max_prompt_tokens": 653,
+      "prompt_tokens": 653,
+      "completion_tokens": 16,
+      "timings": {
+        "generation_s": 1.1584609000128694,
+        "validation_s": 0.005999499990139157,
+        "execution_s": 0.013386799953877926
+      }
+    },
+    {
+      "id": 2,
+      "question": "Hány törölt rendelés van?",
+      "category": "filtering",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT COUNT(*) FROM orders WHERE order_status = 'canceled';",
+      "order_sensitive": false,
+      "expected_result": [
+        [
+          625
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(order_id) AS deleted_orders_count\nFROM orders\nWHERE order_status = 'canceled';",
+      "raw_response": "```sql\nSELECT COUNT(order_id) AS deleted_orders_count\nFROM orders\nWHERE order_status = 'canceled';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          625
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(order_id) AS deleted_orders_count\nFROM orders\nWHERE order_status = 'canceled';",
+          "raw_response": "```sql\nSELECT COUNT(order_id) AS deleted_orders_count\nFROM orders\nWHERE order_status = 'canceled';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 650,
+          "completion_tokens": 26,
+          "timings": {
+            "generation_s": 1.3314546999754384,
+            "validation_s": 0.005648699996527284,
+            "execution_s": 0.014979099971242249
+          }
+        }
+      ],
+      "max_prompt_tokens": 650,
+      "prompt_tokens": 650,
+      "completion_tokens": 26,
+      "timings": {
+        "generation_s": 1.3314546999754384,
+        "validation_s": 0.005648699996527284,
+        "execution_s": 0.014979099971242249
+      }
+    },
+    {
+      "id": 3,
+      "question": "Mennyi az átlagos termékár?",
+      "category": "aggregation",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT AVG(price) FROM order_items;",
+      "order_sensitive": false,
+      "expected_result": [
+        [
+          120.6537
+        ]
+      ],
+      "generated_sql": "SELECT AVG(price) AS average_product_price\nFROM order_items;",
+      "raw_response": "```sql\nSELECT AVG(price) AS average_product_price\nFROM order_items;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          120.6537
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT AVG(price) AS average_product_price\nFROM order_items;",
+          "raw_response": "```sql\nSELECT AVG(price) AS average_product_price\nFROM order_items;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 650,
+          "completion_tokens": 18,
+          "timings": {
+            "generation_s": 0.9888952000183053,
+            "validation_s": 0.005315099959261715,
+            "execution_s": 0.03183230001013726
+          }
+        }
+      ],
+      "max_prompt_tokens": 650,
+      "prompt_tokens": 650,
+      "completion_tokens": 18,
+      "timings": {
+        "generation_s": 0.9888952000183053,
+        "validation_s": 0.005315099959261715,
+        "execution_s": 0.03183230001013726
+      }
+    },
+    {
+      "id": 4,
+      "question": "Melyik államból származik a legtöbb vásárló?",
+      "category": "grouping",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT customer_state FROM customers GROUP BY customer_state ORDER BY COUNT(*) DESC LIMIT 1;",
+      "order_sensitive": true,
+      "expected_result": [
+        [
+          "SP"
+        ]
+      ],
+      "generated_sql": "SELECT c.customer_state, COUNT(c.customer_id) AS customer_count\nFROM customers c\nGROUP BY c.customer_state\nORDER BY customer_count DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT c.customer_state, COUNT(c.customer_id) AS customer_count\nFROM customers c\nGROUP BY c.customer_state\nORDER BY customer_count DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "SP",
+          41746
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT c.customer_state, COUNT(c.customer_id) AS customer_count\nFROM customers c\nGROUP BY c.customer_state\nORDER BY customer_count DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT c.customer_state, COUNT(c.customer_id) AS customer_count\nFROM customers c\nGROUP BY c.customer_state\nORDER BY customer_count DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 661,
+          "completion_tokens": 39,
+          "timings": {
+            "generation_s": 1.8930467999889515,
+            "validation_s": 0.005834500014316291,
+            "execution_s": 0.04716999997617677
+          }
+        }
+      ],
+      "max_prompt_tokens": 661,
+      "prompt_tokens": 661,
+      "completion_tokens": 39,
+      "timings": {
+        "generation_s": 1.8930467999889515,
+        "validation_s": 0.005834500014316291,
+        "execution_s": 0.04716999997617677
+      }
+    },
+    {
+      "id": 5,
+      "question": "Melyik eladó értékesítette a legtöbb terméket?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT seller_id, COUNT(*) AS total_products_sold FROM order_items GROUP BY seller_id ORDER BY total_products_sold DESC LIMIT 1;",
+      "order_sensitive": true,
+      "expected_result": [
+        [
+          "6560211a19b47992c3666cc44a7e94c0",
+          2033
+        ]
+      ],
+      "generated_sql": "SELECT \n    s.seller_id,\n    s.seller_city,\n    s.seller_state,\n    p.product_category_name_english,\n    COUNT(oi.product_id) AS total_products_sold\nFROM \n    sellers s\nJOIN \n    order_items oi ON s.seller_id = oi.seller_id\nJOIN \n    products p ON oi.product_id = p.product_id\nLEFT JOIN \n    product_category_name_translation pcat ON p.product_category_name = pcat.product_category_name\nGROUP BY \n    s.seller_id, s.seller_city, s.seller_state, p.product_category_name_english\nORDER BY \n    total_products_sold DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT \n    s.seller_id,\n    s.seller_city,\n    s.seller_state,\n    p.product_category_name_english,\n    COUNT(oi.product_id) AS total_products_sold\nFROM \n    sellers s\nJOIN \n    order_items oi ON s.seller_id = oi.seller_id\nJOIN \n    products p ON oi.product_id = p.product_id\nLEFT JOIN \n    product_category_name_translation pcat ON p.product_category_name = pcat.product_category_name\nGROUP BY \n    s.seller_id, s.seller_city, s.seller_state, p.product_category_name_english\nORDER BY \n    total_products_sold DESC\nLIMIT 1;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column p.product_category_name_english does not exist\nLINE 5:     p.product_category_name_english,\n            ^\nHINT:  Perhaps you meant to reference the column \"pcat.product_category_name_english\".",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT \n    s.seller_id,\n    s.seller_city,\n    s.seller_state,\n    p.product_category_name_english,\n    COUNT(oi.product_id) AS total_products_sold\nFROM \n    sellers s\nJOIN \n    order_items oi ON s.seller_id = oi.seller_id\nJOIN \n    products p ON oi.product_id = p.product_id\nLEFT JOIN \n    product_category_name_translation pcat ON p.product_category_name = pcat.product_category_name\nGROUP BY \n    s.seller_id, s.seller_city, s.seller_state, p.product_category_name_english\nORDER BY \n    total_products_sold DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT \n    s.seller_id,\n    s.seller_city,\n    s.seller_state,\n    p.product_category_name_english,\n    COUNT(oi.product_id) AS total_products_sold\nFROM \n    sellers s\nJOIN \n    order_items oi ON s.seller_id = oi.seller_id\nJOIN \n    products p ON oi.product_id = p.product_id\nLEFT JOIN \n    product_category_name_translation pcat ON p.product_category_name = pcat.product_category_name\nGROUP BY \n    s.seller_id, s.seller_city, s.seller_state, p.product_category_name_english\nORDER BY \n    total_products_sold DESC\nLIMIT 1;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column p.product_category_name_english does not exist\nLINE 5:     p.product_category_name_english,\n            ^\nHINT:  Perhaps you meant to reference the column \"pcat.product_category_name_english\".",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 660,
+          "completion_tokens": 143,
+          "timings": {
+            "generation_s": 6.876538700016681,
+            "validation_s": 0.006696199998259544
+          }
+        }
+      ],
+      "max_prompt_tokens": 660,
+      "prompt_tokens": 660,
+      "completion_tokens": 143,
+      "timings": {
+        "generation_s": 6.876538700016681,
+        "validation_s": 0.006696199998259544
+      }
+    },
+    {
+      "id": 6,
+      "question": "Melyik termékkategóriából származott a legtöbb eladás?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, COUNT(*) AS total_sales FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY total_sales DESC LIMIT 1;",
+      "order_sensitive": true,
+      "expected_result": [
+        [
+          "bed_bath_table",
+          11115
+        ]
+      ],
+      "generated_sql": "SELECT \n    COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category,\n    COUNT(oi.order_id) AS total_sales\nFROM \n    order_items oi\nJOIN \n    products p ON oi.product_id = p.product_id\nLEFT JOIN \n    product_category_name_translation pt ON p.product_category_name = pt.product_category_name\nGROUP BY \n    COALESCE(pt.product_category_name_english, p.product_category_name)\nORDER BY \n    total_sales DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT \n    COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category,\n    COUNT(oi.order_id) AS total_sales\nFROM \n    order_items oi\nJOIN \n    products p ON oi.product_id = p.product_id\nLEFT JOIN \n    product_category_name_translation pt ON p.product_category_name = pt.product_category_name\nGROUP BY \n    COALESCE(pt.product_category_name_english, p.product_category_name)\nORDER BY \n    total_sales DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "bed_bath_table",
+          11115
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT \n    COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category,\n    COUNT(oi.order_id) AS total_sales\nFROM \n    order_items oi\nJOIN \n    products p ON oi.product_id = p.product_id\nLEFT JOIN \n    product_category_name_translation pt ON p.product_category_name = pt.product_category_name\nGROUP BY \n    COALESCE(pt.product_category_name_english, p.product_category_name)\nORDER BY \n    total_sales DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT \n    COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category,\n    COUNT(oi.order_id) AS total_sales\nFROM \n    order_items oi\nJOIN \n    products p ON oi.product_id = p.product_id\nLEFT JOIN \n    product_category_name_translation pt ON p.product_category_name = pt.product_category_name\nGROUP BY \n    COALESCE(pt.product_category_name_english, p.product_category_name)\nORDER BY \n    total_sales DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 664,
+          "completion_tokens": 110,
+          "timings": {
+            "generation_s": 5.2701872999896295,
+            "validation_s": 0.0071084999945014715,
+            "execution_s": 0.13690670003416017
+          }
+        }
+      ],
+      "max_prompt_tokens": 664,
+      "prompt_tokens": 664,
+      "completion_tokens": 110,
+      "timings": {
+        "generation_s": 5.2701872999896295,
+        "validation_s": 0.0071084999945014715,
+        "execution_s": 0.13690670003416017
+      }
+    },
+    {
+      "id": 7,
+      "question": "Hány rendelés történt 2017 januárjában?",
+      "category": "date",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COUNT(*) FROM orders WHERE order_purchase_timestamp >= '2017-01-01' AND order_purchase_timestamp < '2017-02-01';",
+      "order_sensitive": false,
+      "expected_result": [
+        [
+          800
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(order_id) AS order_count\nFROM orders\nWHERE order_purchase_timestamp >= '2017-01-01 00:00:00'\n  AND order_purchase_timestamp < '2017-02-01 00:00:00';",
+      "raw_response": "```sql\nSELECT COUNT(order_id) AS order_count\nFROM orders\nWHERE order_purchase_timestamp >= '2017-01-01 00:00:00'\n  AND order_purchase_timestamp < '2017-02-01 00:00:00';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          800
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(order_id) AS order_count\nFROM orders\nWHERE order_purchase_timestamp >= '2017-01-01 00:00:00'\n  AND order_purchase_timestamp < '2017-02-01 00:00:00';",
+          "raw_response": "```sql\nSELECT COUNT(order_id) AS order_count\nFROM orders\nWHERE order_purchase_timestamp >= '2017-01-01 00:00:00'\n  AND order_purchase_timestamp < '2017-02-01 00:00:00';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 660,
+          "completion_tokens": 70,
+          "timings": {
+            "generation_s": 3.283549999992829,
+            "validation_s": 0.006107599998358637,
+            "execution_s": 0.014571900013834238
+          }
+        }
+      ],
+      "max_prompt_tokens": 660,
+      "prompt_tokens": 660,
+      "completion_tokens": 70,
+      "timings": {
+        "generation_s": 3.283549999992829,
+        "validation_s": 0.006107599998358637,
+        "execution_s": 0.014571900013834238
+      }
+    },
+    {
+      "id": 8,
+      "question": "Melyik az 5 legdrágább termék?",
+      "category": "sorting",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT product_id, MAX(price) AS price FROM order_items GROUP BY product_id ORDER BY price DESC LIMIT 5;",
+      "order_sensitive": true,
+      "expected_result": [
+        [
+          "489ae2aa008f021502940f251d4cce7f",
+          6735.0
+        ],
+        [
+          "69c590f7ffc7bf8db97190b6cb6ed62e",
+          6729.0
+        ],
+        [
+          "1bdf5e6731585cf01aa8169c7028d6ad",
+          6499.0
+        ],
+        [
+          "a6492cc69376c469ab6f61d8f44de961",
+          4799.0
+        ],
+        [
+          "c3ed642d592594bb648ff4a04cee2747",
+          4690.0
+        ]
+      ],
+      "generated_sql": "SELECT \n    p.product_id,\n    p.product_name_lenght,\n    p.product_description_lenght,\n    p.product_photos_qty,\n    p.product_weight_g,\n    p.product_length_cm,\n    p.product_height_cm,\n    p.product_width_cm,\n    COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category_name,\n    o.order_id,\n    o.order_purchase_timestamp,\n    o.order_approved_at,\n    o.order_delivered_carrier_date,\n    o.order_delivered_customer_date,\n    o.order_estimated_delivery_date,\n    oi.price,\n    oi.freight_value\nFROM \n    products p\nJOIN \n    order_items oi ON p.product_id = oi.product_id\nJOIN \n    orders o ON oi.order_id = o.order_id\nLEFT JOIN \n    product_category_name_translation pt ON p.product_category_name = pt.product_category_name\nORDER BY \n    oi.price DESC\nLIMIT 5;",
+      "raw_response": "```sql\nSELECT \n    p.product_id,\n    p.product_name_lenght,\n    p.product_description_lenght,\n    p.product_photos_qty,\n    p.product_weight_g,\n    p.product_length_cm,\n    p.product_height_cm,\n    p.product_width_cm,\n    COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category_name,\n    o.order_id,\n    o.order_purchase_timestamp,\n    o.order_approved_at,\n    o.order_delivered_carrier_date,\n    o.order_delivered_customer_date,\n    o.order_estimated_delivery_date,\n    oi.price,\n    oi.freight_value\nFROM \n    products p\nJOIN \n    order_items oi ON p.product_id = oi.product_id\nJOIN \n    orders o ON oi.order_id = o.order_id\nLEFT JOIN \n    product_category_name_translation pt ON p.product_category_name = pt.product_category_name\nORDER BY \n    oi.price DESC\nLIMIT 5;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "489ae2aa008f021502940f251d4cce7f",
+          31,
+          875,
+          2,
+          30000,
+          60,
+          61,
+          33,
+          "housewares",
+          "0812eb902a67711a1cb742b3cdaa65ae",
+          "2017-02-12T20:37:36",
+          "2017-02-12T20:45:12",
+          "2017-02-16T09:23:13",
+          "2017-03-03T14:23:18",
+          "2017-03-09T00:00:00",
+          6735.0,
+          194.31
+        ],
+        [
+          "69c590f7ffc7bf8db97190b6cb6ed62e",
+          50,
+          1935,
+          4,
+          5660,
+          54,
+          18,
+          47,
+          "computers",
+          "fefacc66af859508bf1a7934eab1e97f",
+          "2018-07-25T18:10:17",
+          "2018-07-27T04:05:13",
+          "2018-08-03T14:42:00",
+          "2018-08-15T14:57:50",
+          "2018-08-10T00:00:00",
+          6729.0,
+          193.21
+        ],
+        [
+          "1bdf5e6731585cf01aa8169c7028d6ad",
+          28,
+          3954,
+          2,
+          7400,
+          47,
+          25,
+          25,
+          "art",
+          "f5136e38d1a14a4dbd87dff67da82701",
+          "2017-05-24T18:14:34",
+          "2017-05-26T02:45:17",
+          "2017-05-26T11:20:47",
+          "2017-06-05T17:09:48",
+          "2017-06-28T00:00:00",
+          6499.0,
+          227.66
+        ],
+        [
+          "a6492cc69376c469ab6f61d8f44de961",
+          41,
+          1780,
+          2,
+          22600,
+          55,
+          40,
+          40,
+          "small_appliances",
+          "a96610ab360d42a2e5335a3998b4718a",
+          "2017-04-01T15:58:40",
+          "2017-04-03T13:25:18",
+          "2017-04-11T15:10:34",
+          "2017-04-17T11:04:45",
+          "2017-05-02T00:00:00",
+          4799.0,
+          151.34
+        ],
+        [
+          "c3ed642d592594bb648ff4a04cee2747",
+          59,
+          2217,
+          2,
+          30000,
+          50,
+          49,
+          50,
+          "small_appliances",
+          "199af31afc78c699f0dbf71fb178d4d4",
+          "2017-04-18T18:50:13",
+          "2017-04-19T15:50:15",
+          "2017-04-25T13:39:59",
+          "2017-05-07T10:42:39",
+          "2017-05-15T00:00:00",
+          4690.0,
+          74.34
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT \n    p.product_id,\n    p.product_name_lenght,\n    p.product_description_lenght,\n    p.product_photos_qty,\n    p.product_weight_g,\n    p.product_length_cm,\n    p.product_height_cm,\n    p.product_width_cm,\n    COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category_name,\n    o.order_id,\n    o.order_purchase_timestamp,\n    o.order_approved_at,\n    o.order_delivered_carrier_date,\n    o.order_delivered_customer_date,\n    o.order_estimated_delivery_date,\n    oi.price,\n    oi.freight_value\nFROM \n    products p\nJOIN \n    order_items oi ON p.product_id = oi.product_id\nJOIN \n    orders o ON oi.order_id = o.order_id\nLEFT JOIN \n    product_category_name_translation pt ON p.product_category_name = pt.product_category_name\nORDER BY \n    oi.price DESC\nLIMIT 5;",
+          "raw_response": "```sql\nSELECT \n    p.product_id,\n    p.product_name_lenght,\n    p.product_description_lenght,\n    p.product_photos_qty,\n    p.product_weight_g,\n    p.product_length_cm,\n    p.product_height_cm,\n    p.product_width_cm,\n    COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category_name,\n    o.order_id,\n    o.order_purchase_timestamp,\n    o.order_approved_at,\n    o.order_delivered_carrier_date,\n    o.order_delivered_customer_date,\n    o.order_estimated_delivery_date,\n    oi.price,\n    oi.freight_value\nFROM \n    products p\nJOIN \n    order_items oi ON p.product_id = oi.product_id\nJOIN \n    orders o ON oi.order_id = o.order_id\nLEFT JOIN \n    product_category_name_translation pt ON p.product_category_name = pt.product_category_name\nORDER BY \n    oi.price DESC\nLIMIT 5;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 652,
+          "completion_tokens": 196,
+          "timings": {
+            "generation_s": 9.344095600012224,
+            "validation_s": 0.007879699987825006,
+            "execution_s": 0.2852110000094399
+          }
+        }
+      ],
+      "max_prompt_tokens": 652,
+      "prompt_tokens": 652,
+      "completion_tokens": 196,
+      "timings": {
+        "generation_s": 9.344095600012224,
+        "validation_s": 0.007879699987825006,
+        "execution_s": 0.2852110000094399
+      }
+    },
+    {
+      "id": 9,
+      "question": "Melyik vásárló adta le a legtöbb rendelést?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT c.customer_unique_id, COUNT(*) AS order_count FROM orders o JOIN customers c ON o.customer_id = c.customer_id GROUP BY c.customer_unique_id ORDER BY order_count DESC LIMIT 1;",
+      "order_sensitive": true,
+      "expected_result": [
+        [
+          "8d50f5eadf50201ccdcedfb9e2ac8455",
+          17
+        ]
+      ],
+      "generated_sql": "SELECT c.customer_id, c.customer_unique_id, COUNT(o.order_id) AS order_count\nFROM customers c\nJOIN orders o ON c.customer_id = o.customer_id\nGROUP BY c.customer_id, c.customer_unique_id\nORDER BY order_count DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT c.customer_id, c.customer_unique_id, COUNT(o.order_id) AS order_count\nFROM customers c\nJOIN orders o ON c.customer_id = o.customer_id\nGROUP BY c.customer_id, c.customer_unique_id\nORDER BY order_count DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "00012a2ce6f8dcda20d059ce98491703",
+          "248ffe10d632bebe4f7267f1f44844c9",
+          1
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT c.customer_id, c.customer_unique_id, COUNT(o.order_id) AS order_count\nFROM customers c\nJOIN orders o ON c.customer_id = o.customer_id\nGROUP BY c.customer_id, c.customer_unique_id\nORDER BY order_count DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT c.customer_id, c.customer_unique_id, COUNT(o.order_id) AS order_count\nFROM customers c\nJOIN orders o ON c.customer_id = o.customer_id\nGROUP BY c.customer_id, c.customer_unique_id\nORDER BY order_count DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 659,
+          "completion_tokens": 61,
+          "timings": {
+            "generation_s": 2.9626898000133224,
+            "validation_s": 0.006511000043246895,
+            "execution_s": 0.4222031999961473
+          }
+        }
+      ],
+      "max_prompt_tokens": 659,
+      "prompt_tokens": 659,
+      "completion_tokens": 61,
+      "timings": {
+        "generation_s": 2.9626898000133224,
+        "validation_s": 0.006511000043246895,
+        "execution_s": 0.4222031999961473
+      }
+    },
+    {
+      "id": 10,
+      "question": "Melyik termékből származott a legtöbb bevétel?",
+      "category": "join_aggregation",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT p.product_id, SUM(oi.price) AS total_revenue FROM order_items oi JOIN products p ON oi.product_id = p.product_id GROUP BY p.product_id ORDER BY total_revenue DESC LIMIT 1;",
+      "order_sensitive": true,
+      "expected_result": [
+        [
+          "bb50f2e236e5eea0100680137654686c",
+          63885.0
+        ]
+      ],
+      "generated_sql": "SELECT \n    p.product_name_lenght,\n    p.product_description_lenght,\n    p.product_photos_qty,\n    p.product_weight_g,\n    p.product_length_cm,\n    p.product_height_cm,\n    p.product_width_cm,\n    COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category_name\nFROM \n    products p\nJOIN \n    order_items oi ON p.product_id = oi.product_id\nLEFT JOIN \n    product_category_name_translation pt ON p.product_category_name = pt.product_category_name\nGROUP BY \n    p.product_name_lenght,\n    p.product_description_lenght,\n    p.product_photos_qty,\n    p.product_weight_g,\n    p.product_length_cm,\n    p.product_height_cm,\n    p.product_width_cm,\n    pt.product_category_name_english,\n    p.product_category_name\nORDER BY \n    SUM(oi.price) DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT \n    p.product_name_lenght,\n    p.product_description_lenght,\n    p.product_photos_qty,\n    p.product_weight_g,\n    p.product_length_cm,\n    p.product_height_cm,\n    p.product_width_cm,\n    COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category_name\nFROM \n    products p\nJOIN \n    order_items oi ON p.product_id = oi.product_id\nLEFT JOIN \n    product_category_name_translation pt ON p.product_category_name = pt.product_category_name\nGROUP BY \n    p.product_name_lenght,\n    p.product_description_lenght,\n    p.product_photos_qty,\n    p.product_weight_g,\n    p.product_length_cm,\n    p.product_height_cm,\n    p.product_width_cm,\n    pt.product_category_name_english,\n    p.product_category_name\nORDER BY \n    SUM(oi.price) DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          60,
+          2644,
+          6,
+          400,
+          34,
+          4,
+          22,
+          "health_beauty"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT \n    p.product_name_lenght,\n    p.product_description_lenght,\n    p.product_photos_qty,\n    p.product_weight_g,\n    p.product_length_cm,\n    p.product_height_cm,\n    p.product_width_cm,\n    COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category_name\nFROM \n    products p\nJOIN \n    order_items oi ON p.product_id = oi.product_id\nLEFT JOIN \n    product_category_name_translation pt ON p.product_category_name = pt.product_category_name\nGROUP BY \n    p.product_name_lenght,\n    p.product_description_lenght,\n    p.product_photos_qty,\n    p.product_weight_g,\n    p.product_length_cm,\n    p.product_height_cm,\n    p.product_width_cm,\n    pt.product_category_name_english,\n    p.product_category_name\nORDER BY \n    SUM(oi.price) DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT \n    p.product_name_lenght,\n    p.product_description_lenght,\n    p.product_photos_qty,\n    p.product_weight_g,\n    p.product_length_cm,\n    p.product_height_cm,\n    p.product_width_cm,\n    COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category_name\nFROM \n    products p\nJOIN \n    order_items oi ON p.product_id = oi.product_id\nLEFT JOIN \n    product_category_name_translation pt ON p.product_category_name = pt.product_category_name\nGROUP BY \n    p.product_name_lenght,\n    p.product_description_lenght,\n    p.product_photos_qty,\n    p.product_weight_g,\n    p.product_length_cm,\n    p.product_height_cm,\n    p.product_width_cm,\n    pt.product_category_name_english,\n    p.product_category_name\nORDER BY \n    SUM(oi.price) DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 661,
+          "completion_tokens": 189,
+          "timings": {
+            "generation_s": 9.138676800008398,
+            "validation_s": 0.0076280999928712845,
+            "execution_s": 0.3637866999488324
+          }
+        }
+      ],
+      "max_prompt_tokens": 661,
+      "prompt_tokens": 661,
+      "completion_tokens": 189,
+      "timings": {
+        "generation_s": 9.138676800008398,
+        "validation_s": 0.0076280999928712845,
+        "execution_s": 0.3637866999488324
+      }
+    }
+  ]
+}

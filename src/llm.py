@@ -26,9 +26,27 @@ Instructions:
 - Return ONLY the SQL query.
 """
 
-# Identifies the prompt in evaluation results, so runs with
+# Sent after a failed attempt, continuing the same conversation, so the
+# first-attempt prompt stays identical to the baseline.
+CORRECTION_TEMPLATE = """
+The SQL query above failed with this PostgreSQL error:
+
+{error}
+
+Fix the query so that it answers the original question.
+Use only tables and columns from the schema.
+Return ONLY the corrected SQL query.
+"""
+
+
+def _sha256(text):
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+# Identifies the prompts in evaluation results, so runs with
 # different prompts are never compared by accident.
-PROMPT_SHA256 = hashlib.sha256(PROMPT_TEMPLATE.encode("utf-8")).hexdigest()
+PROMPT_SHA256 = _sha256(PROMPT_TEMPLATE)
+CORRECTION_PROMPT_SHA256 = _sha256(CORRECTION_TEMPLATE)
 
 
 @dataclass(frozen=True)
@@ -74,9 +92,33 @@ def extract_sql(text: str) -> str:
 def generate_sql(question, schema, settings: LLMSettings) -> Generation:
     prompt = PROMPT_TEMPLATE.format(schema=schema, question=question)
 
+    return _chat([{"role": "user", "content": prompt}], settings)
+
+
+def correct_sql(question, schema, failed_attempts, settings: LLMSettings) -> Generation:
+    """
+    Ask for a fixed query after failed attempts.
+
+    failed_attempts: (raw_response, error) pairs, oldest first. The model
+    sees every earlier attempt with its error, so it does not repeat one.
+    """
+    prompt = PROMPT_TEMPLATE.format(schema=schema, question=question)
+    messages = [{"role": "user", "content": prompt}]
+
+    for raw_response, error in failed_attempts:
+        messages.append({"role": "assistant", "content": raw_response})
+        messages.append({
+            "role": "user",
+            "content": CORRECTION_TEMPLATE.format(error=error),
+        })
+
+    return _chat(messages, settings)
+
+
+def _chat(messages, settings: LLMSettings) -> Generation:
     response = chat(
         model=settings.model,
-        messages=[{"role": "user", "content": prompt}],
+        messages=messages,
         options={
             "temperature": settings.temperature,
             "seed": settings.seed,

@@ -7,6 +7,7 @@ import re
 import subprocess
 import sys
 from collections import defaultdict
+from dataclasses import asdict
 
 # src könyvtár elérhetővé tétele
 SRC_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,7 +22,7 @@ from evaluation.comparison import (
     relaxed_match,
     strict_match,
 )
-from llm import PROMPT_SHA256, LLMSettings
+from llm import CORRECTION_PROMPT_SHA256, PROMPT_SHA256, LLMSettings
 from pipeline import PipelineConfig, load_schema, run_pipeline
 
 
@@ -98,6 +99,10 @@ def evaluate_test_case(conn, schema, config, case, expected_rows):
         strict = strict_match(expected_rows, generated_rows, ordered)
         relaxed = relaxed_match(expected_rows, generated_rows, ordered)
 
+    # A correction only runs after the first attempt failed, so the
+    # first attempt is exactly what a run without correction produces.
+    corrected = result.correction_rounds > 0
+
     return {
         "id": case["id"],
         "question": case["question"],
@@ -115,6 +120,12 @@ def evaluate_test_case(conn, schema, config, case, expected_rows):
         "generated_result": generated_rows,
         "strict_match": strict,
         "relaxed_match": relaxed,
+        "correction_rounds": result.correction_rounds,
+        "first_attempt_execution_success": result.attempts[0].executed,
+        "first_attempt_strict_match": strict and not corrected,
+        "first_attempt_relaxed_match": relaxed and not corrected,
+        "attempts": [asdict(a) for a in result.attempts],
+        "max_prompt_tokens": max(a.prompt_tokens for a in result.attempts),
         "prompt_tokens": result.prompt_tokens,
         "completion_tokens": result.completion_tokens,
         "timings": result.timings,
@@ -123,6 +134,7 @@ def evaluate_test_case(conn, schema, config, case, expected_rows):
 
 def summarize(results):
     total = len(results)
+    corrected = [r for r in results if r["correction_rounds"] > 0]
 
     def rate(key, subset=results):
         n = len(subset)
@@ -151,6 +163,18 @@ def summarize(results):
         "execution_success": rate("execution_success"),
         "strict_ex": rate("strict_match"),
         "relaxed_ex": rate("relaxed_match"),
+        "first_attempt": {
+            "execution_success": rate("first_attempt_execution_success"),
+            "strict_ex": rate("first_attempt_strict_match"),
+            "relaxed_ex": rate("first_attempt_relaxed_match"),
+        },
+        "correction": {
+            "triggered": len(corrected),
+            "fixed_execution": sum(r["execution_success"] for r in corrected),
+            "fixed_strict": sum(r["strict_match"] for r in corrected),
+            "fixed_relaxed": sum(r["relaxed_match"] for r in corrected),
+            "mean_rounds_when_triggered": mean(r["correction_rounds"] for r in corrected),
+        },
         "by_category": breakdown("category"),
         "by_difficulty": breakdown("difficulty"),
         "mean_generation_s": mean(r["timings"]["generation_s"] for r in results),
@@ -176,6 +200,12 @@ def parse_args():
     parser.add_argument("--temperature", type=float, default=defaults.temperature)
     parser.add_argument("--seed", type=int, default=defaults.seed)
     parser.add_argument("--num-ctx", type=int, default=defaults.num_ctx)
+    parser.add_argument(
+        "--correction-rounds",
+        type=int,
+        default=0,
+        help="hibás SQL javítási körök maximális száma (0 = nincs javítás)",
+    )
     parser.add_argument(
         "--no-schema-hints",
         action="store_true",
@@ -204,6 +234,7 @@ def main():
     config = PipelineConfig(
         llm=llm_settings,
         schema_hints=not args.no_schema_hints,
+        max_correction_rounds=args.correction_rounds,
     )
 
     with open(args.cases, "r", encoding="utf-8") as file:
@@ -237,9 +268,12 @@ def main():
             else:
                 status = "ROSSZ EREDMÉNY"
 
-            print(f"[{case['id']:>3}] {status:<18} {case['question']}")
+            if result["correction_rounds"]:
+                status += f" ({result['correction_rounds']}. javítás után)"
 
-            if result["prompt_tokens"] >= config.llm.num_ctx:
+            print(f"[{case['id']:>3}] {status:<34} {case['question']}")
+
+            if result["max_prompt_tokens"] >= config.llm.num_ctx:
                 print(f"      FIGYELEM: a prompt elérte a num_ctx határt ({config.llm.num_ctx}), csonkolás lehetséges")
 
     finally:
@@ -254,6 +288,20 @@ def main():
     print_rate("Sikeres végrehajtás", summary["execution_success"])
     print_rate("Execution accuracy (strict)", summary["strict_ex"])
     print_rate("Execution accuracy (relaxed)", summary["relaxed_ex"])
+
+    if config.max_correction_rounds:
+        first = summary["first_attempt"]
+        correction = summary["correction"]
+        print("\nJavítás nélkül (első próbálkozás):")
+        print_rate("  Sikeres végrehajtás", first["execution_success"])
+        print_rate("  Execution accuracy (strict)", first["strict_ex"])
+        print_rate("  Execution accuracy (relaxed)", first["relaxed_ex"])
+        print(
+            f"Javítás indult: {correction['triggered']} esetben, "
+            f"ebből lefutott: {correction['fixed_execution']}, "
+            f"helyes lett: {correction['fixed_relaxed']} (relaxed), "
+            f"{correction['fixed_strict']} (strict)"
+        )
     print(f"Átlagos generálási idő: {summary['mean_generation_s']:.2f} s")
 
     output = {
@@ -263,6 +311,7 @@ def main():
             "pipeline": config.to_dict(),
             "model_digest": model_digest(config.llm.model),
             "prompt_sha256": PROMPT_SHA256,
+            "correction_prompt_sha256": CORRECTION_PROMPT_SHA256,
             "database": DB_NAME,
             "db_user": DB_USER,
             "test_cases_file": os.path.relpath(args.cases, SRC_DIR),
