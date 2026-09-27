@@ -2,10 +2,10 @@
   "model": "qwen2.5-coder:7b",
   "database": "olist_db",
   "total_questions": 10,
-  "sql_execution_success": 6,
-  "sql_execution_success_rate": 0.6,
-  "correct_results": 4,
-  "execution_accuracy": 0.4,
+  "sql_execution_success": 9,
+  "sql_execution_success_rate": 0.9,
+  "correct_results": 5,
+  "execution_accuracy": 0.5,
   "results": [
     {
       "id": 1,
@@ -58,10 +58,14 @@
           "120.6537390146471372"
         ]
       ],
-      "generated_sql": "SELECT AVG(products.price) AS average_product_price\nFROM products;",
-      "generated_result": null,
-      "execution_success": false,
-      "execution_accuracy": false
+      "generated_sql": "SELECT AVG(price) AS average_product_price\nFROM order_items;",
+      "generated_result": [
+        [
+          "120.6537390146471372"
+        ]
+      ],
+      "execution_success": true,
+      "execution_accuracy": true
     },
     {
       "id": 4,
@@ -74,7 +78,7 @@
           "SP"
         ]
       ],
-      "generated_sql": "SELECT \n    c.customer_state AS state,\n    COUNT(c.customer_id) AS customer_count\nFROM \n    customers c\nJOIN \n    orders o ON c.customer_id = o.customer_id\nGROUP BY \n    c.customer_state\nORDER BY \n    customer_count DESC\nLIMIT 1;",
+      "generated_sql": "SELECT \n    c.customer_state,\n    COUNT(c.customer_id) AS customer_count\nFROM \n    customers c\nGROUP BY \n    c.customer_state\nORDER BY \n    customer_count DESC\nLIMIT 1;",
       "generated_result": [
         [
           "SP",
@@ -96,7 +100,7 @@
           2033
         ]
       ],
-      "generated_sql": "SELECT \n    s.seller_id,\n    s.seller_city,\n    s.seller_state,\n    p.product_category_name_english,\n    SUM(oi.quantity) AS total_quantity_sold\nFROM \n    sellers s\nJOIN \n    order_items oi ON s.seller_id = oi.seller_id\nJOIN \n    products p ON oi.product_id = p.product_id\nLEFT JOIN \n    product_category_name_translation pcat ON p.product_category_name = pcat.product_category_name\nGROUP BY \n    s.seller_id, s.seller_city, s.seller_state, p.product_category_name_english\nORDER BY \n    total_quantity_sold DESC\nLIMIT 1;",
+      "generated_sql": "SELECT \n    s.seller_id,\n    s.seller_city,\n    s.seller_state,\n    SUM(oi.quantity) AS total_products_sold,\n    p.product_category_name_english AS product_category\nFROM \n    sellers s\nJOIN \n    order_items oi ON s.seller_id = oi.seller_id\nJOIN \n    products p ON oi.product_id = p.product_id\nLEFT JOIN \n    product_category_name_translation pcat ON p.product_category_name = pcat.product_category_name\nGROUP BY \n    s.seller_id, s.seller_city, s.seller_state, p.product_category_name_english\nORDER BY \n    total_products_sold DESC\nLIMIT 1;",
       "generated_result": null,
       "execution_success": false,
       "execution_accuracy": false
@@ -113,7 +117,7 @@
           11115
         ]
       ],
-      "generated_sql": "SELECT \n    COALESCE(pct.product_category_name_english, p.product_category_name) AS product_category,\n    COUNT(oi.product_id) AS total_sales\nFROM \n    order_items oi\nJOIN \n    products p ON oi.product_id = p.product_id\nLEFT JOIN \n    product_category_name_translation pct ON p.product_category_name = pct.product_category_name\nGROUP BY \n    product_category\nORDER BY \n    total_sales DESC\nLIMIT 1;",
+      "generated_sql": "SELECT \n    COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category,\n    COUNT(order_items.order_id) AS total_sales\nFROM \n    orders o\nJOIN \n    order_items order_items ON o.order_id = order_items.order_id\nJOIN \n    products p ON order_items.product_id = p.product_id\nLEFT JOIN \n    product_category_name_translation pt ON p.product_category_name = pt.product_category_name\nGROUP BY \n    product_category\nORDER BY \n    total_sales DESC\nLIMIT 1;",
       "generated_result": [
         [
           "bed_bath_table",
@@ -134,7 +138,7 @@
           800
         ]
       ],
-      "generated_sql": "SELECT COUNT(order_id) AS order_count\nFROM orders\nWHERE EXTRACT(YEAR FROM order_purchase_timestamp) = 2017\n  AND EXTRACT(MONTH FROM order_purchase_timestamp) = 1;",
+      "generated_sql": "SELECT COUNT(order_id) AS order_count\nFROM orders\nWHERE order_purchase_timestamp BETWEEN '2017-01-01 00:00:00' AND '2017-01-31 23:59:59';",
       "generated_result": [
         [
           800
@@ -171,9 +175,75 @@
           "4690.00"
         ]
       ],
-      "generated_sql": "SELECT \n    p.product_name_lenght,\n    p.product_description_lenght,\n    p.product_photos_qty,\n    p.product_weight_g,\n    p.product_length_cm,\n    p.product_height_cm,\n    p.product_width_cm,\n    COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category_name\nFROM \n    products p\nJOIN \n    order_items oi ON p.product_id = oi.product_id\nORDER BY \n    oi.price DESC\nLIMIT 5;",
-      "generated_result": null,
-      "execution_success": false,
+      "generated_sql": "SELECT \n    p.product_id, \n    p.product_name_lenght, \n    p.product_description_lenght, \n    p.product_photos_qty, \n    p.product_weight_g, \n    p.product_length_cm, \n    p.product_height_cm, \n    p.product_width_cm, \n    p.product_category_name,\n    COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category_name_english,\n    oi.price\nFROM \n    products p\nJOIN \n    order_items oi ON p.product_id = oi.product_id\nLEFT JOIN \n    product_category_name_translation pt ON p.product_category_name = pt.product_category_name\nORDER BY \n    oi.price DESC\nLIMIT 5;",
+      "generated_result": [
+        [
+          "489ae2aa008f021502940f251d4cce7f",
+          31,
+          875,
+          2,
+          30000,
+          60,
+          61,
+          33,
+          "utilidades_domesticas",
+          "housewares",
+          "6735.00"
+        ],
+        [
+          "69c590f7ffc7bf8db97190b6cb6ed62e",
+          50,
+          1935,
+          4,
+          5660,
+          54,
+          18,
+          47,
+          "pcs",
+          "computers",
+          "6729.00"
+        ],
+        [
+          "1bdf5e6731585cf01aa8169c7028d6ad",
+          28,
+          3954,
+          2,
+          7400,
+          47,
+          25,
+          25,
+          "artes",
+          "art",
+          "6499.00"
+        ],
+        [
+          "a6492cc69376c469ab6f61d8f44de961",
+          41,
+          1780,
+          2,
+          22600,
+          55,
+          40,
+          40,
+          "eletroportateis",
+          "small_appliances",
+          "4799.00"
+        ],
+        [
+          "c3ed642d592594bb648ff4a04cee2747",
+          59,
+          2217,
+          2,
+          30000,
+          50,
+          49,
+          50,
+          "eletroportateis",
+          "small_appliances",
+          "4690.00"
+        ]
+      ],
+      "execution_success": true,
       "execution_accuracy": false
     },
     {
@@ -188,11 +258,12 @@
           1
         ]
       ],
-      "generated_sql": "SELECT \n    c.customer_unique_id,\n    COUNT(o.order_id) AS order_count\nFROM \n    customers c\nJOIN \n    orders o ON c.customer_id = o.customer_id\nGROUP BY \n    c.customer_unique_id\nORDER BY \n    order_count DESC\nLIMIT 1;",
+      "generated_sql": "SELECT \n    c.customer_id, \n    c.customer_unique_id, \n    COUNT(o.order_id) AS order_count\nFROM \n    customers c\nJOIN \n    orders o ON c.customer_id = o.customer_id\nGROUP BY \n    c.customer_id, \n    c.customer_unique_id\nORDER BY \n    order_count DESC\nLIMIT 1;",
       "generated_result": [
         [
-          "8d50f5eadf50201ccdcedfb9e2ac8455",
-          17
+          "00012a2ce6f8dcda20d059ce98491703",
+          "248ffe10d632bebe4f7267f1f44844c9",
+          1
         ]
       ],
       "execution_success": true,
@@ -210,9 +281,21 @@
           "63885.00"
         ]
       ],
-      "generated_sql": "SELECT \n    p.product_name_lenght,\n    p.product_description_lenght,\n    p.product_photos_qty,\n    p.product_weight_g,\n    p.product_length_cm,\n    p.product_height_cm,\n    p.product_width_cm,\n    COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category_name\nFROM \n    products p\nJOIN \n    order_items oi ON p.product_id = oi.product_id\nLEFT JOIN \n    product_category_name_translation pt ON p.product_category_name = pt.product_category_name\nORDER BY \n    SUM(oi.price) DESC\nLIMIT 1;",
-      "generated_result": null,
-      "execution_success": false,
+      "generated_sql": "SELECT \n    p.product_name_lenght,\n    p.product_description_lenght,\n    p.product_photos_qty,\n    p.product_weight_g,\n    p.product_length_cm,\n    p.product_height_cm,\n    p.product_width_cm,\n    COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category_name,\n    SUM(oi.price * oi.freight_value) AS total_revenue\nFROM \n    products p\nJOIN \n    order_items oi ON p.product_id = oi.product_id\nLEFT JOIN \n    product_category_name_translation pt ON p.product_category_name = pt.product_category_name\nGROUP BY \n    p.product_name_lenght,\n    p.product_description_lenght,\n    p.product_photos_qty,\n    p.product_weight_g,\n    p.product_length_cm,\n    p.product_height_cm,\n    p.product_width_cm,\n    COALESCE(pt.product_category_name_english, p.product_category_name)\nORDER BY \n    total_revenue DESC\nLIMIT 1;",
+      "generated_result": [
+        [
+          53,
+          1935,
+          1,
+          18000,
+          105,
+          30,
+          40,
+          "musical_instruments",
+          "3058305.2800"
+        ]
+      ],
+      "execution_success": true,
       "execution_accuracy": false
     }
   ]

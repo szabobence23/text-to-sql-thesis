@@ -1,50 +1,44 @@
-from schema import get_schema
-from llm import generate_sql
-from database import get_connection, execute_query
+from database import get_connection
+from pipeline import PipelineConfig, load_schema, run_pipeline
 
 
 def main():
 
-    # 1. PostgreSQL kapcsolat
     conn = get_connection()
 
     try:
+        config = PipelineConfig()
+        schema = load_schema(conn, config)
 
-        # 2. Adatbázis séma lekérése
-        schema = get_schema(conn)
-
-        # 3. Felhasználói kérdés
         question = "Melyik termékkategóriából adták el a legtöbb terméket?"
 
         print("Kérdés:")
         print(question)
 
-        # 4. SQL generálása az LLM-mel
-        sql = generate_sql(question, schema)
+        result = run_pipeline(conn, question, schema, config)
 
         print("\nGenerált SQL:")
-        print(sql)
+        print(result.sql)
 
-        # 5. SQL végrehajtása
-        try:
-            result = execute_query(conn, sql)
+        if not result.is_valid:
+            print("\nSQL validációs hiba:")
+            print(result.validation_error)
+            return
 
-            print("\nAdatbázis eredménye:")
-
-            if result:
-                for row in result:
-                    print(row)
-            else:
-                print("(Nincs eredmény)")
-
-        except Exception as e:
-            conn.rollback()
-
+        if not result.executed:
             print("\nSQL végrehajtási hiba:")
-            print(e)
+            print(result.execution_error)
+            return
+
+        print("\nAdatbázis eredménye:")
+
+        if result.rows:
+            for row in result.rows:
+                print(row)
+        else:
+            print("(Nincs eredmény)")
 
     finally:
-        # 6. Kapcsolat bezárása
         conn.close()
 
 

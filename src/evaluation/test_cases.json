@@ -60,7 +60,7 @@
     "question": "Melyik vásárló adta le a legtöbb rendelést?",
     "category": "join_aggregation",
     "difficulty": "medium",
-    "ground_truth_sql": "SELECT customer_id, COUNT(*) AS order_count FROM orders GROUP BY customer_id ORDER BY order_count DESC LIMIT 1;"
+    "ground_truth_sql": "SELECT c.customer_unique_id, COUNT(*) AS order_count FROM orders o JOIN customers c ON o.customer_id = c.customer_id GROUP BY c.customer_unique_id ORDER BY order_count DESC LIMIT 1;"
   },
   {
     "id": 10,

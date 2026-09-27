@@ -1,0 +1,8 @@
+[tool.pytest.ini_options]
+# The modules in src/ import each other flat (from schema import ...),
+# so tests put src/ on sys.path the same way the scripts do.
+pythonpath = ["src"]
+testpaths = ["src/tests"]
+markers = [
+    "db: needs the running olist_db PostgreSQL database",
+]

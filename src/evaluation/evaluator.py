@@ -1,186 +1,287 @@
+import argparse
+import datetime
+import hashlib
 import json
 import os
+import re
+import subprocess
 import sys
+from collections import defaultdict
 
 # src könyvtár elérhetővé tétele
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+SRC_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(SRC_DIR)
 
-from database import get_connection, execute_query
-from schema import get_schema
-from llm import generate_sql
+import ollama
+
+from database import DB_NAME, DB_USER, execute_query, get_connection
+from evaluation.comparison import (
+    is_order_sensitive,
+    normalize_rows,
+    relaxed_match,
+    strict_match,
+)
+from llm import PROMPT_SHA256, LLMSettings
+from pipeline import PipelineConfig, load_schema, run_pipeline
 
 
-def normalize_result(result):
-    """
-    PostgreSQL eredmény -> JSON-kompatibilis forma.
-    """
-    return [list(row) for row in result]
+EVAL_DIR = os.path.join(SRC_DIR, "evaluation")
+DEFAULT_CASES = os.path.join(EVAL_DIR, "test_cases.json")
+DEFAULT_OUTPUT_DIR = os.path.join(EVAL_DIR, "results")
 
 
-def evaluate_test_case(conn, schema, test_case):
-    question = test_case["question"]
-    ground_truth_sql = test_case["ground_truth_sql"]
+def sha256(text):
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
-    expected_result = execute_query(
-        conn,
-        ground_truth_sql
-    )
 
-    expected_result = normalize_result(expected_result)
+def git_info():
+    def git(*args):
+        return subprocess.run(
+            ["git", *args],
+            cwd=SRC_DIR,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
 
-    print("=" * 80)
-    print(f"TESZT {test_case['id']}")
-    print("=" * 80)
-
-    print("\nKérdés:")
-    print(question)
-
-    # LLM SQL generálás
-    generated_sql = generate_sql(question, schema)
-
-    print("\nGenerált SQL:")
-    print(generated_sql)
-
-    # SQL végrehajtása
     try:
-        result = execute_query(conn, generated_sql)
-        result = normalize_result(result)
+        return {
+            "commit": git("rev-parse", "HEAD"),
+            # Uncommitted changes mean the commit alone does not
+            # reproduce this run.
+            "dirty": bool(git("status", "--porcelain")),
+        }
+    except OSError:
+        return {"commit": None, "dirty": None}
 
-        execution_success = True
 
-        print("\nAdatbázis eredménye:")
-        for row in result:
-            print(row)
+def model_digest(model):
+    # The tag (e.g. qwen2.5-coder:7b) can point to new weights after
+    # a re-pull; the digest identifies the exact model evaluated.
+    for m in ollama.list().models:
+        if m.model == model:
+            return m.digest
+    return None
 
-    except Exception as e:
-        conn.rollback()
 
-        result = None
-        execution_success = False
+def run_ground_truths(conn, test_cases):
+    """
+    Execute every ground-truth query up front, so a broken test case
+    stops the run before any time is spent on the LLM.
+    """
+    expected = {}
 
-        print("\nSQL HIBA:")
-        print(e)
+    for case in test_cases:
+        try:
+            expected[case["id"]] = normalize_rows(
+                execute_query(conn, case["ground_truth_sql"])
+            )
+        except Exception as e:
+            raise RuntimeError(
+                f"Ground truth of test case {case['id']} failed: {e}"
+            ) from e
 
-    # Execution accuracy
-    execution_accuracy = (
-        execution_success and result == expected_result
+    return expected
+
+
+def evaluate_test_case(conn, schema, config, case, expected_rows):
+    ordered = is_order_sensitive(case["ground_truth_sql"])
+
+    result = run_pipeline(conn, case["question"], schema, config)
+
+    generated_rows = (
+        normalize_rows(result.rows) if result.executed else None
     )
 
-    print("\nHelyes eredmény?")
-    print("YES" if execution_accuracy else "NO")
+    if generated_rows is None:
+        strict = relaxed = False
+    else:
+        strict = strict_match(expected_rows, generated_rows, ordered)
+        relaxed = relaxed_match(expected_rows, generated_rows, ordered)
 
     return {
-        "id": test_case["id"],
-        "question": question,
-        "category": test_case["category"],
-        "difficulty": test_case["difficulty"],
-        "ground_truth_sql": test_case["ground_truth_sql"],
-        "expected_result": expected_result,
-        "generated_sql": generated_sql,
-        "generated_result": result,
-        "execution_success": execution_success,
-        "execution_accuracy": execution_accuracy
+        "id": case["id"],
+        "question": case["question"],
+        "category": case["category"],
+        "difficulty": case["difficulty"],
+        "ground_truth_sql": case["ground_truth_sql"],
+        "order_sensitive": ordered,
+        "expected_result": expected_rows,
+        "generated_sql": result.sql,
+        "raw_response": result.raw_response,
+        "valid_sql": result.is_valid,
+        "validation_error": result.validation_error,
+        "execution_success": result.executed,
+        "execution_error": result.execution_error,
+        "generated_result": generated_rows,
+        "strict_match": strict,
+        "relaxed_match": relaxed,
+        "prompt_tokens": result.prompt_tokens,
+        "completion_tokens": result.completion_tokens,
+        "timings": result.timings,
     }
 
 
-def main():
+def summarize(results):
+    total = len(results)
 
-    # Test case-ok betöltése
-    with open(
-        "src/evaluation/test_cases.json",
-        "r",
-        encoding="utf-8"
-    ) as file:
-        test_cases = json.load(file)
+    def rate(key, subset=results):
+        n = len(subset)
+        hits = sum(r[key] for r in subset)
+        return {"count": hits, "total": n, "rate": hits / n if n else 0}
+
+    def mean(values):
+        values = list(values)
+        return sum(values) / len(values) if values else 0
+
+    def breakdown(field):
+        groups = defaultdict(list)
+        for r in results:
+            groups[r[field]].append(r)
+        return {
+            name: {
+                "strict_ex": rate("strict_match", group),
+                "relaxed_ex": rate("relaxed_match", group),
+            }
+            for name, group in sorted(groups.items())
+        }
+
+    return {
+        "total_questions": total,
+        "valid_sql": rate("valid_sql"),
+        "execution_success": rate("execution_success"),
+        "strict_ex": rate("strict_match"),
+        "relaxed_ex": rate("relaxed_match"),
+        "by_category": breakdown("category"),
+        "by_difficulty": breakdown("difficulty"),
+        "mean_generation_s": mean(r["timings"]["generation_s"] for r in results),
+        "mean_prompt_tokens": mean(r["prompt_tokens"] for r in results),
+        "mean_completion_tokens": mean(r["completion_tokens"] for r in results),
+    }
+
+
+def output_path(output_dir, started_at, model, run_name):
+    stamp = started_at.strftime("%Y%m%d-%H%M%S")
+    model_slug = re.sub(r"[^A-Za-z0-9.]+", "-", model)
+    name = f"{stamp}_{model_slug}"
+    if run_name:
+        name += f"_{run_name}"
+    return os.path.join(output_dir, f"{name}.json")
+
+
+def parse_args():
+    defaults = LLMSettings()
+
+    parser = argparse.ArgumentParser(description="Text-to-SQL kiértékelés")
+    parser.add_argument("--model", default=defaults.model)
+    parser.add_argument("--temperature", type=float, default=defaults.temperature)
+    parser.add_argument("--seed", type=int, default=defaults.seed)
+    parser.add_argument("--num-ctx", type=int, default=defaults.num_ctx)
+    parser.add_argument(
+        "--no-schema-hints",
+        action="store_true",
+        help="a kézzel írt adatbázis-megjegyzések nélkül",
+    )
+    parser.add_argument("--cases", default=DEFAULT_CASES)
+    parser.add_argument("--output-dir", default=DEFAULT_OUTPUT_DIR)
+    parser.add_argument("--run-name", default="", help="rövid név a fájlnévbe, pl. baseline")
+    return parser.parse_args()
+
+
+def print_rate(label, stats):
+    print(f"{label}: {stats['count']}/{stats['total']} ({stats['rate']:.1%})")
+
+
+def main():
+    args = parse_args()
+
+    llm_settings = LLMSettings(
+        model=args.model,
+        temperature=args.temperature,
+        seed=args.seed,
+        num_ctx=args.num_ctx,
+    )
+
+    config = PipelineConfig(
+        llm=llm_settings,
+        schema_hints=not args.no_schema_hints,
+    )
+
+    with open(args.cases, "r", encoding="utf-8") as file:
+        cases_text = file.read()
+    test_cases = json.loads(cases_text)
+
+    started_at = datetime.datetime.now()
 
     conn = get_connection()
 
     try:
+        schema = load_schema(conn, config)
+        expected = run_ground_truths(conn, test_cases)
 
-        # Schema egyszeri lekérése
-        schema = get_schema(conn)
-
-        print("Olist adatbázis séma betöltve.")
+        print(f"Olist séma betöltve, {len(test_cases)} teszteset, modell: {config.llm.model}")
 
         results = []
 
-        for test_case in test_cases:
+        for case in test_cases:
             result = evaluate_test_case(
-                conn,
-                schema,
-                test_case
+                conn, schema, config, case, expected[case["id"]]
             )
-
             results.append(result)
 
-        # Statisztikák
-        total = len(results)
+            if result["relaxed_match"]:
+                status = "HELYES" if result["strict_match"] else "HELYES (relaxed)"
+            elif not result["valid_sql"]:
+                status = "ÉRVÉNYTELEN SQL"
+            elif not result["execution_success"]:
+                status = "VÉGREHAJTÁSI HIBA"
+            else:
+                status = "ROSSZ EREDMÉNY"
 
-        successful_executions = sum(
-            r["execution_success"]
-            for r in results
-        )
+            print(f"[{case['id']:>3}] {status:<18} {case['question']}")
 
-        correct_results = sum(
-            r["execution_accuracy"]
-            for r in results
-        )
-
-        execution_success_rate = (
-            successful_executions / total
-            if total > 0 else 0
-        )
-
-        execution_accuracy = (
-            correct_results / total
-            if total > 0 else 0
-        )
-
-        print("\n" + "=" * 80)
-        print("EVALUATION SUMMARY")
-        print("=" * 80)
-
-        print(f"\nTesztkérdések: {total}")
-        print(f"SQL execution success: {successful_executions}/{total} "
-              f"({execution_success_rate:.1%})")
-        print(f"Execution accuracy: {correct_results}/{total} "
-              f"({execution_accuracy:.1%})")
-
-        # Eredmények mentése
-        output = {
-            "model": "qwen2.5-coder:7b",
-            "database": "olist_db",
-            "total_questions": total,
-            "sql_execution_success": successful_executions,
-            "sql_execution_success_rate": execution_success_rate,
-            "correct_results": correct_results,
-            "execution_accuracy": execution_accuracy,
-            "results": results
-        }
-
-        os.makedirs(
-            "src/evaluation/results",
-            exist_ok=True
-        )
-
-        with open(
-            "src/evaluation/results/qwen_baseline.json",
-            "w",
-            encoding="utf-8"
-        ) as file:
-            json.dump(
-                output,
-                file,
-                ensure_ascii=False,
-                indent=2,
-                default=str
-            )
-
-        print("\nEredmények mentve:")
-        print("src/evaluation/results/qwen_baseline.json")
+            if result["prompt_tokens"] >= config.llm.num_ctx:
+                print(f"      FIGYELEM: a prompt elérte a num_ctx határt ({config.llm.num_ctx}), csonkolás lehetséges")
 
     finally:
         conn.close()
+
+    summary = summarize(results)
+
+    print("\n" + "=" * 80)
+    print("EVALUATION SUMMARY")
+    print("=" * 80)
+    print_rate("Érvényes SQL", summary["valid_sql"])
+    print_rate("Sikeres végrehajtás", summary["execution_success"])
+    print_rate("Execution accuracy (strict)", summary["strict_ex"])
+    print_rate("Execution accuracy (relaxed)", summary["relaxed_ex"])
+    print(f"Átlagos generálási idő: {summary['mean_generation_s']:.2f} s")
+
+    output = {
+        "run": {
+            "started_at": started_at.isoformat(timespec="seconds"),
+            "git": git_info(),
+            "pipeline": config.to_dict(),
+            "model_digest": model_digest(config.llm.model),
+            "prompt_sha256": PROMPT_SHA256,
+            "database": DB_NAME,
+            "db_user": DB_USER,
+            "test_cases_file": os.path.relpath(args.cases, SRC_DIR),
+            "test_cases_sha256": sha256(cases_text),
+            "schema_sha256": sha256(schema),
+            "schema_text": schema,
+        },
+        "summary": summary,
+        "results": results,
+    }
+
+    os.makedirs(args.output_dir, exist_ok=True)
+    path = output_path(args.output_dir, started_at, config.llm.model, args.run_name)
+
+    with open(path, "w", encoding="utf-8") as file:
+        json.dump(output, file, ensure_ascii=False, indent=2, default=str)
+
+    print("\nEredmények mentve:")
+    print(path)
 
 
 if __name__ == "__main__":

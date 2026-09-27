@@ -1,4 +1,14 @@
-def get_schema(conn):
+# Hand-written, Olist-specific knowledge appended to the schema text.
+# Switchable via PipelineConfig.schema_hints, so its effect is measurable.
+SCHEMA_HINTS = """
+Important notes:
+- product_category_name contains the original Portuguese product category names.
+- product_category_name_translation maps product_category_name to English using product_category_name_english.
+- When returning product category names, prefer product_category_name_english when available.
+"""
+
+
+def get_schema(conn, include_hints=True):
     columns_query = """
     SELECT table_name, column_name, data_type
     FROM information_schema.columns
@@ -6,22 +16,27 @@ def get_schema(conn):
     ORDER BY table_name, ordinal_position;
     """
 
+    # pg_catalog instead of information_schema: constraint_column_usage
+    # only shows constraints to the table owner, so the read-only
+    # application role would see no relationships at all.
     relationships_query = """
     SELECT
-        tc.table_name AS table_name,
-        kcu.column_name AS column_name,
-        ccu.table_name AS foreign_table_name,
-        ccu.column_name AS foreign_column_name
-    FROM information_schema.table_constraints AS tc
-    JOIN information_schema.key_column_usage AS kcu
-        ON tc.constraint_name = kcu.constraint_name
-        AND tc.table_schema = kcu.table_schema
-    JOIN information_schema.constraint_column_usage AS ccu
-        ON ccu.constraint_name = tc.constraint_name
-        AND ccu.table_schema = tc.table_schema
-    WHERE tc.constraint_type = 'FOREIGN KEY'
-        AND tc.table_schema = 'public'
-    ORDER BY tc.table_name, kcu.column_name;
+        cl.relname AS table_name,
+        a.attname AS column_name,
+        fcl.relname AS foreign_table_name,
+        fa.attname AS foreign_column_name
+    FROM pg_constraint AS c
+    JOIN pg_class AS cl ON cl.oid = c.conrelid
+    JOIN pg_namespace AS n ON n.oid = cl.relnamespace
+    JOIN pg_class AS fcl ON fcl.oid = c.confrelid
+    CROSS JOIN LATERAL unnest(c.conkey, c.confkey) AS k(attnum, fattnum)
+    JOIN pg_attribute AS a
+        ON a.attrelid = c.conrelid AND a.attnum = k.attnum
+    JOIN pg_attribute AS fa
+        ON fa.attrelid = c.confrelid AND fa.attnum = k.fattnum
+    WHERE c.contype = 'f'
+        AND n.nspname = 'public'
+    ORDER BY table_name, column_name;
     """
 
     with conn.cursor() as cur:
@@ -30,6 +45,8 @@ def get_schema(conn):
 
         cur.execute(relationships_query)
         relationships = cur.fetchall()
+
+    conn.rollback()
 
     schema = "Database: olist_db\n\n"
 
@@ -50,11 +67,7 @@ def get_schema(conn):
             f"-> {foreign_table}.{foreign_column}\n"
         )
 
-    schema += """
-Important notes:
-- product_category_name contains the original Portuguese product category names.
-- product_category_name_translation maps product_category_name to English using product_category_name_english.
-- When returning product category names, prefer product_category_name_english when available.
-"""
+    if include_hints:
+        schema += SCHEMA_HINTS
 
     return schema
