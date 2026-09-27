@@ -6,8 +6,10 @@
 -- is the one that actually guarantees generated SQL cannot
 -- modify data, read server files or run forever.
 --
--- Run as superuser against olist_db, after olist_schema.sql:
---   psql -U postgres -d olist_db -f readonly_role.sql
+-- One role for the whole server, granted per dataset database.
+-- Run as superuser against the dataset database, after its schema
+-- (setup_dataset.py does this):
+--   psql -U postgres -d <db> -v db_name=<db> -f readonly_role.sql
 -- Local development password; override in production setups.
 
 DO $$
@@ -19,8 +21,8 @@ END
 $$;
 
 -- Only read access to the data tables.
-REVOKE ALL ON DATABASE olist_db FROM PUBLIC;
-GRANT CONNECT ON DATABASE olist_db TO text2sql_reader;
+REVOKE ALL ON DATABASE :"db_name" FROM PUBLIC;
+GRANT CONNECT ON DATABASE :"db_name" TO text2sql_reader;
 
 REVOKE CREATE ON SCHEMA public FROM PUBLIC;
 GRANT USAGE ON SCHEMA public TO text2sql_reader;

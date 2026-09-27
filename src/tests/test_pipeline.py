@@ -2,15 +2,14 @@ import psycopg
 import pytest
 
 import pipeline
-from database import get_connection
+from dataset_loader import load_dataset
 from llm import Generation
-from pipeline import PipelineConfig, load_schema, run_pipeline
-from schema import SCHEMA_HINTS
+from pipeline import PipelineConfig, load_schema, open_connection, run_pipeline
 
 
 @pytest.fixture
 def conn():
-    connection = get_connection()
+    connection = open_connection(PipelineConfig(dataset="olist"))
 
     try:
         yield connection
@@ -27,11 +26,14 @@ def test_default_config_is_serializable():
 
 @pytest.mark.db
 def test_schema_hints_switch(conn):
-    with_hints = load_schema(conn, PipelineConfig(schema_hints=True))
-    without_hints = load_schema(conn, PipelineConfig(schema_hints=False))
+    hints = load_dataset("olist").hints
+    with_hints = load_schema(conn, PipelineConfig(dataset="olist", schema_hints=True))
+    without_hints = load_schema(conn, PipelineConfig(dataset="olist", schema_hints=False))
 
-    assert SCHEMA_HINTS in with_hints
-    assert SCHEMA_HINTS not in without_hints
+    assert hints.startswith("Important notes:")
+    assert with_hints.startswith("Database: olist_db")
+    assert hints in with_hints
+    assert hints not in without_hints
     # FK relationships must survive the read-only role (pg_catalog query).
     assert "- orders.customer_id -> customers.customer_id" in without_hints
 

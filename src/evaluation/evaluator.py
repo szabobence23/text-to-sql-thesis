@@ -15,7 +15,8 @@ sys.path.append(SRC_DIR)
 
 import ollama
 
-from database import DB_NAME, DB_USER, execute_query, get_connection
+from database import DB_USER, execute_query
+from dataset_loader import DEFAULT_DATASET, REPO_DIR, available_datasets, load_dataset
 from evaluation.comparison import (
     is_order_sensitive,
     normalize_rows,
@@ -23,12 +24,10 @@ from evaluation.comparison import (
     strict_match,
 )
 from llm import CORRECTION_PROMPT_SHA256, PROMPT_SHA256, LLMSettings
-from pipeline import PipelineConfig, load_schema, run_pipeline
+from pipeline import PipelineConfig, load_schema, open_connection, run_pipeline
 
 
-EVAL_DIR = os.path.join(SRC_DIR, "evaluation")
-DEFAULT_CASES = os.path.join(EVAL_DIR, "test_cases.json")
-DEFAULT_OUTPUT_DIR = os.path.join(EVAL_DIR, "results")
+DEFAULT_OUTPUT_DIR = os.path.join(SRC_DIR, "evaluation", "results")
 
 
 def sha256(text):
@@ -183,10 +182,10 @@ def summarize(results):
     }
 
 
-def output_path(output_dir, started_at, model, run_name):
+def output_path(output_dir, started_at, dataset, model, run_name):
     stamp = started_at.strftime("%Y%m%d-%H%M%S")
     model_slug = re.sub(r"[^A-Za-z0-9.]+", "-", model)
-    name = f"{stamp}_{model_slug}"
+    name = f"{stamp}_{dataset}_{model_slug}"
     if run_name:
         name += f"_{run_name}"
     return os.path.join(output_dir, f"{name}.json")
@@ -211,7 +210,16 @@ def parse_args():
         action="store_true",
         help="a kézzel írt adatbázis-megjegyzések nélkül",
     )
-    parser.add_argument("--cases", default=DEFAULT_CASES)
+    parser.add_argument(
+        "--dataset",
+        default=DEFAULT_DATASET,
+        choices=available_datasets(),
+        help="adatbázis és tesztkészlet a datasets/ mappából",
+    )
+    parser.add_argument(
+        "--cases",
+        help="másik tesztkészlet-fájl (alapból a dataset test_cases.json-ja)",
+    )
     parser.add_argument("--output-dir", default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--run-name", default="", help="rövid név a fájlnévbe, pl. baseline")
     return parser.parse_args()
@@ -232,24 +240,28 @@ def main():
     )
 
     config = PipelineConfig(
+        dataset=args.dataset,
         llm=llm_settings,
         schema_hints=not args.no_schema_hints,
         max_correction_rounds=args.correction_rounds,
     )
 
-    with open(args.cases, "r", encoding="utf-8") as file:
+    dataset = load_dataset(config.dataset)
+    cases_path = args.cases or dataset.test_cases_path
+
+    with open(cases_path, "r", encoding="utf-8") as file:
         cases_text = file.read()
     test_cases = json.loads(cases_text)
 
     started_at = datetime.datetime.now()
 
-    conn = get_connection()
+    conn = open_connection(config)
 
     try:
         schema = load_schema(conn, config)
         expected = run_ground_truths(conn, test_cases)
 
-        print(f"Olist séma betöltve, {len(test_cases)} teszteset, modell: {config.llm.model}")
+        print(f"Dataset: {dataset.name} ({dataset.db_name}), {len(test_cases)} teszteset, modell: {config.llm.model}")
 
         results = []
 
@@ -312,9 +324,9 @@ def main():
             "model_digest": model_digest(config.llm.model),
             "prompt_sha256": PROMPT_SHA256,
             "correction_prompt_sha256": CORRECTION_PROMPT_SHA256,
-            "database": DB_NAME,
+            "database": dataset.db_name,
             "db_user": DB_USER,
-            "test_cases_file": os.path.relpath(args.cases, SRC_DIR),
+            "test_cases_file": os.path.relpath(cases_path, REPO_DIR),
             "test_cases_sha256": sha256(cases_text),
             "schema_sha256": sha256(schema),
             "schema_text": schema,
@@ -324,7 +336,7 @@ def main():
     }
 
     os.makedirs(args.output_dir, exist_ok=True)
-    path = output_path(args.output_dir, started_at, config.llm.model, args.run_name)
+    path = output_path(args.output_dir, started_at, dataset.name, config.llm.model, args.run_name)
 
     with open(path, "w", encoding="utf-8") as file:
         json.dump(output, file, ensure_ascii=False, indent=2, default=str)

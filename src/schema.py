@@ -1,14 +1,10 @@
-# Hand-written, Olist-specific knowledge appended to the schema text.
-# Switchable via PipelineConfig.schema_hints, so its effect is measurable.
-SCHEMA_HINTS = """
-Important notes:
-- product_category_name contains the original Portuguese product category names.
-- product_category_name_translation maps product_category_name to English using product_category_name_english.
-- When returning product category names, prefer product_category_name_english when available.
-"""
+def get_schema(conn, database_name, hints=""):
+    """
+    Schema text for the prompt, introspected from the database.
 
-
-def get_schema(conn, include_hints=True):
+    hints: the dataset's hand-written notes (datasets/<name>/hints.txt),
+    appended after the relationships; empty for none.
+    """
     columns_query = """
     SELECT table_name, column_name, data_type
     FROM information_schema.columns
@@ -48,7 +44,7 @@ def get_schema(conn, include_hints=True):
 
     conn.rollback()
 
-    schema = "Database: olist_db\n\n"
+    schema = f"Database: {database_name}\n\n"
 
     current_table = None
 
@@ -67,7 +63,7 @@ def get_schema(conn, include_hints=True):
             f"-> {foreign_table}.{foreign_column}\n"
         )
 
-    if include_hints:
-        schema += SCHEMA_HINTS
+    if hints:
+        schema += f"\n{hints}\n"
 
     return schema

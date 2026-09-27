@@ -2,6 +2,7 @@
 import pytest
 
 from database import get_connection
+from dataset_loader import load_dataset
 from sql_schema_validator import validate_sql_schema
 from sql_validator import validate_sql
 
@@ -11,7 +12,7 @@ pytestmark = pytest.mark.db
 
 @pytest.fixture
 def conn():
-    connection = get_connection()
+    connection = get_connection(load_dataset("olist").db_name)
 
     try:
         yield connection

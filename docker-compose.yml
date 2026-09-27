@@ -3,15 +3,15 @@ services:
     image: postgres:17
     container_name: text-to-sql-postgres
     environment:
-      POSTGRES_DB: sales_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./database/olist:/data/olist:ro
+      # Dataset databases are created with database/setup_dataset.py,
+      # which imports from /datasets/<name>/data.
+      - ./datasets:/datasets:ro
 
 volumes:
   postgres_data:

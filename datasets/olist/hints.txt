@@ -1,0 +1,4 @@
+Important notes:
+- product_category_name contains the original Portuguese product category names.
+- product_category_name_translation maps product_category_name to English using product_category_name_english.
+- When returning product category names, prefer product_category_name_english when available.

@@ -1,16 +1,29 @@
-from database import get_connection
-from pipeline import PipelineConfig, load_schema, run_pipeline
+import argparse
+
+from dataset_loader import DEFAULT_DATASET
+from pipeline import PipelineConfig, load_schema, open_connection, run_pipeline
+
+
+DEFAULT_QUESTION = "Melyik termékkategóriából adták el a legtöbb terméket?"
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Text-to-SQL demó")
+    parser.add_argument("question", nargs="?", default=DEFAULT_QUESTION)
+    parser.add_argument("--dataset", default=DEFAULT_DATASET)
+    return parser.parse_args()
 
 
 def main():
+    args = parse_args()
 
-    conn = get_connection()
+    config = PipelineConfig(dataset=args.dataset, max_correction_rounds=2)
+    conn = open_connection(config)
 
     try:
-        config = PipelineConfig(max_correction_rounds=2)
         schema = load_schema(conn, config)
 
-        question = "Melyik termékkategóriából adták el a legtöbb terméket?"
+        question = args.question
 
         print("Kérdés:")
         print(question)

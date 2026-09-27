@@ -1,0 +1,5 @@
+{
+  "name": "olist",
+  "db_name": "olist_db",
+  "description": "Brazilian e-commerce public dataset by Olist (Kaggle): customers, sellers, products, orders, items, payments, reviews, geolocation."
+}

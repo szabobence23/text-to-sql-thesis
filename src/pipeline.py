@@ -3,7 +3,8 @@ from dataclasses import asdict, dataclass, field
 
 import psycopg
 
-from database import execute_query
+from database import execute_query, get_connection
+from dataset_loader import DEFAULT_DATASET, load_dataset
 from llm import LLMSettings, correct_sql, generate_sql
 from schema import get_schema
 from sql_validator import validate_sql
@@ -18,8 +19,10 @@ class PipelineConfig:
     here (off by default), so it can be measured with and without it
     and the evaluator records exactly what was enabled.
     """
+    # Folder name under datasets/: selects database, hints, test cases.
+    dataset: str = DEFAULT_DATASET
     llm: LLMSettings = field(default_factory=LLMSettings)
-    # Hand-written dataset notes appended to the schema text.
+    # The dataset's hints.txt appended to the schema text.
     schema_hints: bool = True
     # How many times a query that failed validation or execution is sent
     # back to the model with the error. 0 = no correction (baseline).
@@ -29,10 +32,16 @@ class PipelineConfig:
         return asdict(self)
 
 
+def open_connection(config: PipelineConfig):
+    return get_connection(load_dataset(config.dataset).db_name)
+
+
 def load_schema(conn, config: PipelineConfig) -> str:
     # Schema text depends on the config, so it is built here rather
     # than by callers, which could pass a mismatching setting.
-    return get_schema(conn, include_hints=config.schema_hints)
+    dataset = load_dataset(config.dataset)
+    hints = dataset.hints if config.schema_hints else ""
+    return get_schema(conn, dataset.db_name, hints)
 
 
 @dataclass

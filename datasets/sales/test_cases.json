@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "question": "Hány vásárló van az adatbázisban?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) FROM customers;"
+  },
+  {
+    "id": 2,
+    "question": "Hány rendelés történt 2025 első félévében?",
+    "category": "date",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) FROM orders WHERE order_date >= '2025-01-01' AND order_date < '2025-07-01';"
+  },
+  {
+    "id": 3,
+    "question": "Melyik termékből adták el a legtöbb darabot?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT p.name, SUM(oi.quantity) AS total_quantity FROM order_items oi JOIN products p ON oi.product_id = p.id GROUP BY p.name ORDER BY total_quantity DESC LIMIT 1;"
+  },
+  {
+    "id": 4,
+    "question": "Mennyi bevétel származott az Electronics kategóriából?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT SUM(oi.quantity * p.price) FROM order_items oi JOIN products p ON oi.product_id = p.id WHERE p.category = 'Electronics';"
+  }
+]
