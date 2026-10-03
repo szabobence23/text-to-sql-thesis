@@ -10,7 +10,9 @@ default `olist`).
   schema.sql        CREATE TABLE statements, with foreign keys
   import.sql        data loading (COPY from /datasets/<name>/data/... or INSERTs)
   hints.txt         optional hand-written notes appended to the schema in the prompt
-  test_cases.json   [{"id", "question", "category", "difficulty", "ground_truth_sql"}]
+  test_cases/       one file per question language: hu.json (required), en.json, ...
+                    [{"id", "question", "category", "difficulty", "ground_truth_sql"}]
+                    translations must match hu.json except for "question"
   data/             data files (gitignored *.csv)
 ```
 

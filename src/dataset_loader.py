@@ -5,7 +5,8 @@ Datasets: a database plus everything that belongs to it.
 
 Each dataset is a folder under datasets/ (see datasets/README.md):
 dataset.json, schema.sql, import.sql, optional hints.txt and
-test_cases.json. Switching databases means switching the dataset name.
+test_cases/<language>.json. Switching databases means switching the
+dataset name.
 """
 
 import json
@@ -17,6 +18,8 @@ REPO_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATASETS_DIR = os.path.join(REPO_DIR, "datasets")
 
 DEFAULT_DATASET = os.getenv("TEXT2SQL_DATASET", "olist")
+# Language of the test questions; the prompt itself stays the same.
+DEFAULT_LANGUAGE = os.getenv("TEXT2SQL_LANGUAGE", "hu")
 
 
 @dataclass(frozen=True)
@@ -40,8 +43,29 @@ class Dataset:
             return file.read().strip()
 
     @property
-    def test_cases_path(self) -> str:
-        return os.path.join(self.path, "test_cases.json")
+    def test_cases_dir(self) -> str:
+        return os.path.join(self.path, "test_cases")
+
+    @property
+    def languages(self) -> list[str]:
+        """Languages with a test case file, e.g. ['en', 'hu']."""
+        if not os.path.isdir(self.test_cases_dir):
+            return []
+
+        return sorted(
+            file_name[:-len(".json")]
+            for file_name in os.listdir(self.test_cases_dir)
+            if file_name.endswith(".json")
+        )
+
+    def test_cases_path(self, language: str = DEFAULT_LANGUAGE) -> str:
+        if language not in self.languages:
+            raise ValueError(
+                f"Dataset '{self.name}' has no test cases in language "
+                f"'{language}'. Available: {', '.join(self.languages)}"
+            )
+
+        return os.path.join(self.test_cases_dir, f"{language}.json")
 
     @property
     def schema_sql_path(self) -> str:

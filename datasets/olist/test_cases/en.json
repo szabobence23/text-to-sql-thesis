@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "question": "How many orders are in the database?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) FROM orders;"
+  },
+  {
+    "id": 2,
+    "question": "How many canceled orders are there?",
+    "category": "filtering",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) FROM orders WHERE order_status = 'canceled';"
+  },
+  {
+    "id": 3,
+    "question": "What is the average product price?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT AVG(price) FROM order_items;"
+  },
+  {
+    "id": 4,
+    "question": "Which state do the most customers come from?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT customer_state FROM customers GROUP BY customer_state ORDER BY COUNT(*) DESC LIMIT 1;"
+  },
+  {
+    "id": 5,
+    "question": "Which seller sold the most products?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT seller_id, COUNT(*) AS total_products_sold FROM order_items GROUP BY seller_id ORDER BY total_products_sold DESC LIMIT 1;"
+  },
+  {
+    "id": 6,
+    "question": "Which product category had the most sales?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, COUNT(*) AS total_sales FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY total_sales DESC LIMIT 1;"
+  },
+  {
+    "id": 7,
+    "question": "How many orders were placed in January 2017?",
+    "category": "date",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) FROM orders WHERE order_purchase_timestamp >= '2017-01-01' AND order_purchase_timestamp < '2017-02-01';"
+  },
+  {
+    "id": 8,
+    "question": "What are the 5 most expensive products?",
+    "category": "sorting",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT product_id, MAX(price) AS price FROM order_items GROUP BY product_id ORDER BY price DESC LIMIT 5;"
+  },
+  {
+    "id": 9,
+    "question": "Which customer placed the most orders?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT c.customer_unique_id, COUNT(*) AS order_count FROM orders o JOIN customers c ON o.customer_id = c.customer_id GROUP BY c.customer_unique_id ORDER BY order_count DESC LIMIT 1;"
+  },
+  {
+    "id": 10,
+    "question": "Which product generated the most revenue?",
+    "category": "join_aggregation",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT p.product_id, SUM(oi.price) AS total_revenue FROM order_items oi JOIN products p ON oi.product_id = p.product_id GROUP BY p.product_id ORDER BY total_revenue DESC LIMIT 1;"
+  }
+]

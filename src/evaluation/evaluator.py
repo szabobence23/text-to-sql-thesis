@@ -9,14 +9,20 @@ import sys
 from collections import defaultdict
 from dataclasses import asdict
 
-# src könyvtár elérhetővé tétele
+# src library
 SRC_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(SRC_DIR)
 
 import ollama
 
 from database import DB_USER, execute_query
-from dataset_loader import DEFAULT_DATASET, REPO_DIR, available_datasets, load_dataset
+from dataset_loader import (
+    DEFAULT_DATASET,
+    DEFAULT_LANGUAGE,
+    REPO_DIR,
+    available_datasets,
+    load_dataset,
+)
 from evaluation.comparison import (
     is_order_sensitive,
     normalize_rows,
@@ -182,10 +188,10 @@ def summarize(results):
     }
 
 
-def output_path(output_dir, started_at, dataset, model, run_name):
+def output_path(output_dir, started_at, dataset, language, model, run_name):
     stamp = started_at.strftime("%Y%m%d-%H%M%S")
     model_slug = re.sub(r"[^A-Za-z0-9.]+", "-", model)
-    name = f"{stamp}_{dataset}_{model_slug}"
+    name = f"{stamp}_{dataset}-{language}_{model_slug}"
     if run_name:
         name += f"_{run_name}"
     return os.path.join(output_dir, f"{name}.json")
@@ -217,8 +223,13 @@ def parse_args():
         help="adatbázis és tesztkészlet a datasets/ mappából",
     )
     parser.add_argument(
+        "--language",
+        default=DEFAULT_LANGUAGE,
+        help="a tesztkérdések nyelve: datasets/<dataset>/test_cases/<language>.json (pl. hu, en)",
+    )
+    parser.add_argument(
         "--cases",
-        help="másik tesztkészlet-fájl (alapból a dataset test_cases.json-ja)",
+        help="másik tesztkészlet-fájl (felülírja a --language szerinti fájlt)",
     )
     parser.add_argument("--output-dir", default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--run-name", default="", help="rövid név a fájlnévbe, pl. baseline")
@@ -247,7 +258,7 @@ def main():
     )
 
     dataset = load_dataset(config.dataset)
-    cases_path = args.cases or dataset.test_cases_path
+    cases_path = args.cases or dataset.test_cases_path(args.language)
 
     with open(cases_path, "r", encoding="utf-8") as file:
         cases_text = file.read()
@@ -261,7 +272,11 @@ def main():
         schema = load_schema(conn, config)
         expected = run_ground_truths(conn, test_cases)
 
-        print(f"Dataset: {dataset.name} ({dataset.db_name}), {len(test_cases)} teszteset, modell: {config.llm.model}")
+        print(
+            f"Dataset: {dataset.name} ({dataset.db_name}), "
+            f"{len(test_cases)} teszteset ({args.language}), "
+            f"modell: {config.llm.model}"
+        )
 
         results = []
 
@@ -327,6 +342,8 @@ def main():
             "database": dataset.db_name,
             "db_user": DB_USER,
             "test_cases_file": os.path.relpath(cases_path, REPO_DIR),
+            # With --cases this is only what was given on the command line.
+            "test_cases_language": args.language,
             "test_cases_sha256": sha256(cases_text),
             "schema_sha256": sha256(schema),
             "schema_text": schema,
@@ -336,7 +353,10 @@ def main():
     }
 
     os.makedirs(args.output_dir, exist_ok=True)
-    path = output_path(args.output_dir, started_at, dataset.name, config.llm.model, args.run_name)
+    path = output_path(
+        args.output_dir, started_at, dataset.name, args.language,
+        config.llm.model, args.run_name,
+    )
 
     with open(path, "w", encoding="utf-8") as file:
         json.dump(output, file, ensure_ascii=False, indent=2, default=str)

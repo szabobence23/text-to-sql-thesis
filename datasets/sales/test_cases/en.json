@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "question": "How many customers are in the database?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) FROM customers;"
+  },
+  {
+    "id": 2,
+    "question": "How many orders were placed in the first half of 2025?",
+    "category": "date",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) FROM orders WHERE order_date >= '2025-01-01' AND order_date < '2025-07-01';"
+  },
+  {
+    "id": 3,
+    "question": "Which product sold the most units?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT p.name, SUM(oi.quantity) AS total_quantity FROM order_items oi JOIN products p ON oi.product_id = p.id GROUP BY p.name ORDER BY total_quantity DESC LIMIT 1;"
+  },
+  {
+    "id": 4,
+    "question": "How much revenue came from the Electronics category?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT SUM(oi.quantity * p.price) FROM order_items oi JOIN products p ON oi.product_id = p.id WHERE p.category = 'Electronics';"
+  }
+]
