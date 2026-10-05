@@ -45,3 +45,48 @@ def test_correct_sql_continues_the_conversation(monkeypatch):
     )
     assert "some error" in sent["messages"][2]["content"]
     assert generation.sql == "SELECT 2;"
+
+
+def test_format_result_limits_rows():
+    rows = [(i, None) for i in range(5)]
+
+    row_info, text = llm.format_result(["id", "name"], rows, max_rows=2)
+
+    assert row_info == "first 2 of 5 rows"
+    assert text == "id | name\n0 | NULL\n1 | NULL"
+
+
+def test_format_result_empty():
+    row_info, text = llm.format_result(["id"], [], max_rows=2)
+
+    assert row_info == "0 rows"
+    assert text == "id"
+
+
+def test_generate_answer_prompt(monkeypatch):
+    sent = {}
+
+    class Response:
+        class message:
+            content = "  A válasz 42.\n"
+        prompt_eval_count = 3
+        eval_count = 2
+
+    def fake_chat(model, messages, options):
+        sent["messages"] = messages
+        return Response
+
+    monkeypatch.setattr(llm, "chat", fake_chat)
+
+    answer = llm.generate_answer(
+        "Hány rendelés van?", "SELECT count(*) AS n FROM orders",
+        ["n"], [(42,)], 50, llm.LLMSettings(),
+    )
+
+    prompt = sent["messages"][0]["content"]
+    assert len(sent["messages"]) == 1
+    assert "Hány rendelés van?" in prompt
+    assert "SELECT count(*) AS n FROM orders" in prompt
+    assert "(1 row)" in prompt
+    assert "n\n42" in prompt
+    assert answer == llm.Answer(text="A válasz 42.", prompt_tokens=3, completion_tokens=2)

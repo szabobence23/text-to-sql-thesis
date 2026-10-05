@@ -3,9 +3,9 @@ from dataclasses import asdict, dataclass, field
 
 import psycopg
 
-from database import execute_query, get_connection
+from database import execute_query_with_columns, get_connection
 from dataset_loader import DEFAULT_DATASET, load_dataset
-from llm import LLMSettings, correct_sql, generate_sql
+from llm import Answer, LLMSettings, correct_sql, generate_answer, generate_sql
 from schema import get_schema
 from sql_validator import validate_sql
 
@@ -24,9 +24,18 @@ class PipelineConfig:
     llm: LLMSettings = field(default_factory=LLMSettings)
     # The dataset's hints.txt appended to the schema text.
     schema_hints: bool = True
+    # Reject queries that call a dangerous function (see
+    # sql_function_validator). Never fires on benign analytical
+    # queries, so it leaves the EX metrics unchanged.
+    block_functions: bool = True
     # How many times a query that failed validation or execution is sent
     # back to the model with the error. 0 = no correction (baseline).
     max_correction_rounds: int = 0
+    # After successful execution, the model turns the rows into an
+    # answer in the question's language. Does not change the SQL.
+    natural_language_answer: bool = False
+    # At most this many result rows are shown to the answer model.
+    answer_max_rows: int = 50
 
     def to_dict(self):
         return asdict(self)
@@ -67,6 +76,8 @@ class PipelineResult:
     """
     The top-level fields describe the final attempt; tokens and
     timings are totals over all attempts (the real cost of an answer).
+    The answer's own tokens are in `answer`, its time in answer_s,
+    so SQL token counts stay comparable with runs without answers.
     """
     question: str
     sql: str
@@ -74,12 +85,15 @@ class PipelineResult:
     is_valid: bool
     validation_error: str
     executed: bool
+    columns: list[str] | None
     rows: list | None
     execution_error: str
     prompt_tokens: int
     completion_tokens: int
     timings: dict
     attempts: list[Attempt]
+    # None if the feature is off or the query did not execute.
+    answer: Answer | None = None
 
     @property
     def correction_rounds(self):
@@ -89,21 +103,23 @@ class PipelineResult:
         return asdict(self)
 
 
-def _run_attempt(conn, generation, generation_s):
+def _run_attempt(conn, generation, generation_s, config):
     timings = {"generation_s": generation_s}
 
     start = time.perf_counter()
-    is_valid, validation_error = validate_sql(conn, generation.sql)
+    is_valid, validation_error = validate_sql(
+        conn, generation.sql, config.block_functions
+    )
     timings["validation_s"] = time.perf_counter() - start
 
-    rows = None
+    columns = rows = None
     executed = False
     execution_error = ""
 
     if is_valid:
         start = time.perf_counter()
         try:
-            rows = execute_query(conn, generation.sql)
+            columns, rows = execute_query_with_columns(conn, generation.sql)
             executed = True
         except psycopg.Error as e:
             execution_error = str(e).strip()
@@ -121,14 +137,15 @@ def _run_attempt(conn, generation, generation_s):
         timings=timings,
     )
 
-    return attempt, rows
+    return attempt, columns, rows
 
 
 def run_pipeline(conn, question, schema, config: PipelineConfig) -> PipelineResult:
     """
     Question -> SQL generation -> validation -> execution, and when the
     query fails validation or execution, up to max_correction_rounds
-    corrections with the error fed back to the model.
+    corrections with the error fed back to the model. Optionally a
+    natural-language answer from the rows of the executed query.
 
     Shared by main.py and the evaluator, so what is measured is
     exactly what runs. Invalid SQL is never executed.
@@ -138,7 +155,7 @@ def run_pipeline(conn, question, schema, config: PipelineConfig) -> PipelineResu
 
     start = time.perf_counter()
     generation = generate_sql(question, schema, config.llm)
-    attempt, rows = _run_attempt(conn, generation, time.perf_counter() - start)
+    attempt, columns, rows = _run_attempt(conn, generation, time.perf_counter() - start, config)
     attempts.append(attempt)
 
     while not attempt.executed and len(attempts) <= config.max_correction_rounds:
@@ -146,13 +163,21 @@ def run_pipeline(conn, question, schema, config: PipelineConfig) -> PipelineResu
 
         start = time.perf_counter()
         generation = correct_sql(question, schema, failed, config.llm)
-        attempt, rows = _run_attempt(conn, generation, time.perf_counter() - start)
+        attempt, columns, rows = _run_attempt(conn, generation, time.perf_counter() - start, config)
         attempts.append(attempt)
 
     timings = {}
     for a in attempts:
         for key, seconds in a.timings.items():
             timings[key] = timings.get(key, 0.0) + seconds
+
+    answer = None
+    if config.natural_language_answer and attempt.executed:
+        start = time.perf_counter()
+        answer = generate_answer(
+            question, attempt.sql, columns, rows, config.answer_max_rows, config.llm
+        )
+        timings["answer_s"] = time.perf_counter() - start
 
     return PipelineResult(
         question=question,
@@ -161,10 +186,12 @@ def run_pipeline(conn, question, schema, config: PipelineConfig) -> PipelineResu
         is_valid=attempt.is_valid,
         validation_error=attempt.validation_error,
         executed=attempt.executed,
+        columns=columns,
         rows=rows,
         execution_error=attempt.execution_error,
         prompt_tokens=sum(a.prompt_tokens for a in attempts),
         completion_tokens=sum(a.completion_tokens for a in attempts),
         timings=timings,
         attempts=attempts,
+        answer=answer,
     )

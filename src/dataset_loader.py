@@ -5,8 +5,8 @@ Datasets: a database plus everything that belongs to it.
 
 Each dataset is a folder under datasets/ (see datasets/README.md):
 dataset.json, schema.sql, import.sql, optional hints.txt and
-test_cases/<language>.json. Switching databases means switching the
-dataset name.
+attacks.json, and test_cases/<language>.json. Switching databases
+means switching the dataset name.
 """
 
 import json
@@ -66,6 +66,11 @@ class Dataset:
             )
 
         return os.path.join(self.test_cases_dir, f"{language}.json")
+
+    @property
+    def attacks_path(self) -> str:
+        """Hand-written attack SQL for evaluation/attack_evaluator.py (optional)."""
+        return os.path.join(self.path, "attacks.json")
 
     @property
     def schema_sql_path(self) -> str:

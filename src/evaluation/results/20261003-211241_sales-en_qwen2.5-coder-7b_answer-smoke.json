@@ -1,0 +1,402 @@
+{
+  "run": {
+    "started_at": "2026-10-03T21:12:41",
+    "git": {
+      "commit": "6a6bbc2f1de4f9ecf28d532efdb8380ae1da6b2e",
+      "dirty": true
+    },
+    "pipeline": {
+      "dataset": "sales",
+      "llm": {
+        "model": "qwen2.5-coder:7b",
+        "temperature": 0.0,
+        "seed": 42,
+        "num_ctx": 8192
+      },
+      "schema_hints": true,
+      "max_correction_rounds": 0,
+      "natural_language_answer": true,
+      "answer_max_rows": 50
+    },
+    "model_digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+    "prompt_sha256": "1dc176a63d06de48214aed35f052e3a96a51fde59ddcd42447b9c659b06da2e6",
+    "correction_prompt_sha256": "18936e160c444acb215efe64089ac135fadb9dbaf3ddecba9dcd16f6af912024",
+    "answer_prompt_sha256": "c9b2d0216120aeb7aeada6b8cbb4c2f14f084befb06d7eb4eb84cdf45f5cc734",
+    "database": "sales_db",
+    "db_user": "text2sql_reader",
+    "test_cases_file": "datasets\\sales\\test_cases\\en.json",
+    "test_cases_language": "en",
+    "test_cases_sha256": "f3a8925f927da1d0ba2d76920162e365b1d617acea1123af6362bbf6f14fbfd4",
+    "schema_sha256": "d616bfe4138237730c7347960ab7e62d02e9220e3d2a2e863ca2e8ec34effdac",
+    "schema_text": "Database: sales_db\n\nTable: customers\n- id integer\n- name character varying\n- country character varying\nTable: order_items\n- id integer\n- order_id integer\n- product_id integer\n- quantity integer\nTable: orders\n- id integer\n- customer_id integer\n- order_date date\nTable: products\n- id integer\n- name character varying\n- category character varying\n- price numeric\n\nRelationships:\n- order_items.order_id -> orders.id\n- order_items.product_id -> products.id\n- orders.customer_id -> customers.id\n"
+  },
+  "summary": {
+    "total_questions": 4,
+    "valid_sql": {
+      "count": 4,
+      "total": 4,
+      "rate": 1.0
+    },
+    "execution_success": {
+      "count": 4,
+      "total": 4,
+      "rate": 1.0
+    },
+    "strict_ex": {
+      "count": 3,
+      "total": 4,
+      "rate": 0.75
+    },
+    "relaxed_ex": {
+      "count": 4,
+      "total": 4,
+      "rate": 1.0
+    },
+    "first_attempt": {
+      "execution_success": {
+        "count": 4,
+        "total": 4,
+        "rate": 1.0
+      },
+      "strict_ex": {
+        "count": 3,
+        "total": 4,
+        "rate": 0.75
+      },
+      "relaxed_ex": {
+        "count": 4,
+        "total": 4,
+        "rate": 1.0
+      }
+    },
+    "correction": {
+      "triggered": 0,
+      "fixed_execution": 0,
+      "fixed_strict": 0,
+      "fixed_relaxed": 0,
+      "mean_rounds_when_triggered": 0
+    },
+    "answer": {
+      "answered": 4,
+      "mean_answer_s": 0.8883883749949746,
+      "mean_prompt_tokens": 204.0,
+      "mean_completion_tokens": 18.75
+    },
+    "by_category": {
+      "aggregation": {
+        "strict_ex": {
+          "count": 1,
+          "total": 1,
+          "rate": 1.0
+        },
+        "relaxed_ex": {
+          "count": 1,
+          "total": 1,
+          "rate": 1.0
+        }
+      },
+      "date": {
+        "strict_ex": {
+          "count": 1,
+          "total": 1,
+          "rate": 1.0
+        },
+        "relaxed_ex": {
+          "count": 1,
+          "total": 1,
+          "rate": 1.0
+        }
+      },
+      "join_aggregation": {
+        "strict_ex": {
+          "count": 1,
+          "total": 2,
+          "rate": 0.5
+        },
+        "relaxed_ex": {
+          "count": 2,
+          "total": 2,
+          "rate": 1.0
+        }
+      }
+    },
+    "by_difficulty": {
+      "easy": {
+        "strict_ex": {
+          "count": 2,
+          "total": 2,
+          "rate": 1.0
+        },
+        "relaxed_ex": {
+          "count": 2,
+          "total": 2,
+          "rate": 1.0
+        }
+      },
+      "medium": {
+        "strict_ex": {
+          "count": 1,
+          "total": 2,
+          "rate": 0.5
+        },
+        "relaxed_ex": {
+          "count": 2,
+          "total": 2,
+          "rate": 1.0
+        }
+      }
+    },
+    "mean_generation_s": 1.6420583000290208,
+    "mean_prompt_tokens": 246.0,
+    "mean_completion_tokens": 39.0
+  },
+  "results": [
+    {
+      "id": 1,
+      "question": "How many customers are in the database?",
+      "category": "aggregation",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT COUNT(*) FROM customers;",
+      "order_sensitive": false,
+      "expected_result": [
+        [
+          5
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(*) AS total_customers FROM customers;",
+      "raw_response": "```sql\nSELECT COUNT(*) AS total_customers FROM customers;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          5
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(*) AS total_customers FROM customers;",
+          "raw_response": "```sql\nSELECT COUNT(*) AS total_customers FROM customers;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 244,
+          "completion_tokens": 15,
+          "timings": {
+            "generation_s": 0.7929221000522375,
+            "validation_s": 0.0032125000143423676,
+            "execution_s": 0.001615299959667027
+          }
+        }
+      ],
+      "answer": {
+        "text": "There are 5 customers in the database.",
+        "prompt_tokens": 174,
+        "completion_tokens": 10
+      },
+      "max_prompt_tokens": 244,
+      "prompt_tokens": 244,
+      "completion_tokens": 15,
+      "timings": {
+        "generation_s": 0.7929221000522375,
+        "validation_s": 0.0032125000143423676,
+        "execution_s": 0.001615299959667027,
+        "answer_s": 0.5746012000599876
+      }
+    },
+    {
+      "id": 2,
+      "question": "How many orders were placed in the first half of 2025?",
+      "category": "date",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT COUNT(*) FROM orders WHERE order_date >= '2025-01-01' AND order_date < '2025-07-01';",
+      "order_sensitive": false,
+      "expected_result": [
+        [
+          6
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(*) \nFROM orders \nWHERE order_date BETWEEN '2025-01-01' AND '2025-06-30';",
+      "raw_response": "```sql\nSELECT COUNT(*) \nFROM orders \nWHERE order_date BETWEEN '2025-01-01' AND '2025-06-30';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          6
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(*) \nFROM orders \nWHERE order_date BETWEEN '2025-01-01' AND '2025-06-30';",
+          "raw_response": "```sql\nSELECT COUNT(*) \nFROM orders \nWHERE order_date BETWEEN '2025-01-01' AND '2025-06-30';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 252,
+          "completion_tokens": 41,
+          "timings": {
+            "generation_s": 1.6413768000202253,
+            "validation_s": 0.003026599995791912,
+            "execution_s": 0.0015672000590711832
+          }
+        }
+      ],
+      "answer": {
+        "text": "In the first half of 2025, 6 orders were placed.",
+        "prompt_tokens": 206,
+        "completion_tokens": 18
+      },
+      "max_prompt_tokens": 252,
+      "prompt_tokens": 252,
+      "completion_tokens": 41,
+      "timings": {
+        "generation_s": 1.6413768000202253,
+        "validation_s": 0.003026599995791912,
+        "execution_s": 0.0015672000590711832,
+        "answer_s": 0.829001999925822
+      }
+    },
+    {
+      "id": 3,
+      "question": "Which product sold the most units?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT p.name, SUM(oi.quantity) AS total_quantity FROM order_items oi JOIN products p ON oi.product_id = p.id GROUP BY p.name ORDER BY total_quantity DESC LIMIT 1;",
+      "order_sensitive": true,
+      "expected_result": [
+        [
+          "Wireless Mouse",
+          8
+        ]
+      ],
+      "generated_sql": "SELECT p.name AS product_name, p.category AS product_category, SUM(oi.quantity) AS total_units_sold\nFROM order_items oi\nJOIN products p ON oi.product_id = p.id\nGROUP BY p.id\nORDER BY total_units_sold DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT p.name AS product_name, p.category AS product_category, SUM(oi.quantity) AS total_units_sold\nFROM order_items oi\nJOIN products p ON oi.product_id = p.id\nGROUP BY p.id\nORDER BY total_units_sold DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Wireless Mouse",
+          "Electronics",
+          8
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT p.name AS product_name, p.category AS product_category, SUM(oi.quantity) AS total_units_sold\nFROM order_items oi\nJOIN products p ON oi.product_id = p.id\nGROUP BY p.id\nORDER BY total_units_sold DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT p.name AS product_name, p.category AS product_category, SUM(oi.quantity) AS total_units_sold\nFROM order_items oi\nJOIN products p ON oi.product_id = p.id\nGROUP BY p.id\nORDER BY total_units_sold DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 243,
+          "completion_tokens": 60,
+          "timings": {
+            "generation_s": 2.465994199970737,
+            "validation_s": 0.003162599983625114,
+            "execution_s": 0.0016790999798104167
+          }
+        }
+      ],
+      "answer": {
+        "text": "The product that sold the most units is the Wireless Mouse, which belongs to the Electronics category and has sold a total of 8 units.",
+        "prompt_tokens": 231,
+        "completion_tokens": 29
+      },
+      "max_prompt_tokens": 243,
+      "prompt_tokens": 243,
+      "completion_tokens": 60,
+      "timings": {
+        "generation_s": 2.465994199970737,
+        "validation_s": 0.003162599983625114,
+        "execution_s": 0.0016790999798104167,
+        "answer_s": 1.2701697000302374
+      }
+    },
+    {
+      "id": 4,
+      "question": "How much revenue came from the Electronics category?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT SUM(oi.quantity * p.price) FROM order_items oi JOIN products p ON oi.product_id = p.id WHERE p.category = 'Electronics';",
+      "order_sensitive": false,
+      "expected_result": [
+        [
+          8769.81
+        ]
+      ],
+      "generated_sql": "SELECT SUM(order_items.quantity * products.price) AS revenue\nFROM order_items\nJOIN products ON order_items.product_id = products.id\nWHERE products.category = 'Electronics';",
+      "raw_response": "```sql\nSELECT SUM(order_items.quantity * products.price) AS revenue\nFROM order_items\nJOIN products ON order_items.product_id = products.id\nWHERE products.category = 'Electronics';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          8769.81
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT SUM(order_items.quantity * products.price) AS revenue\nFROM order_items\nJOIN products ON order_items.product_id = products.id\nWHERE products.category = 'Electronics';",
+          "raw_response": "```sql\nSELECT SUM(order_items.quantity * products.price) AS revenue\nFROM order_items\nJOIN products ON order_items.product_id = products.id\nWHERE products.category = 'Electronics';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 245,
+          "completion_tokens": 40,
+          "timings": {
+            "generation_s": 1.667940100072883,
+            "validation_s": 0.0029953999910503626,
+            "execution_s": 0.0017619999125599861
+          }
+        }
+      ],
+      "answer": {
+        "text": "The revenue from the Electronics category is $8,769.81.",
+        "prompt_tokens": 205,
+        "completion_tokens": 18
+      },
+      "max_prompt_tokens": 245,
+      "prompt_tokens": 245,
+      "completion_tokens": 40,
+      "timings": {
+        "generation_s": 1.667940100072883,
+        "validation_s": 0.0029953999910503626,
+        "execution_s": 0.0017619999125599861,
+        "answer_s": 0.8797805999638513
+      }
+    }
+  ]
+}

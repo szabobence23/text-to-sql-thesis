@@ -11,13 +11,22 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Text-to-SQL demó")
     parser.add_argument("question", nargs="?", default=DEFAULT_QUESTION)
     parser.add_argument("--dataset", default=DEFAULT_DATASET)
+    parser.add_argument(
+        "--no-answer",
+        action="store_true",
+        help="természetes nyelvű válasz nélkül, csak az SQL és a sorok",
+    )
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
 
-    config = PipelineConfig(dataset=args.dataset, max_correction_rounds=2)
+    config = PipelineConfig(
+        dataset=args.dataset,
+        max_correction_rounds=2,
+        natural_language_answer=not args.no_answer,
+    )
     conn = open_connection(config)
 
     try:
@@ -58,6 +67,10 @@ def main():
                 print(row)
         else:
             print("(Nincs eredmény)")
+
+        if result.answer:
+            print("\nVálasz:")
+            print(result.answer.text)
 
     finally:
         conn.close()

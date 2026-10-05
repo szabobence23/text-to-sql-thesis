@@ -29,7 +29,12 @@ from evaluation.comparison import (
     relaxed_match,
     strict_match,
 )
-from llm import CORRECTION_PROMPT_SHA256, PROMPT_SHA256, LLMSettings
+from llm import (
+    ANSWER_PROMPT_SHA256,
+    CORRECTION_PROMPT_SHA256,
+    PROMPT_SHA256,
+    LLMSettings,
+)
 from pipeline import PipelineConfig, load_schema, open_connection, run_pipeline
 
 
@@ -130,6 +135,8 @@ def evaluate_test_case(conn, schema, config, case, expected_rows):
         "first_attempt_strict_match": strict and not corrected,
         "first_attempt_relaxed_match": relaxed and not corrected,
         "attempts": [asdict(a) for a in result.attempts],
+        # Not scored automatically: correctness is measured on the SQL.
+        "answer": asdict(result.answer) if result.answer else None,
         "max_prompt_tokens": max(a.prompt_tokens for a in result.attempts),
         "prompt_tokens": result.prompt_tokens,
         "completion_tokens": result.completion_tokens,
@@ -140,6 +147,7 @@ def evaluate_test_case(conn, schema, config, case, expected_rows):
 def summarize(results):
     total = len(results)
     corrected = [r for r in results if r["correction_rounds"] > 0]
+    answered = [r for r in results if r["answer"]]
 
     def rate(key, subset=results):
         n = len(subset)
@@ -180,6 +188,12 @@ def summarize(results):
             "fixed_relaxed": sum(r["relaxed_match"] for r in corrected),
             "mean_rounds_when_triggered": mean(r["correction_rounds"] for r in corrected),
         },
+        "answer": {
+            "answered": len(answered),
+            "mean_answer_s": mean(r["timings"]["answer_s"] for r in answered),
+            "mean_prompt_tokens": mean(r["answer"]["prompt_tokens"] for r in answered),
+            "mean_completion_tokens": mean(r["answer"]["completion_tokens"] for r in answered),
+        },
         "by_category": breakdown("category"),
         "by_difficulty": breakdown("difficulty"),
         "mean_generation_s": mean(r["timings"]["generation_s"] for r in results),
@@ -215,6 +229,16 @@ def parse_args():
         "--no-schema-hints",
         action="store_true",
         help="a kézzel írt adatbázis-megjegyzések nélkül",
+    )
+    parser.add_argument(
+        "--no-function-blocklist",
+        action="store_true",
+        help="a veszélyes függvények tiltólistája nélkül",
+    )
+    parser.add_argument(
+        "--answer",
+        action="store_true",
+        help="természetes nyelvű válasz generálása a lekérdezés eredményéből",
     )
     parser.add_argument(
         "--dataset",
@@ -254,7 +278,9 @@ def main():
         dataset=args.dataset,
         llm=llm_settings,
         schema_hints=not args.no_schema_hints,
+        block_functions=not args.no_function_blocklist,
         max_correction_rounds=args.correction_rounds,
+        natural_language_answer=args.answer,
     )
 
     dataset = load_dataset(config.dataset)
@@ -300,6 +326,9 @@ def main():
 
             print(f"[{case['id']:>3}] {status:<34} {case['question']}")
 
+            if result["answer"]:
+                print(f"      Válasz: {result['answer']['text']}")
+
             if result["max_prompt_tokens"] >= config.llm.num_ctx:
                 print(f"      FIGYELEM: a prompt elérte a num_ctx határt ({config.llm.num_ctx}), csonkolás lehetséges")
 
@@ -330,6 +359,11 @@ def main():
             f"{correction['fixed_strict']} (strict)"
         )
     print(f"Átlagos generálási idő: {summary['mean_generation_s']:.2f} s")
+    if config.natural_language_answer:
+        print(
+            f"Válasz készült: {summary['answer']['answered']}/{summary['total_questions']} esetben, "
+            f"átlagos válaszidő: {summary['answer']['mean_answer_s']:.2f} s"
+        )
 
     output = {
         "run": {
@@ -339,6 +373,7 @@ def main():
             "model_digest": model_digest(config.llm.model),
             "prompt_sha256": PROMPT_SHA256,
             "correction_prompt_sha256": CORRECTION_PROMPT_SHA256,
+            "answer_prompt_sha256": ANSWER_PROMPT_SHA256,
             "database": dataset.db_name,
             "db_user": DB_USER,
             "test_cases_file": os.path.relpath(cases_path, REPO_DIR),

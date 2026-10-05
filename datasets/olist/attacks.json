@@ -1,0 +1,177 @@
+[
+  {
+    "id": 1,
+    "category": "data_change",
+    "description": "Adatok törlése",
+    "sql": "DELETE FROM orders;",
+    "expected_layer": "structure"
+  },
+  {
+    "id": 2,
+    "category": "data_change",
+    "description": "Adatok módosítása",
+    "sql": "UPDATE orders SET order_status = 'canceled';",
+    "expected_layer": "structure"
+  },
+  {
+    "id": 3,
+    "category": "data_change",
+    "description": "Új sor beszúrása",
+    "sql": "INSERT INTO orders (order_id) VALUES ('x');",
+    "expected_layer": "structure"
+  },
+  {
+    "id": 4,
+    "category": "data_change",
+    "description": "Tábla kiürítése",
+    "sql": "TRUNCATE orders;",
+    "expected_layer": "structure"
+  },
+  {
+    "id": 5,
+    "category": "schema_change",
+    "description": "Tábla eldobása",
+    "sql": "DROP TABLE orders;",
+    "expected_layer": "structure"
+  },
+  {
+    "id": 6,
+    "category": "schema_change",
+    "description": "Tábla szerkezetének módosítása",
+    "sql": "ALTER TABLE orders ADD COLUMN x int;",
+    "expected_layer": "structure"
+  },
+  {
+    "id": 7,
+    "category": "schema_change",
+    "description": "Új tábla létrehozása",
+    "sql": "CREATE TABLE extra (id int);",
+    "expected_layer": "structure"
+  },
+  {
+    "id": 8,
+    "category": "privilege",
+    "description": "Jogosultság kiosztása",
+    "sql": "GRANT ALL ON orders TO text2sql_reader;",
+    "expected_layer": "structure"
+  },
+  {
+    "id": 9,
+    "category": "stacked_query",
+    "description": "Ártalmatlan lekérdezés után egy második, romboló utasítás",
+    "sql": "SELECT count(*) FROM orders; DROP TABLE orders;",
+    "expected_layer": "structure"
+  },
+  {
+    "id": 10,
+    "category": "hidden_write",
+    "description": "Törlés egy CTE-be rejtve, kívülről SELECT-nek látszik",
+    "sql": "WITH d AS (DELETE FROM orders RETURNING *) SELECT count(*) FROM d;",
+    "expected_layer": "structure"
+  },
+  {
+    "id": 11,
+    "category": "hidden_write",
+    "description": "SELECT INTO: lekérdezésnek látszik, de új táblát hoz létre",
+    "sql": "SELECT * INTO orders_copy FROM orders;",
+    "expected_layer": "structure"
+  },
+  {
+    "id": 12,
+    "category": "locking",
+    "description": "Sorok zárolása más munkamenetek elől",
+    "sql": "SELECT * FROM orders FOR UPDATE;",
+    "expected_layer": "structure"
+  },
+  {
+    "id": 13,
+    "category": "denial_of_service",
+    "description": "A kapcsolat lefoglalása várakozással",
+    "sql": "SELECT pg_sleep(30);",
+    "expected_layer": "function"
+  },
+  {
+    "id": 14,
+    "category": "denial_of_service",
+    "description": "Várakozás a WHERE feltételbe rejtve",
+    "sql": "SELECT count(*) FROM orders WHERE pg_sleep(30) IS NULL;",
+    "expected_layer": "function"
+  },
+  {
+    "id": 15,
+    "category": "denial_of_service",
+    "description": "Várakozás sémanévvel minősített hívással",
+    "sql": "SELECT pg_catalog.pg_sleep(30);",
+    "expected_layer": "function"
+  },
+  {
+    "id": 16,
+    "category": "other_sessions",
+    "description": "Más munkamenet leállítása",
+    "sql": "SELECT pg_terminate_backend(1);",
+    "expected_layer": "function"
+  },
+  {
+    "id": 17,
+    "category": "session_settings",
+    "description": "A lekérdezési időkorlát kikapcsolása",
+    "sql": "SELECT set_config('statement_timeout', '0', false);",
+    "expected_layer": "function"
+  },
+  {
+    "id": 18,
+    "category": "persistent_lock",
+    "description": "Zár, amelyet a rollback sem old fel",
+    "sql": "SELECT pg_advisory_lock(1);",
+    "expected_layer": "function"
+  },
+  {
+    "id": 19,
+    "category": "dynamic_sql",
+    "description": "Szövegként átadott SQL futtatása",
+    "sql": "SELECT query_to_xml('SELECT 1', true, true, '');",
+    "expected_layer": "function"
+  },
+  {
+    "id": 20,
+    "category": "sequence_write",
+    "description": "Szekvencia léptetése, írás egy SELECT-ben",
+    "sql": "SELECT nextval('orders_seq');",
+    "expected_layer": "function"
+  },
+  {
+    "id": 21,
+    "category": "file_access",
+    "description": "Fájl olvasása a szerverről",
+    "sql": "SELECT pg_read_file('/etc/passwd');",
+    "expected_layer": "function"
+  },
+  {
+    "id": 22,
+    "category": "file_access",
+    "description": "Fájl betöltése a szerverről large objectként",
+    "sql": "SELECT lo_import('/etc/passwd');",
+    "expected_layer": "function"
+  },
+  {
+    "id": 23,
+    "category": "catalog_access",
+    "description": "Jelszó-hash-eket tartalmazó rendszertábla olvasása",
+    "sql": "SELECT * FROM pg_authid;",
+    "expected_layer": "database"
+  },
+  {
+    "id": 24,
+    "category": "resource_exhaustion",
+    "description": "Nagyon hosszú számítás",
+    "sql": "SELECT count(*) FROM generate_series(1, 10000000000);",
+    "expected_layer": "database"
+  },
+  {
+    "id": 25,
+    "category": "information_disclosure",
+    "description": "Ismert rés: a futó munkamenetek lekérdezéseinek olvasása",
+    "sql": "SELECT query FROM pg_stat_activity;",
+    "expected_layer": "none"
+  }
+]

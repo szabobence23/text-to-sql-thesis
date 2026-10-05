@@ -37,9 +37,16 @@ def execute_query(conn, sql):
     The transaction is always rolled back, so nothing a query does
     to the session (e.g. set_config) can leak into the next query.
     """
+    return execute_query_with_columns(conn, sql)[1]
+
+
+def execute_query_with_columns(conn, sql):
+    """Like execute_query, but returns (column names, rows)."""
     try:
         with conn.cursor() as cur:
             cur.execute(sql)
-            return cur.fetchall()
+            rows = cur.fetchall()
+            columns = [column.name for column in cur.description]
+            return columns, rows
     finally:
         conn.rollback()

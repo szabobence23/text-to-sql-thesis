@@ -38,6 +38,30 @@ Use only tables and columns from the schema.
 Return ONLY the corrected SQL query.
 """
 
+# A separate conversation after successful execution: turns the rows
+# into an answer. The model only sees the result, so a wrong query
+# gives a fluent but wrong answer.
+ANSWER_TEMPLATE = """
+A user asked a question about a database. The SQL query below was run to answer it.
+
+USER QUESTION:
+{question}
+
+SQL QUERY:
+{sql}
+
+QUERY RESULT ({row_info}):
+{result}
+
+Instructions:
+- Answer the user's question based ONLY on the query result above.
+- Write the answer in the same language as the user's question.
+- Be concise. If there are many rows, summarize them or list the most important ones.
+- Do not invent data that is not in the result.
+- If the result is empty, say that no matching data was found.
+- Do not mention SQL, tables or columns unless it is necessary.
+"""
+
 
 def _sha256(text):
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
@@ -47,6 +71,7 @@ def _sha256(text):
 # different prompts are never compared by accident.
 PROMPT_SHA256 = _sha256(PROMPT_TEMPLATE)
 CORRECTION_PROMPT_SHA256 = _sha256(CORRECTION_TEMPLATE)
+ANSWER_PROMPT_SHA256 = _sha256(ANSWER_TEMPLATE)
 
 
 @dataclass(frozen=True)
@@ -115,8 +140,55 @@ def correct_sql(question, schema, failed_attempts, settings: LLMSettings) -> Gen
     return _chat(messages, settings)
 
 
-def _chat(messages, settings: LLMSettings) -> Generation:
-    response = chat(
+@dataclass
+class Answer:
+    text: str
+    prompt_tokens: int
+    completion_tokens: int
+
+
+def format_result(columns, rows, max_rows):
+    """
+    The query result as text for the answer prompt: a header line and
+    at most max_rows rows, so a large result cannot overflow num_ctx.
+    """
+    shown = rows[:max_rows]
+
+    if not rows:
+        row_info = "0 rows"
+    elif len(rows) > max_rows:
+        row_info = f"first {max_rows} of {len(rows)} rows"
+    elif len(rows) == 1:
+        row_info = "1 row"
+    else:
+        row_info = f"{len(rows)} rows"
+
+    def cell(value):
+        return "NULL" if value is None else str(value)
+
+    lines = [" | ".join(columns)]
+    lines += [" | ".join(cell(value) for value in row) for row in shown]
+
+    return row_info, "\n".join(lines)
+
+
+def generate_answer(question, sql, columns, rows, max_rows, settings: LLMSettings) -> Answer:
+    row_info, result = format_result(columns, rows, max_rows)
+    prompt = ANSWER_TEMPLATE.format(
+        question=question, sql=sql, row_info=row_info, result=result
+    )
+
+    response = _call([{"role": "user", "content": prompt}], settings)
+
+    return Answer(
+        text=response.message.content.strip(),
+        prompt_tokens=response.prompt_eval_count or 0,
+        completion_tokens=response.eval_count or 0,
+    )
+
+
+def _call(messages, settings: LLMSettings):
+    return chat(
         model=settings.model,
         messages=messages,
         options={
@@ -125,6 +197,10 @@ def _chat(messages, settings: LLMSettings) -> Generation:
             "num_ctx": settings.num_ctx,
         },
     )
+
+
+def _chat(messages, settings: LLMSettings) -> Generation:
+    response = _call(messages, settings)
 
     raw = response.message.content
 

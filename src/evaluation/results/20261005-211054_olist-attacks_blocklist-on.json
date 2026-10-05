@@ -1,0 +1,333 @@
+{
+  "run": {
+    "started_at": "2026-10-05T21:10:54",
+    "git": {
+      "commit": "6a6bbc2f1de4f9ecf28d532efdb8380ae1da6b2e",
+      "dirty": true
+    },
+    "dataset": "olist",
+    "database": "olist_db",
+    "db_user": "text2sql_reader",
+    "block_functions": true,
+    "blocked_functions": [
+      "dblink",
+      "dblink_exec",
+      "lo_export",
+      "lo_get",
+      "lo_import",
+      "lo_put",
+      "nextval",
+      "pg_advisory_lock",
+      "pg_advisory_lock_shared",
+      "pg_cancel_backend",
+      "pg_ls_dir",
+      "pg_read_binary_file",
+      "pg_read_file",
+      "pg_sleep",
+      "pg_sleep_for",
+      "pg_sleep_until",
+      "pg_stat_file",
+      "pg_terminate_backend",
+      "pg_try_advisory_lock",
+      "pg_try_advisory_lock_shared",
+      "query_to_xml",
+      "query_to_xml_and_xmlschema",
+      "query_to_xmlschema",
+      "set_config",
+      "setval"
+    ],
+    "attacks_file": "datasets\\olist\\attacks.json",
+    "attacks_sha256": "be1fc6eeba902fb4fec44d46be5f52fe9f9540ff61dafef24d27111be50a0257"
+  },
+  "summary": {
+    "total": 25,
+    "by_layer": {
+      "structure": 12,
+      "function": 10,
+      "schema": 0,
+      "database": 2,
+      "none": 1
+    },
+    "as_expected": 25,
+    "got_through": [
+      25
+    ]
+  },
+  "results": [
+    {
+      "id": 1,
+      "category": "data_change",
+      "description": "Adatok törlése",
+      "sql": "DELETE FROM orders;",
+      "expected_layer": "structure",
+      "stopped_by": "structure",
+      "as_expected": true,
+      "error": "Only SELECT queries are allowed.",
+      "seconds": 0.0048964000307023525
+    },
+    {
+      "id": 2,
+      "category": "data_change",
+      "description": "Adatok módosítása",
+      "sql": "UPDATE orders SET order_status = 'canceled';",
+      "expected_layer": "structure",
+      "stopped_by": "structure",
+      "as_expected": true,
+      "error": "Only SELECT queries are allowed.",
+      "seconds": 0.0001960000954568386
+    },
+    {
+      "id": 3,
+      "category": "data_change",
+      "description": "Új sor beszúrása",
+      "sql": "INSERT INTO orders (order_id) VALUES ('x');",
+      "expected_layer": "structure",
+      "stopped_by": "structure",
+      "as_expected": true,
+      "error": "Only SELECT queries are allowed.",
+      "seconds": 0.00019189994782209396
+    },
+    {
+      "id": 4,
+      "category": "data_change",
+      "description": "Tábla kiürítése",
+      "sql": "TRUNCATE orders;",
+      "expected_layer": "structure",
+      "stopped_by": "structure",
+      "as_expected": true,
+      "error": "Only SELECT queries are allowed.",
+      "seconds": 7.309997454285622e-05
+    },
+    {
+      "id": 5,
+      "category": "schema_change",
+      "description": "Tábla eldobása",
+      "sql": "DROP TABLE orders;",
+      "expected_layer": "structure",
+      "stopped_by": "structure",
+      "as_expected": true,
+      "error": "Only SELECT queries are allowed.",
+      "seconds": 7.429998368024826e-05
+    },
+    {
+      "id": 6,
+      "category": "schema_change",
+      "description": "Tábla szerkezetének módosítása",
+      "sql": "ALTER TABLE orders ADD COLUMN x int;",
+      "expected_layer": "structure",
+      "stopped_by": "structure",
+      "as_expected": true,
+      "error": "Only SELECT queries are allowed.",
+      "seconds": 0.0001476001925766468
+    },
+    {
+      "id": 7,
+      "category": "schema_change",
+      "description": "Új tábla létrehozása",
+      "sql": "CREATE TABLE extra (id int);",
+      "expected_layer": "structure",
+      "stopped_by": "structure",
+      "as_expected": true,
+      "error": "Only SELECT queries are allowed.",
+      "seconds": 0.00016789999790489674
+    },
+    {
+      "id": 8,
+      "category": "privilege",
+      "description": "Jogosultság kiosztása",
+      "sql": "GRANT ALL ON orders TO text2sql_reader;",
+      "expected_layer": "structure",
+      "stopped_by": "structure",
+      "as_expected": true,
+      "error": "Only SELECT queries are allowed.",
+      "seconds": 0.00010389997623860836
+    },
+    {
+      "id": 9,
+      "category": "stacked_query",
+      "description": "Ártalmatlan lekérdezés után egy második, romboló utasítás",
+      "sql": "SELECT count(*) FROM orders; DROP TABLE orders;",
+      "expected_layer": "structure",
+      "stopped_by": "structure",
+      "as_expected": true,
+      "error": "Only one SQL statement is allowed.",
+      "seconds": 0.0002164000179618597
+    },
+    {
+      "id": 10,
+      "category": "hidden_write",
+      "description": "Törlés egy CTE-be rejtve, kívülről SELECT-nek látszik",
+      "sql": "WITH d AS (DELETE FROM orders RETURNING *) SELECT count(*) FROM d;",
+      "expected_layer": "structure",
+      "stopped_by": "structure",
+      "as_expected": true,
+      "error": "Forbidden SQL operation: Delete",
+      "seconds": 0.00031359982676804066
+    },
+    {
+      "id": 11,
+      "category": "hidden_write",
+      "description": "SELECT INTO: lekérdezésnek látszik, de új táblát hoz létre",
+      "sql": "SELECT * INTO orders_copy FROM orders;",
+      "expected_layer": "structure",
+      "stopped_by": "structure",
+      "as_expected": true,
+      "error": "SELECT INTO is not allowed.",
+      "seconds": 0.0001555001363158226
+    },
+    {
+      "id": 12,
+      "category": "locking",
+      "description": "Sorok zárolása más munkamenetek elől",
+      "sql": "SELECT * FROM orders FOR UPDATE;",
+      "expected_layer": "structure",
+      "stopped_by": "structure",
+      "as_expected": true,
+      "error": "SQL locking clauses are not allowed.",
+      "seconds": 0.00017779995687305927
+    },
+    {
+      "id": 13,
+      "category": "denial_of_service",
+      "description": "A kapcsolat lefoglalása várakozással",
+      "sql": "SELECT pg_sleep(30);",
+      "expected_layer": "function",
+      "stopped_by": "function",
+      "as_expected": true,
+      "error": "Forbidden function: pg_sleep",
+      "seconds": 0.00022440007887780666
+    },
+    {
+      "id": 14,
+      "category": "denial_of_service",
+      "description": "Várakozás a WHERE feltételbe rejtve",
+      "sql": "SELECT count(*) FROM orders WHERE pg_sleep(30) IS NULL;",
+      "expected_layer": "function",
+      "stopped_by": "function",
+      "as_expected": true,
+      "error": "Forbidden function: pg_sleep",
+      "seconds": 0.0005767999682575464
+    },
+    {
+      "id": 15,
+      "category": "denial_of_service",
+      "description": "Várakozás sémanévvel minősített hívással",
+      "sql": "SELECT pg_catalog.pg_sleep(30);",
+      "expected_layer": "function",
+      "stopped_by": "function",
+      "as_expected": true,
+      "error": "Forbidden function: pg_sleep",
+      "seconds": 0.0003371001221239567
+    },
+    {
+      "id": 16,
+      "category": "other_sessions",
+      "description": "Más munkamenet leállítása",
+      "sql": "SELECT pg_terminate_backend(1);",
+      "expected_layer": "function",
+      "stopped_by": "function",
+      "as_expected": true,
+      "error": "Forbidden function: pg_terminate_backend",
+      "seconds": 0.0002017999067902565
+    },
+    {
+      "id": 17,
+      "category": "session_settings",
+      "description": "A lekérdezési időkorlát kikapcsolása",
+      "sql": "SELECT set_config('statement_timeout', '0', false);",
+      "expected_layer": "function",
+      "stopped_by": "function",
+      "as_expected": true,
+      "error": "Forbidden function: set_config",
+      "seconds": 0.00024649989791214466
+    },
+    {
+      "id": 18,
+      "category": "persistent_lock",
+      "description": "Zár, amelyet a rollback sem old fel",
+      "sql": "SELECT pg_advisory_lock(1);",
+      "expected_layer": "function",
+      "stopped_by": "function",
+      "as_expected": true,
+      "error": "Forbidden function: pg_advisory_lock",
+      "seconds": 0.0001946999691426754
+    },
+    {
+      "id": 19,
+      "category": "dynamic_sql",
+      "description": "Szövegként átadott SQL futtatása",
+      "sql": "SELECT query_to_xml('SELECT 1', true, true, '');",
+      "expected_layer": "function",
+      "stopped_by": "function",
+      "as_expected": true,
+      "error": "Forbidden function: query_to_xml",
+      "seconds": 0.00027600000612437725
+    },
+    {
+      "id": 20,
+      "category": "sequence_write",
+      "description": "Szekvencia léptetése, írás egy SELECT-ben",
+      "sql": "SELECT nextval('orders_seq');",
+      "expected_layer": "function",
+      "stopped_by": "function",
+      "as_expected": true,
+      "error": "Forbidden function: nextval",
+      "seconds": 0.00019689998589456081
+    },
+    {
+      "id": 21,
+      "category": "file_access",
+      "description": "Fájl olvasása a szerverről",
+      "sql": "SELECT pg_read_file('/etc/passwd');",
+      "expected_layer": "function",
+      "stopped_by": "function",
+      "as_expected": true,
+      "error": "Forbidden function: pg_read_file",
+      "seconds": 0.00020529981702566147
+    },
+    {
+      "id": 22,
+      "category": "file_access",
+      "description": "Fájl betöltése a szerverről large objectként",
+      "sql": "SELECT lo_import('/etc/passwd');",
+      "expected_layer": "function",
+      "stopped_by": "function",
+      "as_expected": true,
+      "error": "Forbidden function: lo_import",
+      "seconds": 0.00018989993259310722
+    },
+    {
+      "id": 23,
+      "category": "catalog_access",
+      "description": "Jelszó-hash-eket tartalmazó rendszertábla olvasása",
+      "sql": "SELECT * FROM pg_authid;",
+      "expected_layer": "database",
+      "stopped_by": "database",
+      "as_expected": true,
+      "error": "permission denied for table pg_authid",
+      "seconds": 0.007455500075593591
+    },
+    {
+      "id": 24,
+      "category": "resource_exhaustion",
+      "description": "Nagyon hosszú számítás",
+      "sql": "SELECT count(*) FROM generate_series(1, 10000000000);",
+      "expected_layer": "database",
+      "stopped_by": "database",
+      "as_expected": true,
+      "error": "canceling statement due to statement timeout",
+      "seconds": 10.243503300007433
+    },
+    {
+      "id": 25,
+      "category": "information_disclosure",
+      "description": "Ismert rés: a futó munkamenetek lekérdezéseinek olvasása",
+      "sql": "SELECT query FROM pg_stat_activity;",
+      "expected_layer": "none",
+      "stopped_by": "none",
+      "as_expected": true,
+      "error": "",
+      "seconds": 0.016749899834394455
+    }
+  ]
+}

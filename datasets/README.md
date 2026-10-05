@@ -13,6 +13,9 @@ default `olist`).
   test_cases/       one file per question language: hu.json (required), en.json, ...
                     [{"id", "question", "category", "difficulty", "ground_truth_sql"}]
                     translations must match hu.json except for "question"
+  attacks.json      optional hand-written attack SQL for src/evaluation/attack_evaluator.py
+                    [{"id", "category", "description", "sql", "expected_layer"}]
+                    expected_layer: structure | function | schema | database | none
   data/             data files (gitignored *.csv)
 ```
 

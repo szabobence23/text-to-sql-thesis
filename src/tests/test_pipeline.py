@@ -3,7 +3,7 @@ import pytest
 
 import pipeline
 from dataset_loader import load_dataset
-from llm import Generation
+from llm import Answer, Generation
 from pipeline import PipelineConfig, load_schema, open_connection, run_pipeline
 
 
@@ -48,11 +48,13 @@ class FakeBackend:
         self.generated = list(generated_sqls)
         self.outcomes = outcomes
         self.correction_calls = []
+        self.answer_calls = []
 
         monkeypatch.setattr(pipeline, "generate_sql", self.generate)
         monkeypatch.setattr(pipeline, "correct_sql", self.correct)
         monkeypatch.setattr(pipeline, "validate_sql", self.validate)
-        monkeypatch.setattr(pipeline, "execute_query", self.execute)
+        monkeypatch.setattr(pipeline, "execute_query_with_columns", self.execute)
+        monkeypatch.setattr(pipeline, "generate_answer", self.answer)
 
     def _next(self):
         sql = self.generated.pop(0)
@@ -65,7 +67,7 @@ class FakeBackend:
         self.correction_calls.append(list(failed_attempts))
         return self._next()
 
-    def validate(self, conn, sql):
+    def validate(self, conn, sql, block_functions=True):
         if self.outcomes[sql] == "invalid":
             return False, f"invalid: {sql}"
         return True, ""
@@ -73,7 +75,11 @@ class FakeBackend:
     def execute(self, conn, sql):
         if self.outcomes[sql] == "exec_error":
             raise psycopg.errors.DivisionByZero(f"exec error: {sql}")
-        return [(sql,)]
+        return ["col"], [(sql,)]
+
+    def answer(self, question, sql, columns, rows, max_rows, settings):
+        self.answer_calls.append((sql, columns, rows))
+        return Answer(text=f"answer from {sql}", prompt_tokens=7, completion_tokens=3)
 
 
 def run(config):
@@ -145,3 +151,36 @@ def test_stops_after_max_rounds_with_full_history(monkeypatch):
         ("bad1", "invalid: bad1"),
         ("bad2", "invalid: bad2"),
     ]
+
+
+def test_no_answer_by_default(monkeypatch):
+    backend = FakeBackend(monkeypatch, ["good"], {"good": "ok"})
+
+    result = run(PipelineConfig())
+
+    assert result.answer is None
+    assert backend.answer_calls == []
+    assert "answer_s" not in result.timings
+
+
+def test_answer_uses_final_executed_attempt(monkeypatch):
+    backend = FakeBackend(
+        monkeypatch, ["bad", "good"], {"bad": "invalid", "good": "ok"}
+    )
+
+    result = run(PipelineConfig(max_correction_rounds=1, natural_language_answer=True))
+
+    assert result.answer.text == "answer from good"
+    assert backend.answer_calls == [("good", ["col"], [("good",)])]
+    assert "answer_s" in result.timings
+    # Answer tokens are kept apart from the SQL attempts' totals.
+    assert result.prompt_tokens == 20
+
+
+def test_no_answer_when_query_failed(monkeypatch):
+    backend = FakeBackend(monkeypatch, ["bad"], {"bad": "invalid"})
+
+    result = run(PipelineConfig(natural_language_answer=True))
+
+    assert result.answer is None
+    assert backend.answer_calls == []
