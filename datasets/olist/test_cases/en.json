@@ -68,5 +68,250 @@
     "category": "join_aggregation",
     "difficulty": "hard",
     "ground_truth_sql": "SELECT p.product_id, SUM(oi.price) AS total_revenue FROM order_items oi JOIN products p ON oi.product_id = p.product_id GROUP BY p.product_id ORDER BY total_revenue DESC LIMIT 1;"
+  },
+  {
+    "id": 11,
+    "question": "What is the total value of all products across all orders?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT SUM(price) AS total_value FROM order_items;"
+  },
+  {
+    "id": 12,
+    "question": "What is the average order value?",
+    "category": "subquery",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT AVG(order_total) AS avg_order_value FROM (SELECT order_id, SUM(price) AS order_total FROM order_items GROUP BY order_id) t;"
+  },
+  {
+    "id": 13,
+    "question": "How many distinct customers placed at least one order?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(DISTINCT c.customer_unique_id) AS customer_count FROM orders o JOIN customers c ON o.customer_id = c.customer_id;"
+  },
+  {
+    "id": 14,
+    "question": "What is the average freight cost per order item?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT AVG(freight_value) AS avg_freight FROM order_items;"
+  },
+  {
+    "id": 15,
+    "question": "How many orders were placed in 2018?",
+    "category": "filtering",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS order_count FROM orders WHERE order_purchase_timestamp >= '2018-01-01' AND order_purchase_timestamp < '2019-01-01';"
+  },
+  {
+    "id": 16,
+    "question": "Which 10 orders contained the highest-value order item?",
+    "category": "sorting",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT order_id, price FROM order_items ORDER BY price DESC, order_id LIMIT 10;"
+  },
+  {
+    "id": 17,
+    "question": "Which products have a price above 100 Brazilian reais?",
+    "category": "filtering",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT DISTINCT product_id FROM order_items WHERE price > 100;"
+  },
+  {
+    "id": 18,
+    "question": "How many orders are there for each order status?",
+    "category": "grouping",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT order_status, COUNT(*) AS order_count FROM orders GROUP BY order_status;"
+  },
+  {
+    "id": 19,
+    "question": "Which state did the most customers come from?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT customer_state FROM customers GROUP BY customer_state ORDER BY COUNT(*) DESC LIMIT 1;"
+  },
+  {
+    "id": 20,
+    "question": "Which product category had the most products purchased?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, COUNT(*) AS total_items FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY total_items DESC LIMIT 1;"
+  },
+  {
+    "id": 21,
+    "question": "How many orders were paid with each payment method?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT payment_type, COUNT(DISTINCT order_id) AS order_count FROM order_payments GROUP BY payment_type;"
+  },
+  {
+    "id": 22,
+    "question": "Which product category had the most products sold?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, COUNT(*) AS total_items FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY total_items DESC LIMIT 1;"
+  },
+  {
+    "id": 23,
+    "question": "Which seller has the most order items?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT seller_id, COUNT(*) AS item_count FROM order_items GROUP BY seller_id ORDER BY item_count DESC LIMIT 1;"
+  },
+  {
+    "id": 24,
+    "question": "Which customer placed the most orders?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT c.customer_unique_id, COUNT(*) AS order_count FROM orders o JOIN customers c ON o.customer_id = c.customer_id GROUP BY c.customer_unique_id ORDER BY order_count DESC LIMIT 1;"
+  },
+  {
+    "id": 25,
+    "question": "Which product category had the highest average product price?",
+    "category": "join_aggregation",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, AVG(oi.price) AS avg_price FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY avg_price DESC LIMIT 1;"
+  },
+  {
+    "id": 26,
+    "question": "Which product category had the highest total sales value?",
+    "category": "join_aggregation",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, SUM(oi.price) AS total_value FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY total_value DESC LIMIT 1;"
+  },
+  {
+    "id": 27,
+    "question": "Which customer spent the most on the products in their orders?",
+    "category": "join_aggregation",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT c.customer_unique_id, SUM(oi.price) AS total_spent FROM customers c JOIN orders o ON c.customer_id = o.customer_id JOIN order_items oi ON o.order_id = oi.order_id GROUP BY c.customer_unique_id ORDER BY total_spent DESC LIMIT 1;"
+  },
+  {
+    "id": 28,
+    "question": "Which seller had the highest total sales value?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT seller_id, SUM(price) AS total_value FROM order_items GROUP BY seller_id ORDER BY total_value DESC LIMIT 1;"
+  },
+  {
+    "id": 29,
+    "question": "In which state did customers spend the most on average?",
+    "category": "subquery",
+    "difficulty": "hard",
+    "ground_truth_sql": "WITH customer_spend AS (SELECT c.customer_unique_id, c.customer_state, SUM(oi.price) AS spend FROM customers c JOIN orders o ON c.customer_id = o.customer_id JOIN order_items oi ON o.order_id = oi.order_id GROUP BY c.customer_unique_id, c.customer_state) SELECT customer_state, AVG(spend) AS avg_spend FROM customer_spend GROUP BY customer_state ORDER BY avg_spend DESC LIMIT 1;"
+  },
+  {
+    "id": 30,
+    "question": "In which month were the most orders placed?",
+    "category": "date",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT date_trunc('month', order_purchase_timestamp) AS month, COUNT(*) AS order_count FROM orders GROUP BY month ORDER BY order_count DESC LIMIT 1;"
+  },
+  {
+    "id": 31,
+    "question": "What was the average time between placing an order and its delivery to the customer?",
+    "category": "date",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT AVG(EXTRACT(EPOCH FROM (order_delivered_customer_date - order_purchase_timestamp)) / 86400.0) AS avg_days FROM orders WHERE order_delivered_customer_date IS NOT NULL;"
+  },
+  {
+    "id": 32,
+    "question": "How many orders were delivered later than the estimated delivery date?",
+    "category": "date",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS late_orders FROM orders WHERE order_delivered_customer_date > order_estimated_delivery_date;"
+  },
+  {
+    "id": 33,
+    "question": "Which year had the highest total sales?",
+    "category": "date",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT EXTRACT(YEAR FROM o.order_purchase_timestamp) AS year, SUM(oi.price) AS total_value FROM orders o JOIN order_items oi ON o.order_id = oi.order_id GROUP BY year ORDER BY total_value DESC LIMIT 1;"
+  },
+  {
+    "id": 34,
+    "question": "What are the five most frequently purchased product categories?",
+    "category": "sorting",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, COUNT(*) AS total_items FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY total_items DESC LIMIT 5;"
+  },
+  {
+    "id": 35,
+    "question": "Which five sellers fulfilled the most order items?",
+    "category": "sorting",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT seller_id, COUNT(*) AS item_count FROM order_items GROUP BY seller_id ORDER BY item_count DESC LIMIT 5;"
+  },
+  {
+    "id": 36,
+    "question": "Which ten customers spent the most?",
+    "category": "sorting",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT c.customer_unique_id, SUM(oi.price) AS total_spent FROM customers c JOIN orders o ON c.customer_id = o.customer_id JOIN order_items oi ON o.order_id = oi.order_id GROUP BY c.customer_unique_id ORDER BY total_spent DESC, c.customer_unique_id LIMIT 10;"
+  },
+  {
+    "id": 37,
+    "question": "Which customers spent more than the average customer?",
+    "category": "subquery",
+    "difficulty": "hard",
+    "ground_truth_sql": "WITH spend AS (SELECT c.customer_unique_id, SUM(oi.price) AS total FROM customers c JOIN orders o ON c.customer_id = o.customer_id JOIN order_items oi ON o.order_id = oi.order_id GROUP BY c.customer_unique_id) SELECT customer_unique_id FROM spend WHERE total > (SELECT AVG(total) FROM spend);"
+  },
+  {
+    "id": 38,
+    "question": "Which product categories had a sales value higher than the average across all categories?",
+    "category": "subquery",
+    "difficulty": "hard",
+    "ground_truth_sql": "WITH cat AS (SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS category, SUM(oi.price) AS total FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name)) SELECT category FROM cat WHERE total > (SELECT AVG(total) FROM cat);"
+  },
+  {
+    "id": 39,
+    "question": "Which orders had a value higher than the average order value?",
+    "category": "subquery",
+    "difficulty": "hard",
+    "ground_truth_sql": "WITH order_total AS (SELECT order_id, SUM(price) AS total FROM order_items GROUP BY order_id) SELECT order_id FROM order_total WHERE total > (SELECT AVG(total) FROM order_total);"
+  },
+  {
+    "id": 40,
+    "question": "Which product category received the highest average review score?",
+    "category": "join_aggregation",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, AVG(r.review_score) AS avg_score FROM order_reviews r JOIN order_items oi ON r.order_id = oi.order_id JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY avg_score DESC LIMIT 1;"
+  },
+  {
+    "id": 41,
+    "question": "Which product category had the most 1-star reviews?",
+    "category": "join_aggregation",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, COUNT(*) AS one_star_count FROM order_reviews r JOIN order_items oi ON r.order_id = oi.order_id JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name WHERE r.review_score = 1 GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY one_star_count DESC LIMIT 1;"
+  },
+  {
+    "id": 42,
+    "question": "Is there a relationship between order value and the review score received?",
+    "category": "subquery",
+    "difficulty": "hard",
+    "ground_truth_sql": "WITH order_total AS (SELECT order_id, SUM(price) AS total FROM order_items GROUP BY order_id) SELECT r.review_score, AVG(ot.total) AS avg_order_value FROM order_reviews r JOIN order_total ot ON r.order_id = ot.order_id GROUP BY r.review_score ORDER BY r.review_score;"
+  },
+  {
+    "id": 43,
+    "question": "Which payment method had the highest average payment value?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT payment_type, AVG(payment_value) AS avg_value FROM order_payments GROUP BY payment_type ORDER BY avg_value DESC LIMIT 1;"
+  },
+  {
+    "id": 44,
+    "question": "On average, in how many installments were credit card orders paid?",
+    "category": "aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT AVG(payment_installments) AS avg_installments FROM order_payments WHERE payment_type = 'credit_card';"
+  },
+  {
+    "id": 45,
+    "question": "Which payment method was used for the most orders?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT payment_type FROM order_payments GROUP BY payment_type ORDER BY COUNT(*) DESC LIMIT 1;"
   }
 ]
