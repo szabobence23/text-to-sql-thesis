@@ -38,4 +38,10 @@ SQLite benchmarks (Spider, BIRD) must be converted first.
 
 - `olist`: Brazilian e-commerce (Kaggle), the main thesis dataset. The CSVs
   are not in git; download them into `olist/data/`.
+- `f1`: Formula 1 World Championship 1950-2026 (Kaggle, Atharv Ranjan's
+  extension of Rohan Rao's Ergast-based dataset, CC0), 17 tables. The CSVs
+  are not in git; download them into `f1/data/`. The bundled README there
+  is older than the data (data runs to 2026 round 15). Columns are renamed
+  to snake_case; missing values are `\N`, plus a few empty strings that
+  `import.sql` turns into NULL.
 - `sales`: 4-table toy schema, smoke test and template.

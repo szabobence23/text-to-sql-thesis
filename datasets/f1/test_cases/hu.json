@@ -1,0 +1,352 @@
+[
+  {
+    "id": 1,
+    "question": "Melyik pilóta nyerte a 2007-es világbajnokságot?",
+    "category": "subquery",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT d.forename, d.surname FROM driver_standings ds JOIN races r ON ds.race_id = r.race_id JOIN drivers d ON ds.driver_id = d.driver_id WHERE r.year = 2007 AND ds.position = 1 AND r.round = (SELECT MAX(round) FROM races WHERE year = 2007);"
+  },
+  {
+    "id": 2,
+    "question": "Hány versenyt rendeztek 2010-ben?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS race_count FROM races WHERE year = 2010;"
+  },
+  {
+    "id": 3,
+    "question": "Hány brit pilóta szerepel az adatbázisban?",
+    "category": "filtering",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS driver_count FROM drivers WHERE nationality = 'British';"
+  },
+  {
+    "id": 4,
+    "question": "Melyik csapat nyerte a legtöbb futamot?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT c.name, COUNT(*) AS wins FROM results r JOIN constructors c ON r.constructor_id = c.constructor_id WHERE r.position = 1 GROUP BY c.constructor_id, c.name ORDER BY wins DESC LIMIT 1;"
+  },
+  {
+    "id": 5,
+    "question": "Melyik országban rendezték a legtöbb versenyt?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT ci.country, COUNT(*) AS race_count FROM races r JOIN circuits ci ON r.circuit_id = ci.circuit_id GROUP BY ci.country ORDER BY race_count DESC LIMIT 1;"
+  },
+  {
+    "id": 6,
+    "question": "Hány versenyt rendeztek a Hungaroringen?",
+    "category": "filtering",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS race_count FROM races r JOIN circuits ci ON r.circuit_id = ci.circuit_id WHERE ci.name = 'Hungaroring';"
+  },
+  {
+    "id": 7,
+    "question": "Hány futamot nyert Lewis Hamilton a Mercedesszel?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS wins FROM results r JOIN drivers d ON r.driver_id = d.driver_id JOIN constructors c ON r.constructor_id = c.constructor_id WHERE d.forename = 'Lewis' AND d.surname = 'Hamilton' AND c.name = 'Mercedes' AND r.position = 1;"
+  },
+  {
+    "id": 8,
+    "question": "Kik végeztek az első három helyen a 2023-as pilóta-világbajnokságon?",
+    "category": "sorting",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT d.forename, d.surname, ds.points FROM driver_standings ds JOIN races r ON ds.race_id = r.race_id JOIN drivers d ON ds.driver_id = d.driver_id WHERE r.year = 2023 AND r.round = (SELECT MAX(round) FROM races WHERE year = 2023) ORDER BY ds.position LIMIT 3;"
+  },
+  {
+    "id": 9,
+    "question": "Ki futotta a leggyorsabb kört a 2021-es Monacói Nagydíjon?",
+    "category": "join_aggregation",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT d.forename, d.surname FROM lap_times lt JOIN races r ON lt.race_id = r.race_id JOIN drivers d ON lt.driver_id = d.driver_id WHERE r.year = 2021 AND r.name = 'Monaco Grand Prix' ORDER BY lt.milliseconds LIMIT 1;"
+  },
+  {
+    "id": 10,
+    "question": "Ki volt a legfiatalabb pilóta, aki futamot nyert?",
+    "category": "date",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT d.forename, d.surname FROM results r JOIN races ra ON r.race_id = ra.race_id JOIN drivers d ON r.driver_id = d.driver_id WHERE r.position = 1 ORDER BY ra.date - d.dob LIMIT 1;"
+  },
+  {
+    "id": 11,
+    "question": "Melyik pilóta nyerte a legtöbb futamot egyetlen szezonban, és melyik évben?",
+    "category": "grouping",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT d.forename, d.surname, ra.year, COUNT(*) AS wins FROM results r JOIN races ra ON r.race_id = ra.race_id JOIN drivers d ON r.driver_id = d.driver_id WHERE r.position = 1 GROUP BY d.driver_id, d.forename, d.surname, ra.year ORDER BY wins DESC LIMIT 1;"
+  },
+  {
+    "id": 12,
+    "question": "Hány pilóta szerepel az adatbázisban?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS driver_count FROM drivers;"
+  },
+  {
+    "id": 13,
+    "question": "Hány különböző pályán rendeztek már versenyt?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(DISTINCT circuit_id) AS circuit_count FROM races;"
+  },
+  {
+    "id": 14,
+    "question": "Összesen hány kört teljesítettek a pilóták a 2021-es Monacói Nagydíjon?",
+    "category": "aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT SUM(res.laps) AS total_laps FROM results res JOIN races r ON res.race_id = r.race_id WHERE r.year = 2021 AND r.name = 'Monaco Grand Prix';"
+  },
+  {
+    "id": 15,
+    "question": "Hány különböző nemzetiségű pilóta szerepel az adatbázisban?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(DISTINCT nationality) AS nationality_count FROM drivers;"
+  },
+  {
+    "id": 16,
+    "question": "Mennyi volt Max Verstappen átlagos rajthelye a 2023-as szezon futamain?",
+    "category": "aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT AVG(res.grid) AS avg_grid FROM results res JOIN races r ON res.race_id = r.race_id JOIN drivers d ON res.driver_id = d.driver_id WHERE r.year = 2023 AND d.forename = 'Max' AND d.surname = 'Verstappen';"
+  },
+  {
+    "id": 17,
+    "question": "Hány különböző pilóta nyert futamot a 2012-es szezonban?",
+    "category": "aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(DISTINCT res.driver_id) AS winner_count FROM results res JOIN races r ON res.race_id = r.race_id WHERE r.year = 2012 AND res.position = 1;"
+  },
+  {
+    "id": 18,
+    "question": "Hány versenyt rendeztek 2000 előtt?",
+    "category": "filtering",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS race_count FROM races WHERE year < 2000;"
+  },
+  {
+    "id": 19,
+    "question": "Hány futamon esett az eső a 2025-ös szezonban?",
+    "category": "filtering",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS rainy_races FROM weather w JOIN races r ON w.race_id = r.race_id WHERE r.year = 2025 AND w.rainfall;"
+  },
+  {
+    "id": 20,
+    "question": "Mely pilóták születtek 2000-ben vagy később?",
+    "category": "filtering",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT forename, surname FROM drivers WHERE dob >= '2000-01-01';"
+  },
+  {
+    "id": 21,
+    "question": "Hány versenyt rendeztek az Egyesült Államokban?",
+    "category": "filtering",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS race_count FROM races r JOIN circuits c ON r.circuit_id = c.circuit_id WHERE c.country = 'USA';"
+  },
+  {
+    "id": 22,
+    "question": "Hány versenyt rendeztek az 1990-es évek egyes éveiben?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT year, COUNT(*) AS race_count FROM races WHERE year BETWEEN 1990 AND 1999 GROUP BY year;"
+  },
+  {
+    "id": 23,
+    "question": "Melyik gumikeverékkel teljesítették a legtöbb kört a 2025-ös szezonban?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT ts.compound, SUM(ts.laps_on_tire) AS total_laps FROM tire_stints ts JOIN races r ON ts.race_id = r.race_id WHERE r.year = 2025 GROUP BY ts.compound ORDER BY total_laps DESC LIMIT 1;"
+  },
+  {
+    "id": 24,
+    "question": "Melyik nemzetiség pilótái nyerték a legtöbb futamot?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT d.nationality, COUNT(*) AS wins FROM results res JOIN drivers d ON res.driver_id = d.driver_id WHERE res.position = 1 GROUP BY d.nationality ORDER BY wins DESC LIMIT 1;"
+  },
+  {
+    "id": 25,
+    "question": "Milyen befejezési státuszok fordultak elő a 2023-as szezon futamain, és mindegyikből hány?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT s.status, COUNT(*) AS result_count FROM results res JOIN races r ON res.race_id = r.race_id JOIN status s ON res.status_id = s.status_id WHERE r.year = 2023 GROUP BY s.status;"
+  },
+  {
+    "id": 26,
+    "question": "Melyik nemzetiségű a legtöbb pilóta?",
+    "category": "grouping",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT nationality, COUNT(*) AS driver_count FROM drivers GROUP BY nationality ORDER BY driver_count DESC LIMIT 1;"
+  },
+  {
+    "id": 27,
+    "question": "Ki nyerte a 2024-es Magyar Nagydíjat?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT d.forename, d.surname FROM results res JOIN races r ON res.race_id = r.race_id JOIN drivers d ON res.driver_id = d.driver_id WHERE r.year = 2024 AND r.name = 'Hungarian Grand Prix' AND res.position = 1;"
+  },
+  {
+    "id": 28,
+    "question": "Melyik csapatnál versenyzett Fernando Alonso a 2006-os szezonban?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT DISTINCT c.name FROM results res JOIN races r ON res.race_id = r.race_id JOIN drivers d ON res.driver_id = d.driver_id JOIN constructors c ON res.constructor_id = c.constructor_id WHERE r.year = 2006 AND d.forename = 'Fernando' AND d.surname = 'Alonso';"
+  },
+  {
+    "id": 29,
+    "question": "Hányszor indult Ayrton Senna az első rajthelyről?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS pole_count FROM results res JOIN drivers d ON res.driver_id = d.driver_id WHERE d.forename = 'Ayrton' AND d.surname = 'Senna' AND res.grid = 1;"
+  },
+  {
+    "id": 30,
+    "question": "Melyik pilóta állt a legtöbbször dobogón?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT d.forename, d.surname, COUNT(*) AS podiums FROM results res JOIN drivers d ON res.driver_id = d.driver_id WHERE res.position <= 3 GROUP BY d.driver_id, d.forename, d.surname ORDER BY podiums DESC LIMIT 1;"
+  },
+  {
+    "id": 31,
+    "question": "Melyik csapat nyerte a 2021-es konstruktőri világbajnokságot?",
+    "category": "join_aggregation",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT c.name FROM constructor_standings cs JOIN races r ON cs.race_id = r.race_id JOIN constructors c ON cs.constructor_id = c.constructor_id WHERE r.year = 2021 AND cs.position = 1 AND r.round = (SELECT MAX(round) FROM races WHERE year = 2021);"
+  },
+  {
+    "id": 32,
+    "question": "Hány futamot nyert a Red Bull csapat?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS wins FROM results res JOIN constructors c ON res.constructor_id = c.constructor_id WHERE c.name = 'Red Bull' AND res.position = 1;"
+  },
+  {
+    "id": 33,
+    "question": "Melyik pályán nyert a legtöbbször Michael Schumacher?",
+    "category": "join_aggregation",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT ci.name, COUNT(*) AS wins FROM results res JOIN races r ON res.race_id = r.race_id JOIN circuits ci ON r.circuit_id = ci.circuit_id JOIN drivers d ON res.driver_id = d.driver_id WHERE d.forename = 'Michael' AND d.surname = 'Schumacher' AND res.position = 1 GROUP BY ci.circuit_id, ci.name ORDER BY wins DESC LIMIT 1;"
+  },
+  {
+    "id": 34,
+    "question": "Melyik pilóta teljesítette a legtöbb boxkiállást a 2022-es szezonban?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT d.forename, d.surname, COUNT(*) AS stops FROM pit_stops ps JOIN races r ON ps.race_id = r.race_id JOIN drivers d ON ps.driver_id = d.driver_id WHERE r.year = 2022 GROUP BY d.driver_id, d.forename, d.surname ORDER BY stops DESC LIMIT 1;"
+  },
+  {
+    "id": 35,
+    "question": "Hány versenyt rendeztek júliusban az összes szezont figyelembe véve?",
+    "category": "date",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS race_count FROM races WHERE EXTRACT(MONTH FROM date) = 7;"
+  },
+  {
+    "id": 36,
+    "question": "Melyik napon rendezték a 2023-as szezon első versenyét?",
+    "category": "date",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT MIN(date) AS first_race FROM races WHERE year = 2023;"
+  },
+  {
+    "id": 37,
+    "question": "Hány nap telt el a 2023-as szezon első és utolsó versenye között?",
+    "category": "date",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT MAX(date) - MIN(date) AS days FROM races WHERE year = 2023;"
+  },
+  {
+    "id": 38,
+    "question": "Melyik évtizedben rendezték a legtöbb versenyt?",
+    "category": "date",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT (year / 10) * 10 AS decade, COUNT(*) AS race_count FROM races GROUP BY decade ORDER BY race_count DESC LIMIT 1;"
+  },
+  {
+    "id": 39,
+    "question": "Ki volt a legidősebb pilóta, aki a 2023-as szezonban versenyzett?",
+    "category": "date",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT d.forename, d.surname FROM drivers d WHERE d.driver_id IN (SELECT res.driver_id FROM results res JOIN races r ON res.race_id = r.race_id WHERE r.year = 2023) ORDER BY d.dob LIMIT 1;"
+  },
+  {
+    "id": 40,
+    "question": "Melyik öt pályán rendezték a legtöbb versenyt?",
+    "category": "sorting",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT ci.name, COUNT(*) AS race_count FROM races r JOIN circuits ci ON r.circuit_id = ci.circuit_id GROUP BY ci.circuit_id, ci.name ORDER BY race_count DESC LIMIT 5;"
+  },
+  {
+    "id": 41,
+    "question": "Kik végeztek az első három helyen a 2008-as Brazil Nagydíjon?",
+    "category": "sorting",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT d.forename, d.surname FROM results res JOIN races r ON res.race_id = r.race_id JOIN drivers d ON res.driver_id = d.driver_id WHERE r.year = 2008 AND r.name = 'Brazilian Grand Prix' AND res.position <= 3 ORDER BY res.position;"
+  },
+  {
+    "id": 42,
+    "question": "Melyik öt pilóta nyerte a legtöbb futamot?",
+    "category": "sorting",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT d.forename, d.surname, COUNT(*) AS wins FROM results res JOIN drivers d ON res.driver_id = d.driver_id WHERE res.position = 1 GROUP BY d.driver_id, d.forename, d.surname ORDER BY wins DESC LIMIT 5;"
+  },
+  {
+    "id": 43,
+    "question": "Sorold fel időrendben a 2024-es szezon versenyeit!",
+    "category": "sorting",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT name, date FROM races WHERE year = 2024 ORDER BY date;"
+  },
+  {
+    "id": 44,
+    "question": "Melyik három futamon volt a legmagasabb az átlagos levegőhőmérséklet?",
+    "category": "sorting",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT r.name, r.year, w.air_temp_avg FROM weather w JOIN races r ON w.race_id = r.race_id ORDER BY w.air_temp_avg DESC LIMIT 3;"
+  },
+  {
+    "id": 45,
+    "question": "Hány világbajnoki címet szerzett Michael Schumacher?",
+    "category": "subquery",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT COUNT(*) AS titles FROM driver_standings ds JOIN races r ON ds.race_id = r.race_id JOIN drivers d ON ds.driver_id = d.driver_id WHERE d.forename = 'Michael' AND d.surname = 'Schumacher' AND ds.position = 1 AND r.round = (SELECT MAX(r2.round) FROM races r2 WHERE r2.year = r.year);"
+  },
+  {
+    "id": 46,
+    "question": "Hány olyan pilóta van, aki nyert futamot, de egyetlen befejezett szezonban sem lett világbajnok?",
+    "category": "subquery",
+    "difficulty": "hard",
+    "ground_truth_sql": "WITH champions AS (SELECT DISTINCT ds.driver_id FROM driver_standings ds JOIN races r ON ds.race_id = r.race_id WHERE ds.position = 1 AND r.year < 2026 AND r.round = (SELECT MAX(r2.round) FROM races r2 WHERE r2.year = r.year)) SELECT COUNT(DISTINCT res.driver_id) AS driver_count FROM results res WHERE res.position = 1 AND res.driver_id NOT IN (SELECT driver_id FROM champions);"
+  },
+  {
+    "id": 47,
+    "question": "Futamonként átlagosan hány boxkiállás volt a 2023-as szezonban?",
+    "category": "subquery",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT AVG(stop_count) AS avg_stops FROM (SELECT ps.race_id, COUNT(*) AS stop_count FROM pit_stops ps JOIN races r ON ps.race_id = r.race_id WHERE r.year = 2023 GROUP BY ps.race_id) t;"
+  },
+  {
+    "id": 48,
+    "question": "Melyik pilóta szerezte a legtöbb pontot a 2023-as szezonban úgy, hogy egyetlen futamot sem nyert?",
+    "category": "subquery",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT d.forename, d.surname, ds.points FROM driver_standings ds JOIN races r ON ds.race_id = r.race_id JOIN drivers d ON ds.driver_id = d.driver_id WHERE r.year = 2023 AND r.round = (SELECT MAX(round) FROM races WHERE year = 2023) AND ds.wins = 0 ORDER BY ds.points DESC LIMIT 1;"
+  },
+  {
+    "id": 49,
+    "question": "Mely csapatok szereztek a 2023-as konstruktőri bajnokságban több pontot, mint a csapatok átlaga?",
+    "category": "subquery",
+    "difficulty": "hard",
+    "ground_truth_sql": "WITH final AS (SELECT cs.constructor_id, cs.points FROM constructor_standings cs JOIN races r ON cs.race_id = r.race_id WHERE r.year = 2023 AND r.round = (SELECT MAX(round) FROM races WHERE year = 2023)) SELECT c.name FROM final f JOIN constructors c ON f.constructor_id = c.constructor_id WHERE f.points > (SELECT AVG(points) FROM final);"
+  },
+  {
+    "id": 50,
+    "question": "Mely pilóták szereztek pontot a 2023-as szezon összes futamán?",
+    "category": "subquery",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT d.forename, d.surname FROM drivers d WHERE d.driver_id IN (SELECT res.driver_id FROM results res JOIN races r ON res.race_id = r.race_id WHERE r.year = 2023 AND res.points > 0 GROUP BY res.driver_id HAVING COUNT(*) = (SELECT COUNT(*) FROM races WHERE year = 2023));"
+  }
+]

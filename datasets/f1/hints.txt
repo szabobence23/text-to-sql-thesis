@@ -1,0 +1,7 @@
+Important notes:
+- A driver's full name is drivers.forename plus drivers.surname.
+- results contains only main races; sprint races are in sprint_results.
+- results.position is NULL when the driver was not classified; position_text then holds a code (R = retired, D = disqualified, E = excluded, W = withdrew, F = failed to qualify, N = not classified). position_order orders every driver of a race. A race win is results.position = 1.
+- driver_standings and constructor_standings are cumulative after each race; a season's final standings are the ones after its last race (the highest round of that year).
+- Lap and race times are stored as text (lap_times.time, results.time, fastest_lap_time, q1-q3, pit_stops.duration); use the milliseconds columns to compare or calculate times.
+- Data coverage: qualifying from 1994, lap_times from 1996, pit_stops from 2011, sprint_results from 2021; practice_results, tire_stints and weather only for 2025-2026. The 2026 season is incomplete.

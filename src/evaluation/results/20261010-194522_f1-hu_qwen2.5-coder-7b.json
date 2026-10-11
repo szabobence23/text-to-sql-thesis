@@ -1,0 +1,177 @@
+{
+  "run": {
+    "started_at": "2026-10-10T19:45:22",
+    "git": {
+      "commit": "425193c4339e63ed4f6da9c5759410030021a2c7",
+      "dirty": true
+    },
+    "pipeline": {
+      "dataset": "f1",
+      "llm": {
+        "model": "qwen2.5-coder:7b",
+        "temperature": 0.0,
+        "seed": 42,
+        "num_ctx": 8192
+      },
+      "schema_hints": true,
+      "block_functions": true,
+      "max_correction_rounds": 0,
+      "natural_language_answer": false,
+      "answer_max_rows": 50
+    },
+    "model_digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+    "prompt_sha256": "1dc176a63d06de48214aed35f052e3a96a51fde59ddcd42447b9c659b06da2e6",
+    "correction_prompt_sha256": "18936e160c444acb215efe64089ac135fadb9dbaf3ddecba9dcd16f6af912024",
+    "answer_prompt_sha256": "c9b2d0216120aeb7aeada6b8cbb4c2f14f084befb06d7eb4eb84cdf45f5cc734",
+    "database": "f1_db",
+    "db_user": "text2sql_reader",
+    "test_cases_file": "datasets\\f1\\test_cases\\hu.json",
+    "test_cases_language": "hu",
+    "test_cases_sha256": "8268984c03e4c6ba22ae3ddfa5efc1f2de45435248fd3bfa58b7b874497a3443",
+    "schema_sha256": "324c75525ec90b1ef60e100764c9ee12925608695b0ab8c7671ae3c200af7950",
+    "schema_text": "Database: f1_db\n\nTable: circuits\n- circuit_id integer\n- circuit_ref text\n- name text\n- location text\n- country text\n- lat double precision\n- lng double precision\n- alt integer\n- url text\nTable: constructor_results\n- constructor_results_id integer\n- race_id integer\n- constructor_id integer\n- points numeric\n- status text\nTable: constructor_standings\n- constructor_standings_id integer\n- race_id integer\n- constructor_id integer\n- points numeric\n- position integer\n- position_text text\n- wins integer\nTable: constructors\n- constructor_id integer\n- constructor_ref text\n- name text\n- nationality text\n- url text\nTable: driver_standings\n- driver_standings_id integer\n- race_id integer\n- driver_id integer\n- points numeric\n- position integer\n- position_text text\n- wins integer\nTable: drivers\n- driver_id integer\n- driver_ref text\n- number integer\n- code character varying\n- forename text\n- surname text\n- dob date\n- nationality text\n- url text\nTable: lap_times\n- race_id integer\n- driver_id integer\n- lap integer\n- position integer\n- time text\n- milliseconds integer\nTable: pit_stops\n- race_id integer\n- driver_id integer\n- stop integer\n- lap integer\n- time time without time zone\n- duration text\n- milliseconds integer\nTable: practice_results\n- race_id integer\n- driver_id integer\n- session text\n- position integer\n- best_lap_time interval\n- laps integer\nTable: qualifying\n- qualify_id integer\n- race_id integer\n- driver_id integer\n- constructor_id integer\n- number integer\n- position integer\n- q1 text\n- q2 text\n- q3 text\nTable: races\n- race_id integer\n- year integer\n- round integer\n- circuit_id integer\n- name text\n- date date\n- time time without time zone\n- url text\n- fp1_date date\n- fp1_time time without time zone\n- fp2_date date\n- fp2_time time without time zone\n- fp3_date date\n- fp3_time time without time zone\n- quali_date date\n- quali_time time without time zone\n- sprint_date date\n- sprint_time time without time zone\nTable: results\n- result_id integer\n- race_id integer\n- driver_id integer\n- constructor_id integer\n- number integer\n- grid integer\n- position integer\n- position_text text\n- position_order integer\n- points numeric\n- laps integer\n- time text\n- milliseconds integer\n- fastest_lap integer\n- rank integer\n- fastest_lap_time text\n- fastest_lap_speed numeric\n- status_id integer\nTable: seasons\n- year integer\n- url text\nTable: sprint_results\n- result_id integer\n- race_id integer\n- driver_id integer\n- constructor_id integer\n- number integer\n- grid integer\n- position integer\n- position_text text\n- position_order integer\n- points numeric\n- laps integer\n- time text\n- milliseconds integer\n- fastest_lap integer\n- fastest_lap_time text\n- status_id integer\nTable: status\n- status_id integer\n- status text\nTable: tire_stints\n- race_id integer\n- driver_id integer\n- stint integer\n- compound text\n- start_lap integer\n- end_lap integer\n- laps_on_tire integer\nTable: weather\n- race_id integer\n- air_temp_avg numeric\n- air_temp_min numeric\n- air_temp_max numeric\n- track_temp_avg numeric\n- track_temp_min numeric\n- track_temp_max numeric\n- humidity_avg numeric\n- wind_speed_avg numeric\n- wind_speed_max numeric\n- rainfall boolean\n\nRelationships:\n- constructor_results.constructor_id -> constructors.constructor_id\n- constructor_results.race_id -> races.race_id\n- constructor_standings.constructor_id -> constructors.constructor_id\n- constructor_standings.race_id -> races.race_id\n- driver_standings.driver_id -> drivers.driver_id\n- driver_standings.race_id -> races.race_id\n- lap_times.driver_id -> drivers.driver_id\n- lap_times.race_id -> races.race_id\n- pit_stops.driver_id -> drivers.driver_id\n- pit_stops.race_id -> races.race_id\n- practice_results.driver_id -> drivers.driver_id\n- practice_results.race_id -> races.race_id\n- qualifying.constructor_id -> constructors.constructor_id\n- qualifying.driver_id -> drivers.driver_id\n- qualifying.race_id -> races.race_id\n- races.circuit_id -> circuits.circuit_id\n- races.year -> seasons.year\n- results.constructor_id -> constructors.constructor_id\n- results.driver_id -> drivers.driver_id\n- results.race_id -> races.race_id\n- results.status_id -> status.status_id\n- sprint_results.constructor_id -> constructors.constructor_id\n- sprint_results.driver_id -> drivers.driver_id\n- sprint_results.race_id -> races.race_id\n- sprint_results.status_id -> status.status_id\n- tire_stints.driver_id -> drivers.driver_id\n- tire_stints.race_id -> races.race_id\n- weather.race_id -> races.race_id\n\nImportant notes:\n- A driver's full name is drivers.forename plus drivers.surname.\n- results contains only main races; sprint races are in sprint_results.\n- results.position is NULL when the driver was not classified; position_text then holds a code (R = retired, D = disqualified, E = excluded, W = withdrew, F = failed to qualify, N = not classified). position_order orders every driver of a race. A race win is results.position = 1.\n- driver_standings and constructor_standings are cumulative after each race; a season's final standings are the ones after its last race (the highest round of that year).\n- Lap and race times are stored as text (lap_times.time, results.time, fastest_lap_time, q1-q3, pit_stops.duration); use the milliseconds columns to compare or calculate times.\n- Data coverage: qualifying from 1994, lap_times from 1996, pit_stops from 2011, sprint_results from 2021; practice_results, tire_stints and weather only for 2025-2026. The 2026 season is incomplete.\n"
+  },
+  "summary": {
+    "total_questions": 1,
+    "valid_sql": {
+      "count": 1,
+      "total": 1,
+      "rate": 1.0
+    },
+    "execution_success": {
+      "count": 1,
+      "total": 1,
+      "rate": 1.0
+    },
+    "strict_ex": {
+      "count": 0,
+      "total": 1,
+      "rate": 0.0
+    },
+    "relaxed_ex": {
+      "count": 0,
+      "total": 1,
+      "rate": 0.0
+    },
+    "first_attempt": {
+      "execution_success": {
+        "count": 1,
+        "total": 1,
+        "rate": 1.0
+      },
+      "strict_ex": {
+        "count": 0,
+        "total": 1,
+        "rate": 0.0
+      },
+      "relaxed_ex": {
+        "count": 0,
+        "total": 1,
+        "rate": 0.0
+      }
+    },
+    "correction": {
+      "triggered": 0,
+      "fixed_execution": 0,
+      "fixed_strict": 0,
+      "fixed_relaxed": 0,
+      "mean_rounds_when_triggered": 0
+    },
+    "answer": {
+      "answered": 0,
+      "mean_answer_s": 0,
+      "mean_prompt_tokens": 0,
+      "mean_completion_tokens": 0
+    },
+    "by_category": {
+      "subquery": {
+        "strict_ex": {
+          "count": 0,
+          "total": 1,
+          "rate": 0.0
+        },
+        "relaxed_ex": {
+          "count": 0,
+          "total": 1,
+          "rate": 0.0
+        }
+      }
+    },
+    "by_difficulty": {
+      "medium": {
+        "strict_ex": {
+          "count": 0,
+          "total": 1,
+          "rate": 0.0
+        },
+        "relaxed_ex": {
+          "count": 0,
+          "total": 1,
+          "rate": 0.0
+        }
+      }
+    },
+    "mean_generation_s": 13.344774099998176,
+    "mean_prompt_tokens": 1484.0,
+    "mean_completion_tokens": 64.0
+  },
+  "results": [
+    {
+      "id": 1,
+      "question": "Ki nyerte a 2007-es világbajnokságot?",
+      "category": "subquery",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT d.forename, d.surname FROM driver_standings ds JOIN races r ON ds.race_id = r.race_id JOIN drivers d ON ds.driver_id = d.driver_id WHERE r.year = 2007 AND ds.position = 1 AND r.round = (SELECT MAX(round) FROM races WHERE year = 2007);",
+      "order_sensitive": false,
+      "expected_result": [
+        [
+          "Kimi",
+          "Räikkönen"
+        ]
+      ],
+      "generated_sql": "SELECT c.name AS constructor_name\nFROM constructors c\nJOIN constructor_standings cs ON c.constructor_id = cs.constructor_id\nJOIN races r ON cs.race_id = r.race_id\nWHERE r.year = 2007\nORDER BY cs.points DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT c.name AS constructor_name\nFROM constructors c\nJOIN constructor_standings cs ON c.constructor_id = cs.constructor_id\nJOIN races r ON cs.race_id = r.race_id\nWHERE r.year = 2007\nORDER BY cs.points DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "McLaren"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT c.name AS constructor_name\nFROM constructors c\nJOIN constructor_standings cs ON c.constructor_id = cs.constructor_id\nJOIN races r ON cs.race_id = r.race_id\nWHERE r.year = 2007\nORDER BY cs.points DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT c.name AS constructor_name\nFROM constructors c\nJOIN constructor_standings cs ON c.constructor_id = cs.constructor_id\nJOIN races r ON cs.race_id = r.race_id\nWHERE r.year = 2007\nORDER BY cs.points DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 1484,
+          "completion_tokens": 64,
+          "timings": {
+            "generation_s": 13.344774099998176,
+            "validation_s": 0.009315700037404895,
+            "execution_s": 0.010762199992313981
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 1484,
+      "prompt_tokens": 1484,
+      "completion_tokens": 64,
+      "timings": {
+        "generation_s": 13.344774099998176,
+        "validation_s": 0.009315700037404895,
+        "execution_s": 0.010762199992313981
+      }
+    }
+  ]
+}
