@@ -50,7 +50,7 @@ def load_schema(conn, config: PipelineConfig) -> str:
     # than by callers, which could pass a mismatching setting.
     dataset = load_dataset(config.dataset)
     hints = dataset.hints if config.schema_hints else ""
-    return get_schema(conn, dataset.db_name, hints)
+    return get_schema(conn, dataset.db_name, hints, dataset.schemas)
 
 
 @dataclass

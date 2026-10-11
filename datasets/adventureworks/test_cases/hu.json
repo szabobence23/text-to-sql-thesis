@@ -1,0 +1,352 @@
+[
+  {
+    "id": 1,
+    "question": "Hány alkalmazottja van a cégnek?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS employee_count FROM humanresources.employee;"
+  },
+  {
+    "id": 2,
+    "question": "Hány termék szerepel a termékkatalógusban?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS product_count FROM production.product;"
+  },
+  {
+    "id": 3,
+    "question": "Hány vásárló szerepel az adatbázisban?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS customer_count FROM sales.customer;"
+  },
+  {
+    "id": 4,
+    "question": "Mennyi a legdrágább termék listaára?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT MAX(listprice) AS max_list_price FROM production.product;"
+  },
+  {
+    "id": 5,
+    "question": "Hány vásárlói rendelés érkezett 2024-ben?",
+    "category": "date",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS order_count FROM sales.salesorderheader WHERE orderdate >= '2024-01-01' AND orderdate < '2025-01-01';"
+  },
+  {
+    "id": 6,
+    "question": "Melyik részlegben dolgozik jelenleg a legtöbb alkalmazott?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT d.name, COUNT(*) AS employee_count FROM humanresources.employeedepartmenthistory edh JOIN humanresources.department d ON edh.departmentid = d.departmentid WHERE edh.enddate IS NULL GROUP BY d.departmentid, d.name ORDER BY employee_count DESC LIMIT 1;"
+  },
+  {
+    "id": 7,
+    "question": "Melyik termékből adták el a legtöbb darabot?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT p.name, SUM(sod.orderqty) AS total_quantity FROM sales.salesorderdetail sod JOIN production.product p ON sod.productid = p.productid GROUP BY p.productid, p.name ORDER BY total_quantity DESC LIMIT 1;"
+  },
+  {
+    "id": 8,
+    "question": "Melyik értékesítési területen volt a legnagyobb a rendelések végösszegének összege?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT st.name, SUM(soh.totaldue) AS total_due FROM sales.salesorderheader soh JOIN sales.salesterritory st ON soh.territoryid = st.territoryid GROUP BY st.territoryid, st.name ORDER BY total_due DESC LIMIT 1;"
+  },
+  {
+    "id": 9,
+    "question": "Melyik beszállítótól rendeltek a legnagyobb összértékben, adóval és szállítással együtt?",
+    "category": "join_aggregation",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT v.name, SUM(poh.subtotal + poh.taxamt + poh.freight) AS total_due FROM purchasing.purchaseorderheader poh JOIN purchasing.vendor v ON poh.vendorid = v.businessentityid GROUP BY v.businessentityid, v.name ORDER BY total_due DESC LIMIT 1;"
+  },
+  {
+    "id": 10,
+    "question": "Melyik öt magánszemély vásárló költötte a legtöbbet a rendelések végösszege alapján?",
+    "category": "sorting",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT p.firstname, p.lastname, SUM(soh.totaldue) AS total_spent FROM sales.salesorderheader soh JOIN sales.customer c ON soh.customerid = c.customerid JOIN person.person p ON c.personid = p.businessentityid WHERE c.storeid IS NULL GROUP BY c.customerid, p.firstname, p.lastname ORDER BY total_spent DESC LIMIT 5;"
+  },
+  {
+    "id": 11,
+    "question": "Hány beszállító szerepel az adatbázisban?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS vendor_count FROM purchasing.vendor;"
+  },
+  {
+    "id": 12,
+    "question": "Mennyi az átlagos listaár a nullánál drágább termékek között?",
+    "category": "aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT AVG(listprice) AS avg_list_price FROM production.product WHERE listprice > 0;"
+  },
+  {
+    "id": 13,
+    "question": "Összesen hány darab terméket rendeltek a vásárlók?",
+    "category": "aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT SUM(orderqty) AS total_quantity FROM sales.salesorderdetail;"
+  },
+  {
+    "id": 14,
+    "question": "Hány fekete színű termék van?",
+    "category": "filtering",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS product_count FROM production.product WHERE color = 'Black';"
+  },
+  {
+    "id": 15,
+    "question": "Hány női alkalmazott van?",
+    "category": "filtering",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS employee_count FROM humanresources.employee WHERE gender = 'F';"
+  },
+  {
+    "id": 16,
+    "question": "Mely termékek listaára haladja meg a 3000-et?",
+    "category": "filtering",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT name FROM production.product WHERE listprice > 3000;"
+  },
+  {
+    "id": 17,
+    "question": "Hány vásárlói rendelést adtak le online?",
+    "category": "filtering",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS order_count FROM sales.salesorderheader WHERE onlineorderflag;"
+  },
+  {
+    "id": 18,
+    "question": "Hány termék értékesítése ért már véget (van értékesítési záró dátuma)?",
+    "category": "filtering",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS product_count FROM production.product WHERE sellenddate IS NOT NULL;"
+  },
+  {
+    "id": 19,
+    "question": "Hány alkalmazott született 1980 előtt?",
+    "category": "filtering",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS employee_count FROM humanresources.employee WHERE birthdate < '1980-01-01';"
+  },
+  {
+    "id": 20,
+    "question": "Hány termék van az egyes színekből, a szín nélküli termékeket nem számítva?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT color, COUNT(*) AS product_count FROM production.product WHERE color IS NOT NULL GROUP BY color;"
+  },
+  {
+    "id": 21,
+    "question": "Melyik szállítási móddal adták fel a legtöbb vásárlói rendelést?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT sm.name, COUNT(*) AS order_count FROM sales.salesorderheader soh JOIN purchasing.shipmethod sm ON soh.shipmethodid = sm.shipmethodid GROUP BY sm.shipmethodid, sm.name ORDER BY order_count DESC LIMIT 1;"
+  },
+  {
+    "id": 22,
+    "question": "Hány vásárlói rendelés érkezett az egyes értékesítési területekről?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT st.name, COUNT(*) AS order_count FROM sales.salesorderheader soh JOIN sales.salesterritory st ON soh.territoryid = st.territoryid GROUP BY st.territoryid, st.name;"
+  },
+  {
+    "id": 23,
+    "question": "Melyik bankkártyatípussal fizették a legtöbb vásárlói rendelést?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT cc.cardtype, COUNT(*) AS order_count FROM sales.salesorderheader soh JOIN sales.creditcard cc ON soh.creditcardid = cc.creditcardid GROUP BY cc.cardtype ORDER BY order_count DESC LIMIT 1;"
+  },
+  {
+    "id": 24,
+    "question": "Hány termék tartozik az egyes termékkategóriákba?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT pc.name, COUNT(*) AS product_count FROM production.product p JOIN production.productsubcategory ps ON p.productsubcategoryid = ps.productsubcategoryid JOIN production.productcategory pc ON ps.productcategoryid = pc.productcategoryid GROUP BY pc.productcategoryid, pc.name;"
+  },
+  {
+    "id": 25,
+    "question": "Hány alkalmazott dolgozik jelenleg az egyes műszakokban?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT s.name, COUNT(*) AS employee_count FROM humanresources.employeedepartmenthistory edh JOIN humanresources.shift s ON edh.shiftid = s.shiftid WHERE edh.enddate IS NULL GROUP BY s.shiftid, s.name;"
+  },
+  {
+    "id": 26,
+    "question": "Melyik termékkategóriából adták el a legtöbb darabot?",
+    "category": "join_aggregation",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT pc.name, SUM(sod.orderqty) AS total_quantity FROM sales.salesorderdetail sod JOIN production.product p ON sod.productid = p.productid JOIN production.productsubcategory ps ON p.productsubcategoryid = ps.productsubcategoryid JOIN production.productcategory pc ON ps.productcategoryid = pc.productcategoryid GROUP BY pc.productcategoryid, pc.name ORDER BY total_quantity DESC LIMIT 1;"
+  },
+  {
+    "id": 27,
+    "question": "Melyik termékkategória hozta a legnagyobb bevételt, ha a bevétel az egységár, a mennyiség és az (1 - kedvezmény) szorzata?",
+    "category": "join_aggregation",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT pc.name, SUM(sod.unitprice * sod.orderqty * (1 - sod.unitpricediscount)) AS revenue FROM sales.salesorderdetail sod JOIN production.product p ON sod.productid = p.productid JOIN production.productsubcategory ps ON p.productsubcategoryid = ps.productsubcategoryid JOIN production.productcategory pc ON ps.productcategoryid = pc.productcategoryid GROUP BY pc.productcategoryid, pc.name ORDER BY revenue DESC LIMIT 1;"
+  },
+  {
+    "id": 28,
+    "question": "Melyik üzletkötő bonyolította a legtöbb vásárlói rendelést?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT p.firstname, p.lastname, COUNT(*) AS order_count FROM sales.salesorderheader soh JOIN person.person p ON soh.salespersonid = p.businessentityid GROUP BY soh.salespersonid, p.firstname, p.lastname ORDER BY order_count DESC LIMIT 1;"
+  },
+  {
+    "id": 29,
+    "question": "Hány vásárlói rendelés érkezett a kanadai értékesítési területről?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS order_count FROM sales.salesorderheader soh JOIN sales.salesterritory st ON soh.territoryid = st.territoryid WHERE st.name = 'Canada';"
+  },
+  {
+    "id": 30,
+    "question": "Melyik államban vagy tartományban van a legtöbb magánszemély vásárló a címük alapján?",
+    "category": "join_aggregation",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT sp.name, COUNT(DISTINCT c.customerid) AS customer_count FROM sales.customer c JOIN person.businessentityaddress bea ON c.personid = bea.businessentityid JOIN person.address a ON bea.addressid = a.addressid JOIN person.stateprovince sp ON a.stateprovinceid = sp.stateprovinceid WHERE c.storeid IS NULL GROUP BY sp.stateprovinceid, sp.name ORDER BY customer_count DESC LIMIT 1;"
+  },
+  {
+    "id": 31,
+    "question": "Melyik beszállítótól lehet a legtöbb különböző terméket beszerezni?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT v.name, COUNT(*) AS product_count FROM purchasing.productvendor pv JOIN purchasing.vendor v ON pv.businessentityid = v.businessentityid GROUP BY v.businessentityid, v.name ORDER BY product_count DESC LIMIT 1;"
+  },
+  {
+    "id": 32,
+    "question": "Hány alkalmazott dolgozik jelenleg a Manufacturing részlegcsoportba tartozó részlegekben?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS employee_count FROM humanresources.employeedepartmenthistory edh JOIN humanresources.department d ON edh.departmentid = d.departmentid WHERE edh.enddate IS NULL AND d.groupname = 'Manufacturing';"
+  },
+  {
+    "id": 33,
+    "question": "Melyik alkalmazott adta fel a legtöbb beszerzési rendelést?",
+    "category": "join_aggregation",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT p.firstname, p.lastname, COUNT(*) AS order_count FROM purchasing.purchaseorderheader poh JOIN person.person p ON poh.employeeid = p.businessentityid GROUP BY poh.employeeid, p.firstname, p.lastname ORDER BY order_count DESC LIMIT 1;"
+  },
+  {
+    "id": 34,
+    "question": "Melyik napon adták le az első vásárlói rendelést?",
+    "category": "date",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT MIN(orderdate) AS first_order FROM sales.salesorderheader;"
+  },
+  {
+    "id": 35,
+    "question": "Melyik hónapban (év és hónap) adták le a legtöbb vásárlói rendelést?",
+    "category": "date",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT date_trunc('month', orderdate) AS month, COUNT(*) AS order_count FROM sales.salesorderheader GROUP BY month ORDER BY order_count DESC LIMIT 1;"
+  },
+  {
+    "id": 36,
+    "question": "Átlagosan hány nap telt el a vásárlói rendelések leadása és kiszállítása között?",
+    "category": "date",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT AVG(EXTRACT(EPOCH FROM (shipdate - orderdate)) / 86400.0) AS avg_days FROM sales.salesorderheader;"
+  },
+  {
+    "id": 37,
+    "question": "Hány alkalmazottat vettek fel 2010-ben?",
+    "category": "date",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS employee_count FROM humanresources.employee WHERE hiredate >= '2010-01-01' AND hiredate < '2011-01-01';"
+  },
+  {
+    "id": 38,
+    "question": "Melyik évben volt a legnagyobb a vásárlói rendelések végösszegének összege?",
+    "category": "date",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT EXTRACT(YEAR FROM orderdate) AS year, SUM(totaldue) AS total_due FROM sales.salesorderheader GROUP BY year ORDER BY total_due DESC LIMIT 1;"
+  },
+  {
+    "id": 39,
+    "question": "Melyik öt termékből adták el a legtöbb darabot?",
+    "category": "sorting",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT p.name, SUM(sod.orderqty) AS total_quantity FROM sales.salesorderdetail sod JOIN production.product p ON sod.productid = p.productid GROUP BY p.productid, p.name ORDER BY total_quantity DESC LIMIT 5;"
+  },
+  {
+    "id": 40,
+    "question": "Melyik három értékesítési területről érkezett a legtöbb vásárlói rendelés?",
+    "category": "sorting",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT st.name, COUNT(*) AS order_count FROM sales.salesorderheader soh JOIN sales.salesterritory st ON soh.territoryid = st.territoryid GROUP BY st.territoryid, st.name ORDER BY order_count DESC LIMIT 3;"
+  },
+  {
+    "id": 41,
+    "question": "Sorold fel a termékkategóriákat ábécérendben!",
+    "category": "sorting",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT name FROM production.productcategory ORDER BY name;"
+  },
+  {
+    "id": 42,
+    "question": "Melyik öt alkalmazott dolgozik a legrégebben a cégnél a felvétel dátuma alapján?",
+    "category": "sorting",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT p.firstname, p.lastname FROM humanresources.employee e JOIN person.person p ON e.businessentityid = p.businessentityid ORDER BY e.hiredate LIMIT 5;"
+  },
+  {
+    "id": 43,
+    "question": "Melyik tíz vásárlói rendelésnek volt a legnagyobb a végösszege?",
+    "category": "sorting",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT salesorderid, totaldue FROM sales.salesorderheader ORDER BY totaldue DESC LIMIT 10;"
+  },
+  {
+    "id": 44,
+    "question": "Hány olyan termék van, amelyet a vásárlók soha nem rendeltek meg?",
+    "category": "subquery",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS product_count FROM production.product p WHERE NOT EXISTS (SELECT 1 FROM sales.salesorderdetail sod WHERE sod.productid = p.productid);"
+  },
+  {
+    "id": 45,
+    "question": "Hány termék listaára magasabb az összes termék átlagos listaáránál?",
+    "category": "subquery",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS product_count FROM production.product WHERE listprice > (SELECT AVG(listprice) FROM production.product);"
+  },
+  {
+    "id": 46,
+    "question": "Mely üzletkötők év eleje óta elért értékesítése haladja meg az összes üzletkötő átlagát?",
+    "category": "subquery",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT p.firstname, p.lastname FROM sales.salesperson sp JOIN person.person p ON sp.businessentityid = p.businessentityid WHERE sp.salesytd > (SELECT AVG(salesytd) FROM sales.salesperson);"
+  },
+  {
+    "id": 47,
+    "question": "Hány vásárló adott le az átlagosnál több rendelést, a rendelést leadó vásárlók átlagához mérve?",
+    "category": "subquery",
+    "difficulty": "hard",
+    "ground_truth_sql": "WITH orders_per_customer AS (SELECT customerid, COUNT(*) AS order_count FROM sales.salesorderheader GROUP BY customerid) SELECT COUNT(*) AS customer_count FROM orders_per_customer WHERE order_count > (SELECT AVG(order_count) FROM orders_per_customer);"
+  },
+  {
+    "id": 48,
+    "question": "Hány alkalmazott legutóbbi órabére haladja meg az 50-et?",
+    "category": "subquery",
+    "difficulty": "hard",
+    "ground_truth_sql": "WITH latest AS (SELECT businessentityid, rate, ROW_NUMBER() OVER (PARTITION BY businessentityid ORDER BY ratechangedate DESC) AS rn FROM humanresources.employeepayhistory) SELECT COUNT(*) AS employee_count FROM latest WHERE rn = 1 AND rate > 50;"
+  },
+  {
+    "id": 49,
+    "question": "Hány alkalmazottnak van az átlagosnál több szabadságórája?",
+    "category": "subquery",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS employee_count FROM humanresources.employee WHERE vacationhours > (SELECT AVG(vacationhours) FROM humanresources.employee);"
+  },
+  {
+    "id": 50,
+    "question": "Mely termékkategóriák bevétele haladja meg a kategóriák átlagos bevételét, ha a bevétel az egységár, a mennyiség és az (1 - kedvezmény) szorzata?",
+    "category": "subquery",
+    "difficulty": "hard",
+    "ground_truth_sql": "WITH category_revenue AS (SELECT pc.name, SUM(sod.unitprice * sod.orderqty * (1 - sod.unitpricediscount)) AS revenue FROM sales.salesorderdetail sod JOIN production.product p ON sod.productid = p.productid JOIN production.productsubcategory ps ON p.productsubcategoryid = ps.productsubcategoryid JOIN production.productcategory pc ON ps.productcategoryid = pc.productcategoryid GROUP BY pc.productcategoryid, pc.name) SELECT name FROM category_revenue WHERE revenue > (SELECT AVG(revenue) FROM category_revenue);"
+  }
+]

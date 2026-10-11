@@ -28,6 +28,8 @@ class Dataset:
     db_name: str
     description: str
     path: str
+    # PostgreSQL schemas holding the dataset's tables; most use public.
+    schemas: tuple[str, ...] = ("public",)
 
     @property
     def hints(self) -> str:
@@ -106,4 +108,5 @@ def load_dataset(name: str) -> Dataset:
         db_name=config["db_name"],
         description=config.get("description", ""),
         path=path,
+        schemas=tuple(config.get("schemas", ["public"])),
     )

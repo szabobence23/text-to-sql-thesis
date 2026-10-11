@@ -342,6 +342,7 @@
       "first_attempt_relaxed_match": true,
       "attempts": [
         {
+          
           "sql": "SELECT AVG(price) AS average_product_price\nFROM order_items;",
           "raw_response": "```sql\nSELECT AVG(price) AS average_product_price\nFROM order_items;\n```",
           "is_valid": true,

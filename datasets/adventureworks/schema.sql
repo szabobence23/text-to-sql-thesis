@@ -1,0 +1,4 @@
+-- AdventureWorks has no separate schema file: the PostgreSQL port's
+-- install.sql interleaves CREATE TABLE, data loading and conversions
+-- that need the loaded data (hierarchyid columns), then adds keys and
+-- views. import.sql runs it unchanged. See SOURCES.md.

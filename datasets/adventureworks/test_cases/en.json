@@ -1,0 +1,352 @@
+[
+  {
+    "id": 1,
+    "question": "How many employees does the company have?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS employee_count FROM humanresources.employee;"
+  },
+  {
+    "id": 2,
+    "question": "How many products are in the product catalog?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS product_count FROM production.product;"
+  },
+  {
+    "id": 3,
+    "question": "How many customers are in the database?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS customer_count FROM sales.customer;"
+  },
+  {
+    "id": 4,
+    "question": "What is the list price of the most expensive product?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT MAX(listprice) AS max_list_price FROM production.product;"
+  },
+  {
+    "id": 5,
+    "question": "How many sales orders were placed in 2024?",
+    "category": "date",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS order_count FROM sales.salesorderheader WHERE orderdate >= '2024-01-01' AND orderdate < '2025-01-01';"
+  },
+  {
+    "id": 6,
+    "question": "Which department currently has the most employees?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT d.name, COUNT(*) AS employee_count FROM humanresources.employeedepartmenthistory edh JOIN humanresources.department d ON edh.departmentid = d.departmentid WHERE edh.enddate IS NULL GROUP BY d.departmentid, d.name ORDER BY employee_count DESC LIMIT 1;"
+  },
+  {
+    "id": 7,
+    "question": "Which product sold the most units?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT p.name, SUM(sod.orderqty) AS total_quantity FROM sales.salesorderdetail sod JOIN production.product p ON sod.productid = p.productid GROUP BY p.productid, p.name ORDER BY total_quantity DESC LIMIT 1;"
+  },
+  {
+    "id": 8,
+    "question": "Which sales territory had the highest sum of order totals?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT st.name, SUM(soh.totaldue) AS total_due FROM sales.salesorderheader soh JOIN sales.salesterritory st ON soh.territoryid = st.territoryid GROUP BY st.territoryid, st.name ORDER BY total_due DESC LIMIT 1;"
+  },
+  {
+    "id": 9,
+    "question": "From which vendor were the most purchases made by total value, including tax and freight?",
+    "category": "join_aggregation",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT v.name, SUM(poh.subtotal + poh.taxamt + poh.freight) AS total_due FROM purchasing.purchaseorderheader poh JOIN purchasing.vendor v ON poh.vendorid = v.businessentityid GROUP BY v.businessentityid, v.name ORDER BY total_due DESC LIMIT 1;"
+  },
+  {
+    "id": 10,
+    "question": "Which five individual (non-store) customers spent the most, based on order totals?",
+    "category": "sorting",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT p.firstname, p.lastname, SUM(soh.totaldue) AS total_spent FROM sales.salesorderheader soh JOIN sales.customer c ON soh.customerid = c.customerid JOIN person.person p ON c.personid = p.businessentityid WHERE c.storeid IS NULL GROUP BY c.customerid, p.firstname, p.lastname ORDER BY total_spent DESC LIMIT 5;"
+  },
+  {
+    "id": 11,
+    "question": "How many vendors are in the database?",
+    "category": "aggregation",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS vendor_count FROM purchasing.vendor;"
+  },
+  {
+    "id": 12,
+    "question": "What is the average list price of products with a list price above zero?",
+    "category": "aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT AVG(listprice) AS avg_list_price FROM production.product WHERE listprice > 0;"
+  },
+  {
+    "id": 13,
+    "question": "How many units of products did customers order in total?",
+    "category": "aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT SUM(orderqty) AS total_quantity FROM sales.salesorderdetail;"
+  },
+  {
+    "id": 14,
+    "question": "How many black products are there?",
+    "category": "filtering",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS product_count FROM production.product WHERE color = 'Black';"
+  },
+  {
+    "id": 15,
+    "question": "How many female employees are there?",
+    "category": "filtering",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS employee_count FROM humanresources.employee WHERE gender = 'F';"
+  },
+  {
+    "id": 16,
+    "question": "Which products have a list price above 3000?",
+    "category": "filtering",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT name FROM production.product WHERE listprice > 3000;"
+  },
+  {
+    "id": 17,
+    "question": "How many sales orders were placed online?",
+    "category": "filtering",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS order_count FROM sales.salesorderheader WHERE onlineorderflag;"
+  },
+  {
+    "id": 18,
+    "question": "How many products have a sell end date set (are no longer sold)?",
+    "category": "filtering",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS product_count FROM production.product WHERE sellenddate IS NOT NULL;"
+  },
+  {
+    "id": 19,
+    "question": "How many employees were born before 1980?",
+    "category": "filtering",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS employee_count FROM humanresources.employee WHERE birthdate < '1980-01-01';"
+  },
+  {
+    "id": 20,
+    "question": "How many products are there of each color, excluding products without a color?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT color, COUNT(*) AS product_count FROM production.product WHERE color IS NOT NULL GROUP BY color;"
+  },
+  {
+    "id": 21,
+    "question": "Which shipping method was used for the most sales orders?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT sm.name, COUNT(*) AS order_count FROM sales.salesorderheader soh JOIN purchasing.shipmethod sm ON soh.shipmethodid = sm.shipmethodid GROUP BY sm.shipmethodid, sm.name ORDER BY order_count DESC LIMIT 1;"
+  },
+  {
+    "id": 22,
+    "question": "How many sales orders came from each sales territory?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT st.name, COUNT(*) AS order_count FROM sales.salesorderheader soh JOIN sales.salesterritory st ON soh.territoryid = st.territoryid GROUP BY st.territoryid, st.name;"
+  },
+  {
+    "id": 23,
+    "question": "Which credit card type was used for the most sales orders?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT cc.cardtype, COUNT(*) AS order_count FROM sales.salesorderheader soh JOIN sales.creditcard cc ON soh.creditcardid = cc.creditcardid GROUP BY cc.cardtype ORDER BY order_count DESC LIMIT 1;"
+  },
+  {
+    "id": 24,
+    "question": "How many products belong to each product category?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT pc.name, COUNT(*) AS product_count FROM production.product p JOIN production.productsubcategory ps ON p.productsubcategoryid = ps.productsubcategoryid JOIN production.productcategory pc ON ps.productcategoryid = pc.productcategoryid GROUP BY pc.productcategoryid, pc.name;"
+  },
+  {
+    "id": 25,
+    "question": "How many employees currently work in each shift?",
+    "category": "grouping",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT s.name, COUNT(*) AS employee_count FROM humanresources.employeedepartmenthistory edh JOIN humanresources.shift s ON edh.shiftid = s.shiftid WHERE edh.enddate IS NULL GROUP BY s.shiftid, s.name;"
+  },
+  {
+    "id": 26,
+    "question": "Which product category sold the most units?",
+    "category": "join_aggregation",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT pc.name, SUM(sod.orderqty) AS total_quantity FROM sales.salesorderdetail sod JOIN production.product p ON sod.productid = p.productid JOIN production.productsubcategory ps ON p.productsubcategoryid = ps.productsubcategoryid JOIN production.productcategory pc ON ps.productcategoryid = pc.productcategoryid GROUP BY pc.productcategoryid, pc.name ORDER BY total_quantity DESC LIMIT 1;"
+  },
+  {
+    "id": 27,
+    "question": "Which product category generated the most revenue, where revenue is unit price times quantity times (1 - discount)?",
+    "category": "join_aggregation",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT pc.name, SUM(sod.unitprice * sod.orderqty * (1 - sod.unitpricediscount)) AS revenue FROM sales.salesorderdetail sod JOIN production.product p ON sod.productid = p.productid JOIN production.productsubcategory ps ON p.productsubcategoryid = ps.productsubcategoryid JOIN production.productcategory pc ON ps.productcategoryid = pc.productcategoryid GROUP BY pc.productcategoryid, pc.name ORDER BY revenue DESC LIMIT 1;"
+  },
+  {
+    "id": 28,
+    "question": "Which salesperson handled the most sales orders?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT p.firstname, p.lastname, COUNT(*) AS order_count FROM sales.salesorderheader soh JOIN person.person p ON soh.salespersonid = p.businessentityid GROUP BY soh.salespersonid, p.firstname, p.lastname ORDER BY order_count DESC LIMIT 1;"
+  },
+  {
+    "id": 29,
+    "question": "How many sales orders came from the Canada sales territory?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS order_count FROM sales.salesorderheader soh JOIN sales.salesterritory st ON soh.territoryid = st.territoryid WHERE st.name = 'Canada';"
+  },
+  {
+    "id": 30,
+    "question": "Which state or province has the most individual customers, based on their addresses?",
+    "category": "join_aggregation",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT sp.name, COUNT(DISTINCT c.customerid) AS customer_count FROM sales.customer c JOIN person.businessentityaddress bea ON c.personid = bea.businessentityid JOIN person.address a ON bea.addressid = a.addressid JOIN person.stateprovince sp ON a.stateprovinceid = sp.stateprovinceid WHERE c.storeid IS NULL GROUP BY sp.stateprovinceid, sp.name ORDER BY customer_count DESC LIMIT 1;"
+  },
+  {
+    "id": 31,
+    "question": "Which vendor supplies the most different products?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT v.name, COUNT(*) AS product_count FROM purchasing.productvendor pv JOIN purchasing.vendor v ON pv.businessentityid = v.businessentityid GROUP BY v.businessentityid, v.name ORDER BY product_count DESC LIMIT 1;"
+  },
+  {
+    "id": 32,
+    "question": "How many employees currently work in departments of the Manufacturing group?",
+    "category": "join_aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS employee_count FROM humanresources.employeedepartmenthistory edh JOIN humanresources.department d ON edh.departmentid = d.departmentid WHERE edh.enddate IS NULL AND d.groupname = 'Manufacturing';"
+  },
+  {
+    "id": 33,
+    "question": "Which employee placed the most purchase orders?",
+    "category": "join_aggregation",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT p.firstname, p.lastname, COUNT(*) AS order_count FROM purchasing.purchaseorderheader poh JOIN person.person p ON poh.employeeid = p.businessentityid GROUP BY poh.employeeid, p.firstname, p.lastname ORDER BY order_count DESC LIMIT 1;"
+  },
+  {
+    "id": 34,
+    "question": "On which date was the first sales order placed?",
+    "category": "date",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT MIN(orderdate) AS first_order FROM sales.salesorderheader;"
+  },
+  {
+    "id": 35,
+    "question": "In which month (year and month) were the most sales orders placed?",
+    "category": "date",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT date_trunc('month', orderdate) AS month, COUNT(*) AS order_count FROM sales.salesorderheader GROUP BY month ORDER BY order_count DESC LIMIT 1;"
+  },
+  {
+    "id": 36,
+    "question": "On average, how many days passed between placing and shipping a sales order?",
+    "category": "date",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT AVG(EXTRACT(EPOCH FROM (shipdate - orderdate)) / 86400.0) AS avg_days FROM sales.salesorderheader;"
+  },
+  {
+    "id": 37,
+    "question": "How many employees were hired in 2010?",
+    "category": "date",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS employee_count FROM humanresources.employee WHERE hiredate >= '2010-01-01' AND hiredate < '2011-01-01';"
+  },
+  {
+    "id": 38,
+    "question": "In which year was the sum of sales order totals the highest?",
+    "category": "date",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT EXTRACT(YEAR FROM orderdate) AS year, SUM(totaldue) AS total_due FROM sales.salesorderheader GROUP BY year ORDER BY total_due DESC LIMIT 1;"
+  },
+  {
+    "id": 39,
+    "question": "Which five products sold the most units?",
+    "category": "sorting",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT p.name, SUM(sod.orderqty) AS total_quantity FROM sales.salesorderdetail sod JOIN production.product p ON sod.productid = p.productid GROUP BY p.productid, p.name ORDER BY total_quantity DESC LIMIT 5;"
+  },
+  {
+    "id": 40,
+    "question": "Which three sales territories had the most sales orders?",
+    "category": "sorting",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT st.name, COUNT(*) AS order_count FROM sales.salesorderheader soh JOIN sales.salesterritory st ON soh.territoryid = st.territoryid GROUP BY st.territoryid, st.name ORDER BY order_count DESC LIMIT 3;"
+  },
+  {
+    "id": 41,
+    "question": "List the product categories in alphabetical order.",
+    "category": "sorting",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT name FROM production.productcategory ORDER BY name;"
+  },
+  {
+    "id": 42,
+    "question": "Which five employees have worked at the company the longest, based on hire date?",
+    "category": "sorting",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT p.firstname, p.lastname FROM humanresources.employee e JOIN person.person p ON e.businessentityid = p.businessentityid ORDER BY e.hiredate LIMIT 5;"
+  },
+  {
+    "id": 43,
+    "question": "Which ten sales orders had the highest order total?",
+    "category": "sorting",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT salesorderid, totaldue FROM sales.salesorderheader ORDER BY totaldue DESC LIMIT 10;"
+  },
+  {
+    "id": 44,
+    "question": "How many products have never been ordered by customers?",
+    "category": "subquery",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS product_count FROM production.product p WHERE NOT EXISTS (SELECT 1 FROM sales.salesorderdetail sod WHERE sod.productid = p.productid);"
+  },
+  {
+    "id": 45,
+    "question": "How many products have a list price above the average list price of all products?",
+    "category": "subquery",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS product_count FROM production.product WHERE listprice > (SELECT AVG(listprice) FROM production.product);"
+  },
+  {
+    "id": 46,
+    "question": "Which salespeople have year-to-date sales above the average of all salespeople?",
+    "category": "subquery",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT p.firstname, p.lastname FROM sales.salesperson sp JOIN person.person p ON sp.businessentityid = p.businessentityid WHERE sp.salesytd > (SELECT AVG(salesytd) FROM sales.salesperson);"
+  },
+  {
+    "id": 47,
+    "question": "How many customers placed more orders than average, compared with the average of customers who placed orders?",
+    "category": "subquery",
+    "difficulty": "hard",
+    "ground_truth_sql": "WITH orders_per_customer AS (SELECT customerid, COUNT(*) AS order_count FROM sales.salesorderheader GROUP BY customerid) SELECT COUNT(*) AS customer_count FROM orders_per_customer WHERE order_count > (SELECT AVG(order_count) FROM orders_per_customer);"
+  },
+  {
+    "id": 48,
+    "question": "How many employees have a most recent hourly pay rate above 50?",
+    "category": "subquery",
+    "difficulty": "hard",
+    "ground_truth_sql": "WITH latest AS (SELECT businessentityid, rate, ROW_NUMBER() OVER (PARTITION BY businessentityid ORDER BY ratechangedate DESC) AS rn FROM humanresources.employeepayhistory) SELECT COUNT(*) AS employee_count FROM latest WHERE rn = 1 AND rate > 50;"
+  },
+  {
+    "id": 49,
+    "question": "How many employees have more vacation hours than average?",
+    "category": "subquery",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS employee_count FROM humanresources.employee WHERE vacationhours > (SELECT AVG(vacationhours) FROM humanresources.employee);"
+  },
+  {
+    "id": 50,
+    "question": "Which product categories have revenue above the average category revenue, where revenue is unit price times quantity times (1 - discount)?",
+    "category": "subquery",
+    "difficulty": "hard",
+    "ground_truth_sql": "WITH category_revenue AS (SELECT pc.name, SUM(sod.unitprice * sod.orderqty * (1 - sod.unitpricediscount)) AS revenue FROM sales.salesorderdetail sod JOIN production.product p ON sod.productid = p.productid JOIN production.productsubcategory ps ON p.productsubcategoryid = ps.productsubcategoryid JOIN production.productcategory pc ON ps.productcategoryid = pc.productcategoryid GROUP BY pc.productcategoryid, pc.name) SELECT name FROM category_revenue WHERE revenue > (SELECT AVG(revenue) FROM category_revenue);"
+  }
+]

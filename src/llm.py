@@ -5,6 +5,8 @@ from dataclasses import asdict, dataclass
 from ollama import chat
 
 
+# Dataset-independent: guidance for one dataset belongs in its
+# datasets/<name>/hints.txt, which is part of {schema}.
 PROMPT_TEMPLATE = """
 You are an expert PostgreSQL SQL generator.
 
@@ -22,7 +24,6 @@ Instructions:
 - Do not invent columns.
 - Use only tables and columns from the provided schema.
 - Use the defined relationships when necessary.
-- When returning product category names, prefer the English translation table when available.
 - Return ONLY the SQL query.
 """
 

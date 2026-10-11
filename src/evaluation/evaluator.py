@@ -58,8 +58,12 @@ def git_info():
         return {
             "commit": git("rev-parse", "HEAD"),
             # Uncommitted changes mean the commit alone does not
-            # reproduce this run.
-            "dirty": bool(git("status", "--porcelain")),
+            # reproduce this run. Result files are excluded: they are
+            # outputs, and every run would otherwise dirty the next one.
+            "dirty": bool(git(
+                "status", "--porcelain", "--", ":(top)",
+                ":(top,exclude)" + os.path.relpath(DEFAULT_OUTPUT_DIR, REPO_DIR).replace(os.sep, "/"),
+            )),
         }
     except OSError:
         return {"commit": None, "dirty": None}

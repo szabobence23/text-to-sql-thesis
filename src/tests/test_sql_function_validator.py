@@ -29,6 +29,7 @@ def test_allows_safe_queries(sql):
         ("SELECT set_config('statement_timeout', '0', false)", "set_config"),
         ("SELECT pg_advisory_lock(1)", "pg_advisory_lock"),
         ("SELECT query_to_xml('SELECT 1', true, true, '')", "query_to_xml"),
+        ("SELECT * FROM crosstab('SELECT 1') AS ct(a text)", "crosstab"),
         ("SELECT lo_import('/etc/passwd')", "lo_import"),
         ("SELECT pg_read_file('/etc/passwd')", "pg_read_file"),
         ("SELECT nextval('seq')", "nextval"),

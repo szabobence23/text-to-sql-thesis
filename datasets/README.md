@@ -6,7 +6,10 @@ default `olist`).
 
 ```
 <name>/
-  dataset.json      {"name", "db_name", "description"}
+  dataset.json      {"name", "db_name", "description", optional "schemas"}
+                    "schemas": PostgreSQL schemas holding the tables
+                    (default ["public"]); tables outside public appear
+                    schema-qualified in the prompt
   schema.sql        CREATE TABLE statements, with foreign keys
   import.sql        data loading (COPY from /datasets/<name>/data/... or INSERTs)
   hints.txt         optional hand-written notes appended to the schema in the prompt
@@ -44,4 +47,8 @@ SQLite benchmarks (Spider, BIRD) must be converted first.
   is older than the data (data runs to 2026 round 15). Columns are renamed
   to snake_case; missing values are `\N`, plus a few empty strings that
   `import.sql` turns into NULL.
+- `adventureworks`: Microsoft AdventureWorks OLTP via the lorint PostgreSQL
+  port, 68 tables in 5 schemas (prompt schema text ~4.8k tokens). Sources,
+  pinned versions and checksums in `adventureworks/SOURCES.md`; run
+  `adventureworks/prepare_data.py` before `setup_dataset.py`.
 - `sales`: 4-table toy schema, smoke test and template.

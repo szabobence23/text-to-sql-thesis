@@ -1,0 +1,181 @@
+{
+  "run": {
+    "started_at": "2026-10-11T16:28:18",
+    "git": {
+      "commit": "d39d444f9ace0102e42682f00512a1f53afab314",
+      "dirty": true
+    },
+    "pipeline": {
+      "dataset": "adventureworks",
+      "llm": {
+        "model": "qwen2.5-coder:7b",
+        "temperature": 0.0,
+        "seed": 42,
+        "num_ctx": 8192
+      },
+      "schema_hints": true,
+      "block_functions": true,
+      "max_correction_rounds": 0,
+      "natural_language_answer": true,
+      "answer_max_rows": 50
+    },
+    "model_digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+    "prompt_sha256": "1dc176a63d06de48214aed35f052e3a96a51fde59ddcd42447b9c659b06da2e6",
+    "correction_prompt_sha256": "18936e160c444acb215efe64089ac135fadb9dbaf3ddecba9dcd16f6af912024",
+    "answer_prompt_sha256": "c9b2d0216120aeb7aeada6b8cbb4c2f14f084befb06d7eb4eb84cdf45f5cc734",
+    "database": "adventureworks_db",
+    "db_user": "text2sql_reader",
+    "test_cases_file": "datasets\\adventureworks\\test_cases\\hu.json",
+    "test_cases_language": "hu",
+    "test_cases_sha256": "57ab5ab6cf36cfecebd95bf5c3a28c2b4e5f0e95fe898d68eafe6dc548d0b3ff",
+    "schema_sha256": "4a2242218b5c6861c6345180c650cff4930be5719638ea2f35a054cb2cf53c4d",
+    "schema_text": "Database: adventureworks_db\n\nTable: humanresources.department\n- departmentid integer\n- name character varying\n- groupname character varying\n- modifieddate timestamp without time zone\nTable: humanresources.employee\n- businessentityid integer\n- nationalidnumber character varying\n- loginid character varying\n- jobtitle character varying\n- birthdate date\n- maritalstatus character\n- gender character\n- hiredate date\n- salariedflag boolean\n- vacationhours smallint\n- sickleavehours smallint\n- currentflag boolean\n- rowguid uuid\n- modifieddate timestamp without time zone\n- organizationnode character varying\nTable: humanresources.employeedepartmenthistory\n- businessentityid integer\n- departmentid smallint\n- shiftid smallint\n- startdate date\n- enddate date\n- modifieddate timestamp without time zone\nTable: humanresources.employeepayhistory\n- businessentityid integer\n- ratechangedate timestamp without time zone\n- rate numeric\n- payfrequency smallint\n- modifieddate timestamp without time zone\nTable: humanresources.jobcandidate\n- jobcandidateid integer\n- businessentityid integer\n- resume xml\n- modifieddate timestamp without time zone\nTable: humanresources.shift\n- shiftid integer\n- name character varying\n- starttime time without time zone\n- endtime time without time zone\n- modifieddate timestamp without time zone\nTable: person.address\n- addressid integer\n- addressline1 character varying\n- addressline2 character varying\n- city character varying\n- stateprovinceid integer\n- postalcode character varying\n- spatiallocation bytea\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: person.addresstype\n- addresstypeid integer\n- name character varying\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: person.businessentity\n- businessentityid integer\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: person.businessentityaddress\n- businessentityid integer\n- addressid integer\n- addresstypeid integer\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: person.businessentitycontact\n- businessentityid integer\n- personid integer\n- contacttypeid integer\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: person.contacttype\n- contacttypeid integer\n- name character varying\n- modifieddate timestamp without time zone\nTable: person.countryregion\n- countryregioncode character varying\n- name character varying\n- modifieddate timestamp without time zone\nTable: person.emailaddress\n- businessentityid integer\n- emailaddressid integer\n- emailaddress character varying\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: person.password\n- businessentityid integer\n- passwordhash character varying\n- passwordsalt character varying\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: person.person\n- businessentityid integer\n- persontype character\n- namestyle boolean\n- title character varying\n- firstname character varying\n- middlename character varying\n- lastname character varying\n- suffix character varying\n- emailpromotion integer\n- additionalcontactinfo xml\n- demographics xml\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: person.personphone\n- businessentityid integer\n- phonenumber character varying\n- phonenumbertypeid integer\n- modifieddate timestamp without time zone\nTable: person.phonenumbertype\n- phonenumbertypeid integer\n- name character varying\n- modifieddate timestamp without time zone\nTable: person.stateprovince\n- stateprovinceid integer\n- stateprovincecode character\n- countryregioncode character varying\n- isonlystateprovinceflag boolean\n- name character varying\n- territoryid integer\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: production.billofmaterials\n- billofmaterialsid integer\n- productassemblyid integer\n- componentid integer\n- startdate timestamp without time zone\n- enddate timestamp without time zone\n- unitmeasurecode character\n- bomlevel smallint\n- perassemblyqty numeric\n- modifieddate timestamp without time zone\nTable: production.culture\n- cultureid character\n- name character varying\n- modifieddate timestamp without time zone\nTable: production.document\n- title character varying\n- owner integer\n- folderflag boolean\n- filename character varying\n- fileextension character varying\n- revision character\n- changenumber integer\n- status smallint\n- documentsummary text\n- document bytea\n- rowguid uuid\n- modifieddate timestamp without time zone\n- documentnode character varying\nTable: production.illustration\n- illustrationid integer\n- diagram xml\n- modifieddate timestamp without time zone\nTable: production.location\n- locationid integer\n- name character varying\n- costrate numeric\n- availability numeric\n- modifieddate timestamp without time zone\nTable: production.product\n- productid integer\n- name character varying\n- productnumber character varying\n- makeflag boolean\n- finishedgoodsflag boolean\n- color character varying\n- safetystocklevel smallint\n- reorderpoint smallint\n- standardcost numeric\n- listprice numeric\n- size character varying\n- sizeunitmeasurecode character\n- weightunitmeasurecode character\n- weight numeric\n- daystomanufacture integer\n- productline character\n- class character\n- style character\n- productsubcategoryid integer\n- productmodelid integer\n- sellstartdate timestamp without time zone\n- sellenddate timestamp without time zone\n- discontinueddate timestamp without time zone\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: production.productcategory\n- productcategoryid integer\n- name character varying\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: production.productcosthistory\n- productid integer\n- startdate timestamp without time zone\n- enddate timestamp without time zone\n- standardcost numeric\n- modifieddate timestamp without time zone\nTable: production.productdescription\n- productdescriptionid integer\n- description character varying\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: production.productdocument\n- productid integer\n- modifieddate timestamp without time zone\n- documentnode character varying\nTable: production.productinventory\n- productid integer\n- locationid smallint\n- shelf character varying\n- bin smallint\n- quantity smallint\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: production.productlistpricehistory\n- productid integer\n- startdate timestamp without time zone\n- enddate timestamp without time zone\n- listprice numeric\n- modifieddate timestamp without time zone\nTable: production.productmodel\n- productmodelid integer\n- name character varying\n- catalogdescription xml\n- instructions xml\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: production.productmodelillustration\n- productmodelid integer\n- illustrationid integer\n- modifieddate timestamp without time zone\nTable: production.productmodelproductdescriptionculture\n- productmodelid integer\n- productdescriptionid integer\n- cultureid character\n- modifieddate timestamp without time zone\nTable: production.productphoto\n- productphotoid integer\n- thumbnailphoto bytea\n- thumbnailphotofilename character varying\n- largephoto bytea\n- largephotofilename character varying\n- modifieddate timestamp without time zone\nTable: production.productproductphoto\n- productid integer\n- productphotoid integer\n- primary boolean\n- modifieddate timestamp without time zone\nTable: production.productreview\n- productreviewid integer\n- productid integer\n- reviewername character varying\n- reviewdate timestamp without time zone\n- emailaddress character varying\n- rating integer\n- comments character varying\n- modifieddate timestamp without time zone\nTable: production.productsubcategory\n- productsubcategoryid integer\n- productcategoryid integer\n- name character varying\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: production.scrapreason\n- scrapreasonid integer\n- name character varying\n- modifieddate timestamp without time zone\nTable: production.transactionhistory\n- transactionid integer\n- productid integer\n- referenceorderid integer\n- referenceorderlineid integer\n- transactiondate timestamp without time zone\n- transactiontype character\n- quantity integer\n- actualcost numeric\n- modifieddate timestamp without time zone\nTable: production.transactionhistoryarchive\n- transactionid integer\n- productid integer\n- referenceorderid integer\n- referenceorderlineid integer\n- transactiondate timestamp without time zone\n- transactiontype character\n- quantity integer\n- actualcost numeric\n- modifieddate timestamp without time zone\nTable: production.unitmeasure\n- unitmeasurecode character\n- name character varying\n- modifieddate timestamp without time zone\nTable: production.workorder\n- workorderid integer\n- productid integer\n- orderqty integer\n- scrappedqty smallint\n- startdate timestamp without time zone\n- enddate timestamp without time zone\n- duedate timestamp without time zone\n- scrapreasonid smallint\n- modifieddate timestamp without time zone\nTable: production.workorderrouting\n- workorderid integer\n- productid integer\n- operationsequence smallint\n- locationid smallint\n- scheduledstartdate timestamp without time zone\n- scheduledenddate timestamp without time zone\n- actualstartdate timestamp without time zone\n- actualenddate timestamp without time zone\n- actualresourcehrs numeric\n- plannedcost numeric\n- actualcost numeric\n- modifieddate timestamp without time zone\nTable: purchasing.productvendor\n- productid integer\n- businessentityid integer\n- averageleadtime integer\n- standardprice numeric\n- lastreceiptcost numeric\n- lastreceiptdate timestamp without time zone\n- minorderqty integer\n- maxorderqty integer\n- onorderqty integer\n- unitmeasurecode character\n- modifieddate timestamp without time zone\nTable: purchasing.purchaseorderdetail\n- purchaseorderid integer\n- purchaseorderdetailid integer\n- duedate timestamp without time zone\n- orderqty smallint\n- productid integer\n- unitprice numeric\n- receivedqty numeric\n- rejectedqty numeric\n- modifieddate timestamp without time zone\nTable: purchasing.purchaseorderheader\n- purchaseorderid integer\n- revisionnumber smallint\n- status smallint\n- employeeid integer\n- vendorid integer\n- shipmethodid integer\n- orderdate timestamp without time zone\n- shipdate timestamp without time zone\n- subtotal numeric\n- taxamt numeric\n- freight numeric\n- modifieddate timestamp without time zone\nTable: purchasing.shipmethod\n- shipmethodid integer\n- name character varying\n- shipbase numeric\n- shiprate numeric\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: purchasing.vendor\n- businessentityid integer\n- accountnumber character varying\n- name character varying\n- creditrating smallint\n- preferredvendorstatus boolean\n- activeflag boolean\n- purchasingwebserviceurl character varying\n- modifieddate timestamp without time zone\nTable: sales.countryregioncurrency\n- countryregioncode character varying\n- currencycode character\n- modifieddate timestamp without time zone\nTable: sales.creditcard\n- creditcardid integer\n- cardtype character varying\n- cardnumber character varying\n- expmonth smallint\n- expyear smallint\n- modifieddate timestamp without time zone\nTable: sales.currency\n- currencycode character\n- name character varying\n- modifieddate timestamp without time zone\nTable: sales.currencyrate\n- currencyrateid integer\n- currencyratedate timestamp without time zone\n- fromcurrencycode character\n- tocurrencycode character\n- averagerate numeric\n- endofdayrate numeric\n- modifieddate timestamp without time zone\nTable: sales.customer\n- customerid integer\n- personid integer\n- storeid integer\n- territoryid integer\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: sales.personcreditcard\n- businessentityid integer\n- creditcardid integer\n- modifieddate timestamp without time zone\nTable: sales.salesorderdetail\n- salesorderid integer\n- salesorderdetailid integer\n- carriertrackingnumber character varying\n- orderqty smallint\n- productid integer\n- specialofferid integer\n- unitprice numeric\n- unitpricediscount numeric\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: sales.salesorderheader\n- salesorderid integer\n- revisionnumber smallint\n- orderdate timestamp without time zone\n- duedate timestamp without time zone\n- shipdate timestamp without time zone\n- status smallint\n- onlineorderflag boolean\n- purchaseordernumber character varying\n- accountnumber character varying\n- customerid integer\n- salespersonid integer\n- territoryid integer\n- billtoaddressid integer\n- shiptoaddressid integer\n- shipmethodid integer\n- creditcardid integer\n- creditcardapprovalcode character varying\n- currencyrateid integer\n- subtotal numeric\n- taxamt numeric\n- freight numeric\n- totaldue numeric\n- comment character varying\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: sales.salesorderheadersalesreason\n- salesorderid integer\n- salesreasonid integer\n- modifieddate timestamp without time zone\nTable: sales.salesperson\n- businessentityid integer\n- territoryid integer\n- salesquota numeric\n- bonus numeric\n- commissionpct numeric\n- salesytd numeric\n- saleslastyear numeric\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: sales.salespersonquotahistory\n- businessentityid integer\n- quotadate timestamp without time zone\n- salesquota numeric\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: sales.salesreason\n- salesreasonid integer\n- name character varying\n- reasontype character varying\n- modifieddate timestamp without time zone\nTable: sales.salestaxrate\n- salestaxrateid integer\n- stateprovinceid integer\n- taxtype smallint\n- taxrate numeric\n- name character varying\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: sales.salesterritory\n- territoryid integer\n- name character varying\n- countryregioncode character varying\n- group character varying\n- salesytd numeric\n- saleslastyear numeric\n- costytd numeric\n- costlastyear numeric\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: sales.salesterritoryhistory\n- businessentityid integer\n- territoryid integer\n- startdate timestamp without time zone\n- enddate timestamp without time zone\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: sales.shoppingcartitem\n- shoppingcartitemid integer\n- shoppingcartid character varying\n- quantity integer\n- productid integer\n- datecreated timestamp without time zone\n- modifieddate timestamp without time zone\nTable: sales.specialoffer\n- specialofferid integer\n- description character varying\n- discountpct numeric\n- type character varying\n- category character varying\n- startdate timestamp without time zone\n- enddate timestamp without time zone\n- minqty integer\n- maxqty integer\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: sales.specialofferproduct\n- specialofferid integer\n- productid integer\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: sales.store\n- businessentityid integer\n- name character varying\n- salespersonid integer\n- demographics xml\n- rowguid uuid\n- modifieddate timestamp without time zone\n\nRelationships:\n- humanresources.employee.businessentityid -> person.person.businessentityid\n- humanresources.employeedepartmenthistory.businessentityid -> humanresources.employee.businessentityid\n- humanresources.employeedepartmenthistory.departmentid -> humanresources.department.departmentid\n- humanresources.employeedepartmenthistory.shiftid -> humanresources.shift.shiftid\n- humanresources.employeepayhistory.businessentityid -> humanresources.employee.businessentityid\n- humanresources.jobcandidate.businessentityid -> humanresources.employee.businessentityid\n- person.address.stateprovinceid -> person.stateprovince.stateprovinceid\n- person.businessentityaddress.addressid -> person.address.addressid\n- person.businessentityaddress.addresstypeid -> person.addresstype.addresstypeid\n- person.businessentityaddress.businessentityid -> person.businessentity.businessentityid\n- person.businessentitycontact.businessentityid -> person.businessentity.businessentityid\n- person.businessentitycontact.contacttypeid -> person.contacttype.contacttypeid\n- person.businessentitycontact.personid -> person.person.businessentityid\n- person.emailaddress.businessentityid -> person.person.businessentityid\n- person.password.businessentityid -> person.person.businessentityid\n- person.person.businessentityid -> person.businessentity.businessentityid\n- person.personphone.businessentityid -> person.person.businessentityid\n- person.personphone.phonenumbertypeid -> person.phonenumbertype.phonenumbertypeid\n- person.stateprovince.countryregioncode -> person.countryregion.countryregioncode\n- person.stateprovince.territoryid -> sales.salesterritory.territoryid\n- production.billofmaterials.componentid -> production.product.productid\n- production.billofmaterials.productassemblyid -> production.product.productid\n- production.billofmaterials.unitmeasurecode -> production.unitmeasure.unitmeasurecode\n- production.document.owner -> humanresources.employee.businessentityid\n- production.product.productmodelid -> production.productmodel.productmodelid\n- production.product.productsubcategoryid -> production.productsubcategory.productsubcategoryid\n- production.product.sizeunitmeasurecode -> production.unitmeasure.unitmeasurecode\n- production.product.weightunitmeasurecode -> production.unitmeasure.unitmeasurecode\n- production.productcosthistory.productid -> production.product.productid\n- production.productdocument.documentnode -> production.document.documentnode\n- production.productdocument.productid -> production.product.productid\n- production.productinventory.locationid -> production.location.locationid\n- production.productinventory.productid -> production.product.productid\n- production.productlistpricehistory.productid -> production.product.productid\n- production.productmodelillustration.illustrationid -> production.illustration.illustrationid\n- production.productmodelillustration.productmodelid -> production.productmodel.productmodelid\n- production.productmodelproductdescriptionculture.cultureid -> production.culture.cultureid\n- production.productmodelproductdescriptionculture.productdescriptionid -> production.productdescription.productdescriptionid\n- production.productmodelproductdescriptionculture.productmodelid -> production.productmodel.productmodelid\n- production.productproductphoto.productid -> production.product.productid\n- production.productproductphoto.productphotoid -> production.productphoto.productphotoid\n- production.productreview.productid -> production.product.productid\n- production.productsubcategory.productcategoryid -> production.productcategory.productcategoryid\n- production.transactionhistory.productid -> production.product.productid\n- production.workorder.productid -> production.product.productid\n- production.workorder.scrapreasonid -> production.scrapreason.scrapreasonid\n- production.workorderrouting.locationid -> production.location.locationid\n- production.workorderrouting.workorderid -> production.workorder.workorderid\n- purchasing.productvendor.businessentityid -> purchasing.vendor.businessentityid\n- purchasing.productvendor.productid -> production.product.productid\n- purchasing.productvendor.unitmeasurecode -> production.unitmeasure.unitmeasurecode\n- purchasing.purchaseorderdetail.productid -> production.product.productid\n- purchasing.purchaseorderdetail.purchaseorderid -> purchasing.purchaseorderheader.purchaseorderid\n- purchasing.purchaseorderheader.employeeid -> humanresources.employee.businessentityid\n- purchasing.purchaseorderheader.shipmethodid -> purchasing.shipmethod.shipmethodid\n- purchasing.purchaseorderheader.vendorid -> purchasing.vendor.businessentityid\n- purchasing.vendor.businessentityid -> person.businessentity.businessentityid\n- sales.countryregioncurrency.countryregioncode -> person.countryregion.countryregioncode\n- sales.countryregioncurrency.currencycode -> sales.currency.currencycode\n- sales.currencyrate.fromcurrencycode -> sales.currency.currencycode\n- sales.currencyrate.tocurrencycode -> sales.currency.currencycode\n- sales.customer.personid -> person.person.businessentityid\n- sales.customer.storeid -> sales.store.businessentityid\n- sales.customer.territoryid -> sales.salesterritory.territoryid\n- sales.personcreditcard.businessentityid -> person.person.businessentityid\n- sales.personcreditcard.creditcardid -> sales.creditcard.creditcardid\n- sales.salesorderdetail.productid -> sales.specialofferproduct.productid\n- sales.salesorderdetail.salesorderid -> sales.salesorderheader.salesorderid\n- sales.salesorderdetail.specialofferid -> sales.specialofferproduct.specialofferid\n- sales.salesorderheader.billtoaddressid -> person.address.addressid\n- sales.salesorderheader.creditcardid -> sales.creditcard.creditcardid\n- sales.salesorderheader.currencyrateid -> sales.currencyrate.currencyrateid\n- sales.salesorderheader.customerid -> sales.customer.customerid\n- sales.salesorderheader.salespersonid -> sales.salesperson.businessentityid\n- sales.salesorderheader.shipmethodid -> purchasing.shipmethod.shipmethodid\n- sales.salesorderheader.shiptoaddressid -> person.address.addressid\n- sales.salesorderheader.territoryid -> sales.salesterritory.territoryid\n- sales.salesorderheadersalesreason.salesorderid -> sales.salesorderheader.salesorderid\n- sales.salesorderheadersalesreason.salesreasonid -> sales.salesreason.salesreasonid\n- sales.salesperson.businessentityid -> humanresources.employee.businessentityid\n- sales.salesperson.territoryid -> sales.salesterritory.territoryid\n- sales.salespersonquotahistory.businessentityid -> sales.salesperson.businessentityid\n- sales.salestaxrate.stateprovinceid -> person.stateprovince.stateprovinceid\n- sales.salesterritory.countryregioncode -> person.countryregion.countryregioncode\n- sales.salesterritoryhistory.businessentityid -> sales.salesperson.businessentityid\n- sales.salesterritoryhistory.territoryid -> sales.salesterritory.territoryid\n- sales.shoppingcartitem.productid -> production.product.productid\n- sales.specialofferproduct.productid -> production.product.productid\n- sales.specialofferproduct.specialofferid -> sales.specialoffer.specialofferid\n- sales.store.businessentityid -> person.businessentity.businessentityid\n- sales.store.salespersonid -> sales.salesperson.businessentityid\n"
+  },
+  "summary": {
+    "total_questions": 1,
+    "valid_sql": {
+      "count": 1,
+      "total": 1,
+      "rate": 1.0
+    },
+    "execution_success": {
+      "count": 1,
+      "total": 1,
+      "rate": 1.0
+    },
+    "strict_ex": {
+      "count": 1,
+      "total": 1,
+      "rate": 1.0
+    },
+    "relaxed_ex": {
+      "count": 1,
+      "total": 1,
+      "rate": 1.0
+    },
+    "first_attempt": {
+      "execution_success": {
+        "count": 1,
+        "total": 1,
+        "rate": 1.0
+      },
+      "strict_ex": {
+        "count": 1,
+        "total": 1,
+        "rate": 1.0
+      },
+      "relaxed_ex": {
+        "count": 1,
+        "total": 1,
+        "rate": 1.0
+      }
+    },
+    "correction": {
+      "triggered": 0,
+      "fixed_execution": 0,
+      "fixed_strict": 0,
+      "fixed_relaxed": 0,
+      "mean_rounds_when_triggered": 0
+    },
+    "answer": {
+      "answered": 1,
+      "mean_answer_s": 0.850996799999848,
+      "mean_prompt_tokens": 186.0,
+      "mean_completion_tokens": 16.0
+    },
+    "by_category": {
+      "aggregation": {
+        "strict_ex": {
+          "count": 1,
+          "total": 1,
+          "rate": 1.0
+        },
+        "relaxed_ex": {
+          "count": 1,
+          "total": 1,
+          "rate": 1.0
+        }
+      }
+    },
+    "by_difficulty": {
+      "easy": {
+        "strict_ex": {
+          "count": 1,
+          "total": 1,
+          "rate": 1.0
+        },
+        "relaxed_ex": {
+          "count": 1,
+          "total": 1,
+          "rate": 1.0
+        }
+      }
+    },
+    "mean_generation_s": 14.26099990005605,
+    "mean_prompt_tokens": 4775.0,
+    "mean_completion_tokens": 21.0
+  },
+  "results": [
+    {
+      "id": 1,
+      "question": "Hány alkalmazottja van a cégnek?",
+      "category": "aggregation",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT COUNT(*) AS employee_count FROM humanresources.employee;",
+      "order_sensitive": false,
+      "expected_result": [
+        [
+          290
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(businessentityid) AS employee_count\nFROM humanresources.employee;",
+      "raw_response": "```sql\nSELECT COUNT(businessentityid) AS employee_count\nFROM humanresources.employee;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          290
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(businessentityid) AS employee_count\nFROM humanresources.employee;",
+          "raw_response": "```sql\nSELECT COUNT(businessentityid) AS employee_count\nFROM humanresources.employee;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4775,
+          "completion_tokens": 21,
+          "timings": {
+            "generation_s": 14.26099990005605,
+            "validation_s": 0.0035244999453425407,
+            "execution_s": 0.0014704999048262835
+          }
+        }
+      ],
+      "answer": {
+        "text": "A cégnek 290 alkalmazottja van.",
+        "prompt_tokens": 186,
+        "completion_tokens": 16
+      },
+      "max_prompt_tokens": 4775,
+      "prompt_tokens": 4775,
+      "completion_tokens": 21,
+      "timings": {
+        "generation_s": 14.26099990005605,
+        "validation_s": 0.0035244999453425407,
+        "execution_s": 0.0014704999048262835,
+        "answer_s": 0.850996799999848
+      }
+    }
+  ]
+}

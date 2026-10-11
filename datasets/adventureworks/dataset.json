@@ -1,0 +1,6 @@
+{
+  "name": "adventureworks",
+  "db_name": "adventureworks_db",
+  "description": "Microsoft AdventureWorks OLTP sample (fictitious bicycle manufacturer), PostgreSQL port by lorint: 68 tables in 5 schemas (humanresources, person, production, purchasing, sales).",
+  "schemas": ["humanresources", "person", "production", "purchasing", "sales"]
+}

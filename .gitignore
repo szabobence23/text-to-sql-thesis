@@ -3,3 +3,6 @@ __pycache__/
 *.pyc
 .env
 *.csv
+
+# Raw downloads, reproducible from datasets/adventureworks/SOURCES.md
+datasets/adventureworks/data/

@@ -1,0 +1,99 @@
+{
+  "batch": {
+    "run_name": "smoke",
+    "started_at": "2026-10-11T17:03:36",
+    "git": {
+      "commit": "d39d444f9ace0102e42682f00512a1f53afab314",
+      "dirty": true
+    },
+    "evaluator_args": [],
+    "files": [
+      "20261011-170337_sales-hu_qwen2.5-coder-7b_smoke-r1.json",
+      "20261011-170353_sales-en_qwen2.5-coder-7b_smoke-r1.json",
+      "20261011-170400_sales-hu_qwen2.5-coder-7b_smoke-r2.json",
+      "20261011-170407_sales-en_qwen2.5-coder-7b_smoke-r2.json"
+    ]
+  },
+  "summary": [
+    {
+      "dataset": "sales",
+      "language": "en",
+      "setup": "javítás=0 hintek=be qwen2.5-coder:7b",
+      "runs": 2,
+      "questions": 4,
+      "rates": {
+        "valid_sql": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 1.0,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 1.0,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 1.4683519999671262,
+      "mean_prompt_tokens": 231.0,
+      "dirty_runs": 2,
+      "mismatched_fields": [],
+      "files": [
+        "20261011-170353_sales-en_qwen2.5-coder-7b_smoke-r1.json",
+        "20261011-170407_sales-en_qwen2.5-coder-7b_smoke-r2.json"
+      ]
+    },
+    {
+      "dataset": "sales",
+      "language": "hu",
+      "setup": "javítás=0 hintek=be qwen2.5-coder:7b",
+      "runs": 2,
+      "questions": 4,
+      "rates": {
+        "valid_sql": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.75,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.75,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 0.5,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 1.0,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 2.626076162530808,
+      "mean_prompt_tokens": 240.5,
+      "dirty_runs": 2,
+      "mismatched_fields": [],
+      "files": [
+        "20261011-170337_sales-hu_qwen2.5-coder-7b_smoke-r1.json",
+        "20261011-170400_sales-hu_qwen2.5-coder-7b_smoke-r2.json"
+      ]
+    }
+  ]
+}

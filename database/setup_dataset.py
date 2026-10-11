@@ -69,9 +69,10 @@ def main():
     dataset = load_dataset(args.dataset)
     db = dataset.db_name
 
-    # The name is interpolated into CREATE/DROP DATABASE.
-    if not re.fullmatch(r"[a-z_][a-z0-9_]*", db):
-        sys.exit(f"Invalid db_name '{db}': use lowercase letters, digits, _")
+    # Names are interpolated into CREATE/DROP DATABASE and GRANT.
+    for name in (db, *dataset.schemas):
+        if not re.fullmatch(r"[a-z_][a-z0-9_]*", name):
+            sys.exit(f"Invalid name '{name}': use lowercase letters, digits, _")
 
     mounted = subprocess.run(
         ["docker", "exec", CONTAINER, "test", "-d", f"/datasets/{dataset.name}"]
@@ -107,6 +108,16 @@ def main():
 
     print("Granting read-only access...")
     psql(db, read(READONLY_ROLE_SQL), variables={"db_name": db})
+
+    # readonly_role.sql covers public; datasets with tables in other
+    # schemas need read access there too.
+    other_schemas = [s for s in dataset.schemas if s != "public"]
+    if other_schemas:
+        psql(db, "".join(
+            f"GRANT USAGE ON SCHEMA {s} TO text2sql_reader;\n"
+            f"GRANT SELECT ON ALL TABLES IN SCHEMA {s} TO text2sql_reader;\n"
+            for s in other_schemas
+        ))
 
     print(f"Dataset '{dataset.name}' is ready in {db}.")
 

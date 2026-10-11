@@ -40,6 +40,8 @@ BLOCKED_FUNCTIONS = frozenset({
     # Run SQL passed as a string -- a way around this very check.
     "query_to_xml", "query_to_xmlschema", "query_to_xml_and_xmlschema",
     "dblink", "dblink_exec",
+    # tablefunc extension (installed by the AdventureWorks port).
+    "crosstab", "crosstab2", "crosstab3", "crosstab4", "connectby",
     # Read or write files on the server.
     "pg_read_file", "pg_read_binary_file", "pg_ls_dir", "pg_stat_file",
     "lo_import", "lo_export", "lo_get", "lo_put",
