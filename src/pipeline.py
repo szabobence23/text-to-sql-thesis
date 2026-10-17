@@ -10,6 +10,9 @@ from schema import get_schema
 from sql_validator import validate_sql
 
 
+SCHEMA_RETRIEVAL_MODES = ("full", "oracle")
+
+
 @dataclass(frozen=True)
 class PipelineConfig:
     """
@@ -24,6 +27,11 @@ class PipelineConfig:
     llm: LLMSettings = field(default_factory=LLMSettings)
     # The dataset's hints.txt appended to the schema text.
     schema_hints: bool = True
+    # Which tables the schema text lists: "full" = all of them (baseline);
+    # "oracle" = only those the question's ground truth reads, an upper
+    # bound for schema retrieval. The oracle needs the ground truth, so
+    # only the evaluator can use it, passing a per-question schema.
+    schema_retrieval: str = "full"
     # Reject queries that call a dangerous function (see
     # sql_function_validator). Never fires on benign analytical
     # queries, so it leaves the EX metrics unchanged.
@@ -37,6 +45,13 @@ class PipelineConfig:
     # At most this many result rows are shown to the answer model.
     answer_max_rows: int = 50
 
+    def __post_init__(self):
+        if self.schema_retrieval not in SCHEMA_RETRIEVAL_MODES:
+            raise ValueError(
+                f"Unknown schema_retrieval '{self.schema_retrieval}'. "
+                f"Available: {', '.join(SCHEMA_RETRIEVAL_MODES)}"
+            )
+
     def to_dict(self):
         return asdict(self)
 
@@ -45,12 +60,13 @@ def open_connection(config: PipelineConfig):
     return get_connection(load_dataset(config.dataset).db_name)
 
 
-def load_schema(conn, config: PipelineConfig) -> str:
+def load_schema(conn, config: PipelineConfig, tables=None) -> str:
     # Schema text depends on the config, so it is built here rather
     # than by callers, which could pass a mismatching setting.
+    # tables: (schema, table) pairs to list instead of all of them.
     dataset = load_dataset(config.dataset)
     hints = dataset.hints if config.schema_hints else ""
-    return get_schema(conn, dataset.db_name, hints, dataset.schemas)
+    return get_schema(conn, dataset.db_name, hints, dataset.schemas, tables)
 
 
 @dataclass

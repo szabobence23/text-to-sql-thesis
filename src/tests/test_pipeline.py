@@ -21,7 +21,27 @@ def test_default_config_is_serializable():
     config = PipelineConfig().to_dict()
 
     assert config["schema_hints"] is True
+    assert config["schema_retrieval"] == "full"
     assert config["llm"]["temperature"] == 0.0
+
+
+def test_unknown_schema_retrieval_is_rejected():
+    with pytest.raises(ValueError, match="Available"):
+        PipelineConfig(schema_retrieval="magic")
+
+
+@pytest.mark.db
+def test_schema_can_be_limited_to_some_tables(conn):
+    config = PipelineConfig(dataset="olist")
+    schema = load_schema(conn, config, tables={("public", "orders"), ("public", "customers")})
+
+    tables = [line for line in schema.splitlines() if line.startswith("Table: ")]
+    assert tables == ["Table: customers", "Table: orders"]
+    # Only relationships between two listed tables are kept.
+    assert "- orders.customer_id -> customers.customer_id" in schema
+    assert "order_items" not in schema
+    # Hints are kept: they are not per-table.
+    assert load_dataset("olist").hints in schema
 
 
 @pytest.mark.db

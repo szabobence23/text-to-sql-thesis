@@ -35,7 +35,14 @@ from llm import (
     PROMPT_SHA256,
     LLMSettings,
 )
-from pipeline import PipelineConfig, load_schema, open_connection, run_pipeline
+from pipeline import (
+    SCHEMA_RETRIEVAL_MODES,
+    PipelineConfig,
+    load_schema,
+    open_connection,
+    run_pipeline,
+)
+from sql_tables import format_tables, table_recall, tables_in_sql
 
 
 DEFAULT_OUTPUT_DIR = os.path.join(SRC_DIR, "evaluation", "results")
@@ -100,6 +107,15 @@ def run_ground_truths(conn, test_cases):
 
 def evaluate_test_case(conn, schema, config, case, expected_rows):
     ordered = is_order_sensitive(case["ground_truth_sql"])
+    gold_tables = tables_in_sql(case["ground_truth_sql"])
+
+    # The oracle shows only the tables the ground truth reads; the
+    # model never sees the ground truth itself.
+    if config.schema_retrieval == "oracle":
+        schema_tables = gold_tables
+        schema = load_schema(conn, config, tables=schema_tables)
+    else:
+        schema_tables = None  # every table
 
     result = run_pipeline(conn, case["question"], schema, config)
 
@@ -124,6 +140,11 @@ def evaluate_test_case(conn, schema, config, case, expected_rows):
         "difficulty": case["difficulty"],
         "ground_truth_sql": case["ground_truth_sql"],
         "order_sensitive": ordered,
+        # Tables the question needs vs the tables its schema text listed
+        # (None = all); recall is what schema retrieval is scored on.
+        "gold_tables": format_tables(gold_tables),
+        "schema_tables": None if schema_tables is None else format_tables(schema_tables),
+        "table_recall": 1.0 if schema_tables is None else table_recall(gold_tables, schema_tables),
         "expected_result": expected_rows,
         "generated_sql": result.sql,
         "raw_response": result.raw_response,
@@ -200,6 +221,7 @@ def summarize(results):
         },
         "by_category": breakdown("category"),
         "by_difficulty": breakdown("difficulty"),
+        "mean_table_recall": mean(r["table_recall"] for r in results),
         "mean_generation_s": mean(r["timings"]["generation_s"] for r in results),
         "mean_prompt_tokens": mean(r["prompt_tokens"] for r in results),
         "mean_completion_tokens": mean(r["completion_tokens"] for r in results),
@@ -233,6 +255,12 @@ def parse_args():
         "--no-schema-hints",
         action="store_true",
         help="a kézzel írt adatbázis-megjegyzések nélkül",
+    )
+    parser.add_argument(
+        "--schema-retrieval",
+        default="full",
+        choices=SCHEMA_RETRIEVAL_MODES,
+        help="a promptba kerülő táblák: full = mind, oracle = csak a ground truth táblái (felső korlát)",
     )
     parser.add_argument(
         "--no-function-blocklist",
@@ -282,6 +310,7 @@ def main():
         dataset=args.dataset,
         llm=llm_settings,
         schema_hints=not args.no_schema_hints,
+        schema_retrieval=args.schema_retrieval,
         block_functions=not args.no_function_blocklist,
         max_correction_rounds=args.correction_rounds,
         natural_language_answer=args.answer,
@@ -363,6 +392,9 @@ def main():
             f"{correction['fixed_strict']} (strict)"
         )
     print(f"Átlagos generálási idő: {summary['mean_generation_s']:.2f} s")
+    print(f"Átlagos prompt: {summary['mean_prompt_tokens']:.0f} token")
+    if config.schema_retrieval != "full":
+        print(f"Séma: {config.schema_retrieval}, átlagos tábla-recall: {summary['mean_table_recall']:.1%}")
     if config.natural_language_answer:
         print(
             f"Válasz készült: {summary['answer']['answered']}/{summary['total_questions']} esetben, "

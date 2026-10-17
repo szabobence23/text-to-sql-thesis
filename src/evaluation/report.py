@@ -49,6 +49,8 @@ def setup_label(pipeline):
         f"hintek={'be' if pipeline['schema_hints'] else 'ki'}",
         llm["model"],
     ]
+    if pipeline.get("schema_retrieval", "full") != "full":
+        parts.append(f"séma={pipeline['schema_retrieval']}")
     if llm["temperature"]:
         parts.append(f"temp={llm['temperature']}")
     if not pipeline.get("block_functions", True):

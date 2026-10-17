@@ -1,0 +1,4304 @@
+{
+  "run": {
+    "started_at": "2026-10-16T20:44:43",
+    "git": {
+      "commit": "9656891154b8cb3b3797f0f197d3692f961dd75b",
+      "dirty": true
+    },
+    "pipeline": {
+      "dataset": "f1",
+      "llm": {
+        "model": "qwen2.5-coder:7b",
+        "temperature": 0.0,
+        "seed": 42,
+        "num_ctx": 8192
+      },
+      "schema_hints": true,
+      "schema_retrieval": "oracle",
+      "block_functions": true,
+      "max_correction_rounds": 0,
+      "natural_language_answer": false,
+      "answer_max_rows": 50
+    },
+    "model_digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+    "prompt_sha256": "99da7ecb190dc2876f2c31f4b8f13f51687394725a30debe1632895b058b2d4a",
+    "correction_prompt_sha256": "18936e160c444acb215efe64089ac135fadb9dbaf3ddecba9dcd16f6af912024",
+    "answer_prompt_sha256": "c9b2d0216120aeb7aeada6b8cbb4c2f14f084befb06d7eb4eb84cdf45f5cc734",
+    "database": "f1_db",
+    "db_user": "text2sql_reader",
+    "test_cases_file": "datasets\\f1\\test_cases\\en.json",
+    "test_cases_language": "en",
+    "test_cases_sha256": "5c598b35739906943dd4d046a05a7d9b07b33a04e7613e49e25a13a59fd5cd95",
+    "schema_sha256": "324c75525ec90b1ef60e100764c9ee12925608695b0ab8c7671ae3c200af7950",
+    "schema_text": "Database: f1_db\n\nTable: circuits\n- circuit_id integer\n- circuit_ref text\n- name text\n- location text\n- country text\n- lat double precision\n- lng double precision\n- alt integer\n- url text\nTable: constructor_results\n- constructor_results_id integer\n- race_id integer\n- constructor_id integer\n- points numeric\n- status text\nTable: constructor_standings\n- constructor_standings_id integer\n- race_id integer\n- constructor_id integer\n- points numeric\n- position integer\n- position_text text\n- wins integer\nTable: constructors\n- constructor_id integer\n- constructor_ref text\n- name text\n- nationality text\n- url text\nTable: driver_standings\n- driver_standings_id integer\n- race_id integer\n- driver_id integer\n- points numeric\n- position integer\n- position_text text\n- wins integer\nTable: drivers\n- driver_id integer\n- driver_ref text\n- number integer\n- code character varying\n- forename text\n- surname text\n- dob date\n- nationality text\n- url text\nTable: lap_times\n- race_id integer\n- driver_id integer\n- lap integer\n- position integer\n- time text\n- milliseconds integer\nTable: pit_stops\n- race_id integer\n- driver_id integer\n- stop integer\n- lap integer\n- time time without time zone\n- duration text\n- milliseconds integer\nTable: practice_results\n- race_id integer\n- driver_id integer\n- session text\n- position integer\n- best_lap_time interval\n- laps integer\nTable: qualifying\n- qualify_id integer\n- race_id integer\n- driver_id integer\n- constructor_id integer\n- number integer\n- position integer\n- q1 text\n- q2 text\n- q3 text\nTable: races\n- race_id integer\n- year integer\n- round integer\n- circuit_id integer\n- name text\n- date date\n- time time without time zone\n- url text\n- fp1_date date\n- fp1_time time without time zone\n- fp2_date date\n- fp2_time time without time zone\n- fp3_date date\n- fp3_time time without time zone\n- quali_date date\n- quali_time time without time zone\n- sprint_date date\n- sprint_time time without time zone\nTable: results\n- result_id integer\n- race_id integer\n- driver_id integer\n- constructor_id integer\n- number integer\n- grid integer\n- position integer\n- position_text text\n- position_order integer\n- points numeric\n- laps integer\n- time text\n- milliseconds integer\n- fastest_lap integer\n- rank integer\n- fastest_lap_time text\n- fastest_lap_speed numeric\n- status_id integer\nTable: seasons\n- year integer\n- url text\nTable: sprint_results\n- result_id integer\n- race_id integer\n- driver_id integer\n- constructor_id integer\n- number integer\n- grid integer\n- position integer\n- position_text text\n- position_order integer\n- points numeric\n- laps integer\n- time text\n- milliseconds integer\n- fastest_lap integer\n- fastest_lap_time text\n- status_id integer\nTable: status\n- status_id integer\n- status text\nTable: tire_stints\n- race_id integer\n- driver_id integer\n- stint integer\n- compound text\n- start_lap integer\n- end_lap integer\n- laps_on_tire integer\nTable: weather\n- race_id integer\n- air_temp_avg numeric\n- air_temp_min numeric\n- air_temp_max numeric\n- track_temp_avg numeric\n- track_temp_min numeric\n- track_temp_max numeric\n- humidity_avg numeric\n- wind_speed_avg numeric\n- wind_speed_max numeric\n- rainfall boolean\n\nRelationships:\n- constructor_results.constructor_id -> constructors.constructor_id\n- constructor_results.race_id -> races.race_id\n- constructor_standings.constructor_id -> constructors.constructor_id\n- constructor_standings.race_id -> races.race_id\n- driver_standings.driver_id -> drivers.driver_id\n- driver_standings.race_id -> races.race_id\n- lap_times.driver_id -> drivers.driver_id\n- lap_times.race_id -> races.race_id\n- pit_stops.driver_id -> drivers.driver_id\n- pit_stops.race_id -> races.race_id\n- practice_results.driver_id -> drivers.driver_id\n- practice_results.race_id -> races.race_id\n- qualifying.constructor_id -> constructors.constructor_id\n- qualifying.driver_id -> drivers.driver_id\n- qualifying.race_id -> races.race_id\n- races.circuit_id -> circuits.circuit_id\n- races.year -> seasons.year\n- results.constructor_id -> constructors.constructor_id\n- results.driver_id -> drivers.driver_id\n- results.race_id -> races.race_id\n- results.status_id -> status.status_id\n- sprint_results.constructor_id -> constructors.constructor_id\n- sprint_results.driver_id -> drivers.driver_id\n- sprint_results.race_id -> races.race_id\n- sprint_results.status_id -> status.status_id\n- tire_stints.driver_id -> drivers.driver_id\n- tire_stints.race_id -> races.race_id\n- weather.race_id -> races.race_id\n\nImportant notes:\n- A driver's full name is drivers.forename plus drivers.surname.\n- results contains only main races; sprint races are in sprint_results.\n- results.position is NULL when the driver was not classified; position_text then holds a code (R = retired, D = disqualified, E = excluded, W = withdrew, F = failed to qualify, N = not classified). position_order orders every driver of a race. A race win is results.position = 1.\n- driver_standings and constructor_standings are cumulative after each race; a season's final standings are the ones after its last race (the highest round of that year).\n- Lap and race times are stored as text (lap_times.time, results.time, fastest_lap_time, q1-q3, pit_stops.duration); use the milliseconds columns to compare or calculate times.\n- Data coverage: qualifying from 1994, lap_times from 1996, pit_stops from 2011, sprint_results from 2021; practice_results, tire_stints and weather only for 2025-2026. The 2026 season is incomplete.\n"
+  },
+  "summary": {
+    "total_questions": 50,
+    "valid_sql": {
+      "count": 43,
+      "total": 50,
+      "rate": 0.86
+    },
+    "execution_success": {
+      "count": 43,
+      "total": 50,
+      "rate": 0.86
+    },
+    "strict_ex": {
+      "count": 26,
+      "total": 50,
+      "rate": 0.52
+    },
+    "relaxed_ex": {
+      "count": 32,
+      "total": 50,
+      "rate": 0.64
+    },
+    "first_attempt": {
+      "execution_success": {
+        "count": 43,
+        "total": 50,
+        "rate": 0.86
+      },
+      "strict_ex": {
+        "count": 26,
+        "total": 50,
+        "rate": 0.52
+      },
+      "relaxed_ex": {
+        "count": 32,
+        "total": 50,
+        "rate": 0.64
+      }
+    },
+    "correction": {
+      "triggered": 0,
+      "fixed_execution": 0,
+      "fixed_strict": 0,
+      "fixed_relaxed": 0,
+      "mean_rounds_when_triggered": 0
+    },
+    "answer": {
+      "answered": 0,
+      "mean_answer_s": 0,
+      "mean_prompt_tokens": 0,
+      "mean_completion_tokens": 0
+    },
+    "by_category": {
+      "aggregation": {
+        "strict_ex": {
+          "count": 7,
+          "total": 7,
+          "rate": 1.0
+        },
+        "relaxed_ex": {
+          "count": 7,
+          "total": 7,
+          "rate": 1.0
+        }
+      },
+      "date": {
+        "strict_ex": {
+          "count": 3,
+          "total": 6,
+          "rate": 0.5
+        },
+        "relaxed_ex": {
+          "count": 4,
+          "total": 6,
+          "rate": 0.6666666666666666
+        }
+      },
+      "filtering": {
+        "strict_ex": {
+          "count": 4,
+          "total": 6,
+          "rate": 0.6666666666666666
+        },
+        "relaxed_ex": {
+          "count": 5,
+          "total": 6,
+          "rate": 0.8333333333333334
+        }
+      },
+      "grouping": {
+        "strict_ex": {
+          "count": 5,
+          "total": 6,
+          "rate": 0.8333333333333334
+        },
+        "relaxed_ex": {
+          "count": 5,
+          "total": 6,
+          "rate": 0.8333333333333334
+        }
+      },
+      "join_aggregation": {
+        "strict_ex": {
+          "count": 6,
+          "total": 12,
+          "rate": 0.5
+        },
+        "relaxed_ex": {
+          "count": 8,
+          "total": 12,
+          "rate": 0.6666666666666666
+        }
+      },
+      "sorting": {
+        "strict_ex": {
+          "count": 1,
+          "total": 6,
+          "rate": 0.16666666666666666
+        },
+        "relaxed_ex": {
+          "count": 3,
+          "total": 6,
+          "rate": 0.5
+        }
+      },
+      "subquery": {
+        "strict_ex": {
+          "count": 0,
+          "total": 7,
+          "rate": 0.0
+        },
+        "relaxed_ex": {
+          "count": 0,
+          "total": 7,
+          "rate": 0.0
+        }
+      }
+    },
+    "by_difficulty": {
+      "easy": {
+        "strict_ex": {
+          "count": 8,
+          "total": 9,
+          "rate": 0.8888888888888888
+        },
+        "relaxed_ex": {
+          "count": 8,
+          "total": 9,
+          "rate": 0.8888888888888888
+        }
+      },
+      "hard": {
+        "strict_ex": {
+          "count": 2,
+          "total": 12,
+          "rate": 0.16666666666666666
+        },
+        "relaxed_ex": {
+          "count": 2,
+          "total": 12,
+          "rate": 0.16666666666666666
+        }
+      },
+      "medium": {
+        "strict_ex": {
+          "count": 16,
+          "total": 29,
+          "rate": 0.5517241379310345
+        },
+        "relaxed_ex": {
+          "count": 22,
+          "total": 29,
+          "rate": 0.7586206896551724
+        }
+      }
+    },
+    "mean_table_recall": 1.0,
+    "mean_generation_s": 2.6982562859999963,
+    "mean_prompt_tokens": 546.8,
+    "mean_completion_tokens": 54.62
+  },
+  "results": [
+    {
+      "id": 1,
+      "question": "Which driver won the 2007 world championship?",
+      "category": "subquery",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT d.forename, d.surname FROM driver_standings ds JOIN races r ON ds.race_id = r.race_id JOIN drivers d ON ds.driver_id = d.driver_id WHERE r.year = 2007 AND ds.position = 1 AND r.round = (SELECT MAX(round) FROM races WHERE year = 2007);",
+      "order_sensitive": false,
+      "gold_tables": [
+        "driver_standings",
+        "drivers",
+        "races"
+      ],
+      "schema_tables": [
+        "driver_standings",
+        "drivers",
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Kimi",
+          "Räikkönen"
+        ]
+      ],
+      "generated_sql": "SELECT d.forename, d.surname\nFROM drivers d\nJOIN driver_standings ds ON d.driver_id = ds.driver_id\nJOIN races r ON ds.race_id = r.race_id\nWHERE r.year = 2007 AND ds.position = 1 AND ds.round = (SELECT MAX(round) FROM driver_standings WHERE year = 2007);",
+      "raw_response": "```sql\nSELECT d.forename, d.surname\nFROM drivers d\nJOIN driver_standings ds ON d.driver_id = ds.driver_id\nJOIN races r ON ds.race_id = r.race_id\nWHERE r.year = 2007 AND ds.position = 1 AND ds.round = (SELECT MAX(round) FROM driver_standings WHERE year = 2007);\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column ds.round does not exist\nLINE 5: WHERE r.year = 2007 AND ds.position = 1 AND ds.round = (SELE...\n                                                    ^\nHINT:  Perhaps you meant to reference the column \"r.round\".",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT d.forename, d.surname\nFROM drivers d\nJOIN driver_standings ds ON d.driver_id = ds.driver_id\nJOIN races r ON ds.race_id = r.race_id\nWHERE r.year = 2007 AND ds.position = 1 AND ds.round = (SELECT MAX(round) FROM driver_standings WHERE year = 2007);",
+          "raw_response": "```sql\nSELECT d.forename, d.surname\nFROM drivers d\nJOIN driver_standings ds ON d.driver_id = ds.driver_id\nJOIN races r ON ds.race_id = r.race_id\nWHERE r.year = 2007 AND ds.position = 1 AND ds.round = (SELECT MAX(round) FROM driver_standings WHERE year = 2007);\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column ds.round does not exist\nLINE 5: WHERE r.year = 2007 AND ds.position = 1 AND ds.round = (SELE...\n                                                    ^\nHINT:  Perhaps you meant to reference the column \"r.round\".",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 590,
+          "completion_tokens": 82,
+          "timings": {
+            "generation_s": 5.3817518999999265,
+            "validation_s": 0.008782800000062707
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 590,
+      "prompt_tokens": 590,
+      "completion_tokens": 82,
+      "timings": {
+        "generation_s": 5.3817518999999265,
+        "validation_s": 0.008782800000062707
+      }
+    },
+    {
+      "id": 2,
+      "question": "How many races were held in 2010?",
+      "category": "aggregation",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT COUNT(*) AS race_count FROM races WHERE year = 2010;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "races"
+      ],
+      "schema_tables": [
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          19
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(*) FROM races WHERE year = 2010;",
+      "raw_response": "```sql\nSELECT COUNT(*) FROM races WHERE year = 2010;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          19
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(*) FROM races WHERE year = 2010;",
+          "raw_response": "```sql\nSELECT COUNT(*) FROM races WHERE year = 2010;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 482,
+          "completion_tokens": 19,
+          "timings": {
+            "generation_s": 1.074585099999922,
+            "validation_s": 0.006620899999916219,
+            "execution_s": 0.003291499999932057
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 482,
+      "prompt_tokens": 482,
+      "completion_tokens": 19,
+      "timings": {
+        "generation_s": 1.074585099999922,
+        "validation_s": 0.006620899999916219,
+        "execution_s": 0.003291499999932057
+      }
+    },
+    {
+      "id": 3,
+      "question": "How many British drivers are in the database?",
+      "category": "filtering",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT COUNT(*) AS driver_count FROM drivers WHERE nationality = 'British';",
+      "order_sensitive": false,
+      "gold_tables": [
+        "drivers"
+      ],
+      "schema_tables": [
+        "drivers"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          167
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(*) \nFROM drivers \nWHERE nationality = 'British';",
+      "raw_response": "```sql\nSELECT COUNT(*) \nFROM drivers \nWHERE nationality = 'British';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          167
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(*) \nFROM drivers \nWHERE nationality = 'British';",
+          "raw_response": "```sql\nSELECT COUNT(*) \nFROM drivers \nWHERE nationality = 'British';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 411,
+          "completion_tokens": 18,
+          "timings": {
+            "generation_s": 1.0106905000000097,
+            "validation_s": 0.005977000000029875,
+            "execution_s": 0.0037260999999944033
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 411,
+      "prompt_tokens": 411,
+      "completion_tokens": 18,
+      "timings": {
+        "generation_s": 1.0106905000000097,
+        "validation_s": 0.005977000000029875,
+        "execution_s": 0.0037260999999944033
+      }
+    },
+    {
+      "id": 4,
+      "question": "Which team has won the most races?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT c.name, COUNT(*) AS wins FROM results r JOIN constructors c ON r.constructor_id = c.constructor_id WHERE r.position = 1 GROUP BY c.constructor_id, c.name ORDER BY wins DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "constructors",
+        "results"
+      ],
+      "schema_tables": [
+        "constructors",
+        "results"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Ferrari",
+          251
+        ]
+      ],
+      "generated_sql": "SELECT c.name AS team_name, COUNT(r.race_id) AS race_wins\nFROM constructors c\nJOIN results r ON c.constructor_id = r.constructor_id\nWHERE r.position = 1\nGROUP BY c.constructor_id, c.name\nORDER BY race_wins DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT c.name AS team_name, COUNT(r.race_id) AS race_wins\nFROM constructors c\nJOIN results r ON c.constructor_id = r.constructor_id\nWHERE r.position = 1\nGROUP BY c.constructor_id, c.name\nORDER BY race_wins DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Ferrari",
+          251
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT c.name AS team_name, COUNT(r.race_id) AS race_wins\nFROM constructors c\nJOIN results r ON c.constructor_id = r.constructor_id\nWHERE r.position = 1\nGROUP BY c.constructor_id, c.name\nORDER BY race_wins DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT c.name AS team_name, COUNT(r.race_id) AS race_wins\nFROM constructors c\nJOIN results r ON c.constructor_id = r.constructor_id\nWHERE r.position = 1\nGROUP BY c.constructor_id, c.name\nORDER BY race_wins DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 492,
+          "completion_tokens": 66,
+          "timings": {
+            "generation_s": 2.988652600000023,
+            "validation_s": 0.007570500000156244,
+            "execution_s": 0.007251700000097117
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 492,
+      "prompt_tokens": 492,
+      "completion_tokens": 66,
+      "timings": {
+        "generation_s": 2.988652600000023,
+        "validation_s": 0.007570500000156244,
+        "execution_s": 0.007251700000097117
+      }
+    },
+    {
+      "id": 5,
+      "question": "In which country have the most races been held?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT ci.country, COUNT(*) AS race_count FROM races r JOIN circuits ci ON r.circuit_id = ci.circuit_id GROUP BY ci.country ORDER BY race_count DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "circuits",
+        "races"
+      ],
+      "schema_tables": [
+        "circuits",
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Italy",
+          110
+        ]
+      ],
+      "generated_sql": "SELECT country \nFROM circuits \nJOIN races ON circuits.circuit_id = races.circuit_id \nGROUP BY country \nORDER BY COUNT(*) DESC \nLIMIT 1;",
+      "raw_response": "```sql\nSELECT country \nFROM circuits \nJOIN races ON circuits.circuit_id = races.circuit_id \nGROUP BY country \nORDER BY COUNT(*) DESC \nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Italy"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT country \nFROM circuits \nJOIN races ON circuits.circuit_id = races.circuit_id \nGROUP BY country \nORDER BY COUNT(*) DESC \nLIMIT 1;",
+          "raw_response": "```sql\nSELECT country \nFROM circuits \nJOIN races ON circuits.circuit_id = races.circuit_id \nGROUP BY country \nORDER BY COUNT(*) DESC \nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 535,
+          "completion_tokens": 38,
+          "timings": {
+            "generation_s": 1.8262044000000515,
+            "validation_s": 0.007301099999949656,
+            "execution_s": 0.004464999999981956
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 535,
+      "prompt_tokens": 535,
+      "completion_tokens": 38,
+      "timings": {
+        "generation_s": 1.8262044000000515,
+        "validation_s": 0.007301099999949656,
+        "execution_s": 0.004464999999981956
+      }
+    },
+    {
+      "id": 6,
+      "question": "How many races have been held at the Hungaroring?",
+      "category": "filtering",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COUNT(*) AS race_count FROM races r JOIN circuits ci ON r.circuit_id = ci.circuit_id WHERE ci.name = 'Hungaroring';",
+      "order_sensitive": false,
+      "gold_tables": [
+        "circuits",
+        "races"
+      ],
+      "schema_tables": [
+        "circuits",
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          41
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(*) \nFROM races \nJOIN circuits ON races.circuit_id = circuits.circuit_id \nWHERE circuits.name = 'Hungaroring';",
+      "raw_response": "```sql\nSELECT COUNT(*) \nFROM races \nJOIN circuits ON races.circuit_id = circuits.circuit_id \nWHERE circuits.name = 'Hungaroring';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          41
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(*) \nFROM races \nJOIN circuits ON races.circuit_id = circuits.circuit_id \nWHERE circuits.name = 'Hungaroring';",
+          "raw_response": "```sql\nSELECT COUNT(*) \nFROM races \nJOIN circuits ON races.circuit_id = circuits.circuit_id \nWHERE circuits.name = 'Hungaroring';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 537,
+          "completion_tokens": 34,
+          "timings": {
+            "generation_s": 1.6482416999999714,
+            "validation_s": 0.007953199999974458,
+            "execution_s": 0.004462500000045111
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 537,
+      "prompt_tokens": 537,
+      "completion_tokens": 34,
+      "timings": {
+        "generation_s": 1.6482416999999714,
+        "validation_s": 0.007953199999974458,
+        "execution_s": 0.004462500000045111
+      }
+    },
+    {
+      "id": 7,
+      "question": "How many races did Lewis Hamilton win with Mercedes?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COUNT(*) AS wins FROM results r JOIN drivers d ON r.driver_id = d.driver_id JOIN constructors c ON r.constructor_id = c.constructor_id WHERE d.forename = 'Lewis' AND d.surname = 'Hamilton' AND c.name = 'Mercedes' AND r.position = 1;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "constructors",
+        "drivers",
+        "results"
+      ],
+      "schema_tables": [
+        "constructors",
+        "drivers",
+        "results"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          84
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(*)\nFROM results\nJOIN drivers ON results.driver_id = drivers.driver_id\nJOIN constructors ON results.constructor_id = constructors.constructor_id\nWHERE drivers.forename = 'Lewis' AND drivers.surname = 'Hamilton' AND constructors.name = 'Mercedes' AND results.position = 1;",
+      "raw_response": "```sql\nSELECT COUNT(*)\nFROM results\nJOIN drivers ON results.driver_id = drivers.driver_id\nJOIN constructors ON results.constructor_id = constructors.constructor_id\nWHERE drivers.forename = 'Lewis' AND drivers.surname = 'Hamilton' AND constructors.name = 'Mercedes' AND results.position = 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          84
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(*)\nFROM results\nJOIN drivers ON results.driver_id = drivers.driver_id\nJOIN constructors ON results.constructor_id = constructors.constructor_id\nWHERE drivers.forename = 'Lewis' AND drivers.surname = 'Hamilton' AND constructors.name = 'Mercedes' AND results.position = 1;",
+          "raw_response": "```sql\nSELECT COUNT(*)\nFROM results\nJOIN drivers ON results.driver_id = drivers.driver_id\nJOIN constructors ON results.constructor_id = constructors.constructor_id\nWHERE drivers.forename = 'Lewis' AND drivers.surname = 'Hamilton' AND constructors.name = 'Mercedes' AND results.position = 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 547,
+          "completion_tokens": 64,
+          "timings": {
+            "generation_s": 3.0041384000001017,
+            "validation_s": 0.008136599999943428,
+            "execution_s": 0.005135200000040641
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 547,
+      "prompt_tokens": 547,
+      "completion_tokens": 64,
+      "timings": {
+        "generation_s": 3.0041384000001017,
+        "validation_s": 0.008136599999943428,
+        "execution_s": 0.005135200000040641
+      }
+    },
+    {
+      "id": 8,
+      "question": "Who finished in the top three of the 2023 drivers' championship?",
+      "category": "sorting",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT d.forename, d.surname, ds.points FROM driver_standings ds JOIN races r ON ds.race_id = r.race_id JOIN drivers d ON ds.driver_id = d.driver_id WHERE r.year = 2023 AND r.round = (SELECT MAX(round) FROM races WHERE year = 2023) ORDER BY ds.position LIMIT 3;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "driver_standings",
+        "drivers",
+        "races"
+      ],
+      "schema_tables": [
+        "driver_standings",
+        "drivers",
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Max",
+          "Verstappen",
+          575.0
+        ],
+        [
+          "Sergio",
+          "Pérez",
+          285.0
+        ],
+        [
+          "Lewis",
+          "Hamilton",
+          234.0
+        ]
+      ],
+      "generated_sql": "SELECT \n    d.forename, \n    d.surname, \n    ds.position\nFROM \n    driver_standings ds\nJOIN \n    drivers d ON ds.driver_id = d.driver_id\nWHERE \n    ds.year = 2023 \n    AND ds.position <= 3\nORDER BY \n    ds.position;",
+      "raw_response": "```sql\nSELECT \n    d.forename, \n    d.surname, \n    ds.position\nFROM \n    driver_standings ds\nJOIN \n    drivers d ON ds.driver_id = d.driver_id\nWHERE \n    ds.year = 2023 \n    AND ds.position <= 3\nORDER BY \n    ds.position;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column ds.year does not exist\nLINE 10:     ds.year = 2023 \n             ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT \n    d.forename, \n    d.surname, \n    ds.position\nFROM \n    driver_standings ds\nJOIN \n    drivers d ON ds.driver_id = d.driver_id\nWHERE \n    ds.year = 2023 \n    AND ds.position <= 3\nORDER BY \n    ds.position;",
+          "raw_response": "```sql\nSELECT \n    d.forename, \n    d.surname, \n    ds.position\nFROM \n    driver_standings ds\nJOIN \n    drivers d ON ds.driver_id = d.driver_id\nWHERE \n    ds.year = 2023 \n    AND ds.position <= 3\nORDER BY \n    ds.position;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column ds.year does not exist\nLINE 10:     ds.year = 2023 \n             ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 595,
+          "completion_tokens": 71,
+          "timings": {
+            "generation_s": 3.4188763000001927,
+            "validation_s": 0.007177400000045964
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 595,
+      "prompt_tokens": 595,
+      "completion_tokens": 71,
+      "timings": {
+        "generation_s": 3.4188763000001927,
+        "validation_s": 0.007177400000045964
+      }
+    },
+    {
+      "id": 9,
+      "question": "Who set the fastest lap of the 2021 Monaco Grand Prix?",
+      "category": "join_aggregation",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT d.forename, d.surname FROM lap_times lt JOIN races r ON lt.race_id = r.race_id JOIN drivers d ON lt.driver_id = d.driver_id WHERE r.year = 2021 AND r.name = 'Monaco Grand Prix' ORDER BY lt.milliseconds LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "drivers",
+        "lap_times",
+        "races"
+      ],
+      "schema_tables": [
+        "drivers",
+        "lap_times",
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Lewis",
+          "Hamilton"
+        ]
+      ],
+      "generated_sql": "SELECT d.forename, d.surname\nFROM drivers d\nJOIN lap_times lt ON d.driver_id = lt.driver_id\nJOIN races r ON lt.race_id = r.race_id\nWHERE r.year = 2021 AND r.name = 'Monaco Grand Prix'\nORDER BY lt.milliseconds ASC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT d.forename, d.surname\nFROM drivers d\nJOIN lap_times lt ON d.driver_id = lt.driver_id\nJOIN races r ON lt.race_id = r.race_id\nWHERE r.year = 2021 AND r.name = 'Monaco Grand Prix'\nORDER BY lt.milliseconds ASC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Lewis",
+          "Hamilton"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT d.forename, d.surname\nFROM drivers d\nJOIN lap_times lt ON d.driver_id = lt.driver_id\nJOIN races r ON lt.race_id = r.race_id\nWHERE r.year = 2021 AND r.name = 'Monaco Grand Prix'\nORDER BY lt.milliseconds ASC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT d.forename, d.surname\nFROM drivers d\nJOIN lap_times lt ON d.driver_id = lt.driver_id\nJOIN races r ON lt.race_id = r.race_id\nWHERE r.year = 2021 AND r.name = 'Monaco Grand Prix'\nORDER BY lt.milliseconds ASC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 583,
+          "completion_tokens": 74,
+          "timings": {
+            "generation_s": 3.4650080999999773,
+            "validation_s": 0.007804700000178855,
+            "execution_s": 0.006114000000025044
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 583,
+      "prompt_tokens": 583,
+      "completion_tokens": 74,
+      "timings": {
+        "generation_s": 3.4650080999999773,
+        "validation_s": 0.007804700000178855,
+        "execution_s": 0.006114000000025044
+      }
+    },
+    {
+      "id": 10,
+      "question": "Who was the youngest driver to win a race?",
+      "category": "date",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT d.forename, d.surname FROM results r JOIN races ra ON r.race_id = ra.race_id JOIN drivers d ON r.driver_id = d.driver_id WHERE r.position = 1 ORDER BY ra.date - d.dob LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "drivers",
+        "races",
+        "results"
+      ],
+      "schema_tables": [
+        "drivers",
+        "races",
+        "results"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Max",
+          "Verstappen"
+        ]
+      ],
+      "generated_sql": "SELECT d.forename, d.surname, MIN(r.date) AS youngest_win_date\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nWHERE r.position = 1\nGROUP BY d.driver_id, d.forename, d.surname\nORDER BY youngest_win_date ASC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT d.forename, d.surname, MIN(r.date) AS youngest_win_date\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nWHERE r.position = 1\nGROUP BY d.driver_id, d.forename, d.surname\nORDER BY youngest_win_date ASC\nLIMIT 1;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column r.date does not exist\nLINE 1: ...0630fb073cf0 AS SELECT d.forename, d.surname, MIN(r.date) AS...\n                                                             ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT d.forename, d.surname, MIN(r.date) AS youngest_win_date\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nWHERE r.position = 1\nGROUP BY d.driver_id, d.forename, d.surname\nORDER BY youngest_win_date ASC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT d.forename, d.surname, MIN(r.date) AS youngest_win_date\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nWHERE r.position = 1\nGROUP BY d.driver_id, d.forename, d.surname\nORDER BY youngest_win_date ASC\nLIMIT 1;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column r.date does not exist\nLINE 1: ...0630fb073cf0 AS SELECT d.forename, d.surname, MIN(r.date) AS...\n                                                             ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 635,
+          "completion_tokens": 69,
+          "timings": {
+            "generation_s": 3.467259199999944,
+            "validation_s": 0.007014199999957782
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 635,
+      "prompt_tokens": 635,
+      "completion_tokens": 69,
+      "timings": {
+        "generation_s": 3.467259199999944,
+        "validation_s": 0.007014199999957782
+      }
+    },
+    {
+      "id": 11,
+      "question": "Which driver won the most races in a single season, and in which year?",
+      "category": "grouping",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT d.forename, d.surname, ra.year, COUNT(*) AS wins FROM results r JOIN races ra ON r.race_id = ra.race_id JOIN drivers d ON r.driver_id = d.driver_id WHERE r.position = 1 GROUP BY d.driver_id, d.forename, d.surname, ra.year ORDER BY wins DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "drivers",
+        "races",
+        "results"
+      ],
+      "schema_tables": [
+        "drivers",
+        "races",
+        "results"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Max",
+          "Verstappen",
+          2023,
+          19
+        ]
+      ],
+      "generated_sql": "SELECT d.forename, d.surname, r.year, COUNT(r.race_id) AS race_wins\nFROM drivers d\nJOIN results res ON d.driver_id = res.driver_id\nJOIN races r ON res.race_id = r.race_id\nWHERE res.position = 1\nGROUP BY d.driver_id, r.year\nORDER BY race_wins DESC, r.year DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT d.forename, d.surname, r.year, COUNT(r.race_id) AS race_wins\nFROM drivers d\nJOIN results res ON d.driver_id = res.driver_id\nJOIN races r ON res.race_id = r.race_id\nWHERE res.position = 1\nGROUP BY d.driver_id, r.year\nORDER BY race_wins DESC, r.year DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Max",
+          "Verstappen",
+          2023,
+          19
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT d.forename, d.surname, r.year, COUNT(r.race_id) AS race_wins\nFROM drivers d\nJOIN results res ON d.driver_id = res.driver_id\nJOIN races r ON res.race_id = r.race_id\nWHERE res.position = 1\nGROUP BY d.driver_id, r.year\nORDER BY race_wins DESC, r.year DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT d.forename, d.surname, r.year, COUNT(r.race_id) AS race_wins\nFROM drivers d\nJOIN results res ON d.driver_id = res.driver_id\nJOIN races r ON res.race_id = r.race_id\nWHERE res.position = 1\nGROUP BY d.driver_id, r.year\nORDER BY race_wins DESC, r.year DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 641,
+          "completion_tokens": 88,
+          "timings": {
+            "generation_s": 4.268781200000149,
+            "validation_s": 0.008822799999961717,
+            "execution_s": 0.00887549999993098
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 641,
+      "prompt_tokens": 641,
+      "completion_tokens": 88,
+      "timings": {
+        "generation_s": 4.268781200000149,
+        "validation_s": 0.008822799999961717,
+        "execution_s": 0.00887549999993098
+      }
+    },
+    {
+      "id": 12,
+      "question": "How many drivers are in the database?",
+      "category": "aggregation",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT COUNT(*) AS driver_count FROM drivers;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "drivers"
+      ],
+      "schema_tables": [
+        "drivers"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          879
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(*) AS total_drivers FROM drivers;",
+      "raw_response": "```sql\nSELECT COUNT(*) AS total_drivers FROM drivers;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          879
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(*) AS total_drivers FROM drivers;",
+          "raw_response": "```sql\nSELECT COUNT(*) AS total_drivers FROM drivers;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 410,
+          "completion_tokens": 15,
+          "timings": {
+            "generation_s": 0.8951950999999099,
+            "validation_s": 0.006258099999968181,
+            "execution_s": 0.0037543000000823668
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 410,
+      "prompt_tokens": 410,
+      "completion_tokens": 15,
+      "timings": {
+        "generation_s": 0.8951950999999099,
+        "validation_s": 0.006258099999968181,
+        "execution_s": 0.0037543000000823668
+      }
+    },
+    {
+      "id": 13,
+      "question": "On how many different circuits have races been held?",
+      "category": "aggregation",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT COUNT(DISTINCT circuit_id) AS circuit_count FROM races;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "races"
+      ],
+      "schema_tables": [
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          78
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(DISTINCT circuit_id) AS distinct_circuits\nFROM races;",
+      "raw_response": "```sql\nSELECT COUNT(DISTINCT circuit_id) AS distinct_circuits\nFROM races;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          78
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(DISTINCT circuit_id) AS distinct_circuits\nFROM races;",
+          "raw_response": "```sql\nSELECT COUNT(DISTINCT circuit_id) AS distinct_circuits\nFROM races;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 480,
+          "completion_tokens": 22,
+          "timings": {
+            "generation_s": 1.1838021999999455,
+            "validation_s": 0.006245000000035361,
+            "execution_s": 0.0037576999998236715
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 480,
+      "prompt_tokens": 480,
+      "completion_tokens": 22,
+      "timings": {
+        "generation_s": 1.1838021999999455,
+        "validation_s": 0.006245000000035361,
+        "execution_s": 0.0037576999998236715
+      }
+    },
+    {
+      "id": 14,
+      "question": "How many laps did the drivers complete in total at the 2021 Monaco Grand Prix?",
+      "category": "aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT SUM(res.laps) AS total_laps FROM results res JOIN races r ON res.race_id = r.race_id WHERE r.year = 2021 AND r.name = 'Monaco Grand Prix';",
+      "order_sensitive": false,
+      "gold_tables": [
+        "races",
+        "results"
+      ],
+      "schema_tables": [
+        "races",
+        "results"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          1418
+        ]
+      ],
+      "generated_sql": "SELECT SUM(laps) AS total_laps\nFROM results\nJOIN races ON results.race_id = races.race_id\nWHERE races.year = 2021 AND races.name = 'Monaco Grand Prix';",
+      "raw_response": "```sql\nSELECT SUM(laps) AS total_laps\nFROM results\nJOIN races ON results.race_id = races.race_id\nWHERE races.year = 2021 AND races.name = 'Monaco Grand Prix';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          1418
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT SUM(laps) AS total_laps\nFROM results\nJOIN races ON results.race_id = races.race_id\nWHERE races.year = 2021 AND races.name = 'Monaco Grand Prix';",
+          "raw_response": "```sql\nSELECT SUM(laps) AS total_laps\nFROM results\nJOIN races ON results.race_id = races.race_id\nWHERE races.year = 2021 AND races.name = 'Monaco Grand Prix';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 592,
+          "completion_tokens": 50,
+          "timings": {
+            "generation_s": 2.7952762999998413,
+            "validation_s": 0.007710999999972046,
+            "execution_s": 0.0037291999999524705
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 592,
+      "prompt_tokens": 592,
+      "completion_tokens": 50,
+      "timings": {
+        "generation_s": 2.7952762999998413,
+        "validation_s": 0.007710999999972046,
+        "execution_s": 0.0037291999999524705
+      }
+    },
+    {
+      "id": 15,
+      "question": "How many different driver nationalities are there in the database?",
+      "category": "aggregation",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT COUNT(DISTINCT nationality) AS nationality_count FROM drivers;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "drivers"
+      ],
+      "schema_tables": [
+        "drivers"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          43
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(DISTINCT nationality) AS distinct_nationalities\nFROM drivers;",
+      "raw_response": "```sql\nSELECT COUNT(DISTINCT nationality) AS distinct_nationalities\nFROM drivers;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          43
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(DISTINCT nationality) AS distinct_nationalities\nFROM drivers;",
+          "raw_response": "```sql\nSELECT COUNT(DISTINCT nationality) AS distinct_nationalities\nFROM drivers;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 414,
+          "completion_tokens": 21,
+          "timings": {
+            "generation_s": 1.1393848000000162,
+            "validation_s": 0.006565099999988888,
+            "execution_s": 0.004700800000136951
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 414,
+      "prompt_tokens": 414,
+      "completion_tokens": 21,
+      "timings": {
+        "generation_s": 1.1393848000000162,
+        "validation_s": 0.006565099999988888,
+        "execution_s": 0.004700800000136951
+      }
+    },
+    {
+      "id": 16,
+      "question": "What was Max Verstappen's average starting grid position in the 2023 races?",
+      "category": "aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT AVG(res.grid) AS avg_grid FROM results res JOIN races r ON res.race_id = r.race_id JOIN drivers d ON res.driver_id = d.driver_id WHERE r.year = 2023 AND d.forename = 'Max' AND d.surname = 'Verstappen';",
+      "order_sensitive": false,
+      "gold_tables": [
+        "drivers",
+        "races",
+        "results"
+      ],
+      "schema_tables": [
+        "drivers",
+        "races",
+        "results"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          3.1818
+        ]
+      ],
+      "generated_sql": "SELECT AVG(grid) AS average_grid_position\nFROM results\nJOIN drivers ON results.driver_id = drivers.driver_id\nWHERE drivers.forename = 'Max' AND drivers.surname = 'Verstappen' AND results.race_id IN (\n    SELECT race_id\n    FROM races\n    WHERE year = 2023\n);",
+      "raw_response": "```sql\nSELECT AVG(grid) AS average_grid_position\nFROM results\nJOIN drivers ON results.driver_id = drivers.driver_id\nWHERE drivers.forename = 'Max' AND drivers.surname = 'Verstappen' AND results.race_id IN (\n    SELECT race_id\n    FROM races\n    WHERE year = 2023\n);\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          3.1818
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT AVG(grid) AS average_grid_position\nFROM results\nJOIN drivers ON results.driver_id = drivers.driver_id\nWHERE drivers.forename = 'Max' AND drivers.surname = 'Verstappen' AND results.race_id IN (\n    SELECT race_id\n    FROM races\n    WHERE year = 2023\n);",
+          "raw_response": "```sql\nSELECT AVG(grid) AS average_grid_position\nFROM results\nJOIN drivers ON results.driver_id = drivers.driver_id\nWHERE drivers.forename = 'Max' AND drivers.surname = 'Verstappen' AND results.race_id IN (\n    SELECT race_id\n    FROM races\n    WHERE year = 2023\n);\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 645,
+          "completion_tokens": 72,
+          "timings": {
+            "generation_s": 3.4196211999999377,
+            "validation_s": 0.007689299999810828,
+            "execution_s": 0.004657899999983783
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 645,
+      "prompt_tokens": 645,
+      "completion_tokens": 72,
+      "timings": {
+        "generation_s": 3.4196211999999377,
+        "validation_s": 0.007689299999810828,
+        "execution_s": 0.004657899999983783
+      }
+    },
+    {
+      "id": 17,
+      "question": "How many different drivers won a race in the 2012 season?",
+      "category": "aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COUNT(DISTINCT res.driver_id) AS winner_count FROM results res JOIN races r ON res.race_id = r.race_id WHERE r.year = 2012 AND res.position = 1;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "races",
+        "results"
+      ],
+      "schema_tables": [
+        "races",
+        "results"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          8
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(DISTINCT driver_id) AS distinct_winners\nFROM results\nWHERE race_id IN (\n    SELECT race_id\n    FROM races\n    WHERE year = 2012 AND position = 1\n);",
+      "raw_response": "```sql\nSELECT COUNT(DISTINCT driver_id) AS distinct_winners\nFROM results\nWHERE race_id IN (\n    SELECT race_id\n    FROM races\n    WHERE year = 2012 AND position = 1\n);\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          8
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(DISTINCT driver_id) AS distinct_winners\nFROM results\nWHERE race_id IN (\n    SELECT race_id\n    FROM races\n    WHERE year = 2012 AND position = 1\n);",
+          "raw_response": "```sql\nSELECT COUNT(DISTINCT driver_id) AS distinct_winners\nFROM results\nWHERE race_id IN (\n    SELECT race_id\n    FROM races\n    WHERE year = 2012 AND position = 1\n);\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 588,
+          "completion_tokens": 51,
+          "timings": {
+            "generation_s": 2.630961500000012,
+            "validation_s": 0.00715289999993729,
+            "execution_s": 0.0044459000000642845
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 588,
+      "prompt_tokens": 588,
+      "completion_tokens": 51,
+      "timings": {
+        "generation_s": 2.630961500000012,
+        "validation_s": 0.00715289999993729,
+        "execution_s": 0.0044459000000642845
+      }
+    },
+    {
+      "id": 18,
+      "question": "How many races were held before 2000?",
+      "category": "filtering",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT COUNT(*) AS race_count FROM races WHERE year < 2000;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "races"
+      ],
+      "schema_tables": [
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          646
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(*) FROM races WHERE year < 2000;",
+      "raw_response": "```sql\nSELECT COUNT(*) FROM races WHERE year < 2000;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          646
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(*) FROM races WHERE year < 2000;",
+          "raw_response": "```sql\nSELECT COUNT(*) FROM races WHERE year < 2000;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 482,
+          "completion_tokens": 19,
+          "timings": {
+            "generation_s": 1.1112316000001101,
+            "validation_s": 0.006867900000088412,
+            "execution_s": 0.004078399999798421
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 482,
+      "prompt_tokens": 482,
+      "completion_tokens": 19,
+      "timings": {
+        "generation_s": 1.1112316000001101,
+        "validation_s": 0.006867900000088412,
+        "execution_s": 0.004078399999798421
+      }
+    },
+    {
+      "id": 19,
+      "question": "In how many races did it rain during the 2025 season?",
+      "category": "filtering",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COUNT(*) AS rainy_races FROM weather w JOIN races r ON w.race_id = r.race_id WHERE r.year = 2025 AND w.rainfall;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "races",
+        "weather"
+      ],
+      "schema_tables": [
+        "races",
+        "weather"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          6
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(*) \nFROM weather \nWHERE race_id IN (SELECT race_id FROM races WHERE year = 2025) \nAND rainfall = TRUE;",
+      "raw_response": "```sql\nSELECT COUNT(*) \nFROM weather \nWHERE race_id IN (SELECT race_id FROM races WHERE year = 2025) \nAND rainfall = TRUE;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          6
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(*) \nFROM weather \nWHERE race_id IN (SELECT race_id FROM races WHERE year = 2025) \nAND rainfall = TRUE;",
+          "raw_response": "```sql\nSELECT COUNT(*) \nFROM weather \nWHERE race_id IN (SELECT race_id FROM races WHERE year = 2025) \nAND rainfall = TRUE;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 563,
+          "completion_tokens": 37,
+          "timings": {
+            "generation_s": 1.8137465000002067,
+            "validation_s": 0.00713739999991958,
+            "execution_s": 0.003796599999986938
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 563,
+      "prompt_tokens": 563,
+      "completion_tokens": 37,
+      "timings": {
+        "generation_s": 1.8137465000002067,
+        "validation_s": 0.00713739999991958,
+        "execution_s": 0.003796599999986938
+      }
+    },
+    {
+      "id": 20,
+      "question": "Which drivers were born in 2000 or later?",
+      "category": "filtering",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT forename, surname FROM drivers WHERE dob >= '2000-01-01';",
+      "order_sensitive": false,
+      "gold_tables": [
+        "drivers"
+      ],
+      "schema_tables": [
+        "drivers"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Yuki",
+          "Tsunoda"
+        ],
+        [
+          "Oscar",
+          "Piastri"
+        ],
+        [
+          "Logan",
+          "Sargeant"
+        ],
+        [
+          "Liam",
+          "Lawson"
+        ],
+        [
+          "Oliver",
+          "Bearman"
+        ],
+        [
+          "Franco",
+          "Colapinto"
+        ],
+        [
+          "Jack",
+          "Doohan"
+        ],
+        [
+          "Andrea Kimi",
+          "Antonelli"
+        ],
+        [
+          "Gabriel",
+          "Bortoleto"
+        ],
+        [
+          "Isack",
+          "Hadjar"
+        ],
+        [
+          "Arvid",
+          "Lindblad"
+        ]
+      ],
+      "generated_sql": "SELECT driver_id, forename, surname, dob\nFROM drivers\nWHERE dob >= '2000-01-01';",
+      "raw_response": "```sql\nSELECT driver_id, forename, surname, dob\nFROM drivers\nWHERE dob >= '2000-01-01';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          852,
+          "Yuki",
+          "Tsunoda",
+          "2000-05-11"
+        ],
+        [
+          857,
+          "Oscar",
+          "Piastri",
+          "2001-04-06"
+        ],
+        [
+          858,
+          "Logan",
+          "Sargeant",
+          "2000-12-31"
+        ],
+        [
+          859,
+          "Liam",
+          "Lawson",
+          "2002-02-11"
+        ],
+        [
+          860,
+          "Oliver",
+          "Bearman",
+          "2005-05-08"
+        ],
+        [
+          861,
+          "Franco",
+          "Colapinto",
+          "2003-05-27"
+        ],
+        [
+          862,
+          "Jack",
+          "Doohan",
+          "2003-01-20"
+        ],
+        [
+          863,
+          "Andrea Kimi",
+          "Antonelli",
+          "2006-08-25"
+        ],
+        [
+          866,
+          "Gabriel",
+          "Bortoleto",
+          "2004-10-14"
+        ],
+        [
+          872,
+          "Isack",
+          "Hadjar",
+          "2004-09-28"
+        ],
+        [
+          876,
+          "Arvid",
+          "Lindblad",
+          "2007-08-08"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT driver_id, forename, surname, dob\nFROM drivers\nWHERE dob >= '2000-01-01';",
+          "raw_response": "```sql\nSELECT driver_id, forename, surname, dob\nFROM drivers\nWHERE dob >= '2000-01-01';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 415,
+          "completion_tokens": 34,
+          "timings": {
+            "generation_s": 1.6711370000000443,
+            "validation_s": 0.0065030999999180494,
+            "execution_s": 0.0036187999999128806
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 415,
+      "prompt_tokens": 415,
+      "completion_tokens": 34,
+      "timings": {
+        "generation_s": 1.6711370000000443,
+        "validation_s": 0.0065030999999180494,
+        "execution_s": 0.0036187999999128806
+      }
+    },
+    {
+      "id": 21,
+      "question": "How many races have been held in the United States?",
+      "category": "filtering",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COUNT(*) AS race_count FROM races r JOIN circuits c ON r.circuit_id = c.circuit_id WHERE c.country = 'USA';",
+      "order_sensitive": false,
+      "gold_tables": [
+        "circuits",
+        "races"
+      ],
+      "schema_tables": [
+        "circuits",
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          83
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(*) \nFROM races \nJOIN circuits ON races.circuit_id = circuits.circuit_id \nWHERE circuits.country = 'United States';",
+      "raw_response": "```sql\nSELECT COUNT(*) \nFROM races \nJOIN circuits ON races.circuit_id = circuits.circuit_id \nWHERE circuits.country = 'United States';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          0
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(*) \nFROM races \nJOIN circuits ON races.circuit_id = circuits.circuit_id \nWHERE circuits.country = 'United States';",
+          "raw_response": "```sql\nSELECT COUNT(*) \nFROM races \nJOIN circuits ON races.circuit_id = circuits.circuit_id \nWHERE circuits.country = 'United States';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 536,
+          "completion_tokens": 33,
+          "timings": {
+            "generation_s": 1.757370499999979,
+            "validation_s": 0.006821399999807909,
+            "execution_s": 0.0038356000000021595
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 536,
+      "prompt_tokens": 536,
+      "completion_tokens": 33,
+      "timings": {
+        "generation_s": 1.757370499999979,
+        "validation_s": 0.006821399999807909,
+        "execution_s": 0.0038356000000021595
+      }
+    },
+    {
+      "id": 22,
+      "question": "How many races were held in each year of the 1990s?",
+      "category": "grouping",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT year, COUNT(*) AS race_count FROM races WHERE year BETWEEN 1990 AND 1999 GROUP BY year;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "races"
+      ],
+      "schema_tables": [
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          1991,
+          16
+        ],
+        [
+          1990,
+          16
+        ],
+        [
+          1993,
+          16
+        ],
+        [
+          1997,
+          17
+        ],
+        [
+          1995,
+          17
+        ],
+        [
+          1992,
+          16
+        ],
+        [
+          1994,
+          16
+        ],
+        [
+          1996,
+          16
+        ],
+        [
+          1998,
+          16
+        ],
+        [
+          1999,
+          16
+        ]
+      ],
+      "generated_sql": "SELECT year, COUNT(*) AS race_count\nFROM races\nWHERE year BETWEEN 1990 AND 1999\nGROUP BY year\nORDER BY year;",
+      "raw_response": "```sql\nSELECT year, COUNT(*) AS race_count\nFROM races\nWHERE year BETWEEN 1990 AND 1999\nGROUP BY year\nORDER BY year;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          1990,
+          16
+        ],
+        [
+          1991,
+          16
+        ],
+        [
+          1992,
+          16
+        ],
+        [
+          1993,
+          16
+        ],
+        [
+          1994,
+          16
+        ],
+        [
+          1995,
+          17
+        ],
+        [
+          1996,
+          16
+        ],
+        [
+          1997,
+          17
+        ],
+        [
+          1998,
+          16
+        ],
+        [
+          1999,
+          16
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT year, COUNT(*) AS race_count\nFROM races\nWHERE year BETWEEN 1990 AND 1999\nGROUP BY year\nORDER BY year;",
+          "raw_response": "```sql\nSELECT year, COUNT(*) AS race_count\nFROM races\nWHERE year BETWEEN 1990 AND 1999\nGROUP BY year\nORDER BY year;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 487,
+          "completion_tokens": 40,
+          "timings": {
+            "generation_s": 2.0385217000000466,
+            "validation_s": 0.007165600000007544,
+            "execution_s": 0.003699099999948885
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 487,
+      "prompt_tokens": 487,
+      "completion_tokens": 40,
+      "timings": {
+        "generation_s": 2.0385217000000466,
+        "validation_s": 0.007165600000007544,
+        "execution_s": 0.003699099999948885
+      }
+    },
+    {
+      "id": 23,
+      "question": "Which tire compound was used for the most laps in the 2025 season?",
+      "category": "grouping",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT ts.compound, SUM(ts.laps_on_tire) AS total_laps FROM tire_stints ts JOIN races r ON ts.race_id = r.race_id WHERE r.year = 2025 GROUP BY ts.compound ORDER BY total_laps DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "races",
+        "tire_stints"
+      ],
+      "schema_tables": [
+        "races",
+        "tire_stints"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "HARD",
+          10850
+        ]
+      ],
+      "generated_sql": "SELECT compound\nFROM tire_stints\nJOIN races ON tire_stints.race_id = races.race_id\nWHERE races.year = 2025\nGROUP BY compound\nORDER BY SUM(laps_on_tire) DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT compound\nFROM tire_stints\nJOIN races ON tire_stints.race_id = races.race_id\nWHERE races.year = 2025\nGROUP BY compound\nORDER BY SUM(laps_on_tire) DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "HARD"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT compound\nFROM tire_stints\nJOIN races ON tire_stints.race_id = races.race_id\nWHERE races.year = 2025\nGROUP BY compound\nORDER BY SUM(laps_on_tire) DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT compound\nFROM tire_stints\nJOIN races ON tire_stints.race_id = races.race_id\nWHERE races.year = 2025\nGROUP BY compound\nORDER BY SUM(laps_on_tire) DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 544,
+          "completion_tokens": 57,
+          "timings": {
+            "generation_s": 2.8120449000000463,
+            "validation_s": 0.007462899999836736,
+            "execution_s": 0.004985000000033324
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 544,
+      "prompt_tokens": 544,
+      "completion_tokens": 57,
+      "timings": {
+        "generation_s": 2.8120449000000463,
+        "validation_s": 0.007462899999836736,
+        "execution_s": 0.004985000000033324
+      }
+    },
+    {
+      "id": 24,
+      "question": "Drivers of which nationality have won the most races?",
+      "category": "grouping",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT d.nationality, COUNT(*) AS wins FROM results res JOIN drivers d ON res.driver_id = d.driver_id WHERE res.position = 1 GROUP BY d.nationality ORDER BY wins DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "drivers",
+        "results"
+      ],
+      "schema_tables": [
+        "drivers",
+        "results"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "British",
+          332
+        ]
+      ],
+      "generated_sql": "SELECT d.nationality, COUNT(r.driver_id) AS race_wins\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nWHERE r.position = 1\nGROUP BY d.nationality\nORDER BY race_wins DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT d.nationality, COUNT(r.driver_id) AS race_wins\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nWHERE r.position = 1\nGROUP BY d.nationality\nORDER BY race_wins DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "British",
+          332
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT d.nationality, COUNT(r.driver_id) AS race_wins\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nWHERE r.position = 1\nGROUP BY d.nationality\nORDER BY race_wins DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT d.nationality, COUNT(r.driver_id) AS race_wins\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nWHERE r.position = 1\nGROUP BY d.nationality\nORDER BY race_wins DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 512,
+          "completion_tokens": 62,
+          "timings": {
+            "generation_s": 3.002124899999899,
+            "validation_s": 0.007929399999966336,
+            "execution_s": 0.009750700000040524
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 512,
+      "prompt_tokens": 512,
+      "completion_tokens": 62,
+      "timings": {
+        "generation_s": 3.002124899999899,
+        "validation_s": 0.007929399999966336,
+        "execution_s": 0.009750700000040524
+      }
+    },
+    {
+      "id": 25,
+      "question": "Which finishing statuses occurred in the 2023 races, and how many times each?",
+      "category": "grouping",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT s.status, COUNT(*) AS result_count FROM results res JOIN races r ON res.race_id = r.race_id JOIN status s ON res.status_id = s.status_id WHERE r.year = 2023 GROUP BY s.status;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "races",
+        "results",
+        "status"
+      ],
+      "schema_tables": [
+        "races",
+        "results",
+        "status"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Mechanical",
+          1
+        ],
+        [
+          "Finished",
+          304
+        ],
+        [
+          "Engine",
+          10
+        ],
+        [
+          "Accident",
+          9
+        ],
+        [
+          "Fuel leak",
+          1
+        ],
+        [
+          "+2 Laps",
+          6
+        ],
+        [
+          "+1 Lap",
+          64
+        ],
+        [
+          "Collision",
+          9
+        ],
+        [
+          "Oil leak",
+          1
+        ],
+        [
+          "Electrical",
+          1
+        ],
+        [
+          "Illness",
+          1
+        ],
+        [
+          "Disqualified",
+          2
+        ],
+        [
+          "Withdrew",
+          2
+        ],
+        [
+          "Overheating",
+          2
+        ],
+        [
+          "Gearbox",
+          2
+        ],
+        [
+          "Rear wing",
+          1
+        ],
+        [
+          "Collision damage",
+          13
+        ],
+        [
+          "Undertray",
+          2
+        ],
+        [
+          "Power loss",
+          1
+        ],
+        [
+          "Radiator",
+          1
+        ],
+        [
+          "Steering",
+          1
+        ],
+        [
+          "Brakes",
+          2
+        ],
+        [
+          "Retired",
+          3
+        ],
+        [
+          "Technical",
+          1
+        ]
+      ],
+      "generated_sql": "SELECT s.status, COUNT(r.result_id) AS count\nFROM results r\nJOIN status s ON r.status_id = s.status_id\nWHERE r.race_id IN (SELECT race_id FROM races WHERE year = 2023)\nGROUP BY s.status;",
+      "raw_response": "```sql\nSELECT s.status, COUNT(r.result_id) AS count\nFROM results r\nJOIN status s ON r.status_id = s.status_id\nWHERE r.race_id IN (SELECT race_id FROM races WHERE year = 2023)\nGROUP BY s.status;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Mechanical",
+          1
+        ],
+        [
+          "Finished",
+          304
+        ],
+        [
+          "Engine",
+          10
+        ],
+        [
+          "Accident",
+          9
+        ],
+        [
+          "Fuel leak",
+          1
+        ],
+        [
+          "+2 Laps",
+          6
+        ],
+        [
+          "+1 Lap",
+          64
+        ],
+        [
+          "Collision",
+          9
+        ],
+        [
+          "Oil leak",
+          1
+        ],
+        [
+          "Electrical",
+          1
+        ],
+        [
+          "Illness",
+          1
+        ],
+        [
+          "Disqualified",
+          2
+        ],
+        [
+          "Withdrew",
+          2
+        ],
+        [
+          "Overheating",
+          2
+        ],
+        [
+          "Gearbox",
+          2
+        ],
+        [
+          "Rear wing",
+          1
+        ],
+        [
+          "Collision damage",
+          13
+        ],
+        [
+          "Undertray",
+          2
+        ],
+        [
+          "Power loss",
+          1
+        ],
+        [
+          "Radiator",
+          1
+        ],
+        [
+          "Steering",
+          1
+        ],
+        [
+          "Brakes",
+          2
+        ],
+        [
+          "Retired",
+          3
+        ],
+        [
+          "Technical",
+          1
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT s.status, COUNT(r.result_id) AS count\nFROM results r\nJOIN status s ON r.status_id = s.status_id\nWHERE r.race_id IN (SELECT race_id FROM races WHERE year = 2023)\nGROUP BY s.status;",
+          "raw_response": "```sql\nSELECT s.status, COUNT(r.result_id) AS count\nFROM results r\nJOIN status s ON r.status_id = s.status_id\nWHERE r.race_id IN (SELECT race_id FROM races WHERE year = 2023)\nGROUP BY s.status;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 613,
+          "completion_tokens": 59,
+          "timings": {
+            "generation_s": 3.082157099999904,
+            "validation_s": 0.008391800000026706,
+            "execution_s": 0.0051121000001330685
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 613,
+      "prompt_tokens": 613,
+      "completion_tokens": 59,
+      "timings": {
+        "generation_s": 3.082157099999904,
+        "validation_s": 0.008391800000026706,
+        "execution_s": 0.0051121000001330685
+      }
+    },
+    {
+      "id": 26,
+      "question": "Which nationality has the most drivers?",
+      "category": "grouping",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT nationality, COUNT(*) AS driver_count FROM drivers GROUP BY nationality ORDER BY driver_count DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "drivers"
+      ],
+      "schema_tables": [
+        "drivers"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "British",
+          167
+        ]
+      ],
+      "generated_sql": "SELECT nationality, COUNT(*) AS driver_count\nFROM drivers\nGROUP BY nationality\nORDER BY driver_count DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT nationality, COUNT(*) AS driver_count\nFROM drivers\nGROUP BY nationality\nORDER BY driver_count DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "British",
+          167
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT nationality, COUNT(*) AS driver_count\nFROM drivers\nGROUP BY nationality\nORDER BY driver_count DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT nationality, COUNT(*) AS driver_count\nFROM drivers\nGROUP BY nationality\nORDER BY driver_count DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 409,
+          "completion_tokens": 31,
+          "timings": {
+            "generation_s": 1.5563882999999805,
+            "validation_s": 0.00676900000007663,
+            "execution_s": 0.003961699999990742
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 409,
+      "prompt_tokens": 409,
+      "completion_tokens": 31,
+      "timings": {
+        "generation_s": 1.5563882999999805,
+        "validation_s": 0.00676900000007663,
+        "execution_s": 0.003961699999990742
+      }
+    },
+    {
+      "id": 27,
+      "question": "Who won the 2024 Hungarian Grand Prix?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT d.forename, d.surname FROM results res JOIN races r ON res.race_id = r.race_id JOIN drivers d ON res.driver_id = d.driver_id WHERE r.year = 2024 AND r.name = 'Hungarian Grand Prix' AND res.position = 1;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "drivers",
+        "races",
+        "results"
+      ],
+      "schema_tables": [
+        "drivers",
+        "races",
+        "results"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Oscar",
+          "Piastri"
+        ]
+      ],
+      "generated_sql": "SELECT d.forename, d.surname\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nJOIN races ra ON r.race_id = ra.race_id\nWHERE ra.year = 2024 AND ra.name = 'Hungarian Grand Prix' AND r.position = 1;",
+      "raw_response": "```sql\nSELECT d.forename, d.surname\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nJOIN races ra ON r.race_id = ra.race_id\nWHERE ra.year = 2024 AND ra.name = 'Hungarian Grand Prix' AND r.position = 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Oscar",
+          "Piastri"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT d.forename, d.surname\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nJOIN races ra ON r.race_id = ra.race_id\nWHERE ra.year = 2024 AND ra.name = 'Hungarian Grand Prix' AND r.position = 1;",
+          "raw_response": "```sql\nSELECT d.forename, d.surname\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nJOIN races ra ON r.race_id = ra.race_id\nWHERE ra.year = 2024 AND ra.name = 'Hungarian Grand Prix' AND r.position = 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 637,
+          "completion_tokens": 69,
+          "timings": {
+            "generation_s": 3.319795699999986,
+            "validation_s": 0.008648799999946277,
+            "execution_s": 0.004276899999922534
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 637,
+      "prompt_tokens": 637,
+      "completion_tokens": 69,
+      "timings": {
+        "generation_s": 3.319795699999986,
+        "validation_s": 0.008648799999946277,
+        "execution_s": 0.004276899999922534
+      }
+    },
+    {
+      "id": 28,
+      "question": "Which team did Fernando Alonso drive for in the 2006 season?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT DISTINCT c.name FROM results res JOIN races r ON res.race_id = r.race_id JOIN drivers d ON res.driver_id = d.driver_id JOIN constructors c ON res.constructor_id = c.constructor_id WHERE r.year = 2006 AND d.forename = 'Fernando' AND d.surname = 'Alonso';",
+      "order_sensitive": false,
+      "gold_tables": [
+        "constructors",
+        "drivers",
+        "races",
+        "results"
+      ],
+      "schema_tables": [
+        "constructors",
+        "drivers",
+        "races",
+        "results"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Renault"
+        ]
+      ],
+      "generated_sql": "SELECT c.name\nFROM constructors c\nJOIN results r ON c.constructor_id = r.constructor_id\nJOIN drivers d ON r.driver_id = d.driver_id\nWHERE d.forename = 'Fernando' AND d.surname = 'Alonso' AND r.race_id IN (\n    SELECT race_id\n    FROM races\n    WHERE year = 2006\n);",
+      "raw_response": "```sql\nSELECT c.name\nFROM constructors c\nJOIN results r ON c.constructor_id = r.constructor_id\nJOIN drivers d ON r.driver_id = d.driver_id\nWHERE d.forename = 'Fernando' AND d.surname = 'Alonso' AND r.race_id IN (\n    SELECT race_id\n    FROM races\n    WHERE year = 2006\n);\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Renault"
+        ],
+        [
+          "Renault"
+        ],
+        [
+          "Renault"
+        ],
+        [
+          "Renault"
+        ],
+        [
+          "Renault"
+        ],
+        [
+          "Renault"
+        ],
+        [
+          "Renault"
+        ],
+        [
+          "Renault"
+        ],
+        [
+          "Renault"
+        ],
+        [
+          "Renault"
+        ],
+        [
+          "Renault"
+        ],
+        [
+          "Renault"
+        ],
+        [
+          "Renault"
+        ],
+        [
+          "Renault"
+        ],
+        [
+          "Renault"
+        ],
+        [
+          "Renault"
+        ],
+        [
+          "Renault"
+        ],
+        [
+          "Renault"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT c.name\nFROM constructors c\nJOIN results r ON c.constructor_id = r.constructor_id\nJOIN drivers d ON r.driver_id = d.driver_id\nWHERE d.forename = 'Fernando' AND d.surname = 'Alonso' AND r.race_id IN (\n    SELECT race_id\n    FROM races\n    WHERE year = 2006\n);",
+          "raw_response": "```sql\nSELECT c.name\nFROM constructors c\nJOIN results r ON c.constructor_id = r.constructor_id\nJOIN drivers d ON r.driver_id = d.driver_id\nWHERE d.forename = 'Fernando' AND d.surname = 'Alonso' AND r.race_id IN (\n    SELECT race_id\n    FROM races\n    WHERE year = 2006\n);\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 676,
+          "completion_tokens": 82,
+          "timings": {
+            "generation_s": 3.819989200000009,
+            "validation_s": 0.008764899999960107,
+            "execution_s": 0.0052393999999367225
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 676,
+      "prompt_tokens": 676,
+      "completion_tokens": 82,
+      "timings": {
+        "generation_s": 3.819989200000009,
+        "validation_s": 0.008764899999960107,
+        "execution_s": 0.0052393999999367225
+      }
+    },
+    {
+      "id": 29,
+      "question": "How many times did Ayrton Senna start from first place on the grid?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COUNT(*) AS pole_count FROM results res JOIN drivers d ON res.driver_id = d.driver_id WHERE d.forename = 'Ayrton' AND d.surname = 'Senna' AND res.grid = 1;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "drivers",
+        "results"
+      ],
+      "schema_tables": [
+        "drivers",
+        "results"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          65
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(*) \nFROM results \nJOIN drivers ON results.driver_id = drivers.driver_id \nWHERE drivers.forename = 'Ayrton' AND drivers.surname = 'Senna' AND grid = 1;",
+      "raw_response": "```sql\nSELECT COUNT(*) \nFROM results \nJOIN drivers ON results.driver_id = drivers.driver_id \nWHERE drivers.forename = 'Ayrton' AND drivers.surname = 'Senna' AND grid = 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          65
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(*) \nFROM results \nJOIN drivers ON results.driver_id = drivers.driver_id \nWHERE drivers.forename = 'Ayrton' AND drivers.surname = 'Senna' AND grid = 1;",
+          "raw_response": "```sql\nSELECT COUNT(*) \nFROM results \nJOIN drivers ON results.driver_id = drivers.driver_id \nWHERE drivers.forename = 'Ayrton' AND drivers.surname = 'Senna' AND grid = 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 519,
+          "completion_tokens": 47,
+          "timings": {
+            "generation_s": 2.269510099999934,
+            "validation_s": 0.006622699999979886,
+            "execution_s": 0.003921899999795642
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 519,
+      "prompt_tokens": 519,
+      "completion_tokens": 47,
+      "timings": {
+        "generation_s": 2.269510099999934,
+        "validation_s": 0.006622699999979886,
+        "execution_s": 0.003921899999795642
+      }
+    },
+    {
+      "id": 30,
+      "question": "Which driver has finished on the podium the most times?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT d.forename, d.surname, COUNT(*) AS podiums FROM results res JOIN drivers d ON res.driver_id = d.driver_id WHERE res.position <= 3 GROUP BY d.driver_id, d.forename, d.surname ORDER BY podiums DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "drivers",
+        "results"
+      ],
+      "schema_tables": [
+        "drivers",
+        "results"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Lewis",
+          "Hamilton",
+          207
+        ]
+      ],
+      "generated_sql": "SELECT d.driver_id, d.forename, d.surname, COUNT(r.position) AS podium_count\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nWHERE r.position BETWEEN 1 AND 3\nGROUP BY d.driver_id, d.forename, d.surname\nORDER BY podium_count DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT d.driver_id, d.forename, d.surname, COUNT(r.position) AS podium_count\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nWHERE r.position BETWEEN 1 AND 3\nGROUP BY d.driver_id, d.forename, d.surname\nORDER BY podium_count DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          1,
+          "Lewis",
+          "Hamilton",
+          207
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT d.driver_id, d.forename, d.surname, COUNT(r.position) AS podium_count\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nWHERE r.position BETWEEN 1 AND 3\nGROUP BY d.driver_id, d.forename, d.surname\nORDER BY podium_count DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT d.driver_id, d.forename, d.surname, COUNT(r.position) AS podium_count\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nWHERE r.position BETWEEN 1 AND 3\nGROUP BY d.driver_id, d.forename, d.surname\nORDER BY podium_count DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 513,
+          "completion_tokens": 74,
+          "timings": {
+            "generation_s": 3.5256259999998747,
+            "validation_s": 0.008713200000102006,
+            "execution_s": 0.011402600000110397
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 513,
+      "prompt_tokens": 513,
+      "completion_tokens": 74,
+      "timings": {
+        "generation_s": 3.5256259999998747,
+        "validation_s": 0.008713200000102006,
+        "execution_s": 0.011402600000110397
+      }
+    },
+    {
+      "id": 31,
+      "question": "Which team won the 2021 constructors' championship?",
+      "category": "join_aggregation",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT c.name FROM constructor_standings cs JOIN races r ON cs.race_id = r.race_id JOIN constructors c ON cs.constructor_id = c.constructor_id WHERE r.year = 2021 AND cs.position = 1 AND r.round = (SELECT MAX(round) FROM races WHERE year = 2021);",
+      "order_sensitive": false,
+      "gold_tables": [
+        "constructor_standings",
+        "constructors",
+        "races"
+      ],
+      "schema_tables": [
+        "constructor_standings",
+        "constructors",
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Mercedes"
+        ]
+      ],
+      "generated_sql": "SELECT c.name AS team_name\nFROM constructors c\nJOIN constructor_standings cs ON c.constructor_id = cs.constructor_id\nWHERE cs.year = 2021\nORDER BY cs.points DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT c.name AS team_name\nFROM constructors c\nJOIN constructor_standings cs ON c.constructor_id = cs.constructor_id\nWHERE cs.year = 2021\nORDER BY cs.points DESC\nLIMIT 1;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column cs.year does not exist\nLINE 4: WHERE cs.year = 2021\n              ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT c.name AS team_name\nFROM constructors c\nJOIN constructor_standings cs ON c.constructor_id = cs.constructor_id\nWHERE cs.year = 2021\nORDER BY cs.points DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT c.name AS team_name\nFROM constructors c\nJOIN constructor_standings cs ON c.constructor_id = cs.constructor_id\nWHERE cs.year = 2021\nORDER BY cs.points DESC\nLIMIT 1;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column cs.year does not exist\nLINE 4: WHERE cs.year = 2021\n              ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 573,
+          "completion_tokens": 50,
+          "timings": {
+            "generation_s": 2.521960199999967,
+            "validation_s": 0.006618899999921268
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 573,
+      "prompt_tokens": 573,
+      "completion_tokens": 50,
+      "timings": {
+        "generation_s": 2.521960199999967,
+        "validation_s": 0.006618899999921268
+      }
+    },
+    {
+      "id": 32,
+      "question": "How many races has the Red Bull team won?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COUNT(*) AS wins FROM results res JOIN constructors c ON res.constructor_id = c.constructor_id WHERE c.name = 'Red Bull' AND res.position = 1;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "constructors",
+        "results"
+      ],
+      "schema_tables": [
+        "constructors",
+        "results"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          130
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(*) \nFROM results \nJOIN constructors ON results.constructor_id = constructors.constructor_id \nWHERE constructors.name = 'Red Bull' AND results.position = 1;",
+      "raw_response": "```sql\nSELECT COUNT(*) \nFROM results \nJOIN constructors ON results.constructor_id = constructors.constructor_id \nWHERE constructors.name = 'Red Bull' AND results.position = 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          130
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(*) \nFROM results \nJOIN constructors ON results.constructor_id = constructors.constructor_id \nWHERE constructors.name = 'Red Bull' AND results.position = 1;",
+          "raw_response": "```sql\nSELECT COUNT(*) \nFROM results \nJOIN constructors ON results.constructor_id = constructors.constructor_id \nWHERE constructors.name = 'Red Bull' AND results.position = 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 494,
+          "completion_tokens": 38,
+          "timings": {
+            "generation_s": 1.8520548999999846,
+            "validation_s": 0.007408499999883134,
+            "execution_s": 0.004140900000038528
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 494,
+      "prompt_tokens": 494,
+      "completion_tokens": 38,
+      "timings": {
+        "generation_s": 1.8520548999999846,
+        "validation_s": 0.007408499999883134,
+        "execution_s": 0.004140900000038528
+      }
+    },
+    {
+      "id": 33,
+      "question": "At which circuit did Michael Schumacher win the most times?",
+      "category": "join_aggregation",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT ci.name, COUNT(*) AS wins FROM results res JOIN races r ON res.race_id = r.race_id JOIN circuits ci ON r.circuit_id = ci.circuit_id JOIN drivers d ON res.driver_id = d.driver_id WHERE d.forename = 'Michael' AND d.surname = 'Schumacher' AND res.position = 1 GROUP BY ci.circuit_id, ci.name ORDER BY wins DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "circuits",
+        "drivers",
+        "races",
+        "results"
+      ],
+      "schema_tables": [
+        "circuits",
+        "drivers",
+        "races",
+        "results"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Circuit de Nevers Magny-Cours",
+          8
+        ]
+      ],
+      "generated_sql": "SELECT c.name AS circuit_name\nFROM circuits c\nJOIN races r ON c.circuit_id = r.circuit_id\nJOIN results res ON r.race_id = res.race_id\nJOIN drivers d ON res.driver_id = d.driver_id\nWHERE d.forename = 'Michael' AND d.surname = 'Schumacher' AND res.position = 1\nGROUP BY c.name\nORDER BY COUNT(res.position) DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT c.name AS circuit_name\nFROM circuits c\nJOIN races r ON c.circuit_id = r.circuit_id\nJOIN results res ON r.race_id = res.race_id\nJOIN drivers d ON res.driver_id = d.driver_id\nWHERE d.forename = 'Michael' AND d.surname = 'Schumacher' AND res.position = 1\nGROUP BY c.name\nORDER BY COUNT(res.position) DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Circuit de Nevers Magny-Cours"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT c.name AS circuit_name\nFROM circuits c\nJOIN races r ON c.circuit_id = r.circuit_id\nJOIN results res ON r.race_id = res.race_id\nJOIN drivers d ON res.driver_id = d.driver_id\nWHERE d.forename = 'Michael' AND d.surname = 'Schumacher' AND res.position = 1\nGROUP BY c.name\nORDER BY COUNT(res.position) DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT c.name AS circuit_name\nFROM circuits c\nJOIN races r ON c.circuit_id = r.circuit_id\nJOIN results res ON r.race_id = res.race_id\nJOIN drivers d ON res.driver_id = d.driver_id\nWHERE d.forename = 'Michael' AND d.surname = 'Schumacher' AND res.position = 1\nGROUP BY c.name\nORDER BY COUNT(res.position) DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 693,
+          "completion_tokens": 97,
+          "timings": {
+            "generation_s": 4.5937355000000935,
+            "validation_s": 0.009440000000040527,
+            "execution_s": 0.004629000000022643
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 693,
+      "prompt_tokens": 693,
+      "completion_tokens": 97,
+      "timings": {
+        "generation_s": 4.5937355000000935,
+        "validation_s": 0.009440000000040527,
+        "execution_s": 0.004629000000022643
+      }
+    },
+    {
+      "id": 34,
+      "question": "Which driver made the most pit stops in the 2022 season?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT d.forename, d.surname, COUNT(*) AS stops FROM pit_stops ps JOIN races r ON ps.race_id = r.race_id JOIN drivers d ON ps.driver_id = d.driver_id WHERE r.year = 2022 GROUP BY d.driver_id, d.forename, d.surname ORDER BY stops DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "drivers",
+        "pit_stops",
+        "races"
+      ],
+      "schema_tables": [
+        "drivers",
+        "pit_stops",
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Nicholas",
+          "Latifi",
+          48
+        ]
+      ],
+      "generated_sql": "SELECT d.driver_id, d.forename, d.surname, COUNT(ps.stop) AS pit_stops\nFROM drivers d\nJOIN pit_stops ps ON d.driver_id = ps.driver_id\nJOIN races r ON ps.race_id = r.race_id\nWHERE r.year = 2022\nGROUP BY d.driver_id, d.forename, d.surname\nORDER BY pit_stops DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT d.driver_id, d.forename, d.surname, COUNT(ps.stop) AS pit_stops\nFROM drivers d\nJOIN pit_stops ps ON d.driver_id = ps.driver_id\nJOIN races r ON ps.race_id = r.race_id\nWHERE r.year = 2022\nGROUP BY d.driver_id, d.forename, d.surname\nORDER BY pit_stops DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          849,
+          "Nicholas",
+          "Latifi",
+          48
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT d.driver_id, d.forename, d.surname, COUNT(ps.stop) AS pit_stops\nFROM drivers d\nJOIN pit_stops ps ON d.driver_id = ps.driver_id\nJOIN races r ON ps.race_id = r.race_id\nWHERE r.year = 2022\nGROUP BY d.driver_id, d.forename, d.surname\nORDER BY pit_stops DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT d.driver_id, d.forename, d.surname, COUNT(ps.stop) AS pit_stops\nFROM drivers d\nJOIN pit_stops ps ON d.driver_id = ps.driver_id\nJOIN races r ON ps.race_id = r.race_id\nWHERE r.year = 2022\nGROUP BY d.driver_id, d.forename, d.surname\nORDER BY pit_stops DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 593,
+          "completion_tokens": 92,
+          "timings": {
+            "generation_s": 4.391506200000094,
+            "validation_s": 0.008395500000005995,
+            "execution_s": 0.00514589999988857
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 593,
+      "prompt_tokens": 593,
+      "completion_tokens": 92,
+      "timings": {
+        "generation_s": 4.391506200000094,
+        "validation_s": 0.008395500000005995,
+        "execution_s": 0.00514589999988857
+      }
+    },
+    {
+      "id": 35,
+      "question": "How many races have been held in July across all seasons?",
+      "category": "date",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COUNT(*) AS race_count FROM races WHERE EXTRACT(MONTH FROM date) = 7;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "races"
+      ],
+      "schema_tables": [
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          189
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(*) \nFROM races \nWHERE EXTRACT(MONTH FROM date) = 7;",
+      "raw_response": "```sql\nSELECT COUNT(*) \nFROM races \nWHERE EXTRACT(MONTH FROM date) = 7;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          189
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(*) \nFROM races \nWHERE EXTRACT(MONTH FROM date) = 7;",
+          "raw_response": "```sql\nSELECT COUNT(*) \nFROM races \nWHERE EXTRACT(MONTH FROM date) = 7;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 482,
+          "completion_tokens": 25,
+          "timings": {
+            "generation_s": 1.3078092000000652,
+            "validation_s": 0.0064093000000866596,
+            "execution_s": 0.0038962000000992703
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 482,
+      "prompt_tokens": 482,
+      "completion_tokens": 25,
+      "timings": {
+        "generation_s": 1.3078092000000652,
+        "validation_s": 0.0064093000000866596,
+        "execution_s": 0.0038962000000992703
+      }
+    },
+    {
+      "id": 36,
+      "question": "On which date was the first race of the 2023 season held?",
+      "category": "date",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT MIN(date) AS first_race FROM races WHERE year = 2023;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "races"
+      ],
+      "schema_tables": [
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "2023-03-05"
+        ]
+      ],
+      "generated_sql": "SELECT date FROM races WHERE year = 2023 ORDER BY date ASC LIMIT 1;",
+      "raw_response": "```sql\nSELECT date FROM races WHERE year = 2023 ORDER BY date ASC LIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "2023-03-05"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT date FROM races WHERE year = 2023 ORDER BY date ASC LIMIT 1;",
+          "raw_response": "```sql\nSELECT date FROM races WHERE year = 2023 ORDER BY date ASC LIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 487,
+          "completion_tokens": 25,
+          "timings": {
+            "generation_s": 1.2727069999998548,
+            "validation_s": 0.006444899999905829,
+            "execution_s": 0.0033757999999579624
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 487,
+      "prompt_tokens": 487,
+      "completion_tokens": 25,
+      "timings": {
+        "generation_s": 1.2727069999998548,
+        "validation_s": 0.006444899999905829,
+        "execution_s": 0.0033757999999579624
+      }
+    },
+    {
+      "id": 37,
+      "question": "How many days passed between the first and the last race of the 2023 season?",
+      "category": "date",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT MAX(date) - MIN(date) AS days FROM races WHERE year = 2023;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "races"
+      ],
+      "schema_tables": [
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          266
+        ]
+      ],
+      "generated_sql": "SELECT (MAX(date) - MIN(date)) AS days_passed\nFROM races\nWHERE year = 2023;",
+      "raw_response": "```sql\nSELECT (MAX(date) - MIN(date)) AS days_passed\nFROM races\nWHERE year = 2023;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          266
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT (MAX(date) - MIN(date)) AS days_passed\nFROM races\nWHERE year = 2023;",
+          "raw_response": "```sql\nSELECT (MAX(date) - MIN(date)) AS days_passed\nFROM races\nWHERE year = 2023;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 490,
+          "completion_tokens": 30,
+          "timings": {
+            "generation_s": 1.5050833999998758,
+            "validation_s": 0.007803199999898425,
+            "execution_s": 0.004025100000035309
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 490,
+      "prompt_tokens": 490,
+      "completion_tokens": 30,
+      "timings": {
+        "generation_s": 1.5050833999998758,
+        "validation_s": 0.007803199999898425,
+        "execution_s": 0.004025100000035309
+      }
+    },
+    {
+      "id": 38,
+      "question": "In which decade were the most races held?",
+      "category": "date",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT (year / 10) * 10 AS decade, COUNT(*) AS race_count FROM races GROUP BY decade ORDER BY race_count DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "races"
+      ],
+      "schema_tables": [
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          2010,
+          198
+        ]
+      ],
+      "generated_sql": "SELECT \n    decade,\n    COUNT(*) AS race_count\nFROM (\n    SELECT \n        EXTRACT(YEAR FROM date) AS year,\n        (EXTRACT(YEAR FROM date) / 10) * 10 AS decade\n    FROM \n        races\n) AS decades\nGROUP BY \n    decade\nORDER BY \n    race_count DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT \n    decade,\n    COUNT(*) AS race_count\nFROM (\n    SELECT \n        EXTRACT(YEAR FROM date) AS year,\n        (EXTRACT(YEAR FROM date) / 10) * 10 AS decade\n    FROM \n        races\n) AS decades\nGROUP BY \n    decade\nORDER BY \n    race_count DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          2024.0,
+          24
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT \n    decade,\n    COUNT(*) AS race_count\nFROM (\n    SELECT \n        EXTRACT(YEAR FROM date) AS year,\n        (EXTRACT(YEAR FROM date) / 10) * 10 AS decade\n    FROM \n        races\n) AS decades\nGROUP BY \n    decade\nORDER BY \n    race_count DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT \n    decade,\n    COUNT(*) AS race_count\nFROM (\n    SELECT \n        EXTRACT(YEAR FROM date) AS year,\n        (EXTRACT(YEAR FROM date) / 10) * 10 AS decade\n    FROM \n        races\n) AS decades\nGROUP BY \n    decade\nORDER BY \n    race_count DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 479,
+          "completion_tokens": 82,
+          "timings": {
+            "generation_s": 3.889449900000045,
+            "validation_s": 0.00880579999989095,
+            "execution_s": 0.005092900000136069
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 479,
+      "prompt_tokens": 479,
+      "completion_tokens": 82,
+      "timings": {
+        "generation_s": 3.889449900000045,
+        "validation_s": 0.00880579999989095,
+        "execution_s": 0.005092900000136069
+      }
+    },
+    {
+      "id": 39,
+      "question": "Who was the oldest driver who raced in the 2023 season?",
+      "category": "date",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT d.forename, d.surname FROM drivers d WHERE d.driver_id IN (SELECT res.driver_id FROM results res JOIN races r ON res.race_id = r.race_id WHERE r.year = 2023) ORDER BY d.dob LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "drivers",
+        "races",
+        "results"
+      ],
+      "schema_tables": [
+        "drivers",
+        "races",
+        "results"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Fernando",
+          "Alonso"
+        ]
+      ],
+      "generated_sql": "SELECT d.forename, d.surname, d.dob\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nWHERE r.race_id IN (SELECT race_id FROM races WHERE year = 2023)\nORDER BY d.dob ASC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT d.forename, d.surname, d.dob\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nWHERE r.race_id IN (SELECT race_id FROM races WHERE year = 2023)\nORDER BY d.dob ASC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Fernando",
+          "Alonso",
+          "1981-07-29"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT d.forename, d.surname, d.dob\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nWHERE r.race_id IN (SELECT race_id FROM races WHERE year = 2023)\nORDER BY d.dob ASC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT d.forename, d.surname, d.dob\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nWHERE r.race_id IN (SELECT race_id FROM races WHERE year = 2023)\nORDER BY d.dob ASC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 641,
+          "completion_tokens": 65,
+          "timings": {
+            "generation_s": 3.079998799999885,
+            "validation_s": 0.008347299999968527,
+            "execution_s": 0.004752800000005664
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 641,
+      "prompt_tokens": 641,
+      "completion_tokens": 65,
+      "timings": {
+        "generation_s": 3.079998799999885,
+        "validation_s": 0.008347299999968527,
+        "execution_s": 0.004752800000005664
+      }
+    },
+    {
+      "id": 40,
+      "question": "At which five circuits have the most races been held?",
+      "category": "sorting",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT ci.name, COUNT(*) AS race_count FROM races r JOIN circuits ci ON r.circuit_id = ci.circuit_id GROUP BY ci.circuit_id, ci.name ORDER BY race_count DESC LIMIT 5;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "circuits",
+        "races"
+      ],
+      "schema_tables": [
+        "circuits",
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Autodromo Nazionale di Monza",
+          76
+        ],
+        [
+          "Circuit de Monaco",
+          72
+        ],
+        [
+          "Silverstone Circuit",
+          61
+        ],
+        [
+          "Circuit de Spa-Francorchamps",
+          59
+        ],
+        [
+          "Circuit Gilles Villeneuve",
+          45
+        ]
+      ],
+      "generated_sql": "SELECT c.circuit_id, c.name, COUNT(r.race_id) AS race_count\nFROM circuits c\nJOIN races r ON c.circuit_id = r.circuit_id\nGROUP BY c.circuit_id, c.name\nORDER BY race_count DESC\nLIMIT 5;",
+      "raw_response": "```sql\nSELECT c.circuit_id, c.name, COUNT(r.race_id) AS race_count\nFROM circuits c\nJOIN races r ON c.circuit_id = r.circuit_id\nGROUP BY c.circuit_id, c.name\nORDER BY race_count DESC\nLIMIT 5;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          14,
+          "Autodromo Nazionale di Monza",
+          76
+        ],
+        [
+          6,
+          "Circuit de Monaco",
+          72
+        ],
+        [
+          9,
+          "Silverstone Circuit",
+          61
+        ],
+        [
+          13,
+          "Circuit de Spa-Francorchamps",
+          59
+        ],
+        [
+          7,
+          "Circuit Gilles Villeneuve",
+          45
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT c.circuit_id, c.name, COUNT(r.race_id) AS race_count\nFROM circuits c\nJOIN races r ON c.circuit_id = r.circuit_id\nGROUP BY c.circuit_id, c.name\nORDER BY race_count DESC\nLIMIT 5;",
+          "raw_response": "```sql\nSELECT c.circuit_id, c.name, COUNT(r.race_id) AS race_count\nFROM circuits c\nJOIN races r ON c.circuit_id = r.circuit_id\nGROUP BY c.circuit_id, c.name\nORDER BY race_count DESC\nLIMIT 5;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 536,
+          "completion_tokens": 62,
+          "timings": {
+            "generation_s": 2.9616812000001573,
+            "validation_s": 0.007380799999964438,
+            "execution_s": 0.0044254000001728855
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 536,
+      "prompt_tokens": 536,
+      "completion_tokens": 62,
+      "timings": {
+        "generation_s": 2.9616812000001573,
+        "validation_s": 0.007380799999964438,
+        "execution_s": 0.0044254000001728855
+      }
+    },
+    {
+      "id": 41,
+      "question": "Who finished in the top three at the 2008 Brazilian Grand Prix?",
+      "category": "sorting",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT d.forename, d.surname FROM results res JOIN races r ON res.race_id = r.race_id JOIN drivers d ON res.driver_id = d.driver_id WHERE r.year = 2008 AND r.name = 'Brazilian Grand Prix' AND res.position <= 3 ORDER BY res.position;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "drivers",
+        "races",
+        "results"
+      ],
+      "schema_tables": [
+        "drivers",
+        "races",
+        "results"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Felipe",
+          "Massa"
+        ],
+        [
+          "Fernando",
+          "Alonso"
+        ],
+        [
+          "Kimi",
+          "Räikkönen"
+        ]
+      ],
+      "generated_sql": "SELECT d.forename, d.surname\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nJOIN races ra ON r.race_id = ra.race_id\nWHERE ra.year = 2008 AND ra.name = 'Brazilian Grand Prix' AND r.position BETWEEN 1 AND 3;",
+      "raw_response": "```sql\nSELECT d.forename, d.surname\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nJOIN races ra ON r.race_id = ra.race_id\nWHERE ra.year = 2008 AND ra.name = 'Brazilian Grand Prix' AND r.position BETWEEN 1 AND 3;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Felipe",
+          "Massa"
+        ],
+        [
+          "Fernando",
+          "Alonso"
+        ],
+        [
+          "Kimi",
+          "Räikkönen"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT d.forename, d.surname\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nJOIN races ra ON r.race_id = ra.race_id\nWHERE ra.year = 2008 AND ra.name = 'Brazilian Grand Prix' AND r.position BETWEEN 1 AND 3;",
+          "raw_response": "```sql\nSELECT d.forename, d.surname\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nJOIN races ra ON r.race_id = ra.race_id\nWHERE ra.year = 2008 AND ra.name = 'Brazilian Grand Prix' AND r.position BETWEEN 1 AND 3;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 642,
+          "completion_tokens": 72,
+          "timings": {
+            "generation_s": 3.4436871999998857,
+            "validation_s": 0.0074749999998857675,
+            "execution_s": 0.003806199999871751
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 642,
+      "prompt_tokens": 642,
+      "completion_tokens": 72,
+      "timings": {
+        "generation_s": 3.4436871999998857,
+        "validation_s": 0.0074749999998857675,
+        "execution_s": 0.003806199999871751
+      }
+    },
+    {
+      "id": 42,
+      "question": "Which five drivers have won the most races?",
+      "category": "sorting",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT d.forename, d.surname, COUNT(*) AS wins FROM results res JOIN drivers d ON res.driver_id = d.driver_id WHERE res.position = 1 GROUP BY d.driver_id, d.forename, d.surname ORDER BY wins DESC LIMIT 5;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "drivers",
+        "results"
+      ],
+      "schema_tables": [
+        "drivers",
+        "results"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Lewis",
+          "Hamilton",
+          106
+        ],
+        [
+          "Michael",
+          "Schumacher",
+          91
+        ],
+        [
+          "Max",
+          "Verstappen",
+          71
+        ],
+        [
+          "Sebastian",
+          "Vettel",
+          53
+        ],
+        [
+          "Alain",
+          "Prost",
+          51
+        ]
+      ],
+      "generated_sql": "SELECT d.driver_id, d.forename, d.surname, COUNT(r.result_id) AS race_wins\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nWHERE r.position = 1\nGROUP BY d.driver_id, d.forename, d.surname\nORDER BY race_wins DESC\nLIMIT 5;",
+      "raw_response": "```sql\nSELECT d.driver_id, d.forename, d.surname, COUNT(r.result_id) AS race_wins\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nWHERE r.position = 1\nGROUP BY d.driver_id, d.forename, d.surname\nORDER BY race_wins DESC\nLIMIT 5;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          1,
+          "Lewis",
+          "Hamilton",
+          106
+        ],
+        [
+          30,
+          "Michael",
+          "Schumacher",
+          91
+        ],
+        [
+          830,
+          "Max",
+          "Verstappen",
+          71
+        ],
+        [
+          20,
+          "Sebastian",
+          "Vettel",
+          53
+        ],
+        [
+          117,
+          "Alain",
+          "Prost",
+          51
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT d.driver_id, d.forename, d.surname, COUNT(r.result_id) AS race_wins\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nWHERE r.position = 1\nGROUP BY d.driver_id, d.forename, d.surname\nORDER BY race_wins DESC\nLIMIT 5;",
+          "raw_response": "```sql\nSELECT d.driver_id, d.forename, d.surname, COUNT(r.result_id) AS race_wins\nFROM drivers d\nJOIN results r ON d.driver_id = r.driver_id\nWHERE r.position = 1\nGROUP BY d.driver_id, d.forename, d.surname\nORDER BY race_wins DESC\nLIMIT 5;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 511,
+          "completion_tokens": 74,
+          "timings": {
+            "generation_s": 3.4375918999999158,
+            "validation_s": 0.008574299999963841,
+            "execution_s": 0.012711599999875034
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 511,
+      "prompt_tokens": 511,
+      "completion_tokens": 74,
+      "timings": {
+        "generation_s": 3.4375918999999158,
+        "validation_s": 0.008574299999963841,
+        "execution_s": 0.012711599999875034
+      }
+    },
+    {
+      "id": 43,
+      "question": "List the races of the 2024 season in chronological order.",
+      "category": "sorting",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT name, date FROM races WHERE year = 2024 ORDER BY date;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "races"
+      ],
+      "schema_tables": [
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Bahrain Grand Prix",
+          "2024-03-02"
+        ],
+        [
+          "Saudi Arabian Grand Prix",
+          "2024-03-09"
+        ],
+        [
+          "Australian Grand Prix",
+          "2024-03-24"
+        ],
+        [
+          "Japanese Grand Prix",
+          "2024-04-07"
+        ],
+        [
+          "Chinese Grand Prix",
+          "2024-04-21"
+        ],
+        [
+          "Miami Grand Prix",
+          "2024-05-05"
+        ],
+        [
+          "Emilia Romagna Grand Prix",
+          "2024-05-19"
+        ],
+        [
+          "Monaco Grand Prix",
+          "2024-05-26"
+        ],
+        [
+          "Canadian Grand Prix",
+          "2024-06-09"
+        ],
+        [
+          "Spanish Grand Prix",
+          "2024-06-23"
+        ],
+        [
+          "Austrian Grand Prix",
+          "2024-06-30"
+        ],
+        [
+          "British Grand Prix",
+          "2024-07-07"
+        ],
+        [
+          "Hungarian Grand Prix",
+          "2024-07-21"
+        ],
+        [
+          "Belgian Grand Prix",
+          "2024-07-28"
+        ],
+        [
+          "Dutch Grand Prix",
+          "2024-08-25"
+        ],
+        [
+          "Italian Grand Prix",
+          "2024-09-01"
+        ],
+        [
+          "Azerbaijan Grand Prix",
+          "2024-09-15"
+        ],
+        [
+          "Singapore Grand Prix",
+          "2024-09-22"
+        ],
+        [
+          "United States Grand Prix",
+          "2024-10-20"
+        ],
+        [
+          "Mexico City Grand Prix",
+          "2024-10-27"
+        ],
+        [
+          "São Paulo Grand Prix",
+          "2024-11-03"
+        ],
+        [
+          "Las Vegas Grand Prix",
+          "2024-11-23"
+        ],
+        [
+          "Qatar Grand Prix",
+          "2024-12-01"
+        ],
+        [
+          "Abu Dhabi Grand Prix",
+          "2024-12-08"
+        ]
+      ],
+      "generated_sql": "SELECT name\nFROM races\nWHERE year = 2024\nORDER BY date, time;",
+      "raw_response": "```sql\nSELECT name\nFROM races\nWHERE year = 2024\nORDER BY date, time;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Bahrain Grand Prix"
+        ],
+        [
+          "Saudi Arabian Grand Prix"
+        ],
+        [
+          "Australian Grand Prix"
+        ],
+        [
+          "Japanese Grand Prix"
+        ],
+        [
+          "Chinese Grand Prix"
+        ],
+        [
+          "Miami Grand Prix"
+        ],
+        [
+          "Emilia Romagna Grand Prix"
+        ],
+        [
+          "Monaco Grand Prix"
+        ],
+        [
+          "Canadian Grand Prix"
+        ],
+        [
+          "Spanish Grand Prix"
+        ],
+        [
+          "Austrian Grand Prix"
+        ],
+        [
+          "British Grand Prix"
+        ],
+        [
+          "Hungarian Grand Prix"
+        ],
+        [
+          "Belgian Grand Prix"
+        ],
+        [
+          "Dutch Grand Prix"
+        ],
+        [
+          "Italian Grand Prix"
+        ],
+        [
+          "Azerbaijan Grand Prix"
+        ],
+        [
+          "Singapore Grand Prix"
+        ],
+        [
+          "United States Grand Prix"
+        ],
+        [
+          "Mexico City Grand Prix"
+        ],
+        [
+          "São Paulo Grand Prix"
+        ],
+        [
+          "Las Vegas Grand Prix"
+        ],
+        [
+          "Qatar Grand Prix"
+        ],
+        [
+          "Abu Dhabi Grand Prix"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT name\nFROM races\nWHERE year = 2024\nORDER BY date, time;",
+          "raw_response": "```sql\nSELECT name\nFROM races\nWHERE year = 2024\nORDER BY date, time;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 485,
+          "completion_tokens": 26,
+          "timings": {
+            "generation_s": 1.3884247000000869,
+            "validation_s": 0.007094300000062503,
+            "execution_s": 0.003696300000001429
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 485,
+      "prompt_tokens": 485,
+      "completion_tokens": 26,
+      "timings": {
+        "generation_s": 1.3884247000000869,
+        "validation_s": 0.007094300000062503,
+        "execution_s": 0.003696300000001429
+      }
+    },
+    {
+      "id": 44,
+      "question": "Which three races had the highest average air temperature?",
+      "category": "sorting",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT r.name, r.year, w.air_temp_avg FROM weather w JOIN races r ON w.race_id = r.race_id ORDER BY w.air_temp_avg DESC LIMIT 3;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "races",
+        "weather"
+      ],
+      "schema_tables": [
+        "races",
+        "weather"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Austrian Grand Prix",
+          2026,
+          34.5
+        ],
+        [
+          "Italian Grand Prix",
+          2026,
+          32.2
+        ],
+        [
+          "Hungarian Grand Prix",
+          2026,
+          30.8
+        ]
+      ],
+      "generated_sql": "SELECT r.name, w.air_temp_avg\nFROM races r\nJOIN weather w ON r.race_id = w.race_id\nORDER BY w.air_temp_avg DESC\nLIMIT 3;",
+      "raw_response": "```sql\nSELECT r.name, w.air_temp_avg\nFROM races r\nJOIN weather w ON r.race_id = w.race_id\nORDER BY w.air_temp_avg DESC\nLIMIT 3;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Austrian Grand Prix",
+          34.5
+        ],
+        [
+          "Italian Grand Prix",
+          32.2
+        ],
+        [
+          "Hungarian Grand Prix",
+          30.8
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT r.name, w.air_temp_avg\nFROM races r\nJOIN weather w ON r.race_id = w.race_id\nORDER BY w.air_temp_avg DESC\nLIMIT 3;",
+          "raw_response": "```sql\nSELECT r.name, w.air_temp_avg\nFROM races r\nJOIN weather w ON r.race_id = w.race_id\nORDER BY w.air_temp_avg DESC\nLIMIT 3;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 557,
+          "completion_tokens": 44,
+          "timings": {
+            "generation_s": 2.181370300000026,
+            "validation_s": 0.0074581000001217035,
+            "execution_s": 0.003977200000008452
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 557,
+      "prompt_tokens": 557,
+      "completion_tokens": 44,
+      "timings": {
+        "generation_s": 2.181370300000026,
+        "validation_s": 0.0074581000001217035,
+        "execution_s": 0.003977200000008452
+      }
+    },
+    {
+      "id": 45,
+      "question": "How many world championship titles did Michael Schumacher win?",
+      "category": "subquery",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT COUNT(*) AS titles FROM driver_standings ds JOIN races r ON ds.race_id = r.race_id JOIN drivers d ON ds.driver_id = d.driver_id WHERE d.forename = 'Michael' AND d.surname = 'Schumacher' AND ds.position = 1 AND r.round = (SELECT MAX(r2.round) FROM races r2 WHERE r2.year = r.year);",
+      "order_sensitive": false,
+      "gold_tables": [
+        "driver_standings",
+        "drivers",
+        "races"
+      ],
+      "schema_tables": [
+        "driver_standings",
+        "drivers",
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          7
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(*) AS world_championship_titles\nFROM driver_standings ds\nJOIN drivers d ON ds.driver_id = d.driver_id\nWHERE d.forename = 'Michael' AND d.surname = 'Schumacher' AND ds.position = 1 AND ds.round = (SELECT MAX(round) FROM driver_standings WHERE driver_id = d.driver_id);",
+      "raw_response": "```sql\nSELECT COUNT(*) AS world_championship_titles\nFROM driver_standings ds\nJOIN drivers d ON ds.driver_id = d.driver_id\nWHERE d.forename = 'Michael' AND d.surname = 'Schumacher' AND ds.position = 1 AND ds.round = (SELECT MAX(round) FROM driver_standings WHERE driver_id = d.driver_id);\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column ds.round does not exist\nLINE 4: ... d.surname = 'Schumacher' AND ds.position = 1 AND ds.round =...\n                                                             ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(*) AS world_championship_titles\nFROM driver_standings ds\nJOIN drivers d ON ds.driver_id = d.driver_id\nWHERE d.forename = 'Michael' AND d.surname = 'Schumacher' AND ds.position = 1 AND ds.round = (SELECT MAX(round) FROM driver_standings WHERE driver_id = d.driver_id);",
+          "raw_response": "```sql\nSELECT COUNT(*) AS world_championship_titles\nFROM driver_standings ds\nJOIN drivers d ON ds.driver_id = d.driver_id\nWHERE d.forename = 'Michael' AND d.surname = 'Schumacher' AND ds.position = 1 AND ds.round = (SELECT MAX(round) FROM driver_standings WHERE driver_id = d.driver_id);\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column ds.round does not exist\nLINE 4: ... d.surname = 'Schumacher' AND ds.position = 1 AND ds.round =...\n                                                             ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 590,
+          "completion_tokens": 76,
+          "timings": {
+            "generation_s": 3.726183100000071,
+            "validation_s": 0.007899599999973361
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 590,
+      "prompt_tokens": 590,
+      "completion_tokens": 76,
+      "timings": {
+        "generation_s": 3.726183100000071,
+        "validation_s": 0.007899599999973361
+      }
+    },
+    {
+      "id": 46,
+      "question": "How many drivers have won a race but never won the world championship in a completed season?",
+      "category": "subquery",
+      "difficulty": "hard",
+      "ground_truth_sql": "WITH champions AS (SELECT DISTINCT ds.driver_id FROM driver_standings ds JOIN races r ON ds.race_id = r.race_id WHERE ds.position = 1 AND r.year < 2026 AND r.round = (SELECT MAX(r2.round) FROM races r2 WHERE r2.year = r.year)) SELECT COUNT(DISTINCT res.driver_id) AS driver_count FROM results res WHERE res.position = 1 AND res.driver_id NOT IN (SELECT driver_id FROM champions);",
+      "order_sensitive": false,
+      "gold_tables": [
+        "driver_standings",
+        "races",
+        "results"
+      ],
+      "schema_tables": [
+        "driver_standings",
+        "races",
+        "results"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          81
+        ]
+      ],
+      "generated_sql": "SELECT COUNT(DISTINCT r.driver_id)\nFROM results r\nJOIN driver_standings ds ON r.race_id = ds.race_id AND r.driver_id = ds.driver_id\nWHERE r.position = 1\nAND ds.position = 1\nAND ds.round = (SELECT MAX(round) FROM driver_standings WHERE year = ds.year);",
+      "raw_response": "```sql\nSELECT COUNT(DISTINCT r.driver_id)\nFROM results r\nJOIN driver_standings ds ON r.race_id = ds.race_id AND r.driver_id = ds.driver_id\nWHERE r.position = 1\nAND ds.position = 1\nAND ds.round = (SELECT MAX(round) FROM driver_standings WHERE year = ds.year);\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column ds.round does not exist\nLINE 6: AND ds.round = (SELECT MAX(round) FROM driver_standings WHER...\n            ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(DISTINCT r.driver_id)\nFROM results r\nJOIN driver_standings ds ON r.race_id = ds.race_id AND r.driver_id = ds.driver_id\nWHERE r.position = 1\nAND ds.position = 1\nAND ds.round = (SELECT MAX(round) FROM driver_standings WHERE year = ds.year);",
+          "raw_response": "```sql\nSELECT COUNT(DISTINCT r.driver_id)\nFROM results r\nJOIN driver_standings ds ON r.race_id = ds.race_id AND r.driver_id = ds.driver_id\nWHERE r.position = 1\nAND ds.position = 1\nAND ds.round = (SELECT MAX(round) FROM driver_standings WHERE year = ds.year);\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column ds.round does not exist\nLINE 6: AND ds.round = (SELECT MAX(round) FROM driver_standings WHER...\n            ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 643,
+          "completion_tokens": 75,
+          "timings": {
+            "generation_s": 3.5868682000000263,
+            "validation_s": 0.008742799999936324
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 643,
+      "prompt_tokens": 643,
+      "completion_tokens": 75,
+      "timings": {
+        "generation_s": 3.5868682000000263,
+        "validation_s": 0.008742799999936324
+      }
+    },
+    {
+      "id": 47,
+      "question": "On average, how many pit stops were there per race in the 2023 season?",
+      "category": "subquery",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT AVG(stop_count) AS avg_stops FROM (SELECT ps.race_id, COUNT(*) AS stop_count FROM pit_stops ps JOIN races r ON ps.race_id = r.race_id WHERE r.year = 2023 GROUP BY ps.race_id) t;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "pit_stops",
+        "races"
+      ],
+      "schema_tables": [
+        "pit_stops",
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          41.4545
+        ]
+      ],
+      "generated_sql": "SELECT AVG(stop) AS average_pit_stops_per_race\nFROM pit_stops\nJOIN races ON pit_stops.race_id = races.race_id\nWHERE races.year = 2023;",
+      "raw_response": "```sql\nSELECT AVG(stop) AS average_pit_stops_per_race\nFROM pit_stops\nJOIN races ON pit_stops.race_id = races.race_id\nWHERE races.year = 2023;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          1.9156
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT AVG(stop) AS average_pit_stops_per_race\nFROM pit_stops\nJOIN races ON pit_stops.race_id = races.race_id\nWHERE races.year = 2023;",
+          "raw_response": "```sql\nSELECT AVG(stop) AS average_pit_stops_per_race\nFROM pit_stops\nJOIN races ON pit_stops.race_id = races.race_id\nWHERE races.year = 2023;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 542,
+          "completion_tokens": 48,
+          "timings": {
+            "generation_s": 2.386763299999984,
+            "validation_s": 0.006661599999915779,
+            "execution_s": 0.0038609000000633387
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 542,
+      "prompt_tokens": 542,
+      "completion_tokens": 48,
+      "timings": {
+        "generation_s": 2.386763299999984,
+        "validation_s": 0.006661599999915779,
+        "execution_s": 0.0038609000000633387
+      }
+    },
+    {
+      "id": 48,
+      "question": "Which driver scored the most points in the 2023 season without winning a single race?",
+      "category": "subquery",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT d.forename, d.surname, ds.points FROM driver_standings ds JOIN races r ON ds.race_id = r.race_id JOIN drivers d ON ds.driver_id = d.driver_id WHERE r.year = 2023 AND r.round = (SELECT MAX(round) FROM races WHERE year = 2023) AND ds.wins = 0 ORDER BY ds.points DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "driver_standings",
+        "drivers",
+        "races"
+      ],
+      "schema_tables": [
+        "driver_standings",
+        "drivers",
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Lewis",
+          "Hamilton",
+          234.0
+        ]
+      ],
+      "generated_sql": "SELECT d.driver_id, d.forename, d.surname, SUM(ds.points) AS total_points\nFROM drivers d\nJOIN driver_standings ds ON d.driver_id = ds.driver_id\nJOIN races r ON ds.race_id = r.race_id\nWHERE r.year = 2023 AND ds.wins = 0\nGROUP BY d.driver_id, d.forename, d.surname\nORDER BY total_points DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT d.driver_id, d.forename, d.surname, SUM(ds.points) AS total_points\nFROM drivers d\nJOIN driver_standings ds ON d.driver_id = ds.driver_id\nJOIN races r ON ds.race_id = r.race_id\nWHERE r.year = 2023 AND ds.wins = 0\nGROUP BY d.driver_id, d.forename, d.surname\nORDER BY total_points DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          1,
+          "Lewis",
+          "Hamilton",
+          2935.0
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT d.driver_id, d.forename, d.surname, SUM(ds.points) AS total_points\nFROM drivers d\nJOIN driver_standings ds ON d.driver_id = ds.driver_id\nJOIN races r ON ds.race_id = r.race_id\nWHERE r.year = 2023 AND ds.wins = 0\nGROUP BY d.driver_id, d.forename, d.surname\nORDER BY total_points DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT d.driver_id, d.forename, d.surname, SUM(ds.points) AS total_points\nFROM drivers d\nJOIN driver_standings ds ON d.driver_id = ds.driver_id\nJOIN races r ON ds.race_id = r.race_id\nWHERE r.year = 2023 AND ds.wins = 0\nGROUP BY d.driver_id, d.forename, d.surname\nORDER BY total_points DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 598,
+          "completion_tokens": 97,
+          "timings": {
+            "generation_s": 4.625638199999912,
+            "validation_s": 0.008622299999842653,
+            "execution_s": 0.005053499999803535
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 598,
+      "prompt_tokens": 598,
+      "completion_tokens": 97,
+      "timings": {
+        "generation_s": 4.625638199999912,
+        "validation_s": 0.008622299999842653,
+        "execution_s": 0.005053499999803535
+      }
+    },
+    {
+      "id": 49,
+      "question": "Which teams scored more points in the 2023 constructors' championship than the average team?",
+      "category": "subquery",
+      "difficulty": "hard",
+      "ground_truth_sql": "WITH final AS (SELECT cs.constructor_id, cs.points FROM constructor_standings cs JOIN races r ON cs.race_id = r.race_id WHERE r.year = 2023 AND r.round = (SELECT MAX(round) FROM races WHERE year = 2023)) SELECT c.name FROM final f JOIN constructors c ON f.constructor_id = c.constructor_id WHERE f.points > (SELECT AVG(points) FROM final);",
+      "order_sensitive": false,
+      "gold_tables": [
+        "constructor_standings",
+        "constructors",
+        "races"
+      ],
+      "schema_tables": [
+        "constructor_standings",
+        "constructors",
+        "races"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "McLaren"
+        ],
+        [
+          "Ferrari"
+        ],
+        [
+          "Red Bull"
+        ],
+        [
+          "Aston Martin"
+        ],
+        [
+          "Mercedes"
+        ]
+      ],
+      "generated_sql": "SELECT c.constructor_id, c.name, cs.points\nFROM constructors c\nJOIN constructor_standings cs ON c.constructor_id = cs.constructor_id\nWHERE cs.year = 2023\nGROUP BY c.constructor_id, c.name, cs.points\nHAVING cs.points > (SELECT AVG(points) FROM constructor_standings WHERE year = 2023);",
+      "raw_response": "```sql\nSELECT c.constructor_id, c.name, cs.points\nFROM constructors c\nJOIN constructor_standings cs ON c.constructor_id = cs.constructor_id\nWHERE cs.year = 2023\nGROUP BY c.constructor_id, c.name, cs.points\nHAVING cs.points > (SELECT AVG(points) FROM constructor_standings WHERE year = 2023);\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column cs.year does not exist\nLINE 4: WHERE cs.year = 2023\n              ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT c.constructor_id, c.name, cs.points\nFROM constructors c\nJOIN constructor_standings cs ON c.constructor_id = cs.constructor_id\nWHERE cs.year = 2023\nGROUP BY c.constructor_id, c.name, cs.points\nHAVING cs.points > (SELECT AVG(points) FROM constructor_standings WHERE year = 2023);",
+          "raw_response": "```sql\nSELECT c.constructor_id, c.name, cs.points\nFROM constructors c\nJOIN constructor_standings cs ON c.constructor_id = cs.constructor_id\nWHERE cs.year = 2023\nGROUP BY c.constructor_id, c.name, cs.points\nHAVING cs.points > (SELECT AVG(points) FROM constructor_standings WHERE year = 2023);\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column cs.year does not exist\nLINE 4: WHERE cs.year = 2023\n              ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 580,
+          "completion_tokens": 79,
+          "timings": {
+            "generation_s": 3.782224999999926,
+            "validation_s": 0.007303599999886501
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 580,
+      "prompt_tokens": 580,
+      "completion_tokens": 79,
+      "timings": {
+        "generation_s": 3.782224999999926,
+        "validation_s": 0.007303599999886501
+      }
+    },
+    {
+      "id": 50,
+      "question": "Which drivers scored points in every race of the 2023 season?",
+      "category": "subquery",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT d.forename, d.surname FROM drivers d WHERE d.driver_id IN (SELECT res.driver_id FROM results res JOIN races r ON res.race_id = r.race_id WHERE r.year = 2023 AND res.points > 0 GROUP BY res.driver_id HAVING COUNT(*) = (SELECT COUNT(*) FROM races WHERE year = 2023));",
+      "order_sensitive": false,
+      "gold_tables": [
+        "drivers",
+        "races",
+        "results"
+      ],
+      "schema_tables": [
+        "drivers",
+        "races",
+        "results"
+      ],
+      "table_recall": 1.0,
+      "expected_result": [
+        [
+          "Max",
+          "Verstappen"
+        ]
+      ],
+      "generated_sql": "SELECT d.driver_id, d.forename, d.surname\nFROM drivers d\nWHERE NOT EXISTS (\n    SELECT 1\n    FROM races r\n    LEFT JOIN results res ON r.race_id = res.race_id AND d.driver_id = res.driver_id\n    WHERE r.year = 2023 AND res.points IS NULL\n);",
+      "raw_response": "```sql\nSELECT d.driver_id, d.forename, d.surname\nFROM drivers d\nWHERE NOT EXISTS (\n    SELECT 1\n    FROM races r\n    LEFT JOIN results res ON r.race_id = res.race_id AND d.driver_id = res.driver_id\n    WHERE r.year = 2023 AND res.points IS NULL\n);\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          1,
+          "Lewis",
+          "Hamilton"
+        ],
+        [
+          4,
+          "Fernando",
+          "Alonso"
+        ],
+        [
+          842,
+          "Pierre",
+          "Gasly"
+        ],
+        [
+          807,
+          "Nico",
+          "Hülkenberg"
+        ],
+        [
+          815,
+          "Sergio",
+          "Pérez"
+        ],
+        [
+          822,
+          "Valtteri",
+          "Bottas"
+        ],
+        [
+          825,
+          "Kevin",
+          "Magnussen"
+        ],
+        [
+          830,
+          "Max",
+          "Verstappen"
+        ],
+        [
+          832,
+          "Carlos",
+          "Sainz"
+        ],
+        [
+          839,
+          "Esteban",
+          "Ocon"
+        ],
+        [
+          840,
+          "Lance",
+          "Stroll"
+        ],
+        [
+          844,
+          "Charles",
+          "Leclerc"
+        ],
+        [
+          846,
+          "Lando",
+          "Norris"
+        ],
+        [
+          847,
+          "George",
+          "Russell"
+        ],
+        [
+          848,
+          "Alexander",
+          "Albon"
+        ],
+        [
+          852,
+          "Yuki",
+          "Tsunoda"
+        ],
+        [
+          855,
+          "Guanyu",
+          "Zhou"
+        ],
+        [
+          857,
+          "Oscar",
+          "Piastri"
+        ],
+        [
+          858,
+          "Logan",
+          "Sargeant"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT d.driver_id, d.forename, d.surname\nFROM drivers d\nWHERE NOT EXISTS (\n    SELECT 1\n    FROM races r\n    LEFT JOIN results res ON r.race_id = res.race_id AND d.driver_id = res.driver_id\n    WHERE r.year = 2023 AND res.points IS NULL\n);",
+          "raw_response": "```sql\nSELECT d.driver_id, d.forename, d.surname\nFROM drivers d\nWHERE NOT EXISTS (\n    SELECT 1\n    FROM races r\n    LEFT JOIN results res ON r.race_id = res.race_id AND d.driver_id = res.driver_id\n    WHERE r.year = 2023 AND res.points IS NULL\n);\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 641,
+          "completion_tokens": 76,
+          "timings": {
+            "generation_s": 3.5800021000000015,
+            "validation_s": 0.007970499999828462,
+            "execution_s": 0.04202870000017356
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 641,
+      "prompt_tokens": 641,
+      "completion_tokens": 76,
+      "timings": {
+        "generation_s": 3.5800021000000015,
+        "validation_s": 0.007970499999828462,
+        "execution_s": 0.04202870000017356
+      }
+    }
+  ]
+}

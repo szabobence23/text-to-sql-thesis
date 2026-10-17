@@ -81,6 +81,33 @@ def test_translations_differ_only_in_question(name, language):
     )
 
 
+@pytest.mark.db
+@pytest.mark.parametrize("name", available_datasets())
+def test_ground_truth_tables_exist(name):
+    # The oracle schema lists the tables a ground truth reads; a table
+    # missing from the database would silently shrink that schema.
+    from pipeline import PipelineConfig, open_connection
+    from sql_tables import tables_in_sql
+
+    dataset = load_dataset(name)
+    conn = open_connection(PipelineConfig(dataset=name))
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT table_schema, table_name FROM information_schema.tables "
+                "WHERE table_type = 'BASE TABLE' AND table_schema = ANY(%s)",
+                (list(dataset.schemas),),
+            )
+            existing = set(cur.fetchall())
+        conn.rollback()
+    finally:
+        conn.close()
+
+    for case in load_cases(name, DEFAULT_LANGUAGE):
+        missing = tables_in_sql(case["ground_truth_sql"]) - existing
+        assert not missing, f"case {case['id']}: {missing}"
+
+
 @pytest.mark.parametrize("name", DATASETS_WITH_ATTACKS)
 def test_attacks_are_well_formed(name):
     with open(load_dataset(name).attacks_path, encoding="utf-8") as file:

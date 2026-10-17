@@ -4,7 +4,7 @@ def qualified_name(schema, table):
     return table if schema == "public" else f"{schema}.{table}"
 
 
-def get_schema(conn, database_name, hints="", schemas=("public",)):
+def get_schema(conn, database_name, hints="", schemas=("public",), tables=None):
     """
     Schema text for the prompt, introspected from the database.
 
@@ -12,6 +12,8 @@ def get_schema(conn, database_name, hints="", schemas=("public",)):
     appended after the relationships; empty for none.
     schemas: the PostgreSQL schemas to describe. Tables outside public
     are shown schema-qualified (sales.customer). Views are left out.
+    tables: if given, only these (schema, table) pairs and the
+    relationships between two of them; None lists every table.
     """
     columns_query = """
     SELECT c.table_schema, c.table_name, c.column_name, c.data_type
@@ -59,6 +61,14 @@ def get_schema(conn, database_name, hints="", schemas=("public",)):
         relationships = cur.fetchall()
 
     conn.rollback()
+
+    if tables is not None:
+        wanted = {(s.lower(), t.lower()) for s, t in tables}
+        columns = [c for c in columns if (c[0], c[1]) in wanted]
+        relationships = [
+            r for r in relationships
+            if (r[0], r[1]) in wanted and (r[3], r[4]) in wanted
+        ]
 
     schema = f"Database: {database_name}\n\n"
 
