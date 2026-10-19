@@ -4,16 +4,15 @@ def qualified_name(schema, table):
     return table if schema == "public" else f"{schema}.{table}"
 
 
-def get_schema(conn, database_name, hints="", schemas=("public",), tables=None):
+def fetch_catalog(conn, schemas=("public",)):
     """
-    Schema text for the prompt, introspected from the database.
+    (columns, relationships) of the base tables in the given schemas,
+    read the way the application role sees them. Shared by the prompt's
+    schema text and by schema retrieval, so both see the same tables.
 
-    hints: the dataset's hand-written notes (datasets/<name>/hints.txt),
-    appended after the relationships; empty for none.
-    schemas: the PostgreSQL schemas to describe. Tables outside public
-    are shown schema-qualified (sales.customer). Views are left out.
-    tables: if given, only these (schema, table) pairs and the
-    relationships between two of them; None lists every table.
+    columns: (schema, table, column, data_type), in table and column order.
+    relationships: (schema, table, column, foreign_schema, foreign_table,
+    foreign_column) for every foreign key column.
     """
     columns_query = """
     SELECT c.table_schema, c.table_name, c.column_name, c.data_type
@@ -61,6 +60,22 @@ def get_schema(conn, database_name, hints="", schemas=("public",), tables=None):
         relationships = cur.fetchall()
 
     conn.rollback()
+
+    return columns, relationships
+
+
+def get_schema(conn, database_name, hints="", schemas=("public",), tables=None):
+    """
+    Schema text for the prompt, introspected from the database.
+
+    hints: the dataset's hand-written notes (datasets/<name>/hints.txt),
+    appended after the relationships; empty for none.
+    schemas: the PostgreSQL schemas to describe. Tables outside public
+    are shown schema-qualified (sales.customer). Views are left out.
+    tables: if given, only these (schema, table) pairs and the
+    relationships between two of them; None lists every table.
+    """
+    columns, relationships = fetch_catalog(conn, schemas)
 
     if tables is not None:
         wanted = {(s.lower(), t.lower()) for s, t in tables}
