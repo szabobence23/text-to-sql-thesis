@@ -1,5 +1,9 @@
+import os
+
 from retrieval import (
     BM25Retriever,
+    EmbeddingRetriever,
+    HybridRetriever,
     TableDoc,
     char_ngrams,
     expand_with_bridges,
@@ -100,3 +104,66 @@ def test_select_tables():
     assert select_tables(ranking, 2, {"a": {"x"}, "x": {"a", "b"}, "b": {"x"}}, fk_expansion=True) == [
         "a", "b", "x",
     ]
+
+
+def test_prose_reads_as_sentences():
+    doc = TableDoc(("sales", "customer"), ("customerid", "storeid"), "Current customer information.")
+
+    assert doc.prose(False) == "Table sales.customer. Columns: customerid, storeid."
+    assert doc.prose(True).startswith("Table sales.customer. Current customer information.")
+
+
+class FakeEmbedder:
+    """Embeds a text as counts of a few keywords; records every call."""
+
+    KEYWORDS = ["customer", "order", "vendor"]
+
+    def __init__(self):
+        self.calls = []
+
+    def __call__(self, model, texts):
+        self.calls.append(list(texts))
+        return [[t.lower().count(k) + 0.01 for k in self.KEYWORDS] for t in texts]
+
+
+def test_embedding_ranks_by_cosine_similarity():
+    retriever = EmbeddingRetriever(DOCS, embed=FakeEmbedder())
+
+    assert retriever.rank("which vendor has the most order lines")[0][0] in {
+        ("public", "orders"), ("sales", "salesorderheader"),
+    }
+    assert retriever.rank("customer list")[0][0] == ("public", "customers")
+
+
+def test_table_embeddings_are_cached(tmp_path):
+    first = FakeEmbedder()
+    EmbeddingRetriever(DOCS, embed=first, cache_dir=str(tmp_path), digest="d1")
+    second = FakeEmbedder()
+    EmbeddingRetriever(DOCS, embed=second, cache_dir=str(tmp_path), digest="d1")
+
+    assert len(first.calls) == 1
+    assert second.calls == []  # loaded from the cache
+
+    # A different model digest must not reuse the cached vectors.
+    third = FakeEmbedder()
+    EmbeddingRetriever(DOCS, embed=third, cache_dir=str(tmp_path), digest="d2")
+    assert len(third.calls) == 1
+    assert len(os.listdir(tmp_path)) == 2
+
+
+class FixedRetriever:
+    def __init__(self, order):
+        self.order = order
+
+    def rank_many(self, questions):
+        return [[(key, 0.0) for key in self.order] for _ in questions]
+
+
+def test_hybrid_uses_reciprocal_rank_fusion():
+    # a: ranks 1 and 3; b: ranks 2 and 1; c: ranks 3 and 2.
+    hybrid = HybridRetriever([FixedRetriever(["a", "b", "c"]), FixedRetriever(["b", "c", "a"])], c=60)
+
+    [ranking] = hybrid.rank_many(["q"])
+
+    assert [key for key, _ in ranking] == ["b", "a", "c"]
+    assert ranking[0][1] == 1 / 62 + 1 / 61

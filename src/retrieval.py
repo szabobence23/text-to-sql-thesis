@@ -5,8 +5,8 @@ so the prompt can list a few tables instead of the whole schema.
 The building blocks are shared by every retrieval method:
 - TableDoc: the text a table is found by (its name and column names,
   optionally the database's own table/column descriptions);
-- a ranker that orders the tables for a question (here BM25 over
-  character n-grams; embedding and hybrid rankers can replace it);
+- a ranker that orders the tables for a question: BM25 over character
+  n-grams (keywords), multilingual embeddings (meaning), or both fused;
 - foreign-key expansion: a table that connects two selected tables is
   added, because without it the JOIN between them cannot be written.
 
@@ -15,10 +15,15 @@ each ground truth reads (evaluation/retrieval_eval.py); the oracle schema
 is the upper bound.
 """
 
+import hashlib
+import json
 import math
+import os
 import re
 from collections import Counter, deque
 from dataclasses import dataclass, field
+
+import ollama
 
 from schema import fetch_catalog, qualified_name
 
@@ -39,11 +44,24 @@ class TableDoc:
         return qualified_name(*self.key)
 
     def text(self, with_descriptions):
-        """What the table is searched by."""
+        """What the table is searched by (keyword retrieval)."""
         parts = [self.name, *self.columns]
         if with_descriptions:
             parts += [self.description, *self.column_descriptions]
         return " ".join(p for p in parts if p)
+
+    def prose(self, with_descriptions):
+        """
+        The same content as sentences, for embedding models, which are
+        trained on natural text rather than bare identifier lists.
+        """
+        text = f"Table {self.name}."
+        if with_descriptions and self.description:
+            text += f" {self.description}"
+        text += f" Columns: {', '.join(self.columns)}."
+        if with_descriptions and self.column_descriptions:
+            text += " " + " ".join(self.column_descriptions)
+        return text
 
 
 def repair_mojibake(text):
@@ -193,8 +211,110 @@ class BM25Retriever:
     def rank(self, question):
         """[(table key, score)], best first; ties broken by table name."""
         scores = self.index.scores(tokens(question, self.ngram))
-        ranked = sorted(zip(self.docs, scores), key=lambda p: (-p[1], p[0].name))
-        return [(doc.key, score) for doc, score in ranked]
+        return _ranking(self.docs, scores)
+
+    def rank_many(self, questions):
+        return [self.rank(q) for q in questions]
+
+
+def _ranking(docs, scores):
+    ranked = sorted(zip(docs, scores), key=lambda p: (-p[1], p[0].name))
+    return [(doc.key, score) for doc, score in ranked]
+
+
+# ---------------------------------------------------------------------------
+# Embedding ranker
+# ---------------------------------------------------------------------------
+
+def _normalize(vector):
+    norm = math.sqrt(sum(x * x for x in vector)) or 1.0
+    return [x / norm for x in vector]
+
+
+def ollama_embed(model, texts):
+    return [list(v) for v in ollama.embed(model=model, input=texts).embeddings]
+
+
+class EmbeddingRetriever:
+    """
+    Ranks tables by cosine similarity between the question's and each
+    table's embedding. A multilingual model (bge-m3) places a Hungarian
+    question near the English table it is about, which keyword matching
+    cannot do ('beszállító' vs 'vendor').
+
+    Table embeddings are computed once and cached on disk, keyed by the
+    model digest and the table texts, so a re-pulled model or a changed
+    schema never reuses stale vectors.
+    """
+
+    def __init__(self, docs, model="bge-m3", with_descriptions=False,
+                 cache_dir=None, embed=ollama_embed, digest=None):
+        self.docs = docs
+        self.model = model
+        self.embed = embed
+        texts = [d.prose(with_descriptions) for d in docs]
+        self.vectors = [_normalize(v) for v in self._table_vectors(texts, cache_dir, digest)]
+
+    def _table_vectors(self, texts, cache_dir, digest):
+        if cache_dir is None:
+            return self.embed(self.model, texts)
+
+        key = hashlib.sha256(
+            "\n".join([self.model, digest or "", *texts]).encode("utf-8")
+        ).hexdigest()
+        path = os.path.join(cache_dir, f"{key}.json")
+        if os.path.exists(path):
+            with open(path, encoding="utf-8") as file:
+                return json.load(file)
+
+        vectors = self.embed(self.model, texts)
+        os.makedirs(cache_dir, exist_ok=True)
+        with open(path, "w", encoding="utf-8") as file:
+            json.dump(vectors, file)
+        return vectors
+
+    def rank_many(self, questions):
+        rankings = []
+        for q in self.embed(self.model, list(questions)):
+            q = _normalize(q)
+            scores = [sum(a * b for a, b in zip(q, v)) for v in self.vectors]
+            rankings.append(_ranking(self.docs, scores))
+        return rankings
+
+    def rank(self, question):
+        return self.rank_many([question])[0]
+
+
+# ---------------------------------------------------------------------------
+# Hybrid ranker
+# ---------------------------------------------------------------------------
+
+class HybridRetriever:
+    """
+    Reciprocal Rank Fusion (Cormack et al., 2009): a table's score is the
+    sum of 1 / (c + rank) over the fused rankings, with the usual c = 60.
+    Only ranks are used, so BM25 and cosine scores, which are on different
+    scales, need no calibration.
+    """
+
+    def __init__(self, retrievers, c=60):
+        self.retrievers = retrievers
+        self.c = c
+
+    def rank_many(self, questions):
+        per_retriever = [r.rank_many(questions) for r in self.retrievers]
+        fused = []
+        for rankings in zip(*per_retriever):
+            scores = {}
+            for ranking in rankings:
+                for position, (key, _) in enumerate(ranking, start=1):
+                    scores[key] = scores.get(key, 0.0) + 1 / (self.c + position)
+            # Ties broken by the (schema, table) key, so fusion is deterministic.
+            fused.append(sorted(scores.items(), key=lambda p: (-p[1], p[0])))
+        return fused
+
+    def rank(self, question):
+        return self.rank_many([question])[0]
 
 
 # ---------------------------------------------------------------------------

@@ -13,8 +13,6 @@ from dataclasses import asdict
 SRC_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(SRC_DIR)
 
-import ollama
-
 from database import DB_USER, execute_query
 from dataset_loader import (
     DEFAULT_DATASET,
@@ -34,6 +32,7 @@ from llm import (
     CORRECTION_PROMPT_SHA256,
     PROMPT_SHA256,
     LLMSettings,
+    model_digest,
 )
 from pipeline import (
     SCHEMA_RETRIEVAL_MODES,
@@ -74,15 +73,6 @@ def git_info():
         }
     except OSError:
         return {"commit": None, "dirty": None}
-
-
-def model_digest(model):
-    # The tag (e.g. qwen2.5-coder:7b) can point to new weights after
-    # a re-pull; the digest identifies the exact model evaluated.
-    for m in ollama.list().models:
-        if m.model == model:
-            return m.digest
-    return None
 
 
 def run_ground_truths(conn, test_cases):

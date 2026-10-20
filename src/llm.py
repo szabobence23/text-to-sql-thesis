@@ -2,6 +2,7 @@ import hashlib
 import re
 from dataclasses import asdict, dataclass
 
+import ollama
 from ollama import chat
 
 
@@ -73,6 +74,19 @@ def _sha256(text):
 PROMPT_SHA256 = _sha256(PROMPT_TEMPLATE)
 CORRECTION_PROMPT_SHA256 = _sha256(CORRECTION_TEMPLATE)
 ANSWER_PROMPT_SHA256 = _sha256(ANSWER_TEMPLATE)
+
+
+def model_digest(model):
+    """
+    The digest of a pulled Ollama model. A tag (qwen2.5-coder:7b, bge-m3)
+    can point to new weights after a re-pull; the digest identifies the
+    exact model. None if the model is not pulled.
+    """
+    names = {model, f"{model}:latest"}
+    for m in ollama.list().models:
+        if m.model in names:
+            return m.digest
+    return None
 
 
 @dataclass(frozen=True)

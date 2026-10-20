@@ -2,7 +2,8 @@
 Schema retrieval measured on its own, without the LLM.
 
     python src/evaluation/retrieval_eval.py --run-name bm25
-    python src/evaluation/retrieval_eval.py --run-name bm25-desc --descriptions
+    python src/evaluation/retrieval_eval.py --retriever dense --run-name dense
+    python src/evaluation/retrieval_eval.py --retriever hybrid --descriptions --run-name hybrid-desc
 
 For every test question the retriever ranks the tables; the tables the
 ground truth reads (sql_tables.tables_in_sql) are what it should find.
@@ -28,21 +29,35 @@ import sys
 SRC_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(SRC_DIR)
 
-from dataset_loader import available_datasets, load_dataset
+from dataset_loader import REPO_DIR, available_datasets, load_dataset
 from evaluation.evaluator import DEFAULT_OUTPUT_DIR, git_info, sha256
 from pipeline import PipelineConfig, open_connection
-from retrieval import BM25Retriever, foreign_key_graph, load_table_docs, select_tables
+from llm import model_digest
+from retrieval import (
+    BM25Retriever,
+    EmbeddingRetriever,
+    HybridRetriever,
+    foreign_key_graph,
+    load_table_docs,
+    select_tables,
+)
 from sql_tables import format_tables, table_recall, tables_in_sql
 
 
 DEFAULT_DATASETS = ["olist", "f1", "adventureworks"]
 DEFAULT_KS = [1, 2, 3, 5, 8, 10]
+RETRIEVERS = ["bm25", "dense", "hybrid"]
+# Table embeddings, keyed by model digest and table texts (gitignored).
+EMBEDDING_CACHE_DIR = os.path.join(REPO_DIR, ".cache", "embeddings")
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Sémakeresés mérése LLM nélkül (recall@k)")
     parser.add_argument("--datasets", nargs="+", default=DEFAULT_DATASETS, choices=available_datasets())
     parser.add_argument("--languages", nargs="+", default=["hu", "en"])
+    parser.add_argument("--retriever", default="bm25", choices=RETRIEVERS,
+                        help="bm25 = kulcsszavas, dense = embedding, hybrid = a kettő összefésülve")
+    parser.add_argument("--embedding-model", default="bge-m3")
     parser.add_argument("--k", nargs="+", type=int, default=DEFAULT_KS, help="hány táblát adjon vissza a kereső")
     parser.add_argument("--ngram", type=int, default=3, help="karakter n-gram hossza; 0 = egész szavak")
     parser.add_argument("--descriptions", action="store_true", help="a tábla- és oszlopleírások is kereshetők")
@@ -54,9 +69,9 @@ def parse_args():
 
 def evaluate(cases, retriever, graph, ks, max_hops):
     questions = []
-    for case in cases:
+    rankings = retriever.rank_many([case["question"] for case in cases])
+    for case, ranking in zip(cases, rankings):
         gold = tables_in_sql(case["ground_truth_sql"])
-        ranking = retriever.rank(case["question"])
         order = [key for key, _ in ranking]
         ranks = {key: order.index(key) + 1 for key in gold if key in order}
 
@@ -105,13 +120,38 @@ def summarize(questions, ks):
     return summary
 
 
+def build_retriever(args, docs, digest):
+    bm25 = lambda: BM25Retriever(docs, ngram=args.ngram, with_descriptions=args.descriptions)
+    dense = lambda: EmbeddingRetriever(
+        docs, model=args.embedding_model, with_descriptions=args.descriptions,
+        cache_dir=EMBEDDING_CACHE_DIR, digest=digest,
+    )
+    if args.retriever == "bm25":
+        return bm25()
+    if args.retriever == "dense":
+        return dense()
+    return HybridRetriever([bm25(), dense()])
+
+
+def describe(args):
+    bm25 = f"BM25 ({'egész szavak' if args.ngram <= 0 else f'karakter {args.ngram}-gram'})"
+    dense = f"embedding ({args.embedding_model})"
+    return {"bm25": bm25, "dense": dense, "hybrid": f"hibrid RRF: {bm25} + {dense}"}[args.retriever]
+
+
 def main():
     args = parse_args()
     started_at = datetime.datetime.now()
     ks = sorted(set(args.k))
 
+    digest = None
+    if args.retriever in ("dense", "hybrid"):
+        digest = model_digest(args.embedding_model)
+        if digest is None:
+            raise SystemExit(f"A(z) {args.embedding_model} modell nincs letöltve: ollama pull {args.embedding_model}")
+
     print(
-        f"Kereső: BM25, {'egész szavak' if args.ngram <= 0 else f'karakter {args.ngram}-gram'}, "
+        f"Kereső: {describe(args)}, "
         f"leírások: {'igen' if args.descriptions else 'nem'}, bővítés: legfeljebb {args.max_hops} lépés"
     )
     header = "  ".join(f"k={k:<3}" for k in ks)
@@ -122,8 +162,10 @@ def main():
         "run": {
             "started_at": started_at.isoformat(timespec="seconds"),
             "git": git_info(),
-            "retriever": "bm25",
+            "retriever": args.retriever,
             "ngram": args.ngram,
+            "embedding_model": args.embedding_model if digest else None,
+            "embedding_model_digest": digest,
             "descriptions": args.descriptions,
             "max_hops": args.max_hops,
             "ks": ks,
@@ -140,7 +182,7 @@ def main():
         finally:
             conn.close()
 
-        retriever = BM25Retriever(docs, ngram=args.ngram, with_descriptions=args.descriptions)
+        retriever = build_retriever(args, docs, digest)
 
         for language in args.languages:
             if language not in dataset.languages:
@@ -168,7 +210,7 @@ def main():
             })
 
     stamp = started_at.strftime("%Y%m%d-%H%M%S")
-    name = f"{stamp}_retrieval_bm25" + (f"_{args.run_name}" if args.run_name else "")
+    name = f"{stamp}_retrieval_{args.retriever}" + (f"_{args.run_name}" if args.run_name else "")
     path = os.path.join(args.output_dir, f"{name}.json")
     os.makedirs(args.output_dir, exist_ok=True)
     with open(path, "w", encoding="utf-8") as file:

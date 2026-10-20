@@ -6,3 +6,6 @@ __pycache__/
 
 # Raw downloads, reproducible from datasets/adventureworks/SOURCES.md
 datasets/adventureworks/data/
+
+# Cached embeddings (retrieval.EmbeddingRetriever)
+.cache/
