@@ -3,7 +3,7 @@ import pytest
 
 import pipeline
 from dataset_loader import load_dataset
-from llm import Answer, Generation
+from llm import Answer, Generation, Translation
 from pipeline import PipelineConfig, load_schema, open_connection, run_pipeline
 
 
@@ -204,3 +204,70 @@ def test_no_answer_when_query_failed(monkeypatch):
 
     assert result.answer is None
     assert backend.answer_calls == []
+
+class FakeRetriever:
+    def __init__(self, tables):
+        self.tables = tables
+        self.queries = []
+
+    def select(self, question):
+        self.queries.append(question)
+        return self.tables
+
+
+def test_retrieval_builds_the_schema_from_selected_tables(monkeypatch):
+    FakeBackend(monkeypatch, ["good"], {"good": "ok"})
+    built = []
+    monkeypatch.setattr(
+        pipeline, "load_schema",
+        lambda conn, config, tables=None: built.append(tables) or "small schema",
+    )
+    retriever = FakeRetriever([("public", "orders")])
+
+    result = run_pipeline(None, "question", "full schema", PipelineConfig(schema_retrieval="dense"), retriever)
+
+    assert retriever.queries == ["question"]
+    assert built == [[("public", "orders")]]
+    assert result.schema_tables == [("public", "orders")]
+    assert result.retrieval_query == "question"
+    assert "retrieval_s" in result.timings
+
+
+def test_translation_is_used_only_for_retrieval(monkeypatch):
+    backend = FakeBackend(monkeypatch, ["good"], {"good": "ok"})
+    monkeypatch.setattr(pipeline, "load_schema", lambda conn, config, tables=None: "small schema")
+    monkeypatch.setattr(
+        pipeline, "translate_question",
+        lambda question, settings: Translation("english question", 3, 2),
+    )
+    seen = []
+    monkeypatch.setattr(
+        pipeline, "generate_sql",
+        lambda question, schema, settings: seen.append((question, schema)) or backend._next(),
+    )
+    retriever = FakeRetriever([("public", "orders")])
+
+    config = PipelineConfig(schema_retrieval="hybrid", translate_for_retrieval=True)
+    result = run_pipeline(None, "magyar kérdés", "full schema", config, retriever)
+
+    assert retriever.queries == ["english question"]
+    # The SQL model gets the original question and the retrieved schema.
+    assert seen == [("magyar kérdés", "small schema")]
+    assert result.translation.text == "english question"
+    assert "translation_s" in result.timings
+
+
+def test_retrieval_mode_without_retriever_is_rejected(monkeypatch):
+    FakeBackend(monkeypatch, ["good"], {"good": "ok"})
+
+    with pytest.raises(ValueError, match="needs a retriever"):
+        run(PipelineConfig(schema_retrieval="bm25"))
+
+
+def test_full_schema_records_no_retrieval(monkeypatch):
+    FakeBackend(monkeypatch, ["good"], {"good": "ok"})
+
+    result = run(PipelineConfig())
+
+    assert result.schema_tables is None
+    assert result.retrieval_query is None

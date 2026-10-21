@@ -65,6 +65,23 @@ Instructions:
 """
 
 
+# Optional step before schema retrieval: the tables are described in
+# English, so an English question finds them more easily. Applied to
+# every question, since the system does not know its language.
+TRANSLATE_TEMPLATE = """
+Translate the user's database question into English.
+
+QUESTION:
+{question}
+
+Instructions:
+- If the question is already in English, return it unchanged.
+- Keep names, numbers and quoted values exactly as they are.
+- Do not answer the question and do not write SQL.
+- Return ONLY the English question.
+"""
+
+
 def _sha256(text):
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
@@ -74,6 +91,7 @@ def _sha256(text):
 PROMPT_SHA256 = _sha256(PROMPT_TEMPLATE)
 CORRECTION_PROMPT_SHA256 = _sha256(CORRECTION_TEMPLATE)
 ANSWER_PROMPT_SHA256 = _sha256(ANSWER_TEMPLATE)
+TRANSLATE_PROMPT_SHA256 = _sha256(TRANSLATE_TEMPLATE)
 
 
 def model_digest(model):
@@ -197,6 +215,27 @@ def generate_answer(question, sql, columns, rows, max_rows, settings: LLMSetting
 
     return Answer(
         text=response.message.content.strip(),
+        prompt_tokens=response.prompt_eval_count or 0,
+        completion_tokens=response.eval_count or 0,
+    )
+
+
+@dataclass
+class Translation:
+    text: str
+    prompt_tokens: int
+    completion_tokens: int
+
+
+def translate_question(question, settings: LLMSettings) -> Translation:
+    prompt = TRANSLATE_TEMPLATE.format(question=question)
+    response = _call([{"role": "user", "content": prompt}], settings)
+
+    # Models sometimes wrap the answer in quotes or a code fence.
+    text = extract_sql(response.message.content).strip().strip('"').strip()
+
+    return Translation(
+        text=text or question,
         prompt_tokens=response.prompt_eval_count or 0,
         completion_tokens=response.eval_count or 0,
     )

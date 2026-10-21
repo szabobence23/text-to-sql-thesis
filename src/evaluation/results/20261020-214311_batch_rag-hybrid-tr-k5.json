@@ -1,0 +1,109 @@
+{
+  "batch": {
+    "run_name": "rag-hybrid-tr-k5",
+    "started_at": "2026-10-20T21:43:11",
+    "git": {
+      "commit": "3970081f84322b1754d7e5625ec67d90b8df8a68",
+      "dirty": true
+    },
+    "evaluator_args": [
+      "--schema-retrieval",
+      "hybrid",
+      "--retrieval-k",
+      "5",
+      "--translate-for-retrieval"
+    ],
+    "files": [
+      "20261020-214312_adventureworks-hu_qwen2.5-coder-7b_rag-hybrid-tr-k5-r1.json",
+      "20261020-215817_adventureworks-en_qwen2.5-coder-7b_rag-hybrid-tr-k5-r1.json"
+    ]
+  },
+  "summary": [
+    {
+      "dataset": "adventureworks",
+      "language": "en",
+      "setup": "javítás=0 hintek=be qwen2.5-coder:7b séma=hybrid k=5 fordítás",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.92,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.58,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.7,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 0.9,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.8214285714285714,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.25,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 11.65947066999739,
+      "mean_prompt_tokens": 605.56,
+      "dirty_runs": 1,
+      "mismatched_fields": [],
+      "files": [
+        "20261020-215817_adventureworks-en_qwen2.5-coder-7b_rag-hybrid-tr-k5-r1.json"
+      ]
+    },
+    {
+      "dataset": "adventureworks",
+      "language": "hu",
+      "setup": "javítás=0 hintek=be qwen2.5-coder:7b séma=hybrid k=5 fordítás",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.82,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.36,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.4,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 0.8,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.39285714285714285,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.08333333333333333,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 11.249302264004946,
+      "mean_prompt_tokens": 623.96,
+      "dirty_runs": 1,
+      "mismatched_fields": [],
+      "files": [
+        "20261020-214312_adventureworks-hu_qwen2.5-coder-7b_rag-hybrid-tr-k5-r1.json"
+      ]
+    }
+  ]
+}

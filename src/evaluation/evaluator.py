@@ -31,6 +31,7 @@ from llm import (
     ANSWER_PROMPT_SHA256,
     CORRECTION_PROMPT_SHA256,
     PROMPT_SHA256,
+    TRANSLATE_PROMPT_SHA256,
     LLMSettings,
     model_digest,
 )
@@ -38,6 +39,7 @@ from pipeline import (
     SCHEMA_RETRIEVAL_MODES,
     PipelineConfig,
     load_schema,
+    make_schema_retriever,
     open_connection,
     run_pipeline,
 )
@@ -95,7 +97,7 @@ def run_ground_truths(conn, test_cases):
     return expected
 
 
-def evaluate_test_case(conn, schema, config, case, expected_rows):
+def evaluate_test_case(conn, schema, config, case, expected_rows, retriever=None):
     ordered = is_order_sensitive(case["ground_truth_sql"])
     gold_tables = tables_in_sql(case["ground_truth_sql"])
 
@@ -107,7 +109,11 @@ def evaluate_test_case(conn, schema, config, case, expected_rows):
     else:
         schema_tables = None  # every table
 
-    result = run_pipeline(conn, case["question"], schema, config)
+    result = run_pipeline(conn, case["question"], schema, config, retriever)
+
+    # A retriever chose the tables inside the pipeline.
+    if result.schema_tables is not None:
+        schema_tables = set(result.schema_tables)
 
     generated_rows = (
         normalize_rows(result.rows) if result.executed else None
@@ -135,6 +141,10 @@ def evaluate_test_case(conn, schema, config, case, expected_rows):
         "gold_tables": format_tables(gold_tables),
         "schema_tables": None if schema_tables is None else format_tables(schema_tables),
         "table_recall": 1.0 if schema_tables is None else table_recall(gold_tables, schema_tables),
+        # Every needed table shown: without it a correct query is impossible.
+        "tables_complete": schema_tables is None or gold_tables <= set(schema_tables),
+        "retrieval_query": result.retrieval_query,
+        "translation": asdict(result.translation) if result.translation else None,
         "expected_result": expected_rows,
         "generated_sql": result.sql,
         "raw_response": result.raw_response,
@@ -212,6 +222,7 @@ def summarize(results):
         "by_category": breakdown("category"),
         "by_difficulty": breakdown("difficulty"),
         "mean_table_recall": mean(r["table_recall"] for r in results),
+        "tables_complete": rate("tables_complete"),
         "mean_generation_s": mean(r["timings"]["generation_s"] for r in results),
         "mean_prompt_tokens": mean(r["prompt_tokens"] for r in results),
         "mean_completion_tokens": mean(r["completion_tokens"] for r in results),
@@ -250,8 +261,14 @@ def parse_args():
         "--schema-retrieval",
         default="full",
         choices=SCHEMA_RETRIEVAL_MODES,
-        help="a promptba kerülő táblák: full = mind, oracle = csak a ground truth táblái (felső korlát)",
+        help="a promptba kerülő táblák: full = mind, oracle = a ground truth táblái (felső korlát), "
+             "bm25 / dense / hybrid = a kereső által választott táblák",
     )
+    parser.add_argument("--retrieval-k", type=int, default=5, help="a keresés után megtartott táblák száma")
+    parser.add_argument("--no-fk-expansion", action="store_true", help="az összekötő táblák hozzáadása nélkül")
+    parser.add_argument("--retrieval-descriptions", action="store_true", help="a tábla- és oszlopleírások is kereshetők")
+    parser.add_argument("--translate-for-retrieval", action="store_true", help="keresés előtt angolra fordítja a kérdést")
+    parser.add_argument("--embedding-model", default="bge-m3")
     parser.add_argument(
         "--no-function-blocklist",
         action="store_true",
@@ -301,6 +318,11 @@ def main():
         llm=llm_settings,
         schema_hints=not args.no_schema_hints,
         schema_retrieval=args.schema_retrieval,
+        retrieval_k=args.retrieval_k,
+        retrieval_fk_expansion=not args.no_fk_expansion,
+        retrieval_descriptions=args.retrieval_descriptions,
+        translate_for_retrieval=args.translate_for_retrieval,
+        embedding_model=args.embedding_model,
         block_functions=not args.no_function_blocklist,
         max_correction_rounds=args.correction_rounds,
         natural_language_answer=args.answer,
@@ -319,6 +341,7 @@ def main():
 
     try:
         schema = load_schema(conn, config)
+        retriever = make_schema_retriever(conn, config)
         expected = run_ground_truths(conn, test_cases)
 
         print(
@@ -331,7 +354,7 @@ def main():
 
         for case in test_cases:
             result = evaluate_test_case(
-                conn, schema, config, case, expected[case["id"]]
+                conn, schema, config, case, expected[case["id"]], retriever
             )
             results.append(result)
 
@@ -385,6 +408,7 @@ def main():
     print(f"Átlagos prompt: {summary['mean_prompt_tokens']:.0f} token")
     if config.schema_retrieval != "full":
         print(f"Séma: {config.schema_retrieval}, átlagos tábla-recall: {summary['mean_table_recall']:.1%}")
+        print_rate("Minden szükséges tábla a promptban", summary["tables_complete"])
     if config.natural_language_answer:
         print(
             f"Válasz készült: {summary['answer']['answered']}/{summary['total_questions']} esetben, "
@@ -397,6 +421,11 @@ def main():
             "git": git_info(),
             "pipeline": config.to_dict(),
             "model_digest": model_digest(config.llm.model),
+            "embedding_model_digest": (
+                model_digest(config.embedding_model)
+                if config.schema_retrieval in ("dense", "hybrid") else None
+            ),
+            "translate_prompt_sha256": TRANSLATE_PROMPT_SHA256 if config.translate_for_retrieval else None,
             "prompt_sha256": PROMPT_SHA256,
             "correction_prompt_sha256": CORRECTION_PROMPT_SHA256,
             "answer_prompt_sha256": ANSWER_PROMPT_SHA256,

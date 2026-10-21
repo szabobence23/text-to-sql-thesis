@@ -49,8 +49,17 @@ def setup_label(pipeline):
         f"hintek={'be' if pipeline['schema_hints'] else 'ki'}",
         llm["model"],
     ]
-    if pipeline.get("schema_retrieval", "full") != "full":
-        parts.append(f"séma={pipeline['schema_retrieval']}")
+    retrieval = pipeline.get("schema_retrieval", "full")
+    if retrieval != "full":
+        parts.append(f"séma={retrieval}")
+    if retrieval in ("bm25", "dense", "hybrid"):
+        parts.append(f"k={pipeline['retrieval_k']}")
+        if not pipeline.get("retrieval_fk_expansion", True):
+            parts.append("FK=ki")
+        if pipeline.get("retrieval_descriptions"):
+            parts.append("leírások")
+        if pipeline.get("translate_for_retrieval"):
+            parts.append("fordítás")
     if llm["temperature"]:
         parts.append(f"temp={llm['temperature']}")
     if not pipeline.get("block_functions", True):

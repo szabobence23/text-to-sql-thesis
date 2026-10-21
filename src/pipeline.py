@@ -5,12 +5,22 @@ import psycopg
 
 from database import execute_query_with_columns, get_connection
 from dataset_loader import DEFAULT_DATASET, load_dataset
-from llm import Answer, LLMSettings, correct_sql, generate_answer, generate_sql
+from llm import (
+    Answer,
+    LLMSettings,
+    Translation,
+    correct_sql,
+    generate_answer,
+    generate_sql,
+    model_digest,
+    translate_question,
+)
+from retrieval import RETRIEVAL_METHODS, SchemaRetriever
 from schema import get_schema
 from sql_validator import validate_sql
 
 
-SCHEMA_RETRIEVAL_MODES = ("full", "oracle")
+SCHEMA_RETRIEVAL_MODES = ("full", "oracle", *RETRIEVAL_METHODS)
 
 
 @dataclass(frozen=True)
@@ -31,7 +41,21 @@ class PipelineConfig:
     # "oracle" = only those the question's ground truth reads, an upper
     # bound for schema retrieval. The oracle needs the ground truth, so
     # only the evaluator can use it, passing a per-question schema.
+    # "bm25" / "dense" / "hybrid" = the tables a retriever finds for the
+    # question (see retrieval.py); the settings below apply only to these.
     schema_retrieval: str = "full"
+    # Tables kept from the ranking, before bridge tables are added.
+    retrieval_k: int = 5
+    # Add tables on a short foreign-key path between two kept tables.
+    retrieval_fk_expansion: bool = True
+    # Search the database's table/column descriptions too (only
+    # AdventureWorks has them).
+    retrieval_descriptions: bool = False
+    # Translate the question to English (with llm) before searching;
+    # the SQL model still gets the original question.
+    translate_for_retrieval: bool = False
+    # Ollama embedding model for "dense" and "hybrid".
+    embedding_model: str = "bge-m3"
     # Reject queries that call a dangerous function (see
     # sql_function_validator). Never fires on benign analytical
     # queries, so it leaves the EX metrics unchanged.
@@ -58,6 +82,35 @@ class PipelineConfig:
 
 def open_connection(config: PipelineConfig):
     return get_connection(load_dataset(config.dataset).db_name)
+
+
+def make_schema_retriever(conn, config: PipelineConfig):
+    """
+    The retriever for config.schema_retrieval, or None for "full" and
+    "oracle". Built once per dataset and passed to every run_pipeline call.
+    """
+    if config.schema_retrieval not in RETRIEVAL_METHODS:
+        return None
+
+    digest = None
+    if config.schema_retrieval != "bm25":
+        digest = model_digest(config.embedding_model)
+        if digest is None:
+            raise RuntimeError(
+                f"Embedding model {config.embedding_model} is not pulled: "
+                f"ollama pull {config.embedding_model}"
+            )
+
+    return SchemaRetriever(
+        conn,
+        load_dataset(config.dataset).schemas,
+        config.schema_retrieval,
+        k=config.retrieval_k,
+        fk_expansion=config.retrieval_fk_expansion,
+        with_descriptions=config.retrieval_descriptions,
+        embedding_model=config.embedding_model,
+        digest=digest,
+    )
 
 
 def load_schema(conn, config: PipelineConfig, tables=None) -> str:
@@ -110,6 +163,12 @@ class PipelineResult:
     attempts: list[Attempt]
     # None if the feature is off or the query did not execute.
     answer: Answer | None = None
+    # Schema retrieval: the (schema, table) pairs the prompt listed
+    # (None = the schema text the caller passed, e.g. every table), the
+    # text that was searched with, and its translation if one was made.
+    schema_tables: list | None = None
+    retrieval_query: str | None = None
+    translation: Translation | None = None
 
     @property
     def correction_rounds(self):
@@ -156,18 +215,42 @@ def _run_attempt(conn, generation, generation_s, config):
     return attempt, columns, rows
 
 
-def run_pipeline(conn, question, schema, config: PipelineConfig) -> PipelineResult:
+def run_pipeline(conn, question, schema, config: PipelineConfig, retriever=None) -> PipelineResult:
     """
-    Question -> SQL generation -> validation -> execution, and when the
-    query fails validation or execution, up to max_correction_rounds
-    corrections with the error fed back to the model. Optionally a
-    natural-language answer from the rows of the executed query.
+    Question -> (schema retrieval) -> SQL generation -> validation ->
+    execution, and when the query fails validation or execution, up to
+    max_correction_rounds corrections with the error fed back to the
+    model. Optionally a natural-language answer from the rows of the
+    executed query.
 
     Shared by main.py and the evaluator, so what is measured is
     exactly what runs. Invalid SQL is never executed.
-    schema must come from load_schema with the same config.
+    schema must come from load_schema with the same config. With a
+    retrieval mode, retriever (from make_schema_retriever) chooses the
+    tables instead and schema is not used.
     """
     attempts = []
+    pre_timings = {}
+    schema_tables = retrieval_query = translation = None
+
+    if config.schema_retrieval in RETRIEVAL_METHODS:
+        if retriever is None:
+            raise ValueError(
+                f"schema_retrieval '{config.schema_retrieval}' needs a retriever "
+                "from make_schema_retriever"
+            )
+
+        retrieval_query = question
+        if config.translate_for_retrieval:
+            start = time.perf_counter()
+            translation = translate_question(question, config.llm)
+            pre_timings["translation_s"] = time.perf_counter() - start
+            retrieval_query = translation.text
+
+        start = time.perf_counter()
+        schema_tables = retriever.select(retrieval_query)
+        schema = load_schema(conn, config, tables=schema_tables)
+        pre_timings["retrieval_s"] = time.perf_counter() - start
 
     start = time.perf_counter()
     generation = generate_sql(question, schema, config.llm)
@@ -182,7 +265,7 @@ def run_pipeline(conn, question, schema, config: PipelineConfig) -> PipelineResu
         attempt, columns, rows = _run_attempt(conn, generation, time.perf_counter() - start, config)
         attempts.append(attempt)
 
-    timings = {}
+    timings = dict(pre_timings)
     for a in attempts:
         for key, seconds in a.timings.items():
             timings[key] = timings.get(key, 0.0) + seconds
@@ -210,4 +293,7 @@ def run_pipeline(conn, question, schema, config: PipelineConfig) -> PipelineResu
         timings=timings,
         attempts=attempts,
         answer=answer,
+        schema_tables=schema_tables,
+        retrieval_query=retrieval_query,
+        translation=translation,
     )

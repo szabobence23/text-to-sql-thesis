@@ -1,7 +1,15 @@
 import argparse
 
 from dataset_loader import DEFAULT_DATASET
-from pipeline import PipelineConfig, load_schema, open_connection, run_pipeline
+from pipeline import (
+    PipelineConfig,
+    load_schema,
+    make_schema_retriever,
+    open_connection,
+    run_pipeline,
+)
+from retrieval import RETRIEVAL_METHODS
+from sql_tables import format_tables
 
 
 DEFAULT_QUESTION = "Melyik termékkategóriából adták el a legtöbb terméket?"
@@ -16,6 +24,13 @@ def parse_args():
         action="store_true",
         help="természetes nyelvű válasz nélkül, csak az SQL és a sorok",
     )
+    parser.add_argument(
+        "--schema-retrieval",
+        default="full",
+        choices=["full", *RETRIEVAL_METHODS],
+        help="full = a teljes séma; bm25 / dense / hybrid = csak a kereső által választott táblák",
+    )
+    parser.add_argument("--translate-for-retrieval", action="store_true", help="keresés előtt angolra fordítja a kérdést")
     return parser.parse_args()
 
 
@@ -26,18 +41,27 @@ def main():
         dataset=args.dataset,
         max_correction_rounds=2,
         natural_language_answer=not args.no_answer,
+        schema_retrieval=args.schema_retrieval,
+        translate_for_retrieval=args.translate_for_retrieval,
     )
     conn = open_connection(config)
 
     try:
         schema = load_schema(conn, config)
+        retriever = make_schema_retriever(conn, config)
 
         question = args.question
 
         print("Kérdés:")
         print(question)
 
-        result = run_pipeline(conn, question, schema, config)
+        result = run_pipeline(conn, question, schema, config, retriever)
+
+        if result.schema_tables is not None:
+            if result.translation:
+                print(f"\nKeresés fordítással: {result.retrieval_query}")
+            print(f"\nKiválasztott táblák ({len(result.schema_tables)}):")
+            print(", ".join(format_tables(result.schema_tables)))
 
         for i, attempt in enumerate(result.attempts[:-1], start=1):
             print(f"\n{i}. próbálkozás (hibás):")

@@ -25,7 +25,13 @@ from dataclasses import dataclass, field
 
 import ollama
 
+from dataset_loader import REPO_DIR
 from schema import fetch_catalog, qualified_name
+
+
+RETRIEVAL_METHODS = ("bm25", "dense", "hybrid")
+# Table embeddings, keyed by model digest and table texts (gitignored).
+EMBEDDING_CACHE_DIR = os.path.join(REPO_DIR, ".cache", "embeddings")
 
 
 # ---------------------------------------------------------------------------
@@ -368,3 +374,52 @@ def select_tables(ranking, k, graph=None, fk_expansion=False, max_hops=2):
     if fk_expansion and graph is not None:
         return expand_with_bridges(top, graph, max_hops)
     return top
+
+
+# ---------------------------------------------------------------------------
+# Putting it together
+# ---------------------------------------------------------------------------
+
+def build_ranker(docs, method, ngram=3, with_descriptions=False,
+                 embedding_model="bge-m3", digest=None, cache_dir=EMBEDDING_CACHE_DIR):
+    """The ranker for one of RETRIEVAL_METHODS."""
+    if method not in RETRIEVAL_METHODS:
+        raise ValueError(f"Unknown retrieval method '{method}'. Available: {', '.join(RETRIEVAL_METHODS)}")
+
+    def bm25():
+        return BM25Retriever(docs, ngram=ngram, with_descriptions=with_descriptions)
+
+    def dense():
+        return EmbeddingRetriever(
+            docs, model=embedding_model, with_descriptions=with_descriptions,
+            cache_dir=cache_dir, digest=digest,
+        )
+
+    if method == "bm25":
+        return bm25()
+    if method == "dense":
+        return dense()
+    return HybridRetriever([bm25(), dense()])
+
+
+class SchemaRetriever:
+    """
+    Chooses the tables for one question: rank, keep the top k, add bridge
+    tables. Built once per dataset (the catalog and the table embeddings
+    are loaded here), then used for every question.
+    """
+
+    def __init__(self, conn, schemas, method, k=5, fk_expansion=True,
+                 with_descriptions=False, embedding_model="bge-m3", digest=None):
+        self.docs = load_table_docs(conn, schemas)
+        self.graph = foreign_key_graph(conn, schemas)
+        self.ranker = build_ranker(
+            self.docs, method, with_descriptions=with_descriptions,
+            embedding_model=embedding_model, digest=digest,
+        )
+        self.k = k
+        self.fk_expansion = fk_expansion
+
+    def select(self, question):
+        """(schema, table) keys for the prompt, best first, bridges last."""
+        return select_tables(self.ranker.rank(question), self.k, self.graph, self.fk_expansion)

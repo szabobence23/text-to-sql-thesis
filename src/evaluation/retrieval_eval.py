@@ -32,11 +32,10 @@ sys.path.append(SRC_DIR)
 from dataset_loader import REPO_DIR, available_datasets, load_dataset
 from evaluation.evaluator import DEFAULT_OUTPUT_DIR, git_info, sha256
 from pipeline import PipelineConfig, open_connection
-from llm import model_digest
+from llm import TRANSLATE_PROMPT_SHA256, LLMSettings, model_digest, translate_question
 from retrieval import (
-    BM25Retriever,
-    EmbeddingRetriever,
-    HybridRetriever,
+    RETRIEVAL_METHODS,
+    build_ranker,
     foreign_key_graph,
     load_table_docs,
     select_tables,
@@ -46,18 +45,22 @@ from sql_tables import format_tables, table_recall, tables_in_sql
 
 DEFAULT_DATASETS = ["olist", "f1", "adventureworks"]
 DEFAULT_KS = [1, 2, 3, 5, 8, 10]
-RETRIEVERS = ["bm25", "dense", "hybrid"]
-# Table embeddings, keyed by model digest and table texts (gitignored).
-EMBEDDING_CACHE_DIR = os.path.join(REPO_DIR, ".cache", "embeddings")
+# Question translations, keyed by model digest and translation prompt.
+TRANSLATION_CACHE_DIR = os.path.join(REPO_DIR, ".cache", "translations")
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Sémakeresés mérése LLM nélkül (recall@k)")
     parser.add_argument("--datasets", nargs="+", default=DEFAULT_DATASETS, choices=available_datasets())
     parser.add_argument("--languages", nargs="+", default=["hu", "en"])
-    parser.add_argument("--retriever", default="bm25", choices=RETRIEVERS,
+    parser.add_argument("--retriever", default="bm25", choices=RETRIEVAL_METHODS,
                         help="bm25 = kulcsszavas, dense = embedding, hybrid = a kettő összefésülve")
     parser.add_argument("--embedding-model", default="bge-m3")
+    parser.add_argument(
+        "--translate",
+        action="store_true",
+        help="a kérdést keresés előtt az LLM angolra fordítja (minden kérdést, nyelvtől függetlenül)",
+    )
     parser.add_argument("--k", nargs="+", type=int, default=DEFAULT_KS, help="hány táblát adjon vissza a kereső")
     parser.add_argument("--ngram", type=int, default=3, help="karakter n-gram hossza; 0 = egész szavak")
     parser.add_argument("--descriptions", action="store_true", help="a tábla- és oszlopleírások is kereshetők")
@@ -67,10 +70,37 @@ def parse_args():
     return parser.parse_args()
 
 
-def evaluate(cases, retriever, graph, ks, max_hops):
+class Translator:
+    """
+    translate_question with an on-disk cache, so every retriever variant
+    searches with the same translation and each question is translated once.
+    """
+
+    def __init__(self, settings):
+        self.settings = settings
+        digest = model_digest(settings.model) or ""
+        key = sha256("\n".join([settings.model, digest, TRANSLATE_PROMPT_SHA256]))
+        self.path = os.path.join(TRANSLATION_CACHE_DIR, f"{key}.json")
+        self.cache = {}
+        if os.path.exists(self.path):
+            with open(self.path, encoding="utf-8") as file:
+                self.cache = json.load(file)
+        self.model_digest = digest
+
+    def __call__(self, question):
+        if question not in self.cache:
+            self.cache[question] = translate_question(question, self.settings).text
+            os.makedirs(TRANSLATION_CACHE_DIR, exist_ok=True)
+            with open(self.path, "w", encoding="utf-8") as file:
+                json.dump(self.cache, file, ensure_ascii=False, indent=1)
+        return self.cache[question]
+
+
+def evaluate(cases, retriever, graph, ks, max_hops, translator=None):
     questions = []
-    rankings = retriever.rank_many([case["question"] for case in cases])
-    for case, ranking in zip(cases, rankings):
+    queries = [translator(c["question"]) if translator else c["question"] for c in cases]
+    rankings = retriever.rank_many(queries)
+    for case, query, ranking in zip(cases, queries, rankings):
         gold = tables_in_sql(case["ground_truth_sql"])
         order = [key for key, _ in ranking]
         ranks = {key: order.index(key) + 1 for key in gold if key in order}
@@ -88,6 +118,7 @@ def evaluate(cases, retriever, graph, ks, max_hops):
         questions.append({
             "id": case["id"],
             "question": case["question"],
+            "query": query,
             "gold_tables": format_tables(gold),
             "gold_ranks": {format_tables([k])[0]: r for k, r in sorted(ranks.items())},
             # Rank of the last needed table: the k at which the question
@@ -121,16 +152,10 @@ def summarize(questions, ks):
 
 
 def build_retriever(args, docs, digest):
-    bm25 = lambda: BM25Retriever(docs, ngram=args.ngram, with_descriptions=args.descriptions)
-    dense = lambda: EmbeddingRetriever(
-        docs, model=args.embedding_model, with_descriptions=args.descriptions,
-        cache_dir=EMBEDDING_CACHE_DIR, digest=digest,
+    return build_ranker(
+        docs, args.retriever, ngram=args.ngram, with_descriptions=args.descriptions,
+        embedding_model=args.embedding_model, digest=digest,
     )
-    if args.retriever == "bm25":
-        return bm25()
-    if args.retriever == "dense":
-        return dense()
-    return HybridRetriever([bm25(), dense()])
 
 
 def describe(args):
@@ -150,8 +175,10 @@ def main():
         if digest is None:
             raise SystemExit(f"A(z) {args.embedding_model} modell nincs letöltve: ollama pull {args.embedding_model}")
 
+    translator = Translator(LLMSettings()) if args.translate else None
+
     print(
-        f"Kereső: {describe(args)}, "
+        f"Kereső: {describe(args)}{', kérdésfordítással' if translator else ''}, "
         f"leírások: {'igen' if args.descriptions else 'nem'}, bővítés: legfeljebb {args.max_hops} lépés"
     )
     header = "  ".join(f"k={k:<3}" for k in ks)
@@ -166,6 +193,10 @@ def main():
             "ngram": args.ngram,
             "embedding_model": args.embedding_model if digest else None,
             "embedding_model_digest": digest,
+            "translate": args.translate,
+            "translation_model": LLMSettings().model if args.translate else None,
+            "translation_model_digest": translator.model_digest if translator else None,
+            "translate_prompt_sha256": TRANSLATE_PROMPT_SHA256 if args.translate else None,
             "descriptions": args.descriptions,
             "max_hops": args.max_hops,
             "ks": ks,
@@ -191,7 +222,7 @@ def main():
                 cases_text = file.read()
             cases = json.loads(cases_text)
 
-            questions = evaluate(cases, retriever, graph, ks, args.max_hops)
+            questions = evaluate(cases, retriever, graph, ks, args.max_hops, translator)
             summary = summarize(questions, ks)
 
             for suffix, label in (("", "nincs"), ("+fk", "FK")):
