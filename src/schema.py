@@ -1,3 +1,53 @@
+from psycopg import sql as psql
+
+
+TEXT_TYPES = ("character varying", "text", "character")
+# A value longer than this is free text (a comment, a URL), not a category.
+MAX_VALUE_LENGTH = 40
+
+# Per database: the values cost one query per text column, while the
+# schema text is rebuilt for every question when tables are retrieved.
+_column_values_cache = {}
+
+
+def fetch_column_values(conn, schemas=("public",), max_values=30):
+    """
+    {(schema, table, column): sorted values} for the text columns with at
+    most max_values distinct non-null values, none longer than
+    MAX_VALUE_LENGTH: the categories a question may name ('canceled',
+    'British'), so the model writes them as the database stores them.
+    """
+    key = (conn.info.dbname, tuple(schemas), max_values)
+    if key in _column_values_cache:
+        return _column_values_cache[key]
+
+    columns, _ = fetch_catalog(conn, schemas)
+    values = {}
+
+    with conn.cursor() as cur:
+        for table_schema, table_name, column_name, data_type in columns:
+            if data_type not in TEXT_TYPES:
+                continue
+            query = psql.SQL(
+                "SELECT DISTINCT {col} FROM {tbl} WHERE {col} IS NOT NULL LIMIT %s"
+            ).format(
+                col=psql.Identifier(column_name),
+                tbl=psql.Identifier(table_schema, table_name),
+            )
+            cur.execute(query, (max_values + 1,))
+            found = [row[0] for row in cur.fetchall()]
+            if found and len(found) <= max_values and all(len(v) <= MAX_VALUE_LENGTH for v in found):
+                values[(table_schema, table_name, column_name)] = sorted(found)
+    conn.rollback()
+
+    _column_values_cache[key] = values
+    return values
+
+
+def _quote(value):
+    return "'" + value.replace("'", "''") + "'"
+
+
 def qualified_name(schema, table):
     # public tables keep their bare names, so datasets in public get
     # exactly the schema text they had before multi-schema support.
@@ -64,7 +114,7 @@ def fetch_catalog(conn, schemas=("public",)):
     return columns, relationships
 
 
-def get_schema(conn, database_name, hints="", schemas=("public",), tables=None):
+def get_schema(conn, database_name, hints="", schemas=("public",), tables=None, column_values=None):
     """
     Schema text for the prompt, introspected from the database.
 
@@ -74,8 +124,10 @@ def get_schema(conn, database_name, hints="", schemas=("public",), tables=None):
     are shown schema-qualified (sales.customer). Views are left out.
     tables: if given, only these (schema, table) pairs and the
     relationships between two of them; None lists every table.
+    column_values: from fetch_column_values; listed after their column.
     """
     columns, relationships = fetch_catalog(conn, schemas)
+    column_values = column_values or {}
 
     if tables is not None:
         wanted = {(s.lower(), t.lower()) for s, t in tables}
@@ -96,7 +148,12 @@ def get_schema(conn, database_name, hints="", schemas=("public",), tables=None):
             schema += f"Table: {table}\n"
             current_table = table
 
-        schema += f"- {column_name} {data_type}\n"
+        values = column_values.get((table_schema, table_name, column_name))
+        if values:
+            listed = ", ".join(_quote(v) for v in values)
+            schema += f"- {column_name} {data_type} (values: {listed})\n"
+        else:
+            schema += f"- {column_name} {data_type}\n"
 
     schema += "\nRelationships:\n"
 

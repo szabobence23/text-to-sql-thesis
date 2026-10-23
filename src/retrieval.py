@@ -237,8 +237,16 @@ def _normalize(vector):
     return [x / norm for x in vector]
 
 
+# The embedding model runs on the CPU. On a small GPU (6 GB here) it does
+# not fit next to the SQL model, so Ollama swapped the two for every
+# question and runs became about 6x slower; a short question embeds in
+# well under a second on the CPU.
+EMBEDDING_OPTIONS = {"num_gpu": 0}
+
+
 def ollama_embed(model, texts):
-    return [list(v) for v in ollama.embed(model=model, input=texts).embeddings]
+    response = ollama.embed(model=model, input=texts, options=EMBEDDING_OPTIONS)
+    return [list(v) for v in response.embeddings]
 
 
 class EmbeddingRetriever:
@@ -265,8 +273,10 @@ class EmbeddingRetriever:
         if cache_dir is None:
             return self.embed(self.model, texts)
 
+        # Where the model ran is part of the key: CPU and GPU arithmetic
+        # can give slightly different vectors.
         key = hashlib.sha256(
-            "\n".join([self.model, digest or "", *texts]).encode("utf-8")
+            "\n".join([self.model, digest or "", json.dumps(EMBEDDING_OPTIONS), *texts]).encode("utf-8")
         ).hexdigest()
         path = os.path.join(cache_dir, f"{key}.json")
         if os.path.exists(path):
@@ -376,6 +386,26 @@ def select_tables(ranking, k, graph=None, fk_expansion=False, max_hops=2):
     return top
 
 
+def parse_table_choice(text, candidates):
+    """
+    The candidate tables named in a model's answer, in candidate order.
+    A schema-qualified name matches its table; a bare table name matches
+    too when only one candidate has it. Anything else is ignored.
+    """
+    text = text.lower()
+
+    def mentioned(name):
+        return re.search(rf"(?<![\w.]){re.escape(name)}(?![\w])", text) is not None
+
+    bare_counts = Counter(table for _, table in candidates)
+    chosen = []
+    for key in candidates:
+        schema, table = key
+        if mentioned(qualified_name(schema, table)) or (bare_counts[table] == 1 and mentioned(table)):
+            chosen.append(key)
+    return chosen
+
+
 # ---------------------------------------------------------------------------
 # Putting it together
 # ---------------------------------------------------------------------------
@@ -423,3 +453,12 @@ class SchemaRetriever:
     def select(self, question):
         """(schema, table) keys for the prompt, best first, bridges last."""
         return select_tables(self.ranker.rank(question), self.k, self.graph, self.fk_expansion)
+
+    def describe(self, keys):
+        """One line per table for the table-selection prompt: name and columns."""
+        docs = {d.key: d for d in self.docs}
+        return "\n".join(f"- {docs[k].name}: {', '.join(docs[k].columns)}" for k in keys)
+
+    def expand(self, keys):
+        """keys plus the bridge tables between them."""
+        return expand_with_bridges(list(keys), self.graph)

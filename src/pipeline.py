@@ -8,15 +8,18 @@ from dataset_loader import DEFAULT_DATASET, load_dataset
 from llm import (
     Answer,
     LLMSettings,
+    TABLE_SELECTION_TEMPLATES,
+    TableSelection,
     Translation,
+    choose_tables,
     correct_sql,
     generate_answer,
     generate_sql,
     model_digest,
     translate_question,
 )
-from retrieval import RETRIEVAL_METHODS, SchemaRetriever
-from schema import get_schema
+from retrieval import RETRIEVAL_METHODS, SchemaRetriever, parse_table_choice
+from schema import fetch_column_values, get_schema
 from sql_validator import validate_sql
 
 
@@ -37,6 +40,11 @@ class PipelineConfig:
     llm: LLMSettings = field(default_factory=LLMSettings)
     # The dataset's hints.txt appended to the schema text.
     schema_hints: bool = True
+    # List the values of categorical text columns (at most
+    # column_values_max distinct values) in the schema text, so the model
+    # writes them as stored ('canceled', 'British'). Real data in the prompt.
+    column_values: bool = False
+    column_values_max: int = 50
     # Which tables the schema text lists: "full" = all of them (baseline);
     # "oracle" = only those the question's ground truth reads, an upper
     # bound for schema retrieval. The oracle needs the ground truth, so
@@ -54,6 +62,17 @@ class PipelineConfig:
     # Translate the question to English (with llm) before searching;
     # the SQL model still gets the original question.
     translate_for_retrieval: bool = False
+    # Schema linking: after retrieval the model keeps only the candidate
+    # tables the query needs (bridge tables are then added back), so the
+    # SQL prompt has fewer distracting tables. Use with a larger
+    # retrieval_k, so fewer needed tables are missed.
+    table_selection: bool = False
+    # Which selection prompt: "strict" or "inclusive" (keeps a table
+    # when unsure, and tables that hold names / descriptive values).
+    table_selection_style: str = "strict"
+    # Safety net: the top N retrieved tables stay in the prompt whatever
+    # the selection drops (0 = only the model's choice).
+    selection_keep_top: int = 0
     # Ollama embedding model for "dense" and "hybrid".
     embedding_model: str = "bge-m3"
     # Reject queries that call a dangerous function (see
@@ -74,6 +93,16 @@ class PipelineConfig:
             raise ValueError(
                 f"Unknown schema_retrieval '{self.schema_retrieval}'. "
                 f"Available: {', '.join(SCHEMA_RETRIEVAL_MODES)}"
+            )
+        if self.table_selection_style not in TABLE_SELECTION_TEMPLATES:
+            raise ValueError(
+                f"Unknown table_selection_style '{self.table_selection_style}'. "
+                f"Available: {', '.join(TABLE_SELECTION_TEMPLATES)}"
+            )
+        if self.table_selection and self.schema_retrieval not in RETRIEVAL_METHODS:
+            raise ValueError(
+                "table_selection filters retrieved tables: use it with "
+                f"schema_retrieval {' / '.join(RETRIEVAL_METHODS)}"
             )
 
     def to_dict(self):
@@ -119,7 +148,11 @@ def load_schema(conn, config: PipelineConfig, tables=None) -> str:
     # tables: (schema, table) pairs to list instead of all of them.
     dataset = load_dataset(config.dataset)
     hints = dataset.hints if config.schema_hints else ""
-    return get_schema(conn, dataset.db_name, hints, dataset.schemas, tables)
+    values = (
+        fetch_column_values(conn, dataset.schemas, config.column_values_max)
+        if config.column_values else None
+    )
+    return get_schema(conn, dataset.db_name, hints, dataset.schemas, tables, values)
 
 
 @dataclass
@@ -169,6 +202,10 @@ class PipelineResult:
     schema_tables: list | None = None
     retrieval_query: str | None = None
     translation: Translation | None = None
+    # With table_selection: the retrieved candidates the model chose
+    # from, and its answer (schema_tables are then its choice + bridges).
+    candidate_tables: list | None = None
+    table_selection: TableSelection | None = None
 
     @property
     def correction_rounds(self):
@@ -232,6 +269,7 @@ def run_pipeline(conn, question, schema, config: PipelineConfig, retriever=None)
     attempts = []
     pre_timings = {}
     schema_tables = retrieval_query = translation = None
+    candidate_tables = selection = None
 
     if config.schema_retrieval in RETRIEVAL_METHODS:
         if retriever is None:
@@ -249,8 +287,26 @@ def run_pipeline(conn, question, schema, config: PipelineConfig, retriever=None)
 
         start = time.perf_counter()
         schema_tables = retriever.select(retrieval_query)
-        schema = load_schema(conn, config, tables=schema_tables)
         pre_timings["retrieval_s"] = time.perf_counter() - start
+
+        if config.table_selection:
+            start = time.perf_counter()
+            candidate_tables = schema_tables
+            selection = choose_tables(
+                question, retriever.describe(candidate_tables), config.llm,
+                config.table_selection_style,
+            )
+            chosen = parse_table_choice(selection.text, candidate_tables)
+            # Candidates are ranked best first, so these are the top hits.
+            for key in candidate_tables[:config.selection_keep_top]:
+                if chosen and key not in chosen:
+                    chosen.append(key)
+            # An answer naming no candidate keeps them all rather than
+            # leaving the prompt without tables.
+            schema_tables = retriever.expand(chosen) if chosen else candidate_tables
+            pre_timings["selection_s"] = time.perf_counter() - start
+
+        schema = load_schema(conn, config, tables=schema_tables)
 
     start = time.perf_counter()
     generation = generate_sql(question, schema, config.llm)
@@ -296,4 +352,6 @@ def run_pipeline(conn, question, schema, config: PipelineConfig, retriever=None)
         schema_tables=schema_tables,
         retrieval_query=retrieval_query,
         translation=translation,
+        candidate_tables=candidate_tables,
+        table_selection=selection,
     )

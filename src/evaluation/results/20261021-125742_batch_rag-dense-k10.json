@@ -1,0 +1,108 @@
+{
+  "batch": {
+    "run_name": "rag-dense-k10",
+    "started_at": "2026-10-21T12:57:42",
+    "git": {
+      "commit": "f6cd74600d029b7b4a93a50dcb10a1043235e922",
+      "dirty": true
+    },
+    "evaluator_args": [
+      "--schema-retrieval",
+      "dense",
+      "--retrieval-k",
+      "10"
+    ],
+    "files": [
+      "20261021-125744_adventureworks-hu_qwen2.5-coder-7b_rag-dense-k10-r1.json",
+      "20261021-130113_adventureworks-en_qwen2.5-coder-7b_rag-dense-k10-r1.json"
+    ]
+  },
+  "summary": [
+    {
+      "dataset": "adventureworks",
+      "language": "en",
+      "setup": "javítás=0 hintek=be qwen2.5-coder:7b séma=dense k=10",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.86,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.52,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.62,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 0.9,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.6428571428571429,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.3333333333333333,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 3.6219337439991066,
+      "mean_prompt_tokens": 1016.54,
+      "dirty_runs": 1,
+      "mismatched_fields": [],
+      "files": [
+        "20261021-130113_adventureworks-en_qwen2.5-coder-7b_rag-dense-k10-r1.json"
+      ]
+    },
+    {
+      "dataset": "adventureworks",
+      "language": "hu",
+      "setup": "javítás=0 hintek=be qwen2.5-coder:7b séma=dense k=10",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.82,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.44,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.46,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 0.8,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.5,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.08333333333333333,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 3.882783441998763,
+      "mean_prompt_tokens": 1059.12,
+      "dirty_runs": 1,
+      "mismatched_fields": [],
+      "files": [
+        "20261021-125744_adventureworks-hu_qwen2.5-coder-7b_rag-dense-k10-r1.json"
+      ]
+    }
+  ]
+}

@@ -31,6 +31,7 @@ from llm import (
     ANSWER_PROMPT_SHA256,
     CORRECTION_PROMPT_SHA256,
     PROMPT_SHA256,
+    TABLE_SELECTION_PROMPT_SHA256S,
     TRANSLATE_PROMPT_SHA256,
     LLMSettings,
     model_digest,
@@ -145,6 +146,15 @@ def evaluate_test_case(conn, schema, config, case, expected_rows, retriever=None
         "tables_complete": schema_tables is None or gold_tables <= set(schema_tables),
         "retrieval_query": result.retrieval_query,
         "translation": asdict(result.translation) if result.translation else None,
+        # With table selection: what the retriever offered, and whether
+        # the needed tables were already lost there or only by the choice.
+        "candidate_tables": (
+            format_tables(result.candidate_tables) if result.candidate_tables is not None else None
+        ),
+        "candidates_complete": (
+            gold_tables <= set(result.candidate_tables) if result.candidate_tables is not None else None
+        ),
+        "table_selection": asdict(result.table_selection) if result.table_selection else None,
         "expected_result": expected_rows,
         "generated_sql": result.sql,
         "raw_response": result.raw_response,
@@ -264,10 +274,33 @@ def parse_args():
         help="a promptba kerülő táblák: full = mind, oracle = a ground truth táblái (felső korlát), "
              "bm25 / dense / hybrid = a kereső által választott táblák",
     )
+    parser.add_argument(
+        "--column-values",
+        action="store_true",
+        help="a kevés értékű szöveges oszlopok összes értéke a sémában (pl. order_status: 'canceled', ...)",
+    )
+    parser.add_argument("--column-values-max", type=int, default=50, help="legfeljebb ennyi különböző értékű oszlopot sorol fel")
     parser.add_argument("--retrieval-k", type=int, default=5, help="a keresés után megtartott táblák száma")
     parser.add_argument("--no-fk-expansion", action="store_true", help="az összekötő táblák hozzáadása nélkül")
     parser.add_argument("--retrieval-descriptions", action="store_true", help="a tábla- és oszlopleírások is kereshetők")
     parser.add_argument("--translate-for-retrieval", action="store_true", help="keresés előtt angolra fordítja a kérdést")
+    parser.add_argument(
+        "--table-selection",
+        action="store_true",
+        help="keresés után az LLM kiválasztja a jelöltek közül a szükséges táblákat (javasolt: --retrieval-k 10)",
+    )
+    parser.add_argument(
+        "--selection-style",
+        default="strict",
+        choices=["strict", "inclusive"],
+        help="a szűrő promptja: strict, vagy inclusive (bizonytalanul megtartja a táblát)",
+    )
+    parser.add_argument(
+        "--selection-keep-top",
+        type=int,
+        default=0,
+        help="a kereső első N találata a szűréstől függetlenül a promptban marad",
+    )
     parser.add_argument("--embedding-model", default="bge-m3")
     parser.add_argument(
         "--no-function-blocklist",
@@ -317,11 +350,16 @@ def main():
         dataset=args.dataset,
         llm=llm_settings,
         schema_hints=not args.no_schema_hints,
+        column_values=args.column_values,
+        column_values_max=args.column_values_max,
         schema_retrieval=args.schema_retrieval,
         retrieval_k=args.retrieval_k,
         retrieval_fk_expansion=not args.no_fk_expansion,
         retrieval_descriptions=args.retrieval_descriptions,
         translate_for_retrieval=args.translate_for_retrieval,
+        table_selection=args.table_selection,
+        table_selection_style=args.selection_style,
+        selection_keep_top=args.selection_keep_top,
         embedding_model=args.embedding_model,
         block_functions=not args.no_function_blocklist,
         max_correction_rounds=args.correction_rounds,
@@ -409,6 +447,16 @@ def main():
     if config.schema_retrieval != "full":
         print(f"Séma: {config.schema_retrieval}, átlagos tábla-recall: {summary['mean_table_recall']:.1%}")
         print_rate("Minden szükséges tábla a promptban", summary["tables_complete"])
+        if config.table_selection:
+            with_candidates = [r for r in results if r["candidates_complete"] is not None]
+            print_rate(
+                "  ... a szűrés előtti jelöltek között",
+                {
+                    "count": sum(r["candidates_complete"] for r in with_candidates),
+                    "total": len(with_candidates),
+                    "rate": sum(r["candidates_complete"] for r in with_candidates) / len(with_candidates),
+                },
+            )
     if config.natural_language_answer:
         print(
             f"Válasz készült: {summary['answer']['answered']}/{summary['total_questions']} esetben, "
@@ -426,6 +474,10 @@ def main():
                 if config.schema_retrieval in ("dense", "hybrid") else None
             ),
             "translate_prompt_sha256": TRANSLATE_PROMPT_SHA256 if config.translate_for_retrieval else None,
+            "table_selection_prompt_sha256": (
+                TABLE_SELECTION_PROMPT_SHA256S[config.table_selection_style]
+                if config.table_selection else None
+            ),
             "prompt_sha256": PROMPT_SHA256,
             "correction_prompt_sha256": CORRECTION_PROMPT_SHA256,
             "answer_prompt_sha256": ANSWER_PROMPT_SHA256,

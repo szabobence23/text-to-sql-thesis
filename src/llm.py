@@ -82,6 +82,52 @@ Instructions:
 """
 
 
+# Optional step after schema retrieval (schema linking): the model keeps
+# only the candidate tables the query needs, so the SQL prompt has fewer
+# distracting tables. It sees table and column names, not the data.
+TABLE_SELECTION_TEMPLATE = """
+You are choosing the database tables needed to answer a question with SQL.
+
+QUESTION:
+{question}
+
+CANDIDATE TABLES:
+{tables}
+
+Instructions:
+- Choose every table the SQL query needs, including tables used only to join other tables.
+- Leave out the tables the query does not need.
+- Use only table names from the list above.
+- Return ONLY the chosen table names, one per line.
+"""
+
+# A variant that errs towards keeping tables: the strict prompt dropped
+# needed tables (similar-looking tables, tables holding names), and a
+# missing table makes a correct query impossible, an extra one rarely does.
+TABLE_SELECTION_INCLUSIVE_TEMPLATE = """
+You are choosing the database tables needed to answer a question with SQL.
+
+QUESTION:
+{question}
+
+CANDIDATE TABLES:
+{tables}
+
+Instructions:
+- Choose every table the SQL query needs, including tables used only to join other tables.
+- If the answer should show names or other descriptive values, keep the table that stores them.
+- When you are not sure whether a table is needed, keep it: a missing table makes the query impossible, an extra one does little harm.
+- Leave out the tables that are clearly unrelated to the question.
+- Use only table names from the list above.
+- Return ONLY the chosen table names, one per line.
+"""
+
+TABLE_SELECTION_TEMPLATES = {
+    "strict": TABLE_SELECTION_TEMPLATE,
+    "inclusive": TABLE_SELECTION_INCLUSIVE_TEMPLATE,
+}
+
+
 def _sha256(text):
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
@@ -92,6 +138,10 @@ PROMPT_SHA256 = _sha256(PROMPT_TEMPLATE)
 CORRECTION_PROMPT_SHA256 = _sha256(CORRECTION_TEMPLATE)
 ANSWER_PROMPT_SHA256 = _sha256(ANSWER_TEMPLATE)
 TRANSLATE_PROMPT_SHA256 = _sha256(TRANSLATE_TEMPLATE)
+TABLE_SELECTION_PROMPT_SHA256 = _sha256(TABLE_SELECTION_TEMPLATE)
+TABLE_SELECTION_PROMPT_SHA256S = {
+    style: _sha256(template) for style, template in TABLE_SELECTION_TEMPLATES.items()
+}
 
 
 def model_digest(model):
@@ -236,6 +286,24 @@ def translate_question(question, settings: LLMSettings) -> Translation:
 
     return Translation(
         text=text or question,
+        prompt_tokens=response.prompt_eval_count or 0,
+        completion_tokens=response.eval_count or 0,
+    )
+
+
+@dataclass
+class TableSelection:
+    text: str  # the model's raw answer; retrieval.parse_table_choice reads it
+    prompt_tokens: int
+    completion_tokens: int
+
+
+def choose_tables(question, tables_text, settings: LLMSettings, style="strict") -> TableSelection:
+    prompt = TABLE_SELECTION_TEMPLATES[style].format(question=question, tables=tables_text)
+    response = _call([{"role": "user", "content": prompt}], settings)
+
+    return TableSelection(
+        text=response.message.content,
         prompt_tokens=response.prompt_eval_count or 0,
         completion_tokens=response.eval_count or 0,
     )

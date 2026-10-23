@@ -30,6 +30,13 @@ def parse_args():
         choices=["full", *RETRIEVAL_METHODS],
         help="full = a teljes séma; bm25 / dense / hybrid = csak a kereső által választott táblák",
     )
+    parser.add_argument("--column-values", action="store_true", help="a kategória-oszlopok értékei is a sémában")
+    parser.add_argument("--retrieval-k", type=int, default=5, help="a keresés után megtartott táblák száma")
+    parser.add_argument(
+        "--table-selection",
+        action="store_true",
+        help="az LLM kiválasztja a jelöltek közül a szükséges táblákat (javasolt: --retrieval-k 10)",
+    )
     parser.add_argument("--translate-for-retrieval", action="store_true", help="keresés előtt angolra fordítja a kérdést")
     return parser.parse_args()
 
@@ -43,6 +50,9 @@ def main():
         natural_language_answer=not args.no_answer,
         schema_retrieval=args.schema_retrieval,
         translate_for_retrieval=args.translate_for_retrieval,
+        column_values=args.column_values,
+        retrieval_k=args.retrieval_k,
+        table_selection=args.table_selection,
     )
     conn = open_connection(config)
 
@@ -60,6 +70,9 @@ def main():
         if result.schema_tables is not None:
             if result.translation:
                 print(f"\nKeresés fordítással: {result.retrieval_query}")
+            if result.candidate_tables is not None:
+                print(f"\nJelölt táblák ({len(result.candidate_tables)}):")
+                print(", ".join(format_tables(result.candidate_tables)))
             print(f"\nKiválasztott táblák ({len(result.schema_tables)}):")
             print(", ".join(format_tables(result.schema_tables)))
 

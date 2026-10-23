@@ -7,6 +7,7 @@ from retrieval import (
     TableDoc,
     char_ngrams,
     expand_with_bridges,
+    parse_table_choice,
     repair_mojibake,
     select_tables,
     words,
@@ -167,3 +168,23 @@ def test_hybrid_uses_reciprocal_rank_fusion():
 
     assert [key for key, _ in ranking] == ["b", "a", "c"]
     assert ranking[0][1] == 1 / 62 + 1 / 61
+
+
+def test_parse_table_choice_reads_qualified_and_bare_names():
+    candidates = [("sales", "customer"), ("sales", "salesorderheader"), ("person", "person")]
+    answer = "- sales.customer\n- salesorderheader"
+
+    assert parse_table_choice(answer, candidates) == [("sales", "customer"), ("sales", "salesorderheader")]
+
+
+def test_parse_table_choice_needs_whole_names():
+    candidates = [("public", "orders"), ("public", "order_items")]
+
+    assert parse_table_choice("order_items", candidates) == [("public", "order_items")]
+
+
+def test_parse_table_choice_ignores_ambiguous_bare_names():
+    candidates = [("sales", "customer"), ("crm", "customer")]
+
+    assert parse_table_choice("customer", candidates) == []
+    assert parse_table_choice("crm.customer", candidates) == [("crm", "customer")]

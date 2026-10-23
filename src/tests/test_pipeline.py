@@ -3,7 +3,7 @@ import pytest
 
 import pipeline
 from dataset_loader import load_dataset
-from llm import Answer, Generation, Translation
+from llm import Answer, Generation, TableSelection, Translation
 from pipeline import PipelineConfig, load_schema, open_connection, run_pipeline
 
 
@@ -271,3 +271,82 @@ def test_full_schema_records_no_retrieval(monkeypatch):
 
     assert result.schema_tables is None
     assert result.retrieval_query is None
+
+
+@pytest.mark.db
+def test_column_values_list_categories(conn):
+    with_values = load_schema(conn, PipelineConfig(dataset="olist", column_values=True))
+    without = load_schema(conn, PipelineConfig(dataset="olist"))
+
+    assert "- order_status character varying (values: 'approved', 'canceled'," in with_values
+    assert "- payment_type character varying (values: 'boleto', 'credit_card'," in with_values
+    # Identifiers and other high-cardinality columns are not listed.
+    assert "- customer_id character varying\n" in with_values
+    assert "values:" not in without
+
+
+class FakeSelectingRetriever(FakeRetriever):
+    def describe(self, keys):
+        return "tables"
+
+    def expand(self, keys):
+        return list(keys) + [("public", "bridge")]
+
+
+def test_table_selection_keeps_chosen_tables_plus_bridges(monkeypatch):
+    FakeBackend(monkeypatch, ["good"], {"good": "ok"})
+    monkeypatch.setattr(pipeline, "load_schema", lambda conn, config, tables=None: "small schema")
+    monkeypatch.setattr(pipeline, "choose_tables", lambda q, t, s, style: TableSelection("orders", 4, 1))
+    retriever = FakeSelectingRetriever([("public", "orders"), ("public", "sellers")])
+
+    config = PipelineConfig(schema_retrieval="dense", table_selection=True)
+    result = run_pipeline(None, "question", "full schema", config, retriever)
+
+    assert result.candidate_tables == [("public", "orders"), ("public", "sellers")]
+    assert result.schema_tables == [("public", "orders"), ("public", "bridge")]
+    assert "selection_s" in result.timings
+
+
+def test_table_selection_naming_nothing_keeps_all_candidates(monkeypatch):
+    FakeBackend(monkeypatch, ["good"], {"good": "ok"})
+    monkeypatch.setattr(pipeline, "load_schema", lambda conn, config, tables=None: "small schema")
+    monkeypatch.setattr(pipeline, "choose_tables", lambda q, t, s, style: TableSelection("I am not sure.", 4, 1))
+    retriever = FakeSelectingRetriever([("public", "orders"), ("public", "sellers")])
+
+    config = PipelineConfig(schema_retrieval="dense", table_selection=True)
+    result = run_pipeline(None, "question", "full schema", config, retriever)
+
+    assert result.schema_tables == [("public", "orders"), ("public", "sellers")]
+
+
+def test_table_selection_needs_retrieval():
+    with pytest.raises(ValueError, match="filters retrieved tables"):
+        PipelineConfig(table_selection=True)
+
+
+def test_selection_keep_top_adds_back_top_candidates(monkeypatch):
+    FakeBackend(monkeypatch, ["good"], {"good": "ok"})
+    monkeypatch.setattr(pipeline, "load_schema", lambda conn, config, tables=None: "small schema")
+    styles = []
+    monkeypatch.setattr(
+        pipeline, "choose_tables",
+        lambda q, t, s, style: styles.append(style) or TableSelection("sellers", 4, 1),
+    )
+    retriever = FakeSelectingRetriever([("public", "orders"), ("public", "items"), ("public", "sellers")])
+
+    config = PipelineConfig(
+        schema_retrieval="dense", table_selection=True,
+        table_selection_style="inclusive", selection_keep_top=2,
+    )
+    result = run_pipeline(None, "question", "full schema", config, retriever)
+
+    assert styles == ["inclusive"]
+    # The model's choice first, then the top-2 candidates, then bridges.
+    assert result.schema_tables == [
+        ("public", "sellers"), ("public", "orders"), ("public", "items"), ("public", "bridge"),
+    ]
+
+
+def test_unknown_selection_style_is_rejected():
+    with pytest.raises(ValueError, match="table_selection_style"):
+        PipelineConfig(schema_retrieval="dense", table_selection=True, table_selection_style="loose")

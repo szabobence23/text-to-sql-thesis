@@ -49,6 +49,8 @@ def setup_label(pipeline):
         f"hintek={'be' if pipeline['schema_hints'] else 'ki'}",
         llm["model"],
     ]
+    if pipeline.get("column_values"):
+        parts.append(f"értékek≤{pipeline['column_values_max']}")
     retrieval = pipeline.get("schema_retrieval", "full")
     if retrieval != "full":
         parts.append(f"séma={retrieval}")
@@ -60,6 +62,12 @@ def setup_label(pipeline):
             parts.append("leírások")
         if pipeline.get("translate_for_retrieval"):
             parts.append("fordítás")
+        if pipeline.get("table_selection"):
+            parts.append("szűrés")
+            if pipeline.get("table_selection_style", "strict") != "strict":
+                parts.append(pipeline["table_selection_style"])
+            if pipeline.get("selection_keep_top"):
+                parts.append(f"top{pipeline['selection_keep_top']}-marad")
     if llm["temperature"]:
         parts.append(f"temp={llm['temperature']}")
     if not pipeline.get("block_functions", True):
