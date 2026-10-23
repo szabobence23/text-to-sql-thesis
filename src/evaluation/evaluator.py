@@ -7,7 +7,7 @@ import re
 import subprocess
 import sys
 from collections import defaultdict
-from dataclasses import asdict
+from dataclasses import asdict, replace
 
 # src library
 SRC_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,9 +23,8 @@ from dataset_loader import (
 )
 from evaluation.comparison import (
     is_order_sensitive,
+    match_any,
     normalize_rows,
-    relaxed_match,
-    strict_match,
 )
 from llm import (
     ANSWER_PROMPT_SHA256,
@@ -37,6 +36,7 @@ from llm import (
     model_digest,
 )
 from pipeline import (
+    RAG_SETTINGS,
     SCHEMA_RETRIEVAL_MODES,
     PipelineConfig,
     load_schema,
@@ -78,28 +78,35 @@ def git_info():
         return {"commit": None, "dirty": None}
 
 
+def accepted_sqls(case):
+    """The ground truth first, then the alternatives that are also correct."""
+    return [case["ground_truth_sql"], *case.get("alternative_sql", [])]
+
+
 def run_ground_truths(conn, test_cases):
     """
-    Execute every ground-truth query up front, so a broken test case
-    stops the run before any time is spent on the LLM.
+    Execute every accepted answer up front, so a broken test case stops
+    the run before any time is spent on the LLM. Returns, per case id,
+    the normalized result of each accepted SQL (ground truth first).
     """
     expected = {}
 
     for case in test_cases:
-        try:
-            expected[case["id"]] = normalize_rows(
-                execute_query(conn, case["ground_truth_sql"])
-            )
-        except Exception as e:
-            raise RuntimeError(
-                f"Ground truth of test case {case['id']} failed: {e}"
-            ) from e
+        expected[case["id"]] = []
+        for index, sql in enumerate(accepted_sqls(case)):
+            label = "Ground truth" if index == 0 else f"Alternative {index}"
+            try:
+                expected[case["id"]].append(normalize_rows(execute_query(conn, sql)))
+            except Exception as e:
+                raise RuntimeError(
+                    f"{label} of test case {case['id']} failed: {e}"
+                ) from e
 
     return expected
 
 
-def evaluate_test_case(conn, schema, config, case, expected_rows, retriever=None):
-    ordered = is_order_sensitive(case["ground_truth_sql"])
+def evaluate_test_case(conn, schema, config, case, expected_results, retriever=None):
+    ordered_flags = [is_order_sensitive(sql) for sql in accepted_sqls(case)]
     gold_tables = tables_in_sql(case["ground_truth_sql"])
 
     # The oracle shows only the tables the ground truth reads; the
@@ -121,10 +128,9 @@ def evaluate_test_case(conn, schema, config, case, expected_rows, retriever=None
     )
 
     if generated_rows is None:
-        strict = relaxed = False
+        strict, relaxed, matched = False, False, None
     else:
-        strict = strict_match(expected_rows, generated_rows, ordered)
-        relaxed = relaxed_match(expected_rows, generated_rows, ordered)
+        strict, relaxed, matched = match_any(expected_results, generated_rows, ordered_flags)
 
     # A correction only runs after the first attempt failed, so the
     # first attempt is exactly what a run without correction produces.
@@ -136,7 +142,7 @@ def evaluate_test_case(conn, schema, config, case, expected_rows, retriever=None
         "category": case["category"],
         "difficulty": case["difficulty"],
         "ground_truth_sql": case["ground_truth_sql"],
-        "order_sensitive": ordered,
+        "order_sensitive": ordered_flags[0],
         # Tables the question needs vs the tables its schema text listed
         # (None = all); recall is what schema retrieval is scored on.
         "gold_tables": format_tables(gold_tables),
@@ -155,7 +161,10 @@ def evaluate_test_case(conn, schema, config, case, expected_rows, retriever=None
             gold_tables <= set(result.candidate_tables) if result.candidate_tables is not None else None
         ),
         "table_selection": asdict(result.table_selection) if result.table_selection else None,
-        "expected_result": expected_rows,
+        "expected_result": expected_results[0],
+        # Which accepted answer matched: 0 = the ground truth,
+        # 1.. = an alternative_sql; None = no match.
+        "matched_ground_truth": matched,
         "generated_sql": result.sql,
         "raw_response": result.raw_response,
         "valid_sql": result.is_valid,
@@ -268,6 +277,11 @@ def parse_args():
         help="a kézzel írt adatbázis-megjegyzések nélkül",
     )
     parser.add_argument(
+        "--rag",
+        action="store_true",
+        help="a végleges RAG-beállítás (pipeline.RAG_SETTINGS); felülírja a többi keresési kapcsolót",
+    )
+    parser.add_argument(
         "--schema-retrieval",
         default="full",
         choices=SCHEMA_RETRIEVAL_MODES,
@@ -365,6 +379,8 @@ def main():
         max_correction_rounds=args.correction_rounds,
         natural_language_answer=args.answer,
     )
+    if args.rag:
+        config = replace(config, **RAG_SETTINGS)
 
     dataset = load_dataset(config.dataset)
     cases_path = args.cases or dataset.test_cases_path(args.language)

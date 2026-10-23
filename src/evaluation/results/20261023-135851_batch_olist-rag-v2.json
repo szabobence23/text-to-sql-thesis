@@ -1,0 +1,105 @@
+{
+  "batch": {
+    "run_name": "olist-rag-v2",
+    "started_at": "2026-10-23T13:58:51",
+    "git": {
+      "commit": "049d265fc563de1f9ef853ce25dbb0f2cc1c7260",
+      "dirty": true
+    },
+    "evaluator_args": [
+      "--rag"
+    ],
+    "files": [
+      "20261023-135853_olist-hu_qwen2.5-coder-7b_olist-rag-v2-r1.json",
+      "20261023-140243_olist-en_qwen2.5-coder-7b_olist-rag-v2-r1.json"
+    ]
+  },
+  "summary": [
+    {
+      "dataset": "olist",
+      "language": "en",
+      "setup": "javítás=0 hintek=be qwen2.5-coder:7b séma=dense k=10 szűrés",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.82,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.38,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.54,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.6296296296296297,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.07142857142857142,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 192.4570929559972,
+      "mean_prompt_tokens": 317.74,
+      "dirty_runs": 1,
+      "mismatched_fields": [],
+      "files": [
+        "20261023-140243_olist-en_qwen2.5-coder-7b_olist-rag-v2-r1.json"
+      ]
+    },
+    {
+      "dataset": "olist",
+      "language": "hu",
+      "setup": "javítás=0 hintek=be qwen2.5-coder:7b séma=dense k=10 szűrés",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.88,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.38,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.5,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 0.8888888888888888,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.5555555555555556,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.14285714285714285,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 3.1052072840137406,
+      "mean_prompt_tokens": 336.8,
+      "dirty_runs": 1,
+      "mismatched_fields": [],
+      "files": [
+        "20261023-135853_olist-hu_qwen2.5-coder-7b_olist-rag-v2-r1.json"
+      ]
+    }
+  ]
+}

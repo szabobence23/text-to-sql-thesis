@@ -1,0 +1,103 @@
+{
+  "batch": {
+    "run_name": "olist-full-v2",
+    "started_at": "2026-10-23T13:52:45",
+    "git": {
+      "commit": "049d265fc563de1f9ef853ce25dbb0f2cc1c7260",
+      "dirty": true
+    },
+    "evaluator_args": [],
+    "files": [
+      "20261023-135247_olist-hu_qwen2.5-coder-7b_olist-full-v2-r1.json",
+      "20261023-135547_olist-en_qwen2.5-coder-7b_olist-full-v2-r1.json"
+    ]
+  },
+  "summary": [
+    {
+      "dataset": "olist",
+      "language": "en",
+      "setup": "javítás=0 hintek=be qwen2.5-coder:7b",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.9,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.4,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.56,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 0.8888888888888888,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.6666666666666666,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.14285714285714285,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 3.2312147600017487,
+      "mean_prompt_tokens": 662.28,
+      "dirty_runs": 1,
+      "mismatched_fields": [],
+      "files": [
+        "20261023-135547_olist-en_qwen2.5-coder-7b_olist-full-v2-r1.json"
+      ]
+    },
+    {
+      "dataset": "olist",
+      "language": "hu",
+      "setup": "javítás=0 hintek=be qwen2.5-coder:7b",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.8,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.4,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.52,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 0.8888888888888888,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.5185185185185185,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.2857142857142857,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 3.128268850001041,
+      "mean_prompt_tokens": 676.58,
+      "dirty_runs": 1,
+      "mismatched_fields": [],
+      "files": [
+        "20261023-135247_olist-hu_qwen2.5-coder-7b_olist-full-v2-r1.json"
+      ]
+    }
+  ]
+}

@@ -39,7 +39,10 @@
     "question": "Melyik termékkategóriából származott a legtöbb eladás?",
     "category": "join_aggregation",
     "difficulty": "medium",
-    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, COUNT(*) AS total_sales FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY total_sales DESC LIMIT 1;"
+    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, COUNT(*) AS total_sales FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY total_sales DESC LIMIT 1;",
+    "alternative_sql": [
+      "SELECT p.product_category_name AS product_category, COUNT(*) AS total_sales FROM order_items oi JOIN products p ON oi.product_id = p.product_id GROUP BY p.product_category_name ORDER BY total_sales DESC LIMIT 1;"
+    ]
   },
   {
     "id": 7,
@@ -137,11 +140,14 @@
     "question": "Melyik termékkategóriából vásároltak a legtöbb terméket?",
     "category": "join_aggregation",
     "difficulty": "medium",
-    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, COUNT(*) AS total_items FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY total_items DESC LIMIT 1;"
+    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, COUNT(*) AS total_items FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY total_items DESC LIMIT 1;",
+    "alternative_sql": [
+      "SELECT p.product_category_name AS product_category, COUNT(*) AS total_items FROM order_items oi JOIN products p ON oi.product_id = p.product_id GROUP BY p.product_category_name ORDER BY total_items DESC LIMIT 1;"
+    ]
   },
   {
     "id": 21,
-    "question": "Mekkora az egyes fizetési módokkal fizetett rendelések száma?",
+    "question": "Hány különböző rendelést fizettek az egyes fizetési módokkal?",
     "category": "grouping",
     "difficulty": "medium",
     "ground_truth_sql": "SELECT payment_type, COUNT(DISTINCT order_id) AS order_count FROM order_payments GROUP BY payment_type;"
@@ -151,7 +157,10 @@
     "question": "Melyik termékkategóriából származott a legtöbb eladott termék?",
     "category": "join_aggregation",
     "difficulty": "medium",
-    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, COUNT(*) AS total_items FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY total_items DESC LIMIT 1;"
+    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, COUNT(*) AS total_items FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY total_items DESC LIMIT 1;",
+    "alternative_sql": [
+      "SELECT p.product_category_name AS product_category, COUNT(*) AS total_items FROM order_items oi JOIN products p ON oi.product_id = p.product_id GROUP BY p.product_category_name ORDER BY total_items DESC LIMIT 1;"
+    ]
   },
   {
     "id": 23,
@@ -172,14 +181,20 @@
     "question": "Melyik termékkategóriának volt a legmagasabb átlagos termékára?",
     "category": "join_aggregation",
     "difficulty": "hard",
-    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, AVG(oi.price) AS avg_price FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY avg_price DESC LIMIT 1;"
+    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, AVG(oi.price) AS avg_price FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY avg_price DESC LIMIT 1;",
+    "alternative_sql": [
+      "SELECT p.product_category_name AS product_category, AVG(oi.price) AS avg_price FROM order_items oi JOIN products p ON oi.product_id = p.product_id GROUP BY p.product_category_name ORDER BY avg_price DESC LIMIT 1;"
+    ]
   },
   {
     "id": 26,
     "question": "Melyik termékkategóriához tartozik a legnagyobb összesített értékű eladás?",
     "category": "join_aggregation",
     "difficulty": "hard",
-    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, SUM(oi.price) AS total_value FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY total_value DESC LIMIT 1;"
+    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, SUM(oi.price) AS total_value FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY total_value DESC LIMIT 1;",
+    "alternative_sql": [
+      "SELECT p.product_category_name AS product_category, SUM(oi.price) AS total_value FROM order_items oi JOIN products p ON oi.product_id = p.product_id GROUP BY p.product_category_name ORDER BY total_value DESC LIMIT 1;"
+    ]
   },
   {
     "id": 27,
@@ -204,14 +219,14 @@
   },
   {
     "id": 30,
-    "question": "Melyik hónapban adták le a legtöbb rendelést?",
+    "question": "Melyik konkrét hónapban (év és hónap) adták le a legtöbb rendelést?",
     "category": "date",
     "difficulty": "medium",
     "ground_truth_sql": "SELECT date_trunc('month', order_purchase_timestamp) AS month, COUNT(*) AS order_count FROM orders GROUP BY month ORDER BY order_count DESC LIMIT 1;"
   },
   {
     "id": 31,
-    "question": "Mennyi volt az átlagos idő a rendelés leadása és a vevőnek történő kiszállítás között?",
+    "question": "Átlagosan hány nap telt el a rendelés leadása és a vevőnek történő kiszállítás között?",
     "category": "date",
     "difficulty": "hard",
     "ground_truth_sql": "SELECT AVG(EXTRACT(EPOCH FROM (order_delivered_customer_date - order_purchase_timestamp)) / 86400.0) AS avg_days FROM orders WHERE order_delivered_customer_date IS NOT NULL;"
@@ -235,7 +250,10 @@
     "question": "Melyik az öt leggyakrabban vásárolt termékkategória?",
     "category": "sorting",
     "difficulty": "medium",
-    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, COUNT(*) AS total_items FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY total_items DESC LIMIT 5;"
+    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, COUNT(*) AS total_items FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY total_items DESC LIMIT 5;",
+    "alternative_sql": [
+      "SELECT p.product_category_name AS product_category, COUNT(*) AS total_items FROM order_items oi JOIN products p ON oi.product_id = p.product_id GROUP BY p.product_category_name ORDER BY total_items DESC LIMIT 5;"
+    ]
   },
   {
     "id": 35,
@@ -253,7 +271,7 @@
   },
   {
     "id": 37,
-    "question": "Melyek azok a vásárlók, akik az átlagos vásárlónál többet költöttek?",
+    "question": "Melyek azok a vásárlók, akik a rendelt termékekre többet költöttek, mint az átlagos vásárló?",
     "category": "subquery",
     "difficulty": "hard",
     "ground_truth_sql": "WITH spend AS (SELECT c.customer_unique_id, SUM(oi.price) AS total FROM customers c JOIN orders o ON c.customer_id = o.customer_id JOIN order_items oi ON o.order_id = oi.order_id GROUP BY c.customer_unique_id) SELECT customer_unique_id FROM spend WHERE total > (SELECT AVG(total) FROM spend);"
@@ -263,7 +281,10 @@
     "question": "Mely termékkategóriák értékesítési értéke volt magasabb az összes kategória átlagánál?",
     "category": "subquery",
     "difficulty": "hard",
-    "ground_truth_sql": "WITH cat AS (SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS category, SUM(oi.price) AS total FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name)) SELECT category FROM cat WHERE total > (SELECT AVG(total) FROM cat);"
+    "ground_truth_sql": "WITH cat AS (SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS category, SUM(oi.price) AS total FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name)) SELECT category FROM cat WHERE total > (SELECT AVG(total) FROM cat);",
+    "alternative_sql": [
+      "WITH cat AS (SELECT p.product_category_name AS category, SUM(oi.price) AS total FROM order_items oi JOIN products p ON oi.product_id = p.product_id GROUP BY p.product_category_name) SELECT category FROM cat WHERE total > (SELECT AVG(total) FROM cat);"
+    ]
   },
   {
     "id": 39,
@@ -277,14 +298,20 @@
     "question": "Melyik termékkategória kapta a legmagasabb átlagos értékelést?",
     "category": "join_aggregation",
     "difficulty": "hard",
-    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, AVG(r.review_score) AS avg_score FROM order_reviews r JOIN order_items oi ON r.order_id = oi.order_id JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY avg_score DESC LIMIT 1;"
+    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, AVG(r.review_score) AS avg_score FROM order_reviews r JOIN order_items oi ON r.order_id = oi.order_id JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY avg_score DESC LIMIT 1;",
+    "alternative_sql": [
+      "SELECT p.product_category_name AS product_category, AVG(r.review_score) AS avg_score FROM order_reviews r JOIN order_items oi ON r.order_id = oi.order_id JOIN products p ON oi.product_id = p.product_id GROUP BY p.product_category_name ORDER BY avg_score DESC LIMIT 1;"
+    ]
   },
   {
     "id": 41,
     "question": "Melyik termékkategóriák esetében volt a legtöbb 1-es értékelés?",
     "category": "join_aggregation",
     "difficulty": "hard",
-    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, COUNT(*) AS one_star_count FROM order_reviews r JOIN order_items oi ON r.order_id = oi.order_id JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name WHERE r.review_score = 1 GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY one_star_count DESC LIMIT 1;"
+    "ground_truth_sql": "SELECT COALESCE(pt.product_category_name_english, p.product_category_name) AS product_category, COUNT(*) AS one_star_count FROM order_reviews r JOIN order_items oi ON r.order_id = oi.order_id JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_name_translation pt ON p.product_category_name = pt.product_category_name WHERE r.review_score = 1 GROUP BY COALESCE(pt.product_category_name_english, p.product_category_name) ORDER BY one_star_count DESC LIMIT 1;",
+    "alternative_sql": [
+      "SELECT p.product_category_name AS product_category, COUNT(*) AS one_star_count FROM order_reviews r JOIN order_items oi ON r.order_id = oi.order_id JOIN products p ON oi.product_id = p.product_id WHERE r.review_score = 1 GROUP BY p.product_category_name ORDER BY one_star_count DESC LIMIT 1;"
+    ]
   },
   {
     "id": 42,
@@ -313,5 +340,40 @@
     "category": "grouping",
     "difficulty": "medium",
     "ground_truth_sql": "SELECT payment_type FROM order_payments GROUP BY payment_type ORDER BY COUNT(*) DESC LIMIT 1;"
+  },
+  {
+    "id": 46,
+    "question": "Hány olyan értékelés van, amelyhez szöveges megjegyzést is írtak?",
+    "category": "filtering",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS review_count FROM order_reviews WHERE review_comment_message IS NOT NULL;"
+  },
+  {
+    "id": 47,
+    "question": "Hány eladó található São Paulo államban?",
+    "category": "filtering",
+    "difficulty": "easy",
+    "ground_truth_sql": "SELECT COUNT(*) AS seller_count FROM sellers WHERE seller_state = 'SP';"
+  },
+  {
+    "id": 48,
+    "question": "Összesen mekkora összeget fizettek ki hitelkártyával?",
+    "category": "aggregation",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT SUM(payment_value) AS total_paid FROM order_payments WHERE payment_type = 'credit_card';"
+  },
+  {
+    "id": 49,
+    "question": "Hány rendelést adtak le hétvégén (szombaton vagy vasárnap)?",
+    "category": "date",
+    "difficulty": "medium",
+    "ground_truth_sql": "SELECT COUNT(*) AS order_count FROM orders WHERE EXTRACT(ISODOW FROM order_purchase_timestamp) IN (6, 7);"
+  },
+  {
+    "id": 50,
+    "question": "Hány vásárló adott le egynél több rendelést?",
+    "category": "subquery",
+    "difficulty": "hard",
+    "ground_truth_sql": "SELECT COUNT(*) AS customer_count FROM (SELECT c.customer_unique_id FROM orders o JOIN customers c ON o.customer_id = c.customer_id GROUP BY c.customer_unique_id HAVING COUNT(*) > 1) t;"
   }
 ]

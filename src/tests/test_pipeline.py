@@ -350,3 +350,10 @@ def test_selection_keep_top_adds_back_top_candidates(monkeypatch):
 def test_unknown_selection_style_is_rejected():
     with pytest.raises(ValueError, match="table_selection_style"):
         PipelineConfig(schema_retrieval="dense", table_selection=True, table_selection_style="loose")
+
+
+def test_rag_settings_make_a_valid_config():
+    config = PipelineConfig(**pipeline.RAG_SETTINGS)
+
+    assert config.schema_retrieval in ("bm25", "dense", "hybrid")
+    assert config.table_selection is True

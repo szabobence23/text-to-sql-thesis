@@ -1,9 +1,11 @@
+import datetime
 from decimal import Decimal
 
 import pytest
 
 from evaluation.comparison import (
     is_order_sensitive,
+    match_any,
     normalize_rows,
     relaxed_match,
     strict_match,
@@ -28,6 +30,16 @@ def test_normalize_rounds_decimals_and_floats_alike():
     rows = normalize_rows([(Decimal("120.6537390146471372"),), (120.65373901,)])
 
     assert rows[0] == rows[1]
+
+
+def test_durations_compare_as_days():
+    # The model's interval answer and the ground truth's number of days
+    # (Olist question 31: average delivery time).
+    interval = datetime.timedelta(days=12, hours=13, minutes=24, seconds=31.879068)
+    days = Decimal("12.55870230403205249294")
+
+    assert normalize_rows([(interval,)]) == normalize_rows([(days,)])
+    assert normalize_rows([(interval,)]) == [(12.5587,)]
 
 
 def test_strict_ignores_row_order_when_unordered():
@@ -73,3 +85,15 @@ def test_relaxed_checks_row_pairing_not_only_columns():
 
 def test_relaxed_empty_results_match():
     assert relaxed_match([], [], ordered=False)
+
+
+def test_match_any_prefers_the_ground_truth_then_alternatives():
+    english = [("bed_bath_table", 11115)]
+    portuguese = [("cama_mesa_banho", 11115)]
+    accepted = [english, portuguese]
+
+    assert match_any(accepted, [("bed_bath_table", 11115)], [True, True]) == (True, True, 0)
+    assert match_any(accepted, [("cama_mesa_banho", 11115)], [True, True]) == (True, True, 1)
+    # Extra columns: relaxed match only.
+    assert match_any(accepted, [("cama_mesa_banho", 11115, 7)], [True, True]) == (False, True, 1)
+    assert match_any(accepted, [("moveis_decoracao", 8334)], [True, True]) == (False, False, None)

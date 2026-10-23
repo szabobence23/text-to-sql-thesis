@@ -25,6 +25,21 @@ from sql_validator import validate_sql
 
 SCHEMA_RETRIEVAL_MODES = ("full", "oracle", *RETRIEVAL_METHODS)
 
+# The schema-retrieval configuration chosen from the AdventureWorks
+# experiments: multilingual embedding retrieval of 10 candidate tables,
+# FK bridges, then strict LLM table selection. The refinements tried on
+# top of it (keeping the top-2 candidates, an inclusive selection prompt)
+# did not measurably help. `--rag` in the demo and the evaluator applies
+# these settings; column values are a separate switch.
+RAG_SETTINGS = {
+    "schema_retrieval": "dense",
+    "retrieval_k": 10,
+    "retrieval_fk_expansion": True,
+    "table_selection": True,
+    "table_selection_style": "strict",
+    "selection_keep_top": 0,
+}
+
 
 @dataclass(frozen=True)
 class PipelineConfig:

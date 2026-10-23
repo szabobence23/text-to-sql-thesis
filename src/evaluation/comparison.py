@@ -7,6 +7,13 @@ relaxed: every ground-truth column appears somewhere in the generated
 
 Row order only matters when the ground-truth query has a top-level
 ORDER BY (Spider convention); otherwise rows are compared as multisets.
+
+A test case can accept several answers (alternative_sql next to the
+ground truth); match_any takes the first one that matches.
+
+Numbers are rounded to FLOAT_DIGITS decimals. A duration (PostgreSQL
+interval) becomes a number of days, so '12 days 13:24:31' and the same
+duration computed as 12.5587 days count as the same answer.
 """
 
 import datetime
@@ -22,6 +29,9 @@ FLOAT_DIGITS = 4
 def normalize_value(value):
     if isinstance(value, (Decimal, float)):
         return round(float(value), FLOAT_DIGITS)
+
+    if isinstance(value, datetime.timedelta):
+        return round(value.total_seconds() / 86400, FLOAT_DIGITS)
 
     if isinstance(value, (datetime.date, datetime.datetime, datetime.time)):
         return value.isoformat()
@@ -89,3 +99,19 @@ def relaxed_match(expected, generated, ordered) -> bool:
         )
 
     return assign(0, [])
+
+
+def match_any(expected_results, generated, ordered_flags):
+    """
+    Compare against every accepted answer of a test case (the ground
+    truth first, then its alternatives, e.g. a category named in
+    Portuguese instead of English).
+
+    Returns (strict, relaxed, index): the matches against the first
+    answer that matches relaxed, with its index; (False, False, None)
+    if none does.
+    """
+    for index, (expected, ordered) in enumerate(zip(expected_results, ordered_flags)):
+        if relaxed_match(expected, generated, ordered):
+            return strict_match(expected, generated, ordered), True, index
+    return False, False, None

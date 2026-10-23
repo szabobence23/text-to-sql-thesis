@@ -1,7 +1,9 @@
 import argparse
+from dataclasses import replace
 
 from dataset_loader import DEFAULT_DATASET
 from pipeline import (
+    RAG_SETTINGS,
     PipelineConfig,
     load_schema,
     make_schema_retriever,
@@ -30,6 +32,12 @@ def parse_args():
         choices=["full", *RETRIEVAL_METHODS],
         help="full = a teljes séma; bm25 / dense / hybrid = csak a kereső által választott táblák",
     )
+    parser.add_argument(
+        "--rag",
+        action="store_true",
+        help="a végleges RAG-beállítás: embedding-keresés 10 táblára + LLM-es táblaszűrés "
+             "(felülírja a többi keresési kapcsolót)",
+    )
     parser.add_argument("--column-values", action="store_true", help="a kategória-oszlopok értékei is a sémában")
     parser.add_argument("--retrieval-k", type=int, default=5, help="a keresés után megtartott táblák száma")
     parser.add_argument(
@@ -54,6 +62,8 @@ def main():
         retrieval_k=args.retrieval_k,
         table_selection=args.table_selection,
     )
+    if args.rag:
+        config = replace(config, **RAG_SETTINGS)
     conn = open_connection(config)
 
     try:

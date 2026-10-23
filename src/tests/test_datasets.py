@@ -69,6 +69,13 @@ def test_test_cases_are_well_formed(name, language):
         is_valid, error = validate_sql_structure(case["ground_truth_sql"])
         assert is_valid, f"case {case['id']}: {error}"
 
+        # Optional further correct answers: a non-empty list of queries.
+        alternatives = case.get("alternative_sql", [])
+        assert isinstance(alternatives, list), f"case {case['id']}: alternative_sql must be a list"
+        for sql in alternatives:
+            is_valid, error = validate_sql_structure(sql)
+            assert is_valid, f"case {case['id']} alternative: {error}"
+
 
 @pytest.mark.parametrize("name, language", DATASET_LANGUAGES)
 def test_translations_differ_only_in_question(name, language):
@@ -104,8 +111,9 @@ def test_ground_truth_tables_exist(name):
         conn.close()
 
     for case in load_cases(name, DEFAULT_LANGUAGE):
-        missing = tables_in_sql(case["ground_truth_sql"]) - existing
-        assert not missing, f"case {case['id']}: {missing}"
+        for sql in [case["ground_truth_sql"], *case.get("alternative_sql", [])]:
+            missing = tables_in_sql(sql) - existing
+            assert not missing, f"case {case['id']}: {missing}"
 
 
 @pytest.mark.parametrize("name", DATASETS_WITH_ATTACKS)
