@@ -6,7 +6,9 @@ default `olist`).
 
 ```
 <name>/
-  dataset.json      {"name", "db_name", "description", optional "schemas"}
+  dataset.json      {"name", "label", "summary", "db_name", "description", optional "schemas"}
+                    "label" / "summary": display name and a short Hungarian
+                    description for the web UI's database dropdown
                     "schemas": PostgreSQL schemas holding the tables
                     (default ["public"]); tables outside public appear
                     schema-qualified in the prompt

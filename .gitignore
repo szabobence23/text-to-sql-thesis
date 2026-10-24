@@ -9,3 +9,6 @@ datasets/adventureworks/data/
 
 # Cached embeddings (retrieval.EmbeddingRetriever)
 .cache/
+
+# Web UI chat history (src/chat_store.py)
+.chat_history/

@@ -30,6 +30,9 @@ class Dataset:
     path: str
     # PostgreSQL schemas holding the dataset's tables; most use public.
     schemas: tuple[str, ...] = ("public",)
+    # Display name and a short Hungarian summary for the web UI.
+    label: str = ""
+    summary: str = ""
 
     @property
     def hints(self) -> str:
@@ -109,4 +112,6 @@ def load_dataset(name: str) -> Dataset:
         description=config.get("description", ""),
         path=path,
         schemas=tuple(config.get("schemas", ["public"])),
+        label=config.get("label", name),
+        summary=config.get("summary", ""),
     )

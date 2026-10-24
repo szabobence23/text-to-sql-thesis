@@ -1,5 +1,7 @@
 {
   "name": "olist",
+  "label": "Olist webáruház",
+  "summary": "Brazil webáruház: rendelések, vásárlók, termékek, fizetések, értékelések (9 tábla)",
   "db_name": "olist_db",
   "description": "Brazilian e-commerce public dataset by Olist (Kaggle): customers, sellers, products, orders, items, payments, reviews, geolocation."
 }

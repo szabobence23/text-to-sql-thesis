@@ -1,5 +1,7 @@
 {
   "name": "sales",
+  "label": "Sales (teszt)",
+  "summary": "Kis teszt adatbázis: vásárlók, termékek, rendelések (4 tábla)",
   "db_name": "sales_db",
   "description": "Small toy sales schema (customers, products, orders, order_items). Smoke test for switching datasets and a template for adding new ones."
 }

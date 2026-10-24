@@ -1,5 +1,7 @@
 {
   "name": "f1",
+  "label": "Forma–1",
+  "summary": "Forma–1 világbajnokság 1950–2026: futamok, versenyzők, csapatok, eredmények (17 tábla)",
   "db_name": "f1_db",
   "description": "Formula 1 World Championship 1950-2026 (Kaggle, Atharv Ranjan's extension of Rohan Rao's Ergast-based dataset, v8, CC0): seasons, circuits, races, drivers, constructors, results, qualifying, lap times, pit stops, standings; 2025-2026 only: practice, tire stints, weather."
 }

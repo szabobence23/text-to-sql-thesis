@@ -1,5 +1,5 @@
 import time
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 
 import psycopg
 
@@ -39,6 +39,12 @@ RAG_SETTINGS = {
     "table_selection_style": "strict",
     "selection_keep_top": 0,
 }
+
+# The web UI retrieves the schema (RAG_SETTINGS) only from this many
+# tables up: on Olist (9 tables) retrieval did not help, on AdventureWorks
+# (68 tables) it did (53% -> 61% relaxed EX). F1 (17 tables) was not
+# measured with retrieval, so it stays on the full schema.
+RAG_MIN_TABLES = 30
 
 
 @dataclass(frozen=True)
@@ -122,6 +128,22 @@ class PipelineConfig:
 
     def to_dict(self):
         return asdict(self)
+
+
+def app_config(dataset, table_count) -> PipelineConfig:
+    """
+    The web UI's configuration: the best measured setup with the current
+    model. Two correction rounds and a natural-language answer, like the
+    console demo, plus RAG_SETTINGS on schemas of RAG_MIN_TABLES or more.
+    """
+    config = PipelineConfig(
+        dataset=dataset,
+        max_correction_rounds=2,
+        natural_language_answer=True,
+    )
+    if table_count >= RAG_MIN_TABLES:
+        config = replace(config, **RAG_SETTINGS)
+    return config
 
 
 def open_connection(config: PipelineConfig):

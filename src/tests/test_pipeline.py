@@ -30,6 +30,19 @@ def test_unknown_schema_retrieval_is_rejected():
         PipelineConfig(schema_retrieval="magic")
 
 
+def test_app_config_uses_rag_only_on_large_schemas():
+    small = pipeline.app_config("olist", table_count=9)
+    large = pipeline.app_config("adventureworks", table_count=68)
+
+    assert small.schema_retrieval == "full"
+    assert not small.table_selection
+    assert large.schema_retrieval == pipeline.RAG_SETTINGS["schema_retrieval"]
+    assert large.table_selection
+    for config in (small, large):
+        assert config.max_correction_rounds == 2
+        assert config.natural_language_answer
+
+
 @pytest.mark.db
 def test_schema_can_be_limited_to_some_tables(conn):
     config = PipelineConfig(dataset="olist")
