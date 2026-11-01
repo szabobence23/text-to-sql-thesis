@@ -19,6 +19,7 @@ import time
 import webbrowser
 from dataclasses import dataclass
 from decimal import Decimal
+from typing import Literal
 
 import psycopg
 import uvicorn
@@ -45,6 +46,26 @@ WEB_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "web")
 MAX_SAVED_ROWS = 200
 TITLE_LENGTH = 48
 EXAMPLE_QUESTIONS = 3
+
+# Languages of the interface. The model answers in the question's
+# language whatever is chosen here; these are the app's own messages.
+UI_LANGUAGES = ("hu", "en")
+MESSAGES = {
+    "hu": {
+        "no_database": "Nem érem el az adatbázist. Fut a Docker konténer?",
+        "error": "Hiba történt a kérdés feldolgozása közben. Fut az Ollama?",
+        "failed": "Erre a kérdésre nem sikerült működő lekérdezést készítenem. "
+                  "Próbáld meg másképp megfogalmazni.",
+        "no_answer": "Lefutott a lekérdezés, az eredmény a részletekben látható.",
+    },
+    "en": {
+        "no_database": "I cannot reach the database. Is the Docker container running?",
+        "error": "Something went wrong while processing the question. Is Ollama running?",
+        "failed": "I could not write a working query for this question. "
+                  "Try rephrasing it.",
+        "no_answer": "The query ran; the result is shown in the details.",
+    },
+}
 
 
 @dataclass
@@ -96,8 +117,9 @@ def jsonable(value):
     return str(value)
 
 
-def answer_question(dataset, question):
-    """(answer text, details shown under 'Részletek')."""
+def answer_question(dataset, question, language="hu"):
+    """(answer text, details shown under 'Details'); language: the UI's."""
+    messages = MESSAGES[language]
     try:
         engine = get_engine(dataset)
         start = time.perf_counter()
@@ -107,9 +129,9 @@ def answer_question(dataset, question):
 
     except psycopg.OperationalError as error:
         _engines.pop(dataset, None)
-        return "Nem érem el az adatbázist. Fut a Docker konténer?", {"error": str(error)}
+        return messages["no_database"], {"error": str(error)}
     except Exception as error:
-        return "Hiba történt a kérdés feldolgozása közben. Fut az Ollama?", {"error": str(error)}
+        return messages["error"], {"error": str(error)}
 
     rows = result.rows or []
     details = {
@@ -125,14 +147,10 @@ def answer_question(dataset, question):
     }
 
     if not result.executed:
-        return (
-            "Erre a kérdésre nem sikerült működő lekérdezést készítenem. "
-            "Próbáld meg másképp megfogalmazni.",
-            details,
-        )
+        return messages["failed"], details
     if result.answer:
         return result.answer.text, details
-    return "Lefutott a lekérdezés, az eredmény a részletekben látható.", details
+    return messages["no_answer"], details
 
 
 def title_of(question):
@@ -140,9 +158,11 @@ def title_of(question):
     return question if len(question) <= TITLE_LENGTH else question[: TITLE_LENGTH - 1] + "…"
 
 
-def example_questions(dataset):
+def example_questions(dataset, language):
     # The first easy questions of the dataset's test set, as suggestions.
-    with open(dataset.test_cases_path(DEFAULT_LANGUAGE), encoding="utf-8") as file:
+    if language not in dataset.languages:
+        language = DEFAULT_LANGUAGE
+    with open(dataset.test_cases_path(language), encoding="utf-8") as file:
         cases = json.load(file)
     easy = [case["question"] for case in cases if case.get("difficulty") == "easy"]
     return easy[:EXAMPLE_QUESTIONS]
@@ -152,6 +172,7 @@ class Question(BaseModel):
     question: str = Field(min_length=1, max_length=2000)
     dataset: str
     conversation_id: int | None = None
+    language: Literal["hu", "en"] = "hu"
 
 
 def create_app(store: ChatStore | None = None, answer=answer_question) -> FastAPI:
@@ -159,15 +180,15 @@ def create_app(store: ChatStore | None = None, answer=answer_question) -> FastAP
     app = FastAPI(title="Text-to-SQL", docs_url=None, redoc_url=None)
 
     @app.get("/api/datasets")
-    def datasets():
+    def datasets(language: Literal["hu", "en"] = "hu"):
         items = []
         for name in available_datasets():
             dataset = load_dataset(name)
             items.append({
                 "name": name,
-                "label": dataset.label,
-                "summary": dataset.summary or dataset.description,
-                "examples": example_questions(dataset),
+                "label": dataset.label(language),
+                "summary": dataset.summary(language),
+                "examples": example_questions(dataset, language),
             })
         return {"default": DEFAULT_DATASET, "datasets": items}
 
@@ -209,7 +230,7 @@ def create_app(store: ChatStore | None = None, answer=answer_question) -> FastAP
             conversation_id = body.conversation_id
 
         store.add_message(conversation_id, "user", question)
-        text, details = answer(dataset, question)
+        text, details = answer(dataset, question, body.language)
         store.add_message(conversation_id, "assistant", text, details)
 
         return {

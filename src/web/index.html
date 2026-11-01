@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="/static/app.css">
 </head>
 <body>
+  <!-- Texts marked data-i18n* are filled from STRINGS in app.js. -->
   <div class="app" id="app">
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-head">
@@ -16,39 +17,59 @@
           <span class="logo" data-icon="database"></span>
           <span>Text-to-SQL</span>
         </div>
-        <button class="icon-btn" id="close-sidebar" title="Oldalsáv bezárása" data-icon="panel"></button>
+        <button class="icon-btn" id="close-sidebar" data-i18n-title="closeSidebar" data-icon="panel"></button>
       </div>
 
       <button class="new-chat" id="new-chat">
         <span data-icon="edit"></span>
-        <span>Új beszélgetés</span>
+        <span data-i18n="newChat"></span>
       </button>
 
-      <div class="history-label">Előzmények</div>
+      <div class="history-label" data-i18n="history"></div>
       <nav class="history" id="history"></nav>
     </aside>
     <div class="scrim" id="scrim"></div>
 
     <main class="main">
       <header class="topbar">
-        <button class="icon-btn" id="open-sidebar" title="Oldalsáv megnyitása" data-icon="panel"></button>
+        <button class="icon-btn" id="open-sidebar" data-i18n-title="openSidebar" data-icon="panel"></button>
         <div class="dataset" id="dataset">
           <button class="dataset-btn" id="dataset-btn" type="button" aria-haspopup="menu" aria-expanded="false"
-                  title="Melyik adatbázisról kérdezel?">
+                  data-i18n-title="whichDatabase">
             <span class="dataset-icon" data-icon="database"></span>
-            <span class="dataset-caption">Adatbázis</span>
+            <span class="dataset-caption" data-i18n="database"></span>
             <span class="dataset-name" id="dataset-name"></span>
             <span class="dataset-chevron" data-icon="chevron"></span>
           </button>
           <div class="dataset-menu" id="dataset-menu" role="menu"></div>
+        </div>
+
+        <div class="language" id="language" role="group" data-i18n-aria="language">
+          <button class="flag" data-language="hu" title="Magyar" aria-label="Magyar">
+            <svg viewBox="0 0 6 4" preserveAspectRatio="none">
+              <rect width="6" height="4" fill="#436f4d"/>
+              <rect width="6" height="2.667" fill="#fff"/>
+              <rect width="6" height="1.333" fill="#cd2a3e"/>
+            </svg>
+          </button>
+          <button class="flag" data-language="en" title="English" aria-label="English">
+            <svg viewBox="0 0 60 30" preserveAspectRatio="none">
+              <clipPath id="uk-flag"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
+              <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
+              <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
+              <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#uk-flag)" stroke="#c8102e" stroke-width="4"/>
+              <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
+              <path d="M30,0 v30 M0,15 h60" stroke="#c8102e" stroke-width="6"/>
+            </svg>
+          </button>
         </div>
       </header>
 
       <section class="chat" id="chat">
         <div class="empty" id="empty">
           <div class="empty-logo" data-icon="database"></div>
-          <h1>Miről kérdeznél?</h1>
-          <p id="empty-description">Kérdezz természetes nyelven: SQL-t írok belőle, lefuttatom, és elmondom az eredményt.</p>
+          <h1 data-i18n="welcome"></h1>
+          <p id="empty-description" data-i18n="welcomeText"></p>
           <div class="suggestions" id="suggestions"></div>
         </div>
         <div class="thread" id="thread"></div>
@@ -56,10 +77,10 @@
 
       <footer class="composer-wrap">
         <form class="composer" id="composer">
-          <textarea id="input" rows="1" placeholder="Kérdezz az adatbázisról…" autocomplete="off"></textarea>
-          <button type="submit" class="send" id="send" title="Küldés (Enter)" data-icon="arrow" disabled></button>
+          <textarea id="input" rows="1" data-i18n-placeholder="placeholder" autocomplete="off"></textarea>
+          <button type="submit" class="send" id="send" data-i18n-title="send" data-icon="arrow" disabled></button>
         </form>
-        <div class="disclaimer">A választ egy helyi nyelvi modell generálja. Az SQL a „Részletek” alatt ellenőrizhető.</div>
+        <div class="disclaimer" data-i18n="disclaimer"></div>
       </footer>
     </main>
   </div>

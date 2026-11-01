@@ -9,7 +9,7 @@ from web_app import create_app, title_of
 def client(tmp_path):
     asked = []
 
-    def fake_answer(dataset, question):
+    def fake_answer(dataset, question, language="hu"):
         asked.append((dataset, question))
         return "99 441 rendelés van.", {"sql": "SELECT COUNT(*) FROM orders;", "columns": ["count"], "rows": [[99441]]}
 
@@ -28,7 +28,20 @@ def test_page_and_datasets_are_served(client):
     assert datasets["default"] in names
     assert "olist" in names
     olist = next(d for d in datasets["datasets"] if d["name"] == "olist")
-    assert olist["label"] and olist["summary"]
+    assert olist["label"] == "Olist webáruház"
+    assert olist["examples"][0] == "Hány rendelés van az adatbázisban?"
+
+
+def test_datasets_in_english(tmp_path):
+    client = TestClient(create_app(ChatStore(str(tmp_path / "chats.sqlite3")), answer=None))
+
+    datasets = client.get("/api/datasets?language=en").json()["datasets"]
+    olist = next(d for d in datasets if d["name"] == "olist")
+
+    assert olist["label"] == "Olist e-commerce"
+    assert "tables" in olist["summary"]
+    assert olist["examples"][0] == "How many orders are in the database?"
+    assert client.get("/api/datasets?language=xx").status_code == 422
 
 
 def test_first_question_starts_a_conversation(client):

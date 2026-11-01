@@ -1,7 +1,7 @@
 {
   "name": "sales",
-  "label": "Sales (teszt)",
-  "summary": "Kis teszt adatbázis: vásárlók, termékek, rendelések (4 tábla)",
+  "label": {"hu": "Sales (teszt)", "en": "Sales (test)"},
+  "summary": {"hu": "Kis teszt adatbázis: vásárlók, termékek, rendelések (4 tábla)", "en": "Small test database: customers, products, orders (4 tables)"},
   "db_name": "sales_db",
   "description": "Small toy sales schema (customers, products, orders, order_items). Smoke test for switching datasets and a template for adding new ones."
 }

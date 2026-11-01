@@ -46,8 +46,9 @@ def test_dataset_is_complete(name):
     assert os.path.exists(dataset.schema_sql_path)
     assert os.path.exists(dataset.import_sql_path)
     assert DEFAULT_LANGUAGE in dataset.languages
-    # Shown in the web UI's database picker.
-    assert dataset.label and dataset.summary
+    # Shown in the web UI's database picker, in both UI languages.
+    for language in ("hu", "en"):
+        assert dataset.labels.get(language) and dataset.summaries.get(language)
 
 
 def test_unknown_language_is_rejected():

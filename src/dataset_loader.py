@@ -11,7 +11,7 @@ means switching the dataset name.
 
 import json
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 REPO_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -30,9 +30,17 @@ class Dataset:
     path: str
     # PostgreSQL schemas holding the dataset's tables; most use public.
     schemas: tuple[str, ...] = ("public",)
-    # Display name and a short Hungarian summary for the web UI.
-    label: str = ""
-    summary: str = ""
+    # Display name and short summary for the web UI, per UI language:
+    # {"hu": ..., "en": ...} in dataset.json (a plain string counts as
+    # the default language).
+    labels: dict = field(default_factory=dict, hash=False, compare=False)
+    summaries: dict = field(default_factory=dict, hash=False, compare=False)
+
+    def label(self, language: str = DEFAULT_LANGUAGE) -> str:
+        return self.labels.get(language) or self.labels.get(DEFAULT_LANGUAGE) or self.name
+
+    def summary(self, language: str = DEFAULT_LANGUAGE) -> str:
+        return self.summaries.get(language) or self.summaries.get(DEFAULT_LANGUAGE) or self.description
 
     @property
     def hints(self) -> str:
@@ -93,6 +101,12 @@ def available_datasets() -> list[str]:
     )
 
 
+def _by_language(value) -> dict:
+    if isinstance(value, str):
+        return {DEFAULT_LANGUAGE: value}
+    return dict(value or {})
+
+
 def load_dataset(name: str) -> Dataset:
     path = os.path.join(DATASETS_DIR, name)
     config_path = os.path.join(path, "dataset.json")
@@ -112,6 +126,6 @@ def load_dataset(name: str) -> Dataset:
         description=config.get("description", ""),
         path=path,
         schemas=tuple(config.get("schemas", ["public"])),
-        label=config.get("label", name),
-        summary=config.get("summary", ""),
+        labels=_by_language(config.get("label")),
+        summaries=_by_language(config.get("summary")),
     )
