@@ -11,6 +11,8 @@ const ICONS = {
   trash: '<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m19 6-1 14H6L5 6"/>',
   copy: '<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/>',
   check: '<path d="M20 6 9 17l-5-5"/>',
+  bug: '<path d="m8 2 1.9 1.9"/><path d="M14.1 3.9 16 2"/><path d="M9 7.1V6a3 3 0 1 1 6 0v1.1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/><path d="M12 20v-9"/><path d="M6.5 13H3"/><path d="M21 13h-3.5"/>',
+  alert: '<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
 };
 
 function icon(name) {
@@ -165,6 +167,16 @@ const STRINGS = {
     rows: (count) => `${count} sor`,
     serverDown: "Nem sikerült elérni a szervert. Fut még a `web_app.py`?",
     serverUnavailable: "A szerver nem érhető el.",
+    debug: "Debug",
+    debugTitle: "Fejlesztői nézet: minden lépés részletei",
+    doubtful: "Ellenőrizd: az eredmény lehet, hogy nem a kérdésre válaszol",
+    moreRows: (count) => `+ ${count} további sor a részletekben`,
+    attempts: "Próbálkozások",
+    attempt: (n, total, ok) => `${n}/${total}. próbálkozás${ok ? "" : " – hibás"}`,
+    candidates: (list) => `Jelöltek: ${list}`,
+    steps: "Lépések és költség",
+    tokens: (sql, answer) => `Token: SQL ${sql}, válasz ${answer}`,
+    setup: "Beállítás",
   },
   en: {
     locale: "en-GB",
@@ -197,6 +209,16 @@ const STRINGS = {
     rows: (count) => `${count} row${count === 1 ? "" : "s"}`,
     serverDown: "Could not reach the server. Is `web_app.py` still running?",
     serverUnavailable: "The server is not reachable.",
+    debug: "Debug",
+    debugTitle: "Developer view: every step in detail",
+    doubtful: "Check this: the result may not answer the question",
+    moreRows: (count) => `+ ${count} more row${count === 1 ? "" : "s"} in the details`,
+    attempts: "Attempts",
+    attempt: (n, total, ok) => `Attempt ${n}/${total}${ok ? "" : " – failed"}`,
+    candidates: (list) => `Candidates: ${list}`,
+    steps: "Steps and cost",
+    tokens: (sql, answer) => `Tokens: SQL ${sql}, answer ${answer}`,
+    setup: "Setup",
   },
 };
 const LANGUAGES = Object.keys(STRINGS);
@@ -235,6 +257,7 @@ const savedLanguage = recall("language");
 
 const state = {
   language: LANGUAGES.includes(savedLanguage) ? savedLanguage : "hu",
+  debug: recall("debug") === "on",
   datasets: [],
   dataset: null,
   conversationId: null,
@@ -411,6 +434,23 @@ document.querySelectorAll(".flag").forEach((flag) => {
   flag.onclick = () => setLanguage(flag.dataset.language);
 });
 
+// ---------- debug view ----------
+
+// Off: the answer, a short preview of the rows and closed details.
+// On: the details open by default, with every attempt, the candidate
+// tables, timings, tokens and the setup.
+function applyDebug() {
+  $("debug-toggle").setAttribute("aria-pressed", String(state.debug));
+}
+
+$("debug-toggle").onclick = async () => {
+  if (state.busy) return;
+  state.debug = !state.debug;
+  remember("debug", state.debug ? "on" : "off");
+  applyDebug();
+  if (state.conversationId !== null) await openConversation(state.conversationId);
+};
+
 // ---------- messages ----------
 
 function showEmpty(empty) {
@@ -451,24 +491,81 @@ function addThinking() {
   return { body, stop: () => clearInterval(timer) };
 }
 
+const PREVIEW_ROWS = 5;
+
 function fillAssistant(body, message) {
   const details = message.details || {};
   const failed = !details.columns;
   body.innerHTML = "";
+  if (details.doubtful) {
+    body.append(el("div", "doubt", `${icon("alert")}<span>${escapeHtml(t("doubtful"))}</span>`));
+  }
   body.append(el("div", "answer" + (failed ? " failed" : ""), renderMarkdown(message.content)));
+
+  // The first rows under the answer, so a strange result is visible at
+  // once; a single value is already in the answer.
+  const single = details.columns && details.columns.length === 1 && details.row_count === 1;
+  if (!state.debug && details.columns && details.rows.length && !single) {
+    const preview = el("div", "preview");
+    preview.append(resultTable(details, PREVIEW_ROWS));
+    if (details.row_count > PREVIEW_ROWS) {
+      preview.append(el("div", "table-note", escapeHtml(t("moreRows", details.row_count - PREVIEW_ROWS))));
+    }
+    body.append(preview);
+  }
 
   if (!details.sql && !details.error) return;
 
   const toggle = el("button", "details-toggle", `<span>${escapeHtml(t("details"))}</span>${icon("chevron")}`);
-  toggle.setAttribute("aria-expanded", "false");
   const panel = el("div", "details");
-  panel.hidden = true;
-  toggle.onclick = () => {
-    if (!panel.childElementCount) buildDetails(panel, details);
-    panel.hidden = !panel.hidden;
-    toggle.setAttribute("aria-expanded", String(!panel.hidden));
+  const setOpen = (open) => {
+    if (open && !panel.childElementCount) buildDetails(panel, details);
+    panel.hidden = !open;
+    toggle.setAttribute("aria-expanded", String(open));
   };
+  toggle.onclick = () => setOpen(panel.hidden);
+  setOpen(state.debug);
   body.append(toggle, panel);
+}
+
+function resultTable(details, limit) {
+  const rows = details.rows.slice(0, limit);
+  const numeric = details.columns.map((_, i) => rows.length > 0 &&
+    rows.every((row) => row[i] === null || typeof row[i] === "number"));
+  const header = details.columns.map((c, i) => `<th${numeric[i] ? ' class="num"' : ""}>${escapeHtml(c)}</th>`).join("");
+  const body = rows.map((row) => "<tr>" + row.map((value) => {
+    if (value === null) return `<td class="null">NULL</td>`;
+    const isNumber = typeof value === "number";
+    return `<td${isNumber ? ' class="num"' : ""}>${escapeHtml(value)}</td>`;
+  }).join("") + "</tr>").join("");
+  return el("div", "table-wrap", `<table><thead><tr>${header}</tr></thead><tbody>${body}</tbody></table>`);
+}
+
+function sqlBlock(sql, title) {
+  const block = el("div", "code-block");
+  const head = el("div", "code-head", `<span>${escapeHtml(title)}</span>`);
+  const copyLabel = () => `${icon("copy")}<span>${escapeHtml(t("copy"))}</span>`;
+  const copy = el("button", "copy", copyLabel());
+  copy.onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(sql);
+      copy.innerHTML = `${icon("check")}<span>${escapeHtml(t("copied"))}</span>`;
+      setTimeout(() => { copy.innerHTML = copyLabel(); }, 1500);
+    } catch (_) { /* clipboard unavailable */ }
+  };
+  head.append(copy);
+  block.append(head, el("pre", "", highlightSql(sql)));
+  return block;
+}
+
+function chipRow(texts, extraClass = "") {
+  return el("div", "chips", texts.map((c) => `<span class="chip ${extraClass}">${escapeHtml(c)}</span>`).join(""));
+}
+
+function debugSection(title, ...children) {
+  const section = el("div", "debug-section");
+  section.append(el("div", "debug-title", escapeHtml(title)), ...children);
+  return section;
 }
 
 function buildDetails(panel, details) {
@@ -481,44 +578,47 @@ function buildDetails(panel, details) {
     panel.append(el("div", "chips", chips.map((c) => `<span class="chip">${escapeHtml(c)}</span>`).join("")));
   }
 
+  const attempts = details.attempts || [];
+  if (state.debug && attempts.length > 1) {
+    // Every try with its error; the last one is the final SQL below.
+    const tries = attempts.slice(0, -1).flatMap((attempt, i) => [
+      sqlBlock(attempt.sql, t("attempt", i + 1, attempts.length, false)),
+      el("div", "error-box", escapeHtml(attempt.error)),
+    ]);
+    panel.append(debugSection(t("attempts"), ...tries));
+  }
+
   if (details.sql) {
-    const block = el("div", "code-block");
-    const head = el("div", "code-head", "<span>SQL</span>");
-    const copyLabel = () => `${icon("copy")}<span>${escapeHtml(t("copy"))}</span>`;
-    const copy = el("button", "copy", copyLabel());
-    copy.onclick = async () => {
-      try {
-        await navigator.clipboard.writeText(details.sql);
-        copy.innerHTML = `${icon("check")}<span>${escapeHtml(t("copied"))}</span>`;
-        setTimeout(() => { copy.innerHTML = copyLabel(); }, 1500);
-      } catch (_) { /* clipboard unavailable */ }
-    };
-    head.append(copy);
-    const pre = el("pre", "", highlightSql(details.sql));
-    block.append(head, pre);
-    panel.append(block);
+    const title = state.debug && attempts.length > 1
+      ? t("attempt", attempts.length, attempts.length, !details.error)
+      : "SQL";
+    panel.append(sqlBlock(details.sql, title));
   }
 
   if (details.error) panel.append(el("div", "error-box", escapeHtml(details.error)));
 
   if (details.columns) {
-    const numeric = details.columns.map((_, i) => details.rows.length > 0 &&
-      details.rows.every((row) => row[i] === null || typeof row[i] === "number"));
-    const header = details.columns.map((c, i) => `<th${numeric[i] ? ' class="num"' : ""}>${escapeHtml(c)}</th>`).join("");
-    const body = details.rows.map((row) => "<tr>" + row.map((value) => {
-      if (value === null) return `<td class="null">NULL</td>`;
-      const isNumber = typeof value === "number";
-      return `<td${isNumber ? ' class="num"' : ""}>${escapeHtml(value)}</td>`;
-    }).join("") + "</tr>").join("");
-    const wrap = el("div", "table-wrap",
-      `<table><thead><tr>${header}</tr></thead><tbody>${body}</tbody></table>`);
-    panel.append(wrap);
+    panel.append(resultTable(details, details.rows.length));
 
     let note;
     if (!details.rows.length) note = t("noRows");
     else if (details.row_count > details.rows.length) note = t("firstRows", details.rows.length, details.row_count);
     else note = t("rows", details.row_count);
     panel.append(el("div", "table-note", escapeHtml(note)));
+  }
+
+  if (state.debug) {
+    const steps = [];
+    if (details.candidate_tables) steps.push(t("candidates", details.candidate_tables.join(", ")));
+    for (const [key, seconds] of Object.entries(details.timings || {})) steps.push(`${key} ${seconds} s`);
+    if (details.tokens) steps.push(t("tokens", details.tokens.prompt + details.tokens.completion, details.tokens.answer));
+    if (details.doubtful !== undefined && details.doubtful !== null) steps.push(`check: ${details.doubtful ? "DOUBTFUL" : "OK"}`);
+    if (steps.length) panel.append(debugSection(t("steps"), chipRow(steps, "debug")));
+
+    if (details.config) {
+      const setup = Object.entries(details.config).map(([key, value]) => `${key}: ${value}`);
+      panel.append(debugSection(t("setup"), chipRow(setup, "debug")));
+    }
   }
 }
 
@@ -643,6 +743,7 @@ $("composer").addEventListener("submit", (event) => {
 
 (async () => {
   applyStaticTexts();
+  applyDebug();
   try {
     await loadDatasets();
   } catch (error) {

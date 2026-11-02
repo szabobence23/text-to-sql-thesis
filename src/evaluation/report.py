@@ -68,6 +68,14 @@ def setup_label(pipeline):
                 parts.append(pipeline["table_selection_style"])
             if pipeline.get("selection_keep_top"):
                 parts.append(f"top{pipeline['selection_keep_top']}-marad")
+            if pipeline.get("selection_examples"):
+                parts.append(f"példák={pipeline['selection_examples']}")
+                if not pipeline.get("selection_examples_in_prompt", True):
+                    parts.append("prompt-nélkül")
+                if pipeline.get("example_candidates"):
+                    parts.append("+példatáblák")
+    if pipeline.get("sql_examples"):
+        parts.append(f"few-shot={pipeline['sql_examples']}")
     if llm["temperature"]:
         parts.append(f"temp={llm['temperature']}")
     if not pipeline.get("block_functions", True):

@@ -22,6 +22,11 @@ default `olist`).
                     optional "alternative_sql": [further correct queries], e.g.
                     an Olist category by its Portuguese name instead of the
                     English one; an answer matching any of them is correct
+  examples.json     optional solved questions the prompts may show (few-shot SQL with
+                    --sql-examples, table selection with --selection-examples):
+                    [{"id", "question": {"hu", "en"}, "sql"}]; teach patterns through
+                    other questions than the test set;
+                    must not reword a test question, every query must return rows
   attacks.json      optional hand-written attack SQL for src/evaluation/attack_evaluator.py
                     [{"id", "category", "description", "sql", "expected_layer"}]
                     expected_layer: structure | function | schema | database | none

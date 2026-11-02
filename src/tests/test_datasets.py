@@ -141,3 +141,50 @@ def test_attacks_are_well_formed(name):
         if structure_ok:
             functions_ok, _ = validate_sql_functions(attack["sql"])
             assert functions_ok == (expected != "function"), f"attack {attack['id']}"
+
+
+DATASETS_WITH_EXAMPLES = [
+    name for name in available_datasets()
+    if os.path.exists(load_dataset(name).examples_path)
+]
+
+
+@pytest.mark.parametrize("name", DATASETS_WITH_EXAMPLES)
+def test_examples_are_well_formed_and_not_test_questions(name):
+    dataset = load_dataset(name)
+    with open(dataset.examples_path, encoding="utf-8") as file:
+        examples = json.load(file)
+
+    ids = [example["id"] for example in examples]
+    assert len(ids) == len(set(ids)), "duplicate example ids"
+
+    # Examples are shown to the model, so none may be a test question.
+    test_questions = {
+        case["question"].strip().lower()
+        for language in dataset.languages
+        for case in load_cases(name, language)
+    }
+    for example in examples:
+        assert set(example["question"]) == {"hu", "en"}, f"example {example['id']}"
+        is_valid, error = validate_sql_structure(example["sql"])
+        assert is_valid, f"example {example['id']}: {error}"
+        for question in example["question"].values():
+            assert question.strip().lower() not in test_questions, f"example {example['id']}"
+
+
+@pytest.mark.db
+@pytest.mark.parametrize("name", DATASETS_WITH_EXAMPLES)
+def test_examples_run_and_return_rows(name):
+    # An example the model is shown must be a working, non-empty query.
+    from database import execute_query_with_columns
+    from pipeline import PipelineConfig, open_connection
+
+    with open(load_dataset(name).examples_path, encoding="utf-8") as file:
+        examples = json.load(file)
+    conn = open_connection(PipelineConfig(dataset=name))
+    try:
+        for example in examples:
+            _, rows = execute_query_with_columns(conn, example["sql"])
+            assert rows, f"example {example['id']} returns no rows"
+    finally:
+        conn.close()

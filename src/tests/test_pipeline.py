@@ -93,11 +93,13 @@ class FakeBackend:
         sql = self.generated.pop(0)
         return Generation(sql=sql, raw_response=sql, prompt_tokens=10, completion_tokens=5)
 
-    def generate(self, question, schema, settings):
+    def generate(self, question, schema, settings, examples_text=None):
+        self.generate_examples = examples_text
         return self._next()
 
-    def correct(self, question, schema, failed_attempts, settings):
+    def correct(self, question, schema, failed_attempts, settings, examples_text=None):
         self.correction_calls.append(list(failed_attempts))
+        self.correct_examples = examples_text
         return self._next()
 
     def validate(self, conn, sql, block_functions=True):
@@ -256,7 +258,7 @@ def test_translation_is_used_only_for_retrieval(monkeypatch):
     seen = []
     monkeypatch.setattr(
         pipeline, "generate_sql",
-        lambda question, schema, settings: seen.append((question, schema)) or backend._next(),
+        lambda question, schema, settings, examples_text=None: seen.append((question, schema)) or backend._next(),
     )
     retriever = FakeRetriever([("public", "orders")])
 
@@ -309,7 +311,7 @@ class FakeSelectingRetriever(FakeRetriever):
 def test_table_selection_keeps_chosen_tables_plus_bridges(monkeypatch):
     FakeBackend(monkeypatch, ["good"], {"good": "ok"})
     monkeypatch.setattr(pipeline, "load_schema", lambda conn, config, tables=None: "small schema")
-    monkeypatch.setattr(pipeline, "choose_tables", lambda q, t, s, style: TableSelection("orders", 4, 1))
+    monkeypatch.setattr(pipeline, "choose_tables", lambda q, t, s, style, examples=None: TableSelection("orders", 4, 1))
     retriever = FakeSelectingRetriever([("public", "orders"), ("public", "sellers")])
 
     config = PipelineConfig(schema_retrieval="dense", table_selection=True)
@@ -323,7 +325,7 @@ def test_table_selection_keeps_chosen_tables_plus_bridges(monkeypatch):
 def test_table_selection_naming_nothing_keeps_all_candidates(monkeypatch):
     FakeBackend(monkeypatch, ["good"], {"good": "ok"})
     monkeypatch.setattr(pipeline, "load_schema", lambda conn, config, tables=None: "small schema")
-    monkeypatch.setattr(pipeline, "choose_tables", lambda q, t, s, style: TableSelection("I am not sure.", 4, 1))
+    monkeypatch.setattr(pipeline, "choose_tables", lambda q, t, s, style, examples=None: TableSelection("I am not sure.", 4, 1))
     retriever = FakeSelectingRetriever([("public", "orders"), ("public", "sellers")])
 
     config = PipelineConfig(schema_retrieval="dense", table_selection=True)
@@ -343,7 +345,7 @@ def test_selection_keep_top_adds_back_top_candidates(monkeypatch):
     styles = []
     monkeypatch.setattr(
         pipeline, "choose_tables",
-        lambda q, t, s, style: styles.append(style) or TableSelection("sellers", 4, 1),
+        lambda q, t, s, style, examples=None: styles.append(style) or TableSelection("sellers", 4, 1),
     )
     retriever = FakeSelectingRetriever([("public", "orders"), ("public", "items"), ("public", "sellers")])
 
@@ -370,3 +372,147 @@ def test_rag_settings_make_a_valid_config():
 
     assert config.schema_retrieval in ("bm25", "dense", "hybrid")
     assert config.table_selection is True
+
+
+class FakeExamples:
+    def __init__(self, matches):
+        self.matches = matches
+        self.queries = []
+
+    def similar(self, question, n):
+        self.queries.append((question, n))
+        return self.matches[:n]
+
+
+def example_match(id, question, tables, score=0.9):
+    from examples import Example, Match
+
+    return Match(Example(id, (("en", question),), "SELECT 1;", tuple(tables)), question, score)
+
+
+def test_selection_examples_are_shown_and_can_add_candidates(monkeypatch):
+    FakeBackend(monkeypatch, ["good"], {"good": "ok"})
+    monkeypatch.setattr(pipeline, "load_schema", lambda conn, config, tables=None: "small schema")
+    prompts = []
+    monkeypatch.setattr(
+        pipeline, "choose_tables",
+        lambda q, t, s, style, examples=None: prompts.append(examples) or TableSelection("orders\ncustomers", 4, 1),
+    )
+    retriever = FakeSelectingRetriever([("public", "orders"), ("public", "sellers")])
+    retriever.examples = FakeExamples([
+        example_match(7, "Which customers ordered most?", [("public", "customers"), ("public", "orders")]),
+        example_match(3, "How many sellers?", [("public", "sellers")], 0.5),
+    ])
+
+    config = PipelineConfig(
+        schema_retrieval="dense", table_selection=True,
+        selection_examples=2, example_candidates=True,
+    )
+    result = run_pipeline(None, "kérdés", "full schema", config, retriever)
+
+    # Searched with the original question; both examples in the prompt.
+    assert retriever.examples.queries == [("kérdés", 2)]
+    assert prompts == [
+        '- "Which customers ordered most?" -> customers, orders\n'
+        '- "How many sellers?" -> sellers'
+    ]
+    # The table only an example used became a candidate, and was chosen.
+    assert result.candidate_tables == [("public", "orders"), ("public", "sellers"), ("public", "customers")]
+    assert ("public", "customers") in result.schema_tables
+    assert [e["id"] for e in result.examples] == [7, 3]
+
+
+def test_examples_without_candidates_only_change_the_prompt(monkeypatch):
+    FakeBackend(monkeypatch, ["good"], {"good": "ok"})
+    monkeypatch.setattr(pipeline, "load_schema", lambda conn, config, tables=None: "small schema")
+    monkeypatch.setattr(
+        pipeline, "choose_tables",
+        lambda q, t, s, style, examples=None: TableSelection("orders\ncustomers", 4, 1),
+    )
+    retriever = FakeSelectingRetriever([("public", "orders"), ("public", "sellers")])
+    retriever.examples = FakeExamples([
+        example_match(7, "Which customers ordered most?", [("public", "customers"), ("public", "orders")]),
+    ])
+
+    config = PipelineConfig(schema_retrieval="dense", table_selection=True, selection_examples=1)
+    result = run_pipeline(None, "kérdés", "full schema", config, retriever)
+
+    assert result.candidate_tables == [("public", "orders"), ("public", "sellers")]
+    # customers is not a candidate, so naming it does not add it.
+    assert ("public", "customers") not in result.schema_tables
+
+
+def test_example_switches_need_their_prerequisites():
+    with pytest.raises(ValueError, match="use it with table_selection"):
+        PipelineConfig(schema_retrieval="dense", selection_examples=3)
+    with pytest.raises(ValueError, match="use it with selection_examples"):
+        PipelineConfig(schema_retrieval="dense", table_selection=True, example_candidates=True)
+    with pytest.raises(ValueError, match="negative"):
+        PipelineConfig(schema_retrieval="dense", table_selection=True, selection_examples=-1)
+
+
+def test_example_tables_can_join_candidates_without_the_prompt(monkeypatch):
+    FakeBackend(monkeypatch, ["good"], {"good": "ok"})
+    monkeypatch.setattr(pipeline, "load_schema", lambda conn, config, tables=None: "small schema")
+    prompts = []
+    monkeypatch.setattr(
+        pipeline, "choose_tables",
+        lambda q, t, s, style, examples=None: prompts.append(examples) or TableSelection("orders", 4, 1),
+    )
+    retriever = FakeSelectingRetriever([("public", "orders")])
+    retriever.examples = FakeExamples([
+        example_match(7, "Which customers ordered most?", [("public", "customers"), ("public", "orders")]),
+    ])
+
+    config = PipelineConfig(
+        schema_retrieval="dense", table_selection=True, selection_examples=1,
+        example_candidates=True, selection_examples_in_prompt=False,
+    )
+    result = run_pipeline(None, "kérdés", "full schema", config, retriever)
+
+    assert prompts == [None]
+    assert result.candidate_tables == [("public", "orders"), ("public", "customers")]
+
+
+def test_examples_must_be_used_somehow():
+    with pytest.raises(ValueError, match="neither shown nor used"):
+        PipelineConfig(
+            schema_retrieval="dense", table_selection=True,
+            selection_examples=1, selection_examples_in_prompt=False,
+        )
+
+
+def test_sql_examples_go_into_generation_and_correction(monkeypatch):
+    backend = FakeBackend(monkeypatch, ["bad", "good"], {"bad": "invalid", "good": "ok"})
+    examples = FakeExamples([
+        example_match(4, "Which drivers have won three titles?", [("public", "driver_standings")]),
+        example_match(9, "How many races did Alonso win?", [("public", "results")], 0.7),
+    ])
+
+    config = PipelineConfig(sql_examples=2, max_correction_rounds=1)
+    result = run_pipeline(None, "Ki nyert három címet?", "schema", config, example_retriever=examples)
+
+    assert examples.queries == [("Ki nyert három címet?", 2)]
+    assert backend.generate_examples.startswith("Question: Which drivers have won three titles?\nSQL: SELECT 1;")
+    # The correction continues the same prompt, examples included.
+    assert backend.correct_examples == backend.generate_examples
+    assert [e["id"] for e in result.sql_examples] == [4, 9]
+    assert "examples_s" in result.timings
+
+
+def test_no_sql_examples_by_default(monkeypatch):
+    backend = FakeBackend(monkeypatch, ["good"], {"good": "ok"})
+
+    result = run(PipelineConfig())
+
+    assert backend.generate_examples is None
+    assert result.sql_examples is None
+
+
+def test_sql_examples_need_an_example_retriever(monkeypatch):
+    FakeBackend(monkeypatch, ["good"], {"good": "ok"})
+
+    with pytest.raises(ValueError, match="make_example_retriever"):
+        run(PipelineConfig(sql_examples=3))
+    with pytest.raises(ValueError, match="negative"):
+        PipelineConfig(sql_examples=-1)

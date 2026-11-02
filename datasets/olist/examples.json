@@ -1,0 +1,137 @@
+[
+  {
+    "id": 1,
+    "question": {"hu": "Hány egyedi vásárló él Curitiba városában?", "en": "How many unique customers live in the city of Curitiba?"},
+    "sql": "SELECT COUNT(DISTINCT customer_unique_id) AS customers FROM customers WHERE customer_city = 'curitiba';"
+  },
+  {
+    "id": 2,
+    "question": {"hu": "Hány vásárló vásárolt egynél több eladótól?", "en": "How many customers bought from more than one seller?"},
+    "sql": "SELECT COUNT(*) AS customers FROM (SELECT c.customer_unique_id FROM customers c JOIN orders o ON o.customer_id = c.customer_id JOIN order_items oi ON oi.order_id = o.order_id GROUP BY c.customer_unique_id HAVING COUNT(DISTINCT oi.seller_id) > 1) AS t;"
+  },
+  {
+    "id": 3,
+    "question": {"hu": "Rio de Janeiro (RJ) államban melyik városban van a legtöbb egyedi vásárló?", "en": "Which city in the state of Rio de Janeiro (RJ) has the most unique customers?"},
+    "sql": "SELECT customer_city, COUNT(DISTINCT customer_unique_id) AS customers FROM customers WHERE customer_state = 'RJ' GROUP BY customer_city ORDER BY customers DESC LIMIT 1;"
+  },
+  {
+    "id": 4,
+    "question": {"hu": "Mennyi a Minas Gerais (MG) államba szállított tételek teljes szállítási díja?", "en": "What is the total freight value of the items shipped to customers in Minas Gerais (MG)?"},
+    "sql": "SELECT SUM(oi.freight_value) AS freight FROM order_items oi JOIN orders o ON o.order_id = oi.order_id JOIN customers c ON c.customer_id = o.customer_id WHERE c.customer_state = 'MG';"
+  },
+  {
+    "id": 5,
+    "question": {"hu": "Melyik eladónál a legmagasabb az átlagos tételár, a legalább 50 tételt eladók közül?", "en": "Which seller has the highest average item price, among sellers with at least 50 items sold?"},
+    "sql": "SELECT seller_id, AVG(price) AS avg_price, COUNT(*) AS items FROM order_items GROUP BY seller_id HAVING COUNT(*) >= 50 ORDER BY avg_price DESC LIMIT 1;"
+  },
+  {
+    "id": 6,
+    "question": {"hu": "Hány termék tartozik a health_beauty kategóriába?", "en": "How many products belong to the health_beauty category?"},
+    "sql": "SELECT COUNT(*) AS products FROM products p JOIN product_category_name_translation t ON t.product_category_name = p.product_category_name WHERE t.product_category_name_english = 'health_beauty';"
+  },
+  {
+    "id": 7,
+    "question": {"hu": "Mennyi szállítási díjat fizettek összesen a furniture_decor kategóriájú tételekért?", "en": "What is the total freight value paid for items in the furniture_decor category?"},
+    "sql": "SELECT SUM(oi.freight_value) AS freight FROM order_items oi JOIN products p ON p.product_id = oi.product_id JOIN product_category_name_translation t ON t.product_category_name = p.product_category_name WHERE t.product_category_name_english = 'furniture_decor';"
+  },
+  {
+    "id": 8,
+    "question": {"hu": "Mely termékkategóriáknak nincs angol fordítása?", "en": "Which product categories have no English translation?"},
+    "sql": "SELECT DISTINCT p.product_category_name FROM products p LEFT JOIN product_category_name_translation t ON t.product_category_name = p.product_category_name WHERE t.product_category_name IS NULL AND p.product_category_name IS NOT NULL;"
+  },
+  {
+    "id": 9,
+    "question": {"hu": "Hány toys kategóriájú tételt adtak el 2017-ben?", "en": "How many items from the toys category were sold in 2017?"},
+    "sql": "SELECT COUNT(*) AS items FROM order_items oi JOIN orders o ON o.order_id = oi.order_id JOIN products p ON p.product_id = oi.product_id JOIN product_category_name_translation t ON t.product_category_name = p.product_category_name WHERE t.product_category_name_english = 'toys' AND EXTRACT(YEAR FROM o.order_purchase_timestamp) = 2017;"
+  },
+  {
+    "id": 10,
+    "question": {"hu": "Mennyi az átlagos értékelési pontszám a késve kiszállított rendeléseknél?", "en": "What is the average review score of orders that were delivered late?"},
+    "sql": "SELECT AVG(r.review_score) AS avg_score FROM order_reviews r JOIN orders o ON o.order_id = r.order_id WHERE o.order_delivered_customer_date > o.order_estimated_delivery_date;"
+  },
+  {
+    "id": 11,
+    "question": {"hu": "Hány 5 pontos értékelés született 2018-ban?", "en": "How many 5-star reviews were written in 2018?"},
+    "sql": "SELECT COUNT(*) AS reviews FROM order_reviews WHERE review_score = 5 AND EXTRACT(YEAR FROM review_creation_date) = 2018;"
+  },
+  {
+    "id": 12,
+    "question": {"hu": "Mely eladók kapták a legalacsonyabb átlagos értékelést, a legalább 30 értékelt rendeléssel rendelkezők közül?", "en": "Which sellers received the lowest average review score, among sellers with at least 30 reviewed orders?"},
+    "sql": "SELECT oi.seller_id, AVG(r.review_score) AS avg_score, COUNT(DISTINCT r.order_id) AS orders FROM order_items oi JOIN order_reviews r ON r.order_id = oi.order_id GROUP BY oi.seller_id HAVING COUNT(DISTINCT r.order_id) >= 30 ORDER BY avg_score LIMIT 5;"
+  },
+  {
+    "id": 13,
+    "question": {"hu": "Átlagosan hány nap telt el a futárnak átadás és a vásárlóhoz kiszállítás között, államonként?", "en": "On average, how many days passed between the handover to the carrier and the delivery to the customer, by customer state?"},
+    "sql": "SELECT c.customer_state, AVG(EXTRACT(EPOCH FROM (o.order_delivered_customer_date - o.order_delivered_carrier_date)) / 86400) AS avg_days FROM orders o JOIN customers c ON c.customer_id = o.customer_id WHERE o.order_delivered_customer_date IS NOT NULL AND o.order_delivered_carrier_date IS NOT NULL GROUP BY c.customer_state ORDER BY avg_days DESC;"
+  },
+  {
+    "id": 14,
+    "question": {"hu": "A nap melyik órájában adják le a legtöbb rendelést?", "en": "In which hour of the day are the most orders placed?"},
+    "sql": "SELECT EXTRACT(HOUR FROM order_purchase_timestamp) AS hour, COUNT(*) AS orders FROM orders GROUP BY hour ORDER BY orders DESC LIMIT 1;"
+  },
+  {
+    "id": 15,
+    "question": {"hu": "Hány rendelést adtak le 2017 egyes negyedéveiben?", "en": "How many orders were placed in each quarter of 2017?"},
+    "sql": "SELECT EXTRACT(QUARTER FROM order_purchase_timestamp) AS quarter, COUNT(*) AS orders FROM orders WHERE EXTRACT(YEAR FROM order_purchase_timestamp) = 2017 GROUP BY quarter ORDER BY quarter;"
+  },
+  {
+    "id": 16,
+    "question": {"hu": "Hány rendelést fizettek ki tíznél több részletben?", "en": "How many orders were paid in more than ten installments?"},
+    "sql": "SELECT COUNT(DISTINCT order_id) AS orders FROM order_payments WHERE payment_installments > 10;"
+  },
+  {
+    "id": 17,
+    "question": {"hu": "Mekkora volt a legnagyobb egyedi befizetés, és milyen fizetési móddal történt?", "en": "What was the largest single payment, and with which payment type was it made?"},
+    "sql": "SELECT order_id, payment_type, payment_value FROM order_payments ORDER BY payment_value DESC LIMIT 1;"
+  },
+  {
+    "id": 18,
+    "question": {"hu": "Mennyi volt az utalványos (voucher) fizetések összege a 2018-as rendeléseknél?", "en": "What was the total voucher payment value for orders placed in 2018?"},
+    "sql": "SELECT SUM(op.payment_value) AS total FROM order_payments op JOIN orders o ON o.order_id = op.order_id WHERE op.payment_type = 'voucher' AND EXTRACT(YEAR FROM o.order_purchase_timestamp) = 2018;"
+  },
+  {
+    "id": 19,
+    "question": {"hu": "Melyik öt városban van a legtöbb eladó?", "en": "Which five cities have the most sellers?"},
+    "sql": "SELECT seller_city, COUNT(*) AS sellers FROM sellers GROUP BY seller_city ORDER BY sellers DESC LIMIT 5;"
+  },
+  {
+    "id": 20,
+    "question": {"hu": "Hány eladó adott el más államban élő vásárlónak, mint ahol ő maga van?", "en": "How many sellers sold to customers in a different state than their own?"},
+    "sql": "SELECT COUNT(DISTINCT s.seller_id) AS sellers FROM order_items oi JOIN sellers s ON s.seller_id = oi.seller_id JOIN orders o ON o.order_id = oi.order_id JOIN customers c ON c.customer_id = o.customer_id WHERE s.seller_state <> c.customer_state;"
+  },
+  {
+    "id": 21,
+    "question": {"hu": "Mennyi a sports_leisure kategóriájú termékek átlagos tömege grammban?", "en": "What is the average weight in grams of the products in the sports_leisure category?"},
+    "sql": "SELECT AVG(p.product_weight_g) AS avg_weight_g FROM products p JOIN product_category_name_translation t ON t.product_category_name = p.product_category_name WHERE t.product_category_name_english = 'sports_leisure';"
+  },
+  {
+    "id": 22,
+    "question": {"hu": "Mely rendelésekben van ötnél több tétel?", "en": "Which orders contain more than five items?"},
+    "sql": "SELECT order_id, COUNT(*) AS items FROM order_items GROUP BY order_id HAVING COUNT(*) > 5 ORDER BY items DESC;"
+  },
+  {
+    "id": 23,
+    "question": {"hu": "A rendelések hány százalékát törölték?", "en": "What percentage of the orders were canceled?"},
+    "sql": "SELECT 100.0 * COUNT(*) FILTER (WHERE order_status = 'canceled') / COUNT(*) AS canceled_percent FROM orders;"
+  },
+  {
+    "id": 24,
+    "question": {"hu": "Hány egyedi vásárló rendelt 2017-ben és 2018-ban is?", "en": "How many unique customers placed orders in both 2017 and 2018?"},
+    "sql": "SELECT COUNT(*) AS customers FROM (SELECT c.customer_unique_id FROM customers c JOIN orders o ON o.customer_id = c.customer_id WHERE EXTRACT(YEAR FROM o.order_purchase_timestamp) = 2017 INTERSECT SELECT c.customer_unique_id FROM customers c JOIN orders o ON o.customer_id = c.customer_id WHERE EXTRACT(YEAR FROM o.order_purchase_timestamp) = 2018) AS t;"
+  },
+  {
+    "id": 25,
+    "question": {"hu": "Hány termékhez nem tartozik egyetlen fénykép sem?", "en": "How many products have no photos?"},
+    "sql": "SELECT COUNT(*) AS products FROM products WHERE product_photos_qty = 0 OR product_photos_qty IS NULL;"
+  },
+  {
+    "id": 26,
+    "question": {"hu": "Mennyi az eladók államonkénti teljes bevétele a tételárak alapján?", "en": "What is the total revenue from item prices for each seller state?"},
+    "sql": "SELECT s.seller_state, SUM(oi.price) AS revenue FROM order_items oi JOIN sellers s ON s.seller_id = oi.seller_id GROUP BY s.seller_state ORDER BY revenue DESC;"
+  },
+  {
+    "id": 27,
+    "question": {"hu": "Mely vásárlók adtak kettőnél több 1 pontos értékelést?", "en": "Which customers gave more than two 1-star reviews?"},
+    "sql": "SELECT c.customer_unique_id, COUNT(*) AS one_star_reviews FROM order_reviews r JOIN orders o ON o.order_id = r.order_id JOIN customers c ON c.customer_id = o.customer_id WHERE r.review_score = 1 GROUP BY c.customer_unique_id HAVING COUNT(*) > 2 ORDER BY one_star_reviews DESC;"
+  }
+]

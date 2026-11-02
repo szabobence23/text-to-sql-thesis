@@ -1,0 +1,187 @@
+[
+  {
+    "id": 1,
+    "question": {"hu": "Melyik csapat lett második a 2015-ös konstruktőri bajnokságban?", "en": "Which constructor finished second in the 2015 constructors' championship?"},
+    "sql": "SELECT c.name FROM constructor_standings cs JOIN races r ON r.race_id = cs.race_id JOIN constructors c ON c.constructor_id = cs.constructor_id WHERE r.year = 2015 AND r.round = (SELECT MAX(round) FROM races WHERE year = 2015) AND cs.position = 2;"
+  },
+  {
+    "id": 2,
+    "question": {"hu": "Hány pontot szerzett a 2019-es pilóta-világbajnok abban a szezonban?", "en": "How many points did the 2019 drivers' champion score in that season?"},
+    "sql": "SELECT d.forename, d.surname, ds.points FROM driver_standings ds JOIN races r ON r.race_id = ds.race_id JOIN drivers d ON d.driver_id = ds.driver_id WHERE r.year = 2019 AND r.round = (SELECT MAX(round) FROM races WHERE year = 2019) AND ds.position = 1;"
+  },
+  {
+    "id": 3,
+    "question": {"hu": "Hányadik helyen végzett Sebastian Vettel a pilóták végső pontversenyében 2010 és 2013 között az egyes szezonokban?", "en": "Where did Sebastian Vettel finish in the final drivers' standings of each season from 2010 to 2013?"},
+    "sql": "SELECT r.year, ds.position, ds.points FROM driver_standings ds JOIN races r ON r.race_id = ds.race_id JOIN drivers d ON d.driver_id = ds.driver_id WHERE d.forename = 'Sebastian' AND d.surname = 'Vettel' AND r.year BETWEEN 2010 AND 2013 AND r.round = (SELECT MAX(r2.round) FROM races r2 WHERE r2.year = r.year) ORDER BY r.year;"
+  },
+  {
+    "id": 4,
+    "question": {"hu": "Mely pilóták nyertek legalább három világbajnoki címet a befejezett szezonokban?", "en": "Which drivers have won at least three world championship titles in completed seasons?"},
+    "sql": "SELECT d.forename, d.surname, COUNT(*) AS titles FROM driver_standings ds JOIN races r ON r.race_id = ds.race_id JOIN drivers d ON d.driver_id = ds.driver_id WHERE ds.position = 1 AND r.year < 2026 AND r.round = (SELECT MAX(r2.round) FROM races r2 WHERE r2.year = r.year) GROUP BY d.driver_id, d.forename, d.surname HAVING COUNT(*) >= 3 ORDER BY titles DESC;"
+  },
+  {
+    "id": 5,
+    "question": {"hu": "Ki vezette a pilóták pontversenyét a 2021-es szezon első futama után?", "en": "Who led the drivers' standings after the first race of the 2021 season?"},
+    "sql": "SELECT d.forename, d.surname, ds.points FROM driver_standings ds JOIN races r ON r.race_id = ds.race_id JOIN drivers d ON d.driver_id = ds.driver_id WHERE r.year = 2021 AND r.round = 1 AND ds.position = 1;"
+  },
+  {
+    "id": 6,
+    "question": {"hu": "Hány futamot nyert Kimi Räikkönen pályafutása során?", "en": "How many races did Kimi Räikkönen win in his career?"},
+    "sql": "SELECT COUNT(*) AS wins FROM results res JOIN drivers d ON d.driver_id = res.driver_id WHERE d.forename = 'Kimi' AND d.surname = 'Räikkönen' AND res.position = 1;"
+  },
+  {
+    "id": 7,
+    "question": {"hu": "Hány futamgyőzelmet szereztek az egyes csapatok a 2016-os szezonban?", "en": "How many race wins did each constructor have in the 2016 season?"},
+    "sql": "SELECT c.name, COUNT(*) AS wins FROM results res JOIN races r ON r.race_id = res.race_id JOIN constructors c ON c.constructor_id = res.constructor_id WHERE r.year = 2016 AND res.position = 1 GROUP BY c.name ORDER BY wins DESC;"
+  },
+  {
+    "id": 8,
+    "question": {"hu": "Ki nyerte a 2018-as szezon utolsó futamát, és melyik verseny volt az?", "en": "Which driver won the last race of the 2018 season, and which race was it?"},
+    "sql": "SELECT d.forename, d.surname, r.name FROM results res JOIN races r ON r.race_id = res.race_id JOIN drivers d ON d.driver_id = res.driver_id WHERE r.year = 2018 AND r.round = (SELECT MAX(round) FROM races WHERE year = 2018) AND res.position = 1;"
+  },
+  {
+    "id": 9,
+    "question": {"hu": "Hány futamon végzett Fernando Alonso a második helyen?", "en": "In how many races did Fernando Alonso finish second?"},
+    "sql": "SELECT COUNT(*) AS second_places FROM results res JOIN drivers d ON d.driver_id = res.driver_id WHERE d.forename = 'Fernando' AND d.surname = 'Alonso' AND res.position = 2;"
+  },
+  {
+    "id": 10,
+    "question": {"hu": "Hány pontot szerzett Charles Leclerc a 2022-es főfutamokon, a sprintek nélkül?", "en": "How many points did Charles Leclerc score in the 2022 main races, without the sprints?"},
+    "sql": "SELECT SUM(res.points) AS points FROM results res JOIN races r ON r.race_id = res.race_id JOIN drivers d ON d.driver_id = res.driver_id WHERE r.year = 2022 AND d.forename = 'Charles' AND d.surname = 'Leclerc';"
+  },
+  {
+    "id": 11,
+    "question": {"hu": "Mely pilóták estek ki (R) a 2020-as Osztrák Nagydíjon?", "en": "Which drivers retired (R) from the 2020 Austrian Grand Prix?"},
+    "sql": "SELECT d.forename, d.surname FROM results res JOIN races r ON r.race_id = res.race_id JOIN drivers d ON d.driver_id = res.driver_id WHERE r.year = 2020 AND r.name = 'Austrian Grand Prix' AND res.position_text = 'R';"
+  },
+  {
+    "id": 12,
+    "question": {"hu": "Mely pilóták nyertek futamot úgy, hogy a tizedik rajthelynél hátrébbról indultak?", "en": "Which drivers have won a race after starting behind tenth place on the grid?"},
+    "sql": "SELECT DISTINCT d.forename, d.surname FROM results res JOIN drivers d ON d.driver_id = res.driver_id WHERE res.position = 1 AND res.grid > 10 ORDER BY d.surname;"
+  },
+  {
+    "id": 13,
+    "question": {"hu": "Mely pilóták versenyeztek a Ferrarinál a 2010-es szezonban?", "en": "Which drivers raced for Ferrari in the 2010 season?"},
+    "sql": "SELECT DISTINCT d.forename, d.surname FROM results res JOIN races r ON r.race_id = res.race_id JOIN drivers d ON d.driver_id = res.driver_id JOIN constructors c ON c.constructor_id = res.constructor_id WHERE r.year = 2010 AND c.name = 'Ferrari';"
+  },
+  {
+    "id": 14,
+    "question": {"hu": "Hány dobogós helyezést értek el a McLaren pilótái 2012-ben?", "en": "How many podium finishes did McLaren drivers achieve in 2012?"},
+    "sql": "SELECT COUNT(*) AS podiums FROM results res JOIN races r ON r.race_id = res.race_id JOIN constructors c ON c.constructor_id = res.constructor_id WHERE r.year = 2012 AND c.name = 'McLaren' AND res.position <= 3;"
+  },
+  {
+    "id": 15,
+    "question": {"hu": "Hány kört teljesített Max Verstappen összesen a 2022-es futamokon?", "en": "How many laps did Max Verstappen complete in total in the 2022 races?"},
+    "sql": "SELECT SUM(res.laps) AS laps FROM results res JOIN races r ON r.race_id = res.race_id JOIN drivers d ON d.driver_id = res.driver_id WHERE r.year = 2022 AND d.forename = 'Max' AND d.surname = 'Verstappen';"
+  },
+  {
+    "id": 16,
+    "question": {"hu": "Ki futotta a legtöbbször a futam leggyorsabb körét a 2019-es szezonban?", "en": "Which driver set the fastest lap of the race most often in the 2019 season?"},
+    "sql": "SELECT d.forename, d.surname, COUNT(*) AS fastest_laps FROM results res JOIN races r ON r.race_id = res.race_id JOIN drivers d ON d.driver_id = res.driver_id WHERE r.year = 2019 AND res.rank = 1 GROUP BY d.driver_id, d.forename, d.surname ORDER BY fastest_laps DESC LIMIT 1;"
+  },
+  {
+    "id": 17,
+    "question": {"hu": "Mennyi volt Lando Norris átlagos köride ezredmásodpercben a 2023-as Brit Nagydíjon?", "en": "What was Lando Norris's average lap time in milliseconds at the 2023 British Grand Prix?"},
+    "sql": "SELECT AVG(lt.milliseconds) AS avg_lap_ms FROM lap_times lt JOIN races r ON r.race_id = lt.race_id JOIN drivers d ON d.driver_id = lt.driver_id WHERE r.year = 2023 AND r.name = 'British Grand Prix' AND d.forename = 'Lando' AND d.surname = 'Norris';"
+  },
+  {
+    "id": 18,
+    "question": {"hu": "Hány kört vezetett Charles Leclerc a 2019-es Belga Nagydíjon a köridők szerint?", "en": "How many laps did Charles Leclerc lead at the 2019 Belgian Grand Prix according to the lap times?"},
+    "sql": "SELECT COUNT(*) AS laps_led FROM lap_times lt JOIN races r ON r.race_id = lt.race_id JOIN drivers d ON d.driver_id = lt.driver_id WHERE r.year = 2019 AND r.name = 'Belgian Grand Prix' AND d.forename = 'Charles' AND d.surname = 'Leclerc' AND lt.position = 1;"
+  },
+  {
+    "id": 19,
+    "question": {"hu": "Melyik volt a 2021-es szezon legrövidebb boxkiállása, és ki csinálta?", "en": "What was the shortest pit stop of the 2021 season, and which driver made it?"},
+    "sql": "SELECT d.forename, d.surname, r.name, ps.milliseconds FROM pit_stops ps JOIN races r ON r.race_id = ps.race_id JOIN drivers d ON d.driver_id = ps.driver_id WHERE r.year = 2021 ORDER BY ps.milliseconds LIMIT 1;"
+  },
+  {
+    "id": 20,
+    "question": {"hu": "Hány boxkiállása volt Lewis Hamiltonnak a 2021-es szezonban?", "en": "How many pit stops did Lewis Hamilton make in the 2021 season?"},
+    "sql": "SELECT COUNT(*) AS pit_stops FROM pit_stops ps JOIN races r ON r.race_id = ps.race_id JOIN drivers d ON d.driver_id = ps.driver_id WHERE r.year = 2021 AND d.forename = 'Lewis' AND d.surname = 'Hamilton';"
+  },
+  {
+    "id": 21,
+    "question": {"hu": "Hány pole pozíciót szerzett Lewis Hamilton az időmérő edzéseken 2020-ban?", "en": "How many pole positions did Lewis Hamilton take in qualifying in 2020?"},
+    "sql": "SELECT COUNT(*) AS poles FROM qualifying q JOIN races r ON r.race_id = q.race_id JOIN drivers d ON d.driver_id = q.driver_id WHERE r.year = 2020 AND d.forename = 'Lewis' AND d.surname = 'Hamilton' AND q.position = 1;"
+  },
+  {
+    "id": 22,
+    "question": {"hu": "Ki nyerte a legtöbb sprintversenyt?", "en": "Who has won the most sprint races?"},
+    "sql": "SELECT d.forename, d.surname, COUNT(*) AS sprint_wins FROM sprint_results sr JOIN drivers d ON d.driver_id = sr.driver_id WHERE sr.position = 1 GROUP BY d.driver_id, d.forename, d.surname ORDER BY sprint_wins DESC LIMIT 1;"
+  },
+  {
+    "id": 23,
+    "question": {"hu": "Hányszor esett ki pilóta motorhiba (Engine) miatt a 2010-es szezonban?", "en": "How many times did a driver retire with an engine failure (Engine) in the 2010 season?"},
+    "sql": "SELECT COUNT(*) AS engine_failures FROM results res JOIN races r ON r.race_id = res.race_id JOIN status s ON s.status_id = res.status_id WHERE r.year = 2010 AND s.status = 'Engine';"
+  },
+  {
+    "id": 24,
+    "question": {"hu": "Mely pályák találhatók Olaszországban?", "en": "Which circuits are located in Italy?"},
+    "sql": "SELECT name, location FROM circuits WHERE country = 'Italy' ORDER BY name;"
+  },
+  {
+    "id": 25,
+    "question": {"hu": "Mely pályákon rendeztek futamot 2021-ben, de 2019-ben nem?", "en": "Which circuits hosted a race in 2021 but not in 2019?"},
+    "sql": "SELECT c.name FROM races r JOIN circuits c ON c.circuit_id = r.circuit_id WHERE r.year = 2021 EXCEPT SELECT c.name FROM races r JOIN circuits c ON c.circuit_id = r.circuit_id WHERE r.year = 2019;"
+  },
+  {
+    "id": 26,
+    "question": {"hu": "Mely német pilóták nyertek futamot?", "en": "Which German drivers have won a race?"},
+    "sql": "SELECT DISTINCT d.forename, d.surname FROM results res JOIN drivers d ON d.driver_id = res.driver_id WHERE d.nationality = 'German' AND res.position = 1 ORDER BY d.surname;"
+  },
+  {
+    "id": 27,
+    "question": {"hu": "Hány pilóta mutatkozott be a 2014-es szezonban?", "en": "How many drivers made their debut in the 2014 season?"},
+    "sql": "SELECT COUNT(*) AS debutants FROM (SELECT res.driver_id, MIN(r.year) AS first_year FROM results res JOIN races r ON r.race_id = res.race_id GROUP BY res.driver_id) AS t WHERE t.first_year = 2014;"
+  },
+  {
+    "id": 28,
+    "question": {"hu": "Hány éves volt Max Verstappen az első futamgyőzelmekor?", "en": "How old was Max Verstappen at his first race win?"},
+    "sql": "SELECT EXTRACT(YEAR FROM AGE(MIN(r.date), d.dob)) AS age FROM results res JOIN races r ON r.race_id = res.race_id JOIN drivers d ON d.driver_id = res.driver_id WHERE d.forename = 'Max' AND d.surname = 'Verstappen' AND res.position = 1 GROUP BY d.dob;"
+  },
+  {
+    "id": 29,
+    "question": {"hu": "Mely szezonokban rendeztek 20-nál több futamot?", "en": "Which seasons had more than 20 races?"},
+    "sql": "SELECT year, COUNT(*) AS races FROM races GROUP BY year HAVING COUNT(*) > 20 ORDER BY year;"
+  },
+  {
+    "id": 30,
+    "question": {"hu": "Melyik 2025-ös futamon mérték a legmagasabb pályahőmérsékletet?", "en": "At which 2025 race was the highest track temperature measured?"},
+    "sql": "SELECT r.name, w.track_temp_max FROM weather w JOIN races r ON r.race_id = w.race_id WHERE r.year = 2025 ORDER BY w.track_temp_max DESC LIMIT 1;"
+  },
+  {
+    "id": 31,
+    "question": {"hu": "Ki teljesítette a leghosszabb stintet egyetlen gumiszettel a 2025-ös szezonban?", "en": "Who drove the longest stint on a single set of tyres in the 2025 season?"},
+    "sql": "SELECT d.forename, d.surname, r.name, ts.laps_on_tire FROM tire_stints ts JOIN races r ON r.race_id = ts.race_id JOIN drivers d ON d.driver_id = ts.driver_id WHERE r.year = 2025 ORDER BY ts.laps_on_tire DESC LIMIT 1;"
+  },
+  {
+    "id": 32,
+    "question": {"hu": "Ki volt a leggyorsabb a 2025-ös szezonnyitó első szabadedzésén?", "en": "Who was fastest in the first practice session of the 2025 season opener?"},
+    "sql": "SELECT d.forename, d.surname, pr.best_lap_time FROM practice_results pr JOIN races r ON r.race_id = pr.race_id JOIN drivers d ON d.driver_id = pr.driver_id WHERE r.year = 2025 AND r.round = 1 AND pr.session = 'FP1' AND pr.position = 1;"
+  },
+  {
+    "id": 33,
+    "question": {"hu": "Hány pontot gyűjtött a Williams a 2021-es futamokon a csapateredmények szerint?", "en": "How many points did Williams collect in the 2021 races according to the constructor results?"},
+    "sql": "SELECT SUM(cr.points) AS points FROM constructor_results cr JOIN races r ON r.race_id = cr.race_id JOIN constructors c ON c.constructor_id = cr.constructor_id WHERE r.year = 2021 AND c.name = 'Williams';"
+  },
+  {
+    "id": 34,
+    "question": {"hu": "Mennyi volt Lewis Hamilton átlagos célba érkezési helyezése a 2016-os szezonban, csak a rangsorolt eredményeket számolva?", "en": "What was Lewis Hamilton's average finishing position in the 2016 season, counting only classified finishes?"},
+    "sql": "SELECT AVG(res.position) AS avg_position FROM results res JOIN races r ON r.race_id = res.race_id JOIN drivers d ON d.driver_id = res.driver_id WHERE r.year = 2016 AND d.forename = 'Lewis' AND d.surname = 'Hamilton' AND res.position IS NOT NULL;"
+  },
+  {
+    "id": 35,
+    "question": {"hu": "Mely pilóták versenyeztek a Ferrarinál és a McLarennél is?", "en": "Which drivers have raced for both Ferrari and McLaren?"},
+    "sql": "SELECT d.forename, d.surname FROM drivers d WHERE d.driver_id IN (SELECT res.driver_id FROM results res JOIN constructors c ON c.constructor_id = res.constructor_id WHERE c.name = 'Ferrari') AND d.driver_id IN (SELECT res.driver_id FROM results res JOIN constructors c ON c.constructor_id = res.constructor_id WHERE c.name = 'McLaren') ORDER BY d.surname;"
+  },
+  {
+    "id": 36,
+    "question": {"hu": "Hány futamot rendeztek az egyes pályákon a 2010-es években?", "en": "How many races did each circuit host in the 2010s?"},
+    "sql": "SELECT c.name, COUNT(*) AS races FROM races r JOIN circuits c ON c.circuit_id = r.circuit_id WHERE r.year BETWEEN 2010 AND 2019 GROUP BY c.name ORDER BY races DESC;"
+  },
+  {
+    "id": 37,
+    "question": {"hu": "Melyik pilóta szerezte a legtöbb pontot a 2017-es szezonban a végső pontverseny szerint, és hány győzelme volt?", "en": "Which driver had the most points in the final 2017 standings, and how many wins did he have?"},
+    "sql": "SELECT d.forename, d.surname, ds.points, ds.wins FROM driver_standings ds JOIN races r ON r.race_id = ds.race_id JOIN drivers d ON d.driver_id = ds.driver_id WHERE r.year = 2017 AND r.round = (SELECT MAX(round) FROM races WHERE year = 2017) ORDER BY ds.points DESC LIMIT 1;"
+  }
+]

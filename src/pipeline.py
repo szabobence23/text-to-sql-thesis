@@ -5,6 +5,7 @@ import psycopg
 
 from database import execute_query_with_columns, get_connection
 from dataset_loader import DEFAULT_DATASET, load_dataset
+from examples import ExampleRetriever, format_sql_examples, load_examples
 from llm import (
     Answer,
     LLMSettings,
@@ -20,6 +21,7 @@ from llm import (
 )
 from retrieval import RETRIEVAL_METHODS, SchemaRetriever, parse_table_choice
 from schema import fetch_column_values, get_schema
+from sql_tables import format_tables
 from sql_validator import validate_sql
 
 
@@ -94,6 +96,22 @@ class PipelineConfig:
     # Safety net: the top N retrieved tables stay in the prompt whatever
     # the selection drops (0 = only the model's choice).
     selection_keep_top: int = 0
+    # Table selection with solved examples (datasets/<name>/examples.json):
+    # the selection_examples examples most similar to the question (by
+    # embedding) are shown in the selection prompt with the tables their
+    # SQL used; with example_candidates those tables also join the
+    # candidates, so a table the search missed can still be chosen.
+    selection_examples: int = 0
+    example_candidates: bool = False
+    # False: the examples only add their tables to the candidates and are
+    # not shown to the model (it copied the examples' tables).
+    selection_examples_in_prompt: bool = True
+    # Dynamic few-shot: the sql_examples solved examples most similar to
+    # the question (examples.json, by embedding) go into the SQL prompt
+    # with their SQL, so the model can follow a pattern (the final
+    # standings of a season, wins from results) instead of a hint.
+    # Needs make_example_retriever. 0 = no examples (baseline).
+    sql_examples: int = 0
     # Ollama embedding model for "dense" and "hybrid".
     embedding_model: str = "bge-m3"
     # Reject queries that call a dangerous function (see
@@ -125,6 +143,16 @@ class PipelineConfig:
                 "table_selection filters retrieved tables: use it with "
                 f"schema_retrieval {' / '.join(RETRIEVAL_METHODS)}"
             )
+        if self.selection_examples < 0:
+            raise ValueError("selection_examples must not be negative")
+        if self.sql_examples < 0:
+            raise ValueError("sql_examples must not be negative")
+        if self.selection_examples and not self.table_selection:
+            raise ValueError("selection_examples are shown in table selection: use it with table_selection")
+        if self.example_candidates and not self.selection_examples:
+            raise ValueError("example_candidates adds the tables of the examples: use it with selection_examples")
+        if self.selection_examples and not (self.selection_examples_in_prompt or self.example_candidates):
+            raise ValueError("examples neither shown nor used as candidates: enable one of them")
 
     def to_dict(self):
         return asdict(self)
@@ -150,6 +178,35 @@ def open_connection(config: PipelineConfig):
     return get_connection(load_dataset(config.dataset).db_name)
 
 
+def _embedding_digest(config: PipelineConfig):
+    digest = model_digest(config.embedding_model)
+    if digest is None:
+        raise RuntimeError(
+            f"Embedding model {config.embedding_model} is not pulled: "
+            f"ollama pull {config.embedding_model}"
+        )
+    return digest
+
+
+def _example_retriever(config: PipelineConfig, digest):
+    dataset = load_dataset(config.dataset)
+    items = load_examples(dataset.examples_path)
+    if not items:
+        raise RuntimeError(f"Solved examples need {dataset.examples_path}")
+    return ExampleRetriever(items, config.embedding_model, digest)
+
+
+def make_example_retriever(config: PipelineConfig):
+    """
+    The example retriever for sql_examples (dynamic few-shot), or None
+    when it is off. Built once per dataset and passed to every
+    run_pipeline call.
+    """
+    if not config.sql_examples:
+        return None
+    return _example_retriever(config, _embedding_digest(config))
+
+
 def make_schema_retriever(conn, config: PipelineConfig):
     """
     The retriever for config.schema_retrieval, or None for "full" and
@@ -158,24 +215,23 @@ def make_schema_retriever(conn, config: PipelineConfig):
     if config.schema_retrieval not in RETRIEVAL_METHODS:
         return None
 
+    dataset = load_dataset(config.dataset)
     digest = None
-    if config.schema_retrieval != "bm25":
-        digest = model_digest(config.embedding_model)
-        if digest is None:
-            raise RuntimeError(
-                f"Embedding model {config.embedding_model} is not pulled: "
-                f"ollama pull {config.embedding_model}"
-            )
+    if config.schema_retrieval != "bm25" or config.selection_examples:
+        digest = _embedding_digest(config)
+
+    examples = _example_retriever(config, digest) if config.selection_examples else None
 
     return SchemaRetriever(
         conn,
-        load_dataset(config.dataset).schemas,
+        dataset.schemas,
         config.schema_retrieval,
         k=config.retrieval_k,
         fk_expansion=config.retrieval_fk_expansion,
         with_descriptions=config.retrieval_descriptions,
         embedding_model=config.embedding_model,
         digest=digest,
+        examples=examples,
     )
 
 
@@ -243,6 +299,10 @@ class PipelineResult:
     # from, and its answer (schema_tables are then its choice + bridges).
     candidate_tables: list | None = None
     table_selection: TableSelection | None = None
+    # With selection_examples: the examples shown ({id, question, score}).
+    examples: list | None = None
+    # With sql_examples: the examples in the SQL prompt ({id, question, score}).
+    sql_examples: list | None = None
 
     @property
     def correction_rounds(self):
@@ -289,7 +349,14 @@ def _run_attempt(conn, generation, generation_s, config):
     return attempt, columns, rows
 
 
-def run_pipeline(conn, question, schema, config: PipelineConfig, retriever=None) -> PipelineResult:
+def _examples_text(matches):
+    return "\n".join(
+        f'- "{m.question}" -> {", ".join(format_tables(m.example.tables))}' for m in matches
+    )
+
+
+def run_pipeline(conn, question, schema, config: PipelineConfig, retriever=None,
+                 example_retriever=None) -> PipelineResult:
     """
     Question -> (schema retrieval) -> SQL generation -> validation ->
     execution, and when the query fails validation or execution, up to
@@ -301,12 +368,14 @@ def run_pipeline(conn, question, schema, config: PipelineConfig, retriever=None)
     exactly what runs. Invalid SQL is never executed.
     schema must come from load_schema with the same config. With a
     retrieval mode, retriever (from make_schema_retriever) chooses the
-    tables instead and schema is not used.
+    tables instead and schema is not used. With sql_examples,
+    example_retriever (from make_example_retriever) finds the solved
+    examples for the SQL prompt.
     """
     attempts = []
     pre_timings = {}
     schema_tables = retrieval_query = translation = None
-    candidate_tables = selection = None
+    candidate_tables = selection = examples = None
 
     if config.schema_retrieval in RETRIEVAL_METHODS:
         if retriever is None:
@@ -329,9 +398,23 @@ def run_pipeline(conn, question, schema, config: PipelineConfig, retriever=None)
         if config.table_selection:
             start = time.perf_counter()
             candidate_tables = schema_tables
+            examples_text = None
+            if config.selection_examples:
+                # Searched with the original question: the examples have
+                # Hungarian and English wordings.
+                matches = retriever.examples.similar(question, config.selection_examples)
+                examples = [
+                    {"id": m.example.id, "question": m.question, "score": round(m.score, 4)}
+                    for m in matches
+                ]
+                if config.selection_examples_in_prompt:
+                    examples_text = _examples_text(matches)
+                if config.example_candidates:
+                    extra = [t for m in matches for t in m.example.tables if t not in candidate_tables]
+                    candidate_tables = candidate_tables + list(dict.fromkeys(extra))
             selection = choose_tables(
                 question, retriever.describe(candidate_tables), config.llm,
-                config.table_selection_style,
+                config.table_selection_style, examples_text,
             )
             chosen = parse_table_choice(selection.text, candidate_tables)
             # Candidates are ranked best first, so these are the top hits.
@@ -345,8 +428,22 @@ def run_pipeline(conn, question, schema, config: PipelineConfig, retriever=None)
 
         schema = load_schema(conn, config, tables=schema_tables)
 
+    sql_examples = examples_text = None
+    if config.sql_examples:
+        if example_retriever is None:
+            raise ValueError("sql_examples needs an example retriever from make_example_retriever")
+        start = time.perf_counter()
+        # The original question: the examples have Hungarian and English
+        # wordings, and the closest one is shown.
+        matches = example_retriever.similar(question, config.sql_examples)
+        pre_timings["examples_s"] = time.perf_counter() - start
+        sql_examples = [
+            {"id": m.example.id, "question": m.question, "score": round(m.score, 4)} for m in matches
+        ]
+        examples_text = format_sql_examples(matches)
+
     start = time.perf_counter()
-    generation = generate_sql(question, schema, config.llm)
+    generation = generate_sql(question, schema, config.llm, examples_text)
     attempt, columns, rows = _run_attempt(conn, generation, time.perf_counter() - start, config)
     attempts.append(attempt)
 
@@ -354,7 +451,7 @@ def run_pipeline(conn, question, schema, config: PipelineConfig, retriever=None)
         failed = [(a.raw_response, a.error) for a in attempts]
 
         start = time.perf_counter()
-        generation = correct_sql(question, schema, failed, config.llm)
+        generation = correct_sql(question, schema, failed, config.llm, examples_text)
         attempt, columns, rows = _run_attempt(conn, generation, time.perf_counter() - start, config)
         attempts.append(attempt)
 
@@ -391,4 +488,6 @@ def run_pipeline(conn, question, schema, config: PipelineConfig, retriever=None)
         translation=translation,
         candidate_tables=candidate_tables,
         table_selection=selection,
+        examples=examples,
+        sql_examples=sql_examples,
     )

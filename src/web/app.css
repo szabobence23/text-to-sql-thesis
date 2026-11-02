@@ -253,8 +253,30 @@ svg { width: 18px; height: 18px; flex: none; display: block; }
 .dataset-option.selected .dataset-check { visibility: visible; }
 .dataset-hint { padding: 8px 12px 4px; border-top: 1px solid var(--border); margin-top: 4px; font-size: 12px; color: var(--faint); }
 
-.language {
+.debug-toggle {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 11px 0 9px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--faint);
+  font-size: 13px;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.debug-toggle svg { width: 15px; height: 15px; }
+.debug-toggle:hover { color: var(--text); }
+.debug-toggle[aria-pressed="true"] {
+  color: #ffcf85;
+  border-color: rgba(255, 184, 77, 0.35);
+  background: rgba(255, 184, 77, 0.08);
+}
+
+.language {
+  margin-left: 8px;
   display: flex;
   gap: 4px;
   padding: 4px;
@@ -380,6 +402,27 @@ svg { width: 18px; height: 18px; flex: none; display: block; }
   background: var(--surface-2);
 }
 .answer.failed { color: var(--muted); }
+
+.doubt {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 8px;
+  padding: 4px 11px 4px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 184, 77, 0.3);
+  background: rgba(255, 184, 77, 0.08);
+  color: #ffcf85;
+  font-size: 12.5px;
+}
+.doubt svg { width: 14px; height: 14px; }
+
+.preview { margin-top: 12px; }
+.preview .table-wrap { max-height: 220px; }
+
+.debug-section { display: flex; flex-direction: column; gap: 8px; }
+.debug-title { font-size: 12px; font-weight: 500; color: var(--faint); text-transform: uppercase; letter-spacing: 0.04em; }
+.chip.debug { border-color: rgba(255, 184, 77, 0.25); color: #e8c48f; }
 
 .thinking {
   display: flex;

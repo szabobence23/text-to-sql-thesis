@@ -63,30 +63,78 @@ def test_format_result_empty():
     assert text == "id"
 
 
-def test_generate_answer_prompt(monkeypatch):
-    sent = {}
+def fake_replies(monkeypatch, *replies):
+    """chat() returns the replies in order; records every prompt sent."""
+    sent = []
 
-    class Response:
-        class message:
-            content = "  A válasz 42.\n"
-        prompt_eval_count = 3
-        eval_count = 2
-
-    def fake_chat(model, messages, options):
-        sent["messages"] = messages
+    def response(content):
+        class Response:
+            class message:
+                pass
+            prompt_eval_count = 3
+            eval_count = 2
+        Response.message.content = content
         return Response
 
+    queue = list(replies)
+
+    def fake_chat(model, messages, options):
+        sent.append(messages)
+        return response(queue.pop(0))
+
     monkeypatch.setattr(llm, "chat", fake_chat)
+    return sent
+
+
+def test_generate_answer_checks_then_answers(monkeypatch):
+    sent = fake_replies(monkeypatch, "OK", "  A válasz 42.\n")
 
     answer = llm.generate_answer(
         "Hány rendelés van?", "SELECT count(*) AS n FROM orders",
         ["n"], [(42,)], 50, llm.LLMSettings(),
     )
 
-    prompt = sent["messages"][0]["content"]
-    assert len(sent["messages"]) == 1
+    check, prompt = (messages[0]["content"] for messages in sent)
+    assert all(len(messages) == 1 for messages in sent)
+    # The check sees the question and the result, not the SQL.
+    assert "Hány rendelés van?" in check and "n\n42" in check
+    assert "SELECT count(*)" not in check
     assert "Hány rendelés van?" in prompt
     assert "SELECT count(*) AS n FROM orders" in prompt
     assert "(1 row)" in prompt
     assert "n\n42" in prompt
-    assert answer == llm.Answer(text="A válasz 42.", prompt_tokens=3, completion_tokens=2)
+    assert "NOTE" not in prompt
+    assert answer == llm.Answer(text="A válasz 42.", prompt_tokens=6, completion_tokens=4, doubtful=False)
+
+
+def test_doubtful_result_is_noted_in_the_answer_prompt(monkeypatch):
+    sent = fake_replies(monkeypatch, "DOUBTFUL", "Az eredmény 17 futam vezetőit sorolja fel.")
+
+    answer = llm.generate_answer(
+        "Ki nyerte a 2007-es bajnokságot?", "SELECT ...",
+        ["name"], [("Räikkönen",), ("Alonso",), ("Hamilton",)], 50, llm.LLMSettings(),
+    )
+
+    assert "NOTE: A check found" in sent[1][0]["content"]
+    assert answer.doubtful is True
+
+
+@pytest.mark.parametrize(
+    "reply, doubtful",
+    [("OK", False), ("DOUBTFUL", True), ("**DOUBTFUL**", True), ("doubtful.", True), ("I cannot tell.", None)],
+)
+def test_check_verdict(reply, doubtful):
+    assert llm.check_verdict(reply) == doubtful
+
+
+def test_sql_prompt_is_unchanged_without_examples():
+    assert llm.sql_prompt("q", "schema") == llm.PROMPT_TEMPLATE.format(schema="schema", question="q")
+
+
+def test_sql_examples_come_right_before_the_question():
+    examples = "Question: x\nSQL: SELECT 1;"
+    prompt = llm.sql_prompt("q", "schema", examples)
+
+    assert prompt.index("schema") < prompt.index("Question: x") < prompt.index("USER QUESTION:")
+    block = llm.SQL_EXAMPLES_BLOCK.format(examples=examples)
+    assert prompt.replace(block, "") == llm.sql_prompt("q", "schema")

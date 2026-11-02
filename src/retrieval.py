@@ -249,6 +249,32 @@ def ollama_embed(model, texts):
     return [list(v) for v in response.embeddings]
 
 
+def cached_embeddings(embed, model, texts, cache_dir=None, digest=None):
+    """
+    Embeddings of fixed texts (tables, example questions), cached on disk
+    keyed by the model digest and the texts, so a re-pulled model or
+    changed texts never reuse stale vectors.
+    """
+    if cache_dir is None:
+        return embed(model, texts)
+
+    # Where the model ran is part of the key: CPU and GPU arithmetic
+    # can give slightly different vectors.
+    key = hashlib.sha256(
+        "\n".join([model, digest or "", json.dumps(EMBEDDING_OPTIONS), *texts]).encode("utf-8")
+    ).hexdigest()
+    path = os.path.join(cache_dir, f"{key}.json")
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as file:
+            return json.load(file)
+
+    vectors = embed(model, texts)
+    os.makedirs(cache_dir, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as file:
+        json.dump(vectors, file)
+    return vectors
+
+
 class EmbeddingRetriever:
     """
     Ranks tables by cosine similarity between the question's and each
@@ -267,27 +293,8 @@ class EmbeddingRetriever:
         self.model = model
         self.embed = embed
         texts = [d.prose(with_descriptions) for d in docs]
-        self.vectors = [_normalize(v) for v in self._table_vectors(texts, cache_dir, digest)]
-
-    def _table_vectors(self, texts, cache_dir, digest):
-        if cache_dir is None:
-            return self.embed(self.model, texts)
-
-        # Where the model ran is part of the key: CPU and GPU arithmetic
-        # can give slightly different vectors.
-        key = hashlib.sha256(
-            "\n".join([self.model, digest or "", json.dumps(EMBEDDING_OPTIONS), *texts]).encode("utf-8")
-        ).hexdigest()
-        path = os.path.join(cache_dir, f"{key}.json")
-        if os.path.exists(path):
-            with open(path, encoding="utf-8") as file:
-                return json.load(file)
-
-        vectors = self.embed(self.model, texts)
-        os.makedirs(cache_dir, exist_ok=True)
-        with open(path, "w", encoding="utf-8") as file:
-            json.dump(vectors, file)
-        return vectors
+        vectors = cached_embeddings(embed, model, texts, cache_dir, digest)
+        self.vectors = [_normalize(v) for v in vectors]
 
     def rank_many(self, questions):
         rankings = []
@@ -440,7 +447,8 @@ class SchemaRetriever:
     """
 
     def __init__(self, conn, schemas, method, k=5, fk_expansion=True,
-                 with_descriptions=False, embedding_model="bge-m3", digest=None):
+                 with_descriptions=False, embedding_model="bge-m3", digest=None,
+                 examples=None):
         self.docs = load_table_docs(conn, schemas)
         self.graph = foreign_key_graph(conn, schemas)
         self.ranker = build_ranker(
@@ -449,6 +457,8 @@ class SchemaRetriever:
         )
         self.k = k
         self.fk_expansion = fk_expansion
+        # examples.ExampleRetriever for table selection with examples, or None.
+        self.examples = examples
 
     def select(self, question):
         """(schema, table) keys for the prompt, best first, bridges last."""

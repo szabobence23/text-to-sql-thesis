@@ -1,0 +1,237 @@
+[
+  {
+    "id": 1,
+    "question": {"hu": "Melyik munkakörben dolgozik a legtöbb alkalmazott?", "en": "Which job titles are held by the most employees?"},
+    "sql": "SELECT jobtitle, COUNT(*) AS employees FROM humanresources.employee GROUP BY jobtitle ORDER BY employees DESC LIMIT 5;"
+  },
+  {
+    "id": 2,
+    "question": {"hu": "Mennyi a havi fizetéses (salaried) alkalmazottak átlagos betegszabadság-órája?", "en": "What is the average number of sick leave hours of salaried employees?"},
+    "sql": "SELECT AVG(sickleavehours) AS avg_sick_leave_hours FROM humanresources.employee WHERE salariedflag = true;"
+  },
+  {
+    "id": 3,
+    "question": {"hu": "Kik dolgoznak jelenleg az Engineering (mérnöki) osztályon?", "en": "Which employees currently work in the Engineering department?"},
+    "sql": "SELECT p.firstname, p.lastname FROM humanresources.employeedepartmenthistory edh JOIN humanresources.department d ON d.departmentid = edh.departmentid JOIN person.person p ON p.businessentityid = edh.businessentityid WHERE d.name = 'Engineering' AND edh.enddate IS NULL;"
+  },
+  {
+    "id": 4,
+    "question": {"hu": "Melyik alkalmazottnak a legmagasabb a jelenlegi órabére?", "en": "Which employee has the highest current hourly pay rate?"},
+    "sql": "SELECT p.firstname, p.lastname, eph.rate FROM humanresources.employeepayhistory eph JOIN person.person p ON p.businessentityid = eph.businessentityid WHERE eph.ratechangedate = (SELECT MAX(e2.ratechangedate) FROM humanresources.employeepayhistory e2 WHERE e2.businessentityid = eph.businessentityid) ORDER BY eph.rate DESC LIMIT 1;"
+  },
+  {
+    "id": 5,
+    "question": {"hu": "Mikor kezdődnek és végződnek a műszakok?", "en": "What are the start and end times of the shifts?"},
+    "sql": "SELECT name, starttime, endtime FROM humanresources.shift ORDER BY starttime;"
+  },
+  {
+    "id": 6,
+    "question": {"hu": "Hány álláspályázó szerepel az adatbázisban?", "en": "How many job candidates are in the database?"},
+    "sql": "SELECT COUNT(*) AS candidates FROM humanresources.jobcandidate;"
+  },
+  {
+    "id": 7,
+    "question": {"hu": "Hány bolti kapcsolattartó (store contact) személy szerepel?", "en": "How many people are stored as store contacts?"},
+    "sql": "SELECT COUNT(*) AS store_contacts FROM person.person WHERE persontype = 'SC';"
+  },
+  {
+    "id": 8,
+    "question": {"hu": "Melyik országnak van a legtöbb állama vagy tartománya?", "en": "Which country or region has the most states and provinces?"},
+    "sql": "SELECT cr.name, COUNT(*) AS provinces FROM person.stateprovince sp JOIN person.countryregion cr ON cr.countryregioncode = sp.countryregioncode GROUP BY cr.name ORDER BY provinces DESC LIMIT 1;"
+  },
+  {
+    "id": 9,
+    "question": {"hu": "Hány cím van Seattle városában?", "en": "How many addresses are in the city of Seattle?"},
+    "sql": "SELECT COUNT(*) AS addresses FROM person.address WHERE city = 'Seattle';"
+  },
+  {
+    "id": 10,
+    "question": {"hu": "Hány személy kért e-mailes promóciós ajánlatokat?", "en": "How many people have opted in to email promotions?"},
+    "sql": "SELECT COUNT(*) AS people FROM person.person WHERE emailpromotion > 0;"
+  },
+  {
+    "id": 11,
+    "question": {"hu": "Melyik telefonszámtípus a leggyakoribb?", "en": "Which phone number type is the most common?"},
+    "sql": "SELECT pnt.name, COUNT(*) AS phones FROM person.personphone pp JOIN person.phonenumbertype pnt ON pnt.phonenumbertypeid = pp.phonenumbertypeid GROUP BY pnt.name ORDER BY phones DESC LIMIT 1;"
+  },
+  {
+    "id": 12,
+    "question": {"hu": "Melyik városokban van a legtöbb bolt a székhelyük (Main Office) címe alapján?", "en": "In which cities are the most stores located, based on their main office address?"},
+    "sql": "SELECT a.city, COUNT(*) AS stores FROM sales.store s JOIN person.businessentityaddress bea ON bea.businessentityid = s.businessentityid JOIN person.addresstype at ON at.addresstypeid = bea.addresstypeid JOIN person.address a ON a.addressid = bea.addressid WHERE at.name = 'Main Office' GROUP BY a.city ORDER BY stores DESC LIMIT 5;"
+  },
+  {
+    "id": 13,
+    "question": {"hu": "Melyik termék-alkategóriában van a legtöbb termék?", "en": "Which product subcategory contains the most products?"},
+    "sql": "SELECT psc.name, COUNT(*) AS products FROM production.product p JOIN production.productsubcategory psc ON psc.productsubcategoryid = p.productsubcategoryid GROUP BY psc.name ORDER BY products DESC LIMIT 1;"
+  },
+  {
+    "id": 14,
+    "question": {"hu": "Mely termékek tartoznak a Clothing (ruházat) kategóriába?", "en": "Which products belong to the Clothing category?"},
+    "sql": "SELECT p.name FROM production.product p JOIN production.productsubcategory psc ON psc.productsubcategoryid = p.productsubcategoryid JOIN production.productcategory pc ON pc.productcategoryid = psc.productcategoryid WHERE pc.name = 'Clothing' ORDER BY p.name;"
+  },
+  {
+    "id": 15,
+    "question": {"hu": "Hány darab termék van raktáron az egyes raktárhelyszíneken?", "en": "How many units are in stock at each inventory location?"},
+    "sql": "SELECT l.name, SUM(pi.quantity) AS units FROM production.productinventory pi JOIN production.location l ON l.locationid = pi.locationid GROUP BY l.name ORDER BY units DESC;"
+  },
+  {
+    "id": 16,
+    "question": {"hu": "Melyik termékből van a legtöbb raktáron, az összes helyszínt összesítve?", "en": "Which product has the largest total stock across all locations?"},
+    "sql": "SELECT p.name, SUM(pi.quantity) AS units FROM production.productinventory pi JOIN production.product p ON p.productid = pi.productid GROUP BY p.name ORDER BY units DESC LIMIT 1;"
+  },
+  {
+    "id": 17,
+    "question": {"hu": "Melyik termékről írták a legtöbb értékelést, és mennyi az átlagos pontszáma?", "en": "Which product received the most reviews, and what is its average rating?"},
+    "sql": "SELECT p.name, COUNT(*) AS reviews, AVG(pr.rating) AS avg_rating FROM production.productreview pr JOIN production.product p ON p.productid = pr.productid GROUP BY p.name ORDER BY reviews DESC LIMIT 1;"
+  },
+  {
+    "id": 18,
+    "question": {"hu": "Hány munkarendelésnél keletkezett selejt az egyes selejtezési okok szerint?", "en": "How many work orders had scrap for each scrap reason?"},
+    "sql": "SELECT sr.name, COUNT(*) AS work_orders FROM production.workorder wo JOIN production.scrapreason sr ON sr.scrapreasonid = wo.scrapreasonid GROUP BY sr.name ORDER BY work_orders DESC;"
+  },
+  {
+    "id": 19,
+    "question": {"hu": "Melyik termékmodellhez tartozik a legtöbb termék?", "en": "Which product model has the most products?"},
+    "sql": "SELECT pm.name, COUNT(*) AS products FROM production.product p JOIN production.productmodel pm ON pm.productmodelid = p.productmodelid GROUP BY pm.name ORDER BY products DESC LIMIT 1;"
+  },
+  {
+    "id": 20,
+    "question": {"hu": "Mely termékeknek van legalább három bejegyzése a listaár-történetben?", "en": "Which products have at least three entries in their list price history?"},
+    "sql": "SELECT p.name, COUNT(*) AS price_entries FROM production.productlistpricehistory h JOIN production.product p ON p.productid = h.productid GROUP BY p.name HAVING COUNT(*) >= 3 ORDER BY p.name;"
+  },
+  {
+    "id": 21,
+    "question": {"hu": "Mennyi a munkarendelések gyártási lépéseinek tényleges költsége helyszínenként?", "en": "What is the total actual cost of work order routing steps at each location?"},
+    "sql": "SELECT l.name, SUM(wr.actualcost) AS actual_cost FROM production.workorderrouting wr JOIN production.location l ON l.locationid = wr.locationid GROUP BY l.name ORDER BY actual_cost DESC;"
+  },
+  {
+    "id": 22,
+    "question": {"hu": "Mely alkatrészeket használják a legtöbb összeszerelt termékben?", "en": "Which components are used in the most product assemblies?"},
+    "sql": "SELECT p.name, COUNT(DISTINCT b.productassemblyid) AS assemblies FROM production.billofmaterials b JOIN production.product p ON p.productid = b.componentid WHERE b.productassemblyid IS NOT NULL GROUP BY p.name ORDER BY assemblies DESC LIMIT 5;"
+  },
+  {
+    "id": 23,
+    "question": {"hu": "Hány tranzakció van a tranzakciótörténetben típusonként?", "en": "How many transactions of each type are in the transaction history?"},
+    "sql": "SELECT transactiontype, COUNT(*) AS transactions FROM production.transactionhistory GROUP BY transactiontype;"
+  },
+  {
+    "id": 24,
+    "question": {"hu": "Hány beszerzési rendelés vár még jóváhagyásra (pending státuszú)?", "en": "How many purchase orders are still pending?"},
+    "sql": "SELECT COUNT(*) AS pending_orders FROM purchasing.purchaseorderheader WHERE status = 1;"
+  },
+  {
+    "id": 25,
+    "question": {"hu": "Mely termékekből utasították vissza a legtöbb darabot a beszerzéseknél?", "en": "Which products had the most rejected units in purchase orders?"},
+    "sql": "SELECT p.name, SUM(pod.rejectedqty) AS rejected FROM purchasing.purchaseorderdetail pod JOIN production.product p ON p.productid = pod.productid GROUP BY p.name ORDER BY rejected DESC LIMIT 5;"
+  },
+  {
+    "id": 26,
+    "question": {"hu": "Mely beszállítók preferáltak és egyben aktívak is?", "en": "Which vendors are both preferred and active?"},
+    "sql": "SELECT name FROM purchasing.vendor WHERE preferredvendorstatus = true AND activeflag = true ORDER BY name;"
+  },
+  {
+    "id": 27,
+    "question": {"hu": "Mennyi az egyes beszállítóktól érkezett beszerzési rendelések átlagos szállítási díja?", "en": "What is the average freight charge of the purchase orders from each vendor?"},
+    "sql": "SELECT v.name, AVG(poh.freight) AS avg_freight FROM purchasing.purchaseorderheader poh JOIN purchasing.vendor v ON v.businessentityid = poh.vendorid GROUP BY v.name ORDER BY avg_freight DESC;"
+  },
+  {
+    "id": 28,
+    "question": {"hu": "Mely beszállítóknál a legrövidebb az átlagos szállítási átfutási idő?", "en": "Which vendors have the shortest average lead time?"},
+    "sql": "SELECT v.name, AVG(pv.averageleadtime) AS lead_time FROM purchasing.productvendor pv JOIN purchasing.vendor v ON v.businessentityid = pv.businessentityid GROUP BY v.name ORDER BY lead_time LIMIT 5;"
+  },
+  {
+    "id": 29,
+    "question": {"hu": "Hány értékesítési rendelés van az egyes rendelési státuszokban?", "en": "How many sales orders are there in each order status?"},
+    "sql": "SELECT status, COUNT(*) AS orders FROM sales.salesorderheader GROUP BY status ORDER BY status;"
+  },
+  {
+    "id": 30,
+    "question": {"hu": "Melyik akciónak a legnagyobb a kedvezmény-százaléka?", "en": "Which special offer has the highest discount percentage?"},
+    "sql": "SELECT description, discountpct FROM sales.specialoffer ORDER BY discountpct DESC LIMIT 1;"
+  },
+  {
+    "id": 31,
+    "question": {"hu": "Mely termékek szerepelnek a legtöbb akcióban?", "en": "Which products are included in the most special offers?"},
+    "sql": "SELECT p.name, COUNT(*) AS offers FROM sales.specialofferproduct sop JOIN production.product p ON p.productid = sop.productid GROUP BY p.name ORDER BY offers DESC LIMIT 5;"
+  },
+  {
+    "id": 32,
+    "question": {"hu": "Milyen vásárlási okot adtak meg leggyakrabban a rendeléseknél?", "en": "Which sales reasons are given most often for orders?"},
+    "sql": "SELECT sr.name, COUNT(*) AS orders FROM sales.salesorderheadersalesreason x JOIN sales.salesreason sr ON sr.salesreasonid = x.salesreasonid GROUP BY sr.name ORDER BY orders DESC;"
+  },
+  {
+    "id": 33,
+    "question": {"hu": "Melyik értékesítő felel a legtöbb boltért?", "en": "Which salesperson is responsible for the most stores?"},
+    "sql": "SELECT p.firstname, p.lastname, COUNT(*) AS stores FROM sales.store s JOIN person.person p ON p.businessentityid = s.salespersonid GROUP BY p.firstname, p.lastname ORDER BY stores DESC LIMIT 1;"
+  },
+  {
+    "id": 34,
+    "question": {"hu": "Melyik értékesítőnek a legnagyobb az összesített értékesítési kvótája a kvótatörténet alapján?", "en": "Which salesperson has the highest total sales quota in the quota history?"},
+    "sql": "SELECT p.firstname, p.lastname, SUM(q.salesquota) AS total_quota FROM sales.salespersonquotahistory q JOIN person.person p ON p.businessentityid = q.businessentityid GROUP BY p.firstname, p.lastname ORDER BY total_quota DESC LIMIT 1;"
+  },
+  {
+    "id": 35,
+    "question": {"hu": "Melyik pénznemhez rögzítették a legtöbb árfolyamot?", "en": "For which currency are the most exchange rates recorded?"},
+    "sql": "SELECT c.name, COUNT(*) AS rates FROM sales.currencyrate cr JOIN sales.currency c ON c.currencycode = cr.tocurrencycode GROUP BY c.name ORDER BY rates DESC LIMIT 1;"
+  },
+  {
+    "id": 36,
+    "question": {"hu": "Melyik államban vagy tartományban a legmagasabb a forgalmi adó kulcsa?", "en": "Which state or province has the highest sales tax rate?"},
+    "sql": "SELECT sp.name, st.taxrate FROM sales.salestaxrate st JOIN person.stateprovince sp ON sp.stateprovinceid = st.stateprovinceid ORDER BY st.taxrate DESC LIMIT 1;"
+  },
+  {
+    "id": 37,
+    "question": {"hu": "Összesen hány darab termék van a bevásárlókosarakban?", "en": "How many items are in shopping carts in total?"},
+    "sql": "SELECT SUM(quantity) AS items FROM sales.shoppingcartitem;"
+  },
+  {
+    "id": 38,
+    "question": {"hu": "Melyik ország értékesítési területei érték el tavaly a legnagyobb forgalmat?", "en": "Which country's sales territories had the highest sales last year?"},
+    "sql": "SELECT cr.name, SUM(st.saleslastyear) AS sales_last_year FROM sales.salesterritory st JOIN person.countryregion cr ON cr.countryregioncode = st.countryregioncode GROUP BY cr.name ORDER BY sales_last_year DESC LIMIT 1;"
+  },
+  {
+    "id": 39,
+    "question": {"hu": "Hány vásárló tartozik az egyes értékesítési területekhez?", "en": "How many customers belong to each sales territory?"},
+    "sql": "SELECT st.name, COUNT(*) AS customers FROM sales.customer c JOIN sales.salesterritory st ON st.territoryid = c.territoryid GROUP BY st.name ORDER BY customers DESC;"
+  },
+  {
+    "id": 40,
+    "question": {"hu": "Mely boltok adták le a legtöbb rendelést?", "en": "Which stores placed the most sales orders?"},
+    "sql": "SELECT s.name, COUNT(*) AS orders FROM sales.salesorderheader soh JOIN sales.customer c ON c.customerid = soh.customerid JOIN sales.store s ON s.businessentityid = c.storeid GROUP BY s.name ORDER BY orders DESC LIMIT 5;"
+  },
+  {
+    "id": 41,
+    "question": {"hu": "Ki adta le a legnagyobb értékű egyedi rendelést a fizetendő összeg alapján?", "en": "Who placed the single largest sales order, by total due?"},
+    "sql": "SELECT p.firstname, p.lastname, soh.totaldue FROM sales.salesorderheader soh JOIN sales.customer c ON c.customerid = soh.customerid JOIN person.person p ON p.businessentityid = c.personid ORDER BY soh.totaldue DESC LIMIT 1;"
+  },
+  {
+    "id": 42,
+    "question": {"hu": "Hány bankkártya van kártyatípusonként?", "en": "How many credit cards are stored of each card type?"},
+    "sql": "SELECT cardtype, COUNT(*) AS cards FROM sales.creditcard GROUP BY cardtype ORDER BY cards DESC;"
+  },
+  {
+    "id": 43,
+    "question": {"hu": "Melyik értékesítő melyik értékesítési területen dolgozik?", "en": "Which salespeople work in which sales territory?"},
+    "sql": "SELECT p.firstname, p.lastname, st.name AS territory FROM sales.salesperson sp JOIN person.person p ON p.businessentityid = sp.businessentityid JOIN sales.salesterritory st ON st.territoryid = sp.territoryid ORDER BY territory;"
+  },
+  {
+    "id": 44,
+    "question": {"hu": "Hány cím van címtípusonként?", "en": "How many addresses are there of each address type?"},
+    "sql": "SELECT at.name, COUNT(*) AS addresses FROM person.businessentityaddress bea JOIN person.addresstype at ON at.addresstypeid = bea.addresstypeid GROUP BY at.name ORDER BY addresses DESC;"
+  },
+  {
+    "id": 45,
+    "question": {"hu": "Mi az e-mail-címe a Sales osztály jelenlegi dolgozóinak?", "en": "What are the email addresses of the employees currently in the Sales department?"},
+    "sql": "SELECT p.firstname, p.lastname, ea.emailaddress FROM humanresources.employeedepartmenthistory edh JOIN humanresources.department d ON d.departmentid = edh.departmentid JOIN person.person p ON p.businessentityid = edh.businessentityid JOIN person.emailaddress ea ON ea.businessentityid = p.businessentityid WHERE d.name = 'Sales' AND edh.enddate IS NULL;"
+  },
+  {
+    "id": 46,
+    "question": {"hu": "Mely termékkategóriákban a legmagasabb az átlagos listaár?", "en": "Which product categories have the highest average list price?"},
+    "sql": "SELECT pc.name, AVG(p.listprice) AS avg_list_price FROM production.product p JOIN production.productsubcategory psc ON psc.productsubcategoryid = p.productsubcategoryid JOIN production.productcategory pc ON pc.productcategoryid = psc.productcategoryid GROUP BY pc.name ORDER BY avg_list_price DESC;"
+  },
+  {
+    "id": 47,
+    "question": {"hu": "Mely termékekből rendeltek a legnagyobb mennyiséget a beszállítóktól?", "en": "Which products were ordered from vendors in the largest quantities?"},
+    "sql": "SELECT p.name, SUM(pod.orderqty) AS ordered FROM purchasing.purchaseorderdetail pod JOIN production.product p ON p.productid = pod.productid GROUP BY p.name ORDER BY ordered DESC LIMIT 5;"
+  }
+]

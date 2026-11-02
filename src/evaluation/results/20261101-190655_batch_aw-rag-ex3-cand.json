@@ -1,0 +1,108 @@
+{
+  "batch": {
+    "run_name": "aw-rag-ex3-cand",
+    "started_at": "2026-11-01T19:06:55",
+    "git": {
+      "commit": "ae0358c9d8654e9153d7aa95e9aabad5b3131074",
+      "dirty": true
+    },
+    "evaluator_args": [
+      "--rag",
+      "--selection-examples",
+      "3",
+      "--example-candidates"
+    ],
+    "files": [
+      "20261101-190656_adventureworks-hu_qwen2.5-coder-7b_aw-rag-ex3-cand-r1.json",
+      "20261101-190939_adventureworks-en_qwen2.5-coder-7b_aw-rag-ex3-cand-r1.json"
+    ]
+  },
+  "summary": [
+    {
+      "dataset": "adventureworks",
+      "language": "en",
+      "setup": "javítás=0 hintek=be qwen2.5-coder:7b séma=dense k=10 szűrés példák=3 +példatáblák",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.92,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.64,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.72,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.7857142857142857,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.3333333333333333,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 2.0754820720001588,
+      "mean_prompt_tokens": 319.1,
+      "dirty_runs": 1,
+      "mismatched_fields": [],
+      "files": [
+        "20261101-190939_adventureworks-en_qwen2.5-coder-7b_aw-rag-ex3-cand-r1.json"
+      ]
+    },
+    {
+      "dataset": "adventureworks",
+      "language": "hu",
+      "setup": "javítás=0 hintek=be qwen2.5-coder:7b séma=dense k=10 szűrés példák=3 +példatáblák",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.52,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.52,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.5,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.16666666666666666,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 2.4326321580004877,
+      "mean_prompt_tokens": 381.26,
+      "dirty_runs": 1,
+      "mismatched_fields": [],
+      "files": [
+        "20261101-190656_adventureworks-hu_qwen2.5-coder-7b_aw-rag-ex3-cand-r1.json"
+      ]
+    }
+  ]
+}

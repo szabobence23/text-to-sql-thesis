@@ -1,0 +1,279 @@
+{
+  "batch": {
+    "run_name": "fewshot-ref",
+    "started_at": "2026-11-02T12:43:59",
+    "git": {
+      "commit": "ae0358c9d8654e9153d7aa95e9aabad5b3131074",
+      "dirty": true
+    },
+    "evaluator_args": [],
+    "files": [
+      "20261102-124400_f1-hu_qwen2.5-coder-7b_fewshot-ref-r1.json",
+      "20261102-124552_f1-en_qwen2.5-coder-7b_fewshot-ref-r1.json",
+      "20261102-124748_olist-hu_qwen2.5-coder-7b_fewshot-ref-r1.json",
+      "20261102-124953_olist-en_qwen2.5-coder-7b_fewshot-ref-r1.json",
+      "20261102-125213_adventureworks-hu_qwen2.5-coder-7b_fewshot-ref-r1.json",
+      "20261102-125437_adventureworks-en_qwen2.5-coder-7b_fewshot-ref-r1.json"
+    ]
+  },
+  "summary": [
+    {
+      "dataset": "adventureworks",
+      "language": "en",
+      "setup": "javítás=0 hintek=be qwen2.5-coder:7b",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.8,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.56,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.62,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.6428571428571429,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.25,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 2.8189420319953933,
+      "mean_prompt_tokens": 4758.8,
+      "dirty_runs": 1,
+      "mismatched_fields": [],
+      "files": [
+        "20261102-125437_adventureworks-en_qwen2.5-coder-7b_fewshot-ref-r1.json"
+      ]
+    },
+    {
+      "dataset": "adventureworks",
+      "language": "hu",
+      "setup": "javítás=0 hintek=be qwen2.5-coder:7b",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.86,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.46,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.48,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 0.9,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.4642857142857143,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.16666666666666666,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 2.8433184919983616,
+      "mean_prompt_tokens": 4774.18,
+      "dirty_runs": 1,
+      "mismatched_fields": [],
+      "files": [
+        "20261102-125213_adventureworks-hu_qwen2.5-coder-7b_fewshot-ref-r1.json"
+      ]
+    },
+    {
+      "dataset": "f1",
+      "language": "en",
+      "setup": "javítás=0 hintek=be qwen2.5-coder:7b",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.88,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.5,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.58,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 0.8888888888888888,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.6551724137931034,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.16666666666666666,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 2.2835760139941703,
+      "mean_prompt_tokens": 1463.82,
+      "dirty_runs": 1,
+      "mismatched_fields": [],
+      "files": [
+        "20261102-124552_f1-en_qwen2.5-coder-7b_fewshot-ref-r1.json"
+      ]
+    },
+    {
+      "dataset": "f1",
+      "language": "hu",
+      "setup": "javítás=0 hintek=be qwen2.5-coder:7b",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.9,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.46,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.48,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.4482758620689655,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.16666666666666666,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 2.196503878000658,
+      "mean_prompt_tokens": 1474.14,
+      "dirty_runs": 1,
+      "mismatched_fields": [],
+      "files": [
+        "20261102-124400_f1-hu_qwen2.5-coder-7b_fewshot-ref-r1.json"
+      ]
+    },
+    {
+      "dataset": "olist",
+      "language": "en",
+      "setup": "javítás=0 hintek=be qwen2.5-coder:7b",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.86,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.4,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.54,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 0.8888888888888888,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.6296296296296297,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.14285714285714285,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 2.594719534000615,
+      "mean_prompt_tokens": 662.28,
+      "dirty_runs": 1,
+      "mismatched_fields": [],
+      "files": [
+        "20261102-124953_olist-en_qwen2.5-coder-7b_fewshot-ref-r1.json"
+      ]
+    },
+    {
+      "dataset": "olist",
+      "language": "hu",
+      "setup": "javítás=0 hintek=be qwen2.5-coder:7b",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.76,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.42,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.52,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 0.8888888888888888,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.5185185185185185,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.2857142857142857,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 2.331657549994998,
+      "mean_prompt_tokens": 676.58,
+      "dirty_runs": 1,
+      "mismatched_fields": [],
+      "files": [
+        "20261102-124748_olist-hu_qwen2.5-coder-7b_fewshot-ref-r1.json"
+      ]
+    }
+  ]
+}

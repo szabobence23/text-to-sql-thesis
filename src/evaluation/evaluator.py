@@ -7,7 +7,7 @@ import re
 import subprocess
 import sys
 from collections import defaultdict
-from dataclasses import asdict, replace
+from dataclasses import asdict
 
 # src library
 SRC_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -30,6 +30,8 @@ from llm import (
     ANSWER_PROMPT_SHA256,
     CORRECTION_PROMPT_SHA256,
     PROMPT_SHA256,
+    SQL_EXAMPLES_SHA256,
+    TABLE_SELECTION_EXAMPLES_SHA256,
     TABLE_SELECTION_PROMPT_SHA256S,
     TRANSLATE_PROMPT_SHA256,
     LLMSettings,
@@ -40,6 +42,7 @@ from pipeline import (
     SCHEMA_RETRIEVAL_MODES,
     PipelineConfig,
     load_schema,
+    make_example_retriever,
     make_schema_retriever,
     open_connection,
     run_pipeline,
@@ -105,7 +108,7 @@ def run_ground_truths(conn, test_cases):
     return expected
 
 
-def evaluate_test_case(conn, schema, config, case, expected_results, retriever=None):
+def evaluate_test_case(conn, schema, config, case, expected_results, retriever=None, examples=None):
     ordered_flags = [is_order_sensitive(sql) for sql in accepted_sqls(case)]
     gold_tables = tables_in_sql(case["ground_truth_sql"])
 
@@ -117,7 +120,7 @@ def evaluate_test_case(conn, schema, config, case, expected_results, retriever=N
     else:
         schema_tables = None  # every table
 
-    result = run_pipeline(conn, case["question"], schema, config, retriever)
+    result = run_pipeline(conn, case["question"], schema, config, retriever, examples)
 
     # A retriever chose the tables inside the pipeline.
     if result.schema_tables is not None:
@@ -161,6 +164,10 @@ def evaluate_test_case(conn, schema, config, case, expected_results, retriever=N
             gold_tables <= set(result.candidate_tables) if result.candidate_tables is not None else None
         ),
         "table_selection": asdict(result.table_selection) if result.table_selection else None,
+        # With selection_examples: the solved examples shown ({id, question, score}).
+        "examples": result.examples,
+        # With sql_examples: the solved examples in the SQL prompt.
+        "sql_examples": result.sql_examples,
         "expected_result": expected_results[0],
         # Which accepted answer matched: 0 = the ground truth,
         # 1.. = an alternative_sql; None = no match.
@@ -315,6 +322,28 @@ def parse_args():
         default=0,
         help="a kereső első N találata a szűréstől függetlenül a promptban marad",
     )
+    parser.add_argument(
+        "--selection-examples",
+        type=int,
+        default=0,
+        help="a táblaszűrő promptba a kérdéshez leghasonlóbb N megoldott példa (examples.json) a tábláival",
+    )
+    parser.add_argument(
+        "--example-candidates",
+        action="store_true",
+        help="a példák táblái a jelöltek közé is bekerülnek (a kereső által kihagyott tábla is választható)",
+    )
+    parser.add_argument(
+        "--sql-examples",
+        type=int,
+        default=0,
+        help="dinamikus few-shot: a kérdéshez leghasonlóbb N megoldott példa (examples.json) SQL-lel az SQL-promptban",
+    )
+    parser.add_argument(
+        "--no-examples-in-prompt",
+        action="store_true",
+        help="a példák nem kerülnek a szűrőpromptba, csak a tábláik a jelöltek közé (--example-candidates)",
+    )
     parser.add_argument("--embedding-model", default="bge-m3")
     parser.add_argument(
         "--no-function-blocklist",
@@ -360,7 +389,9 @@ def main():
         num_ctx=args.num_ctx,
     )
 
-    config = PipelineConfig(
+    # --rag replaces the retrieval switches before the config is checked,
+    # so it combines with the switches built on it (--selection-examples).
+    config_args = dict(
         dataset=args.dataset,
         llm=llm_settings,
         schema_hints=not args.no_schema_hints,
@@ -374,13 +405,18 @@ def main():
         table_selection=args.table_selection,
         table_selection_style=args.selection_style,
         selection_keep_top=args.selection_keep_top,
+        selection_examples=args.selection_examples,
+        example_candidates=args.example_candidates,
+        selection_examples_in_prompt=not args.no_examples_in_prompt,
+        sql_examples=args.sql_examples,
         embedding_model=args.embedding_model,
         block_functions=not args.no_function_blocklist,
         max_correction_rounds=args.correction_rounds,
         natural_language_answer=args.answer,
     )
     if args.rag:
-        config = replace(config, **RAG_SETTINGS)
+        config_args.update(RAG_SETTINGS)
+    config = PipelineConfig(**config_args)
 
     dataset = load_dataset(config.dataset)
     cases_path = args.cases or dataset.test_cases_path(args.language)
@@ -396,6 +432,7 @@ def main():
     try:
         schema = load_schema(conn, config)
         retriever = make_schema_retriever(conn, config)
+        examples = make_example_retriever(config)
         expected = run_ground_truths(conn, test_cases)
 
         print(
@@ -408,7 +445,7 @@ def main():
 
         for case in test_cases:
             result = evaluate_test_case(
-                conn, schema, config, case, expected[case["id"]], retriever
+                conn, schema, config, case, expected[case["id"]], retriever, examples
             )
             results.append(result)
 
@@ -487,12 +524,22 @@ def main():
             "model_digest": model_digest(config.llm.model),
             "embedding_model_digest": (
                 model_digest(config.embedding_model)
-                if config.schema_retrieval in ("dense", "hybrid") else None
+                if config.schema_retrieval in ("dense", "hybrid") or config.selection_examples
+                or config.sql_examples else None
             ),
             "translate_prompt_sha256": TRANSLATE_PROMPT_SHA256 if config.translate_for_retrieval else None,
             "table_selection_prompt_sha256": (
                 TABLE_SELECTION_PROMPT_SHA256S[config.table_selection_style]
                 if config.table_selection else None
+            ),
+            "table_selection_examples_sha256": (
+                TABLE_SELECTION_EXAMPLES_SHA256
+                if config.selection_examples and config.selection_examples_in_prompt else None
+            ),
+            "sql_examples_sha256": SQL_EXAMPLES_SHA256 if config.sql_examples else None,
+            "examples_sha256": (
+                sha256(open(dataset.examples_path, encoding="utf-8").read())
+                if config.selection_examples or config.sql_examples else None
             ),
             "prompt_sha256": PROMPT_SHA256,
             "correction_prompt_sha256": CORRECTION_PROMPT_SHA256,

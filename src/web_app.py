@@ -144,6 +144,27 @@ def answer_question(dataset, question, language="hu"):
         "table_count": engine.table_count,
         "correction_rounds": result.correction_rounds,
         "seconds": round(seconds, 1),
+        # The answer model's verdict on the result (None: no verdict).
+        "doubtful": result.answer.doubtful if result.answer else None,
+        # For the debug view: what happened step by step.
+        "attempts": [{"sql": a.sql, "error": a.error} for a in result.attempts],
+        "candidate_tables": (
+            format_tables(result.candidate_tables) if result.candidate_tables is not None else None
+        ),
+        "timings": {key: round(value, 2) for key, value in result.timings.items()},
+        "tokens": {
+            "prompt": result.prompt_tokens,
+            "completion": result.completion_tokens,
+            "answer": (
+                result.answer.prompt_tokens + result.answer.completion_tokens if result.answer else 0
+            ),
+        },
+        "config": {
+            "schema_retrieval": engine.config.schema_retrieval,
+            "table_selection": engine.config.table_selection,
+            "max_correction_rounds": engine.config.max_correction_rounds,
+            "model": engine.config.llm.model,
+        },
     }
 
     if not result.executed:

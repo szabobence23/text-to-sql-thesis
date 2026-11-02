@@ -86,6 +86,11 @@ class Dataset:
         return os.path.join(self.path, "attacks.json")
 
     @property
+    def examples_path(self) -> str:
+        """Solved example questions the prompts may show (optional, examples.py)."""
+        return os.path.join(self.path, "examples.json")
+
+    @property
     def schema_sql_path(self) -> str:
         return os.path.join(self.path, "schema.sql")
 

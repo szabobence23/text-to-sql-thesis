@@ -6,6 +6,7 @@ from pipeline import (
     RAG_SETTINGS,
     PipelineConfig,
     load_schema,
+    make_example_retriever,
     make_schema_retriever,
     open_connection,
     run_pipeline,
@@ -46,6 +47,12 @@ def parse_args():
         help="az LLM kiválasztja a jelöltek közül a szükséges táblákat (javasolt: --retrieval-k 10)",
     )
     parser.add_argument("--translate-for-retrieval", action="store_true", help="keresés előtt angolra fordítja a kérdést")
+    parser.add_argument(
+        "--sql-examples",
+        type=int,
+        default=0,
+        help="dinamikus few-shot: N leghasonlóbb megoldott példa az SQL-promptban (0 = kikapcsolva)",
+    )
     return parser.parse_args()
 
 
@@ -61,6 +68,7 @@ def main():
         column_values=args.column_values,
         retrieval_k=args.retrieval_k,
         table_selection=args.table_selection,
+        sql_examples=args.sql_examples,
     )
     if args.rag:
         config = replace(config, **RAG_SETTINGS)
@@ -69,13 +77,19 @@ def main():
     try:
         schema = load_schema(conn, config)
         retriever = make_schema_retriever(conn, config)
+        examples = make_example_retriever(config)
 
         question = args.question
 
         print("Kérdés:")
         print(question)
 
-        result = run_pipeline(conn, question, schema, config, retriever)
+        result = run_pipeline(conn, question, schema, config, retriever, examples)
+
+        if result.sql_examples:
+            print(f"\nPéldák a promptban ({len(result.sql_examples)}):")
+            for example in result.sql_examples:
+                print(f"  #{example['id']} ({example['score']:.2f}) {example['question']}")
 
         if result.schema_tables is not None:
             if result.translation:
