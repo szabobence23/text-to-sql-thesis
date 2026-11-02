@@ -1,0 +1,107 @@
+{
+  "batch": {
+    "run_name": "fewshot-3-rag",
+    "started_at": "2026-11-02T14:29:31",
+    "git": {
+      "commit": "9cdfa28b42181a65e7c8d2988d01eb41fa173ba9",
+      "dirty": true
+    },
+    "evaluator_args": [
+      "--sql-examples",
+      "3",
+      "--rag"
+    ],
+    "files": [
+      "20261102-142932_adventureworks-hu_qwen2.5-coder-7b_fewshot-3-rag-r1.json",
+      "20261102-143220_adventureworks-en_qwen2.5-coder-7b_fewshot-3-rag-r1.json"
+    ]
+  },
+  "summary": [
+    {
+      "dataset": "adventureworks",
+      "language": "en",
+      "setup": "javítás=0 hintek=be qwen2.5-coder:7b séma=dense k=10 szűrés few-shot=3",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.92,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.82,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.86,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.9285714285714286,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.5833333333333334,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 2.177812006000895,
+      "mean_prompt_tokens": 528.8,
+      "dirty_runs": 1,
+      "mismatched_fields": [],
+      "files": [
+        "20261102-143220_adventureworks-en_qwen2.5-coder-7b_fewshot-3-rag-r1.json"
+      ]
+    },
+    {
+      "dataset": "adventureworks",
+      "language": "hu",
+      "setup": "javítás=0 hintek=be qwen2.5-coder:7b séma=dense k=10 szűrés few-shot=3",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.94,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.64,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.68,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.6071428571428571,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.5833333333333334,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 2.293649987997487,
+      "mean_prompt_tokens": 579.9,
+      "dirty_runs": 1,
+      "mismatched_fields": [],
+      "files": [
+        "20261102-142932_adventureworks-hu_qwen2.5-coder-7b_fewshot-3-rag-r1.json"
+      ]
+    }
+  ]
+}

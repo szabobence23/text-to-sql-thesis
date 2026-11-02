@@ -177,6 +177,7 @@ const STRINGS = {
     steps: "Lépések és költség",
     tokens: (sql, answer) => `Token: SQL ${sql}, válasz ${answer}`,
     setup: "Beállítás",
+    fewShot: "Példák a promptban (few-shot)",
   },
   en: {
     locale: "en-GB",
@@ -219,6 +220,7 @@ const STRINGS = {
     steps: "Steps and cost",
     tokens: (sql, answer) => `Tokens: SQL ${sql}, answer ${answer}`,
     setup: "Setup",
+    fewShot: "Examples in the prompt (few-shot)",
   },
 };
 const LANGUAGES = Object.keys(STRINGS);
@@ -605,6 +607,11 @@ function buildDetails(panel, details) {
     else if (details.row_count > details.rows.length) note = t("firstRows", details.rows.length, details.row_count);
     else note = t("rows", details.row_count);
     panel.append(el("div", "table-note", escapeHtml(note)));
+  }
+
+  if (state.debug && details.sql_examples && details.sql_examples.length) {
+    const examples = details.sql_examples.map((e) => `#${e.id} (${e.score.toFixed(2)}) ${e.question}`);
+    panel.append(debugSection(t("fewShot"), chipRow(examples, "debug")));
   }
 
   if (state.debug) {

@@ -34,6 +34,7 @@ from pipeline import (
     PipelineConfig,
     app_config,
     load_schema,
+    make_example_retriever,
     make_schema_retriever,
     open_connection,
     run_pipeline,
@@ -75,6 +76,7 @@ class Engine:
     conn: psycopg.Connection
     schema: str
     retriever: object
+    example_retriever: object  # few-shot examples, None when off
     table_count: int
     # One query at a time: one connection, and Ollama runs one model anyway.
     lock: threading.Lock
@@ -100,6 +102,7 @@ def get_engine(dataset) -> Engine:
             conn=conn,
             schema=load_schema(conn, config),
             retriever=make_schema_retriever(conn, config),
+            example_retriever=make_example_retriever(config),
             table_count=table_count,
             lock=threading.Lock(),
         )
@@ -124,7 +127,10 @@ def answer_question(dataset, question, language="hu"):
         engine = get_engine(dataset)
         start = time.perf_counter()
         with engine.lock:
-            result = run_pipeline(engine.conn, question, engine.schema, engine.config, engine.retriever)
+            result = run_pipeline(
+                engine.conn, question, engine.schema, engine.config,
+                engine.retriever, engine.example_retriever,
+            )
         seconds = time.perf_counter() - start
 
     except psycopg.OperationalError as error:
@@ -148,6 +154,7 @@ def answer_question(dataset, question, language="hu"):
         "doubtful": result.answer.doubtful if result.answer else None,
         # For the debug view: what happened step by step.
         "attempts": [{"sql": a.sql, "error": a.error} for a in result.attempts],
+        "sql_examples": result.sql_examples,
         "candidate_tables": (
             format_tables(result.candidate_tables) if result.candidate_tables is not None else None
         ),
@@ -163,6 +170,7 @@ def answer_question(dataset, question, language="hu"):
             "schema_retrieval": engine.config.schema_retrieval,
             "table_selection": engine.config.table_selection,
             "max_correction_rounds": engine.config.max_correction_rounds,
+            "sql_examples": engine.config.sql_examples,
             "model": engine.config.llm.model,
         },
     }

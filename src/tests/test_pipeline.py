@@ -30,15 +30,24 @@ def test_unknown_schema_retrieval_is_rejected():
         PipelineConfig(schema_retrieval="magic")
 
 
-def test_app_config_uses_rag_only_on_large_schemas():
-    small = pipeline.app_config("olist", table_count=9)
-    large = pipeline.app_config("adventureworks", table_count=68)
+def test_app_config_uses_few_shot_and_rag_on_large_schemas():
+    with_examples = pipeline.app_config("adventureworks", table_count=68)
+    small_with_examples = pipeline.app_config("olist", table_count=9)
+    small = pipeline.app_config("sales", table_count=4)
+    # A large schema without examples.json: RAG only.
+    large = pipeline.app_config("sales", table_count=68)
 
+    assert with_examples.sql_examples == pipeline.APP_SQL_EXAMPLES
+    assert with_examples.schema_retrieval == pipeline.RAG_SETTINGS["schema_retrieval"]
+    assert small_with_examples.sql_examples == pipeline.APP_SQL_EXAMPLES
+    # With few-shot, RAG helped on small schemas too.
+    assert small_with_examples.schema_retrieval == pipeline.RAG_SETTINGS["schema_retrieval"]
+    assert small.sql_examples == 0
     assert small.schema_retrieval == "full"
-    assert not small.table_selection
+    assert large.sql_examples == 0
     assert large.schema_retrieval == pipeline.RAG_SETTINGS["schema_retrieval"]
     assert large.table_selection
-    for config in (small, large):
+    for config in (with_examples, small_with_examples, small, large):
         assert config.max_correction_rounds == 2
         assert config.natural_language_answer
 

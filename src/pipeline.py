@@ -1,3 +1,4 @@
+import os
 import time
 from dataclasses import asdict, dataclass, field, replace
 
@@ -47,6 +48,14 @@ RAG_SETTINGS = {
 # (68 tables) it did (53% -> 61% relaxed EX). F1 (17 tables) was not
 # measured with retrieval, so it stays on the full schema.
 RAG_MIN_TABLES = 30
+
+# Solved examples in the web UI's SQL prompt (dynamic few-shot), where the
+# dataset has examples.json. Of 300 questions: none 161, 1 example 178,
+# 3: 205, 5: 214 (F1 66 -> 74 from 3 to 5). With few-shot, RAG helped on
+# the small schemas too, unlike without it (5 examples + 2 corrections,
+# without / with RAG: F1 76 / 80, Olist 73 / 76, AdventureWorks - / 79;
+# each not significant alone), so with examples RAG is on everywhere.
+APP_SQL_EXAMPLES = 5
 
 
 @dataclass(frozen=True)
@@ -161,15 +170,21 @@ class PipelineConfig:
 def app_config(dataset, table_count) -> PipelineConfig:
     """
     The web UI's configuration: the best measured setup with the current
-    model. Two correction rounds and a natural-language answer, like the
-    console demo, plus RAG_SETTINGS on schemas of RAG_MIN_TABLES or more.
+    model, every measured improvement together. Two correction rounds and
+    a natural-language answer, like the console demo; where the dataset
+    has examples.json, APP_SQL_EXAMPLES few-shot examples and RAG_SETTINGS;
+    without examples, RAG_SETTINGS only on schemas of RAG_MIN_TABLES or
+    more (alone, RAG did not help on Olist's 9 tables).
     """
     config = PipelineConfig(
         dataset=dataset,
         max_correction_rounds=2,
         natural_language_answer=True,
     )
-    if table_count >= RAG_MIN_TABLES:
+    has_examples = os.path.exists(load_dataset(dataset).examples_path)
+    if has_examples:
+        config = replace(config, sql_examples=APP_SQL_EXAMPLES)
+    if has_examples or table_count >= RAG_MIN_TABLES:
         config = replace(config, **RAG_SETTINGS)
     return config
 
