@@ -5,20 +5,17 @@ Web UI: a chat over the databases.
 
 A small FastAPI server (JSON API + the static page in src/web/), another
 front-end of pipeline.run_pipeline like main.py. Every question is
-answered on its own (no memory of earlier questions), with
-pipeline.app_config. History is kept in a local SQLite file (chat_store).
-Listens on 127.0.0.1 only: the app runs generated SQL on the databases.
+answered on its own (no memory of earlier questions), by the shared
+engines of service.py (pipeline.app_config). History is kept in a local
+SQLite file (chat_store). Listens on 127.0.0.1 only: the app runs
+generated SQL on the databases.
 """
 
 import argparse
-import datetime
 import json
 import os
 import threading
-import time
 import webbrowser
-from dataclasses import dataclass
-from decimal import Decimal
 from typing import Literal
 
 import psycopg
@@ -28,18 +25,10 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
+import service
 from chat_store import ChatStore
 from dataset_loader import DEFAULT_DATASET, DEFAULT_LANGUAGE, available_datasets, load_dataset
-from pipeline import (
-    PipelineConfig,
-    app_config,
-    load_schema,
-    make_example_retriever,
-    make_schema_retriever,
-    open_connection,
-    run_pipeline,
-)
-from schema import fetch_catalog
+from service import jsonable
 from sql_tables import format_tables
 
 
@@ -69,72 +58,12 @@ MESSAGES = {
 }
 
 
-@dataclass
-class Engine:
-    """Everything one dataset needs; built once, shared by every request."""
-    config: PipelineConfig
-    conn: psycopg.Connection
-    schema: str
-    retriever: object
-    example_retriever: object  # few-shot examples, None when off
-    table_count: int
-    # One query at a time: one connection, and Ollama runs one model anyway.
-    lock: threading.Lock
-
-
-_engines = {}
-_engines_lock = threading.Lock()
-
-
-def get_engine(dataset) -> Engine:
-    with _engines_lock:
-        engine = _engines.get(dataset)
-        if engine is not None and not (engine.conn.closed or engine.conn.broken):
-            return engine
-
-        conn = open_connection(PipelineConfig(dataset=dataset))
-        columns, _ = fetch_catalog(conn, load_dataset(dataset).schemas)
-        table_count = len({(schema, table) for schema, table, _, _ in columns})
-        config = app_config(dataset, table_count)
-
-        engine = Engine(
-            config=config,
-            conn=conn,
-            schema=load_schema(conn, config),
-            retriever=make_schema_retriever(conn, config),
-            example_retriever=make_example_retriever(config),
-            table_count=table_count,
-            lock=threading.Lock(),
-        )
-        _engines[dataset] = engine
-        return engine
-
-
-def jsonable(value):
-    if value is None or isinstance(value, (bool, int, float, str)):
-        return value
-    if isinstance(value, Decimal):
-        return float(value)
-    if isinstance(value, (datetime.date, datetime.datetime, datetime.time)):
-        return value.isoformat()
-    return str(value)
-
-
 def answer_question(dataset, question, language="hu"):
     """(answer text, details shown under 'Details'); language: the UI's."""
     messages = MESSAGES[language]
     try:
-        engine = get_engine(dataset)
-        start = time.perf_counter()
-        with engine.lock:
-            result = run_pipeline(
-                engine.conn, question, engine.schema, engine.config,
-                engine.retriever, engine.example_retriever,
-            )
-        seconds = time.perf_counter() - start
-
+        engine, result, seconds = service.ask(dataset, question)
     except psycopg.OperationalError as error:
-        _engines.pop(dataset, None)
         return messages["no_database"], {"error": str(error)}
     except Exception as error:
         return messages["error"], {"error": str(error)}
