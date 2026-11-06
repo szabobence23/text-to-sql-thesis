@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "text-to-sql": {
+      "type": "stdio",
+      "command": ".venv/Scripts/python.exe",
+      "args": ["src/mcp_server.py"]
+    }
+  }
+}

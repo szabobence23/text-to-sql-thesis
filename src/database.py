@@ -40,12 +40,12 @@ def execute_query(conn, sql):
     return execute_query_with_columns(conn, sql)[1]
 
 
-def execute_query_with_columns(conn, sql):
-    """Like execute_query, but returns (column names, rows)."""
+def execute_query_with_columns(conn, sql, max_rows=None):
+    """Like execute_query, but returns (column names, rows); at most max_rows rows if given."""
     try:
         with conn.cursor() as cur:
             cur.execute(sql)
-            rows = cur.fetchall()
+            rows = cur.fetchall() if max_rows is None else cur.fetchmany(max_rows)
             columns = [column.name for column in cur.description]
             return columns, rows
     finally:

@@ -17,3 +17,5 @@ typing-inspection==0.4.4
 tzdata==2026.4
 fastapi==0.161.1
 uvicorn==0.54.0
+mcp==2.3.0
+mcp-types==2.3.0

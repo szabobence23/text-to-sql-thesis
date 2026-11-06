@@ -4,6 +4,12 @@ layers of the pipeline and records which layer stopped each attack.
 
 No LLM is involved: the attacks are hand-written SQL, so the result is
 deterministic and shows what the defences do regardless of the model.
+
+--via-mcp sends every attack through the MCP server's run_sql tool instead
+(the real server as a stdio subprocess, as a client would start it) and
+reads the stopping layer from the tool's error; each attack is also run
+directly, and the two layers are compared. The server builds the dataset's
+full engine, so this mode needs Ollama (for the embedding model's digest).
 """
 
 import argparse
@@ -17,7 +23,9 @@ import time
 SRC_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(SRC_DIR)
 
+import anyio
 import psycopg
+from mcp import Client, StdioServerParameters
 
 from database import DB_USER, execute_query
 from dataset_loader import DEFAULT_DATASET, REPO_DIR, available_datasets, load_dataset
@@ -67,9 +75,48 @@ def find_stopping_layer(conn, sql, block_functions):
     return "none", ""
 
 
-def output_path(output_dir, started_at, dataset, run_name):
+MCP_SERVER = os.path.join(SRC_DIR, "mcp_server.py")
+
+# How the errors of service.run_sql (via sql_validator) begin, per layer.
+ERROR_PREFIXES = {
+    "structure": "Structural validation failed",
+    "function": "Function validation failed",
+    "schema": "Schema validation failed",
+    "database": "Execution failed",
+}
+
+
+def layer_of_tool_result(result):
+    """(layer, error) of a run_sql call: the layer its error names."""
+    if not result.is_error:
+        return "none", ""
+    text = result.content[0].text
+    for layer, prefix in ERROR_PREFIXES.items():
+        if prefix in text:
+            return layer, text[text.index(prefix) + len(prefix):].lstrip(": ").strip()
+    # Not a rejected query (e.g. the server cannot build its engine).
+    raise RuntimeError(f"Unexpected run_sql error: {text}")
+
+
+def stopping_layers_via_mcp(dataset, attacks):
+    """[(layer, error, seconds)] of every attack sent to the MCP server's run_sql."""
+    server = StdioServerParameters(command=sys.executable, args=[MCP_SERVER])
+
+    async def run():
+        layers = []
+        async with Client(server, read_timeout_seconds=120) as client:
+            for attack in attacks:
+                start = time.perf_counter()
+                result = await client.call_tool("run_sql", {"sql": attack["sql"], "database": dataset})
+                layers.append((*layer_of_tool_result(result), time.perf_counter() - start))
+        return layers
+
+    return anyio.run(run)
+
+
+def output_path(output_dir, started_at, dataset, run_name, via_mcp=False):
     stamp = started_at.strftime("%Y%m%d-%H%M%S")
-    name = f"{stamp}_{dataset}-attacks"
+    name = f"{stamp}_{dataset}-attacks" + ("-mcp" if via_mcp else "")
     if run_name:
         name += f"_{run_name}"
     return os.path.join(output_dir, f"{name}.json")
@@ -88,9 +135,17 @@ def parse_args():
         action="store_true",
         help="a függvény-tiltólista nélkül: mi állítja meg ekkor a támadásokat?",
     )
+    parser.add_argument(
+        "--via-mcp",
+        action="store_true",
+        help="az MCP-szerver run_sql eszközén át (stdio), a közvetlen futtatással összevetve",
+    )
     parser.add_argument("--output-dir", default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--run-name", default="", help="rövid név a fájlnévbe")
-    return parser.parse_args()
+    args = parser.parse_args()
+    if args.via_mcp and args.no_function_blocklist:
+        parser.error("az MCP-szerver mindig a tiltólistával fut: a --via-mcp és a --no-function-blocklist együtt nem használható")
+    return args
 
 
 def main():
@@ -115,16 +170,20 @@ def main():
 
     print(
         f"Támadások: {dataset.name} ({len(attacks)} db), "
-        f"függvény-tiltólista: {blocklist_label}\n"
+        f"függvény-tiltólista: {blocklist_label}"
+        + (", az MCP-szerver run_sql eszközén át" if args.via_mcp else "")
+        + "\n"
     )
+
+    mcp_layers = stopping_layers_via_mcp(dataset.name, attacks) if args.via_mcp else None
 
     results = []
     conn = open_connection(config)
 
     try:
-        for attack in attacks:
+        for i, attack in enumerate(attacks):
             start = time.perf_counter()
-            layer, error = find_stopping_layer(conn, attack["sql"], config.block_functions)
+            direct_layer, direct_error = find_stopping_layer(conn, attack["sql"], config.block_functions)
             seconds = time.perf_counter() - start
 
             # An attack may break the session (e.g. a cancelled backend);
@@ -132,9 +191,14 @@ def main():
             if conn.broken:
                 conn = open_connection(config)
 
+            if mcp_layers:
+                layer, error, seconds = mcp_layers[i]
+            else:
+                layer, error = direct_layer, direct_error
+
             as_expected = layer == attack["expected_layer"]
 
-            results.append({
+            result = {
                 "id": attack["id"],
                 "category": attack["category"],
                 "description": attack["description"],
@@ -144,9 +208,15 @@ def main():
                 "as_expected": as_expected,
                 "error": error,
                 "seconds": seconds,
-            })
+            }
+            if mcp_layers:
+                result["direct_stopped_by"] = direct_layer
+                result["same_as_direct"] = layer == direct_layer
+            results.append(result)
 
             mark = "" if as_expected else f"  (várt: {LAYER_LABELS[attack['expected_layer']]})"
+            if mcp_layers and layer != direct_layer:
+                mark += f"  (közvetlenül: {LAYER_LABELS[direct_layer]})"
             print(
                 f"[{attack['id']:>3}] {LAYER_LABELS[layer]:<20} "
                 f"{attack['description']}{mark}"
@@ -164,6 +234,8 @@ def main():
         "as_expected": sum(r["as_expected"] for r in results),
         "got_through": got_through,
     }
+    if mcp_layers:
+        summary["same_as_direct"] = sum(r["same_as_direct"] for r in results)
 
     print("\n" + "=" * 80)
     print("ÖSSZESÍTÉS")
@@ -173,6 +245,8 @@ def main():
     print(f"\nA várt réteg állította meg: {summary['as_expected']}/{summary['total']}")
     if got_through:
         print(f"Átjutott (lefutott): {', '.join(map(str, got_through))}")
+    if mcp_layers:
+        print(f"MCP-n át ugyanaz a réteg, mint közvetlenül: {summary['same_as_direct']}/{summary['total']}")
 
     output = {
         "run": {
@@ -180,6 +254,7 @@ def main():
             "git": git_info(),
             "dataset": dataset.name,
             "database": dataset.db_name,
+            "via": "mcp run_sql" if args.via_mcp else "direct",
             "db_user": DB_USER,
             "block_functions": config.block_functions,
             "blocked_functions": sorted(BLOCKED_FUNCTIONS) if config.block_functions else [],
@@ -191,7 +266,7 @@ def main():
     }
 
     os.makedirs(args.output_dir, exist_ok=True)
-    path = output_path(args.output_dir, started_at, dataset.name, args.run_name)
+    path = output_path(args.output_dir, started_at, dataset.name, args.run_name, args.via_mcp)
 
     with open(path, "w", encoding="utf-8") as file:
         json.dump(output, file, ensure_ascii=False, indent=2)
