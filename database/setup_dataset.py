@@ -4,6 +4,7 @@ database -> schema.sql -> import.sql -> read-only role grants.
 
     python database/setup_dataset.py olist
     python database/setup_dataset.py sales --recreate
+    python database/setup_dataset.py olist --grants-only
 
 Runs psql inside the container as the postgres superuser. import.sql
 reads its files from /datasets/<name>/data (datasets/ is mounted there).
@@ -56,6 +57,20 @@ def read(path):
         return file.read()
 
 
+def grant_read_only(dataset, db):
+    psql(db, read(READONLY_ROLE_SQL), variables={"db_name": db})
+
+    # readonly_role.sql covers public; datasets with tables in other
+    # schemas need read access there too.
+    other_schemas = [s for s in dataset.schemas if s != "public"]
+    if other_schemas:
+        psql(db, "".join(
+            f"GRANT USAGE ON SCHEMA {s} TO text2sql_reader;\n"
+            f"GRANT SELECT ON ALL TABLES IN SCHEMA {s} TO text2sql_reader;\n"
+            for s in other_schemas
+        ))
+
+
 def main():
     parser = argparse.ArgumentParser(description="Dataset adatbázis létrehozása")
     parser.add_argument("dataset", choices=available_datasets())
@@ -63,6 +78,11 @@ def main():
         "--recreate",
         action="store_true",
         help="létező adatbázis törlése és újraépítése",
+    )
+    parser.add_argument(
+        "--grants-only",
+        action="store_true",
+        help="csak a readonly_role.sql újrafuttatása egy létező adatbázison (az adatok maradnak)",
     )
     args = parser.parse_args()
 
@@ -90,6 +110,14 @@ def main():
         capture=True,
     )
 
+    if args.grants_only:
+        if not exists:
+            sys.exit(f"Database {db} does not exist yet: run without --grants-only first.")
+        print(f"Granting read-only access on {db}...")
+        grant_read_only(dataset, db)
+        print(f"Read-only role updated on {db}.")
+        return
+
     if exists and not args.recreate:
         sys.exit(f"Database {db} already exists. Use --recreate to rebuild it.")
 
@@ -107,17 +135,7 @@ def main():
     psql(db, read(dataset.import_sql_path))
 
     print("Granting read-only access...")
-    psql(db, read(READONLY_ROLE_SQL), variables={"db_name": db})
-
-    # readonly_role.sql covers public; datasets with tables in other
-    # schemas need read access there too.
-    other_schemas = [s for s in dataset.schemas if s != "public"]
-    if other_schemas:
-        psql(db, "".join(
-            f"GRANT USAGE ON SCHEMA {s} TO text2sql_reader;\n"
-            f"GRANT SELECT ON ALL TABLES IN SCHEMA {s} TO text2sql_reader;\n"
-            for s in other_schemas
-        ))
+    grant_read_only(dataset, db)
 
     print(f"Dataset '{dataset.name}' is ready in {db}.")
 

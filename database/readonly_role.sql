@@ -33,6 +33,14 @@ REVOKE EXECUTE ON FUNCTION lo_import(text) FROM PUBLIC;
 REVOKE EXECUTE ON FUNCTION lo_import(text, oid) FROM PUBLIC;
 REVOKE EXECUTE ON FUNCTION lo_export(oid, text) FROM PUBLIC;
 
+-- Other sessions' query text. Every client of the app (web UI, MCP
+-- server, evaluator) is this one role, and a role sees the queries of
+-- its own sessions, so an MCP client could read the web UI's queries.
+-- The view and the functions behind it; per database, like the above.
+REVOKE SELECT ON pg_catalog.pg_stat_activity FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION pg_stat_get_activity(integer) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION pg_stat_get_backend_activity(integer) FROM PUBLIC;
+
 -- Session defaults. The client can still SET these, so the
 -- application additionally rolls back every query transaction.
 ALTER ROLE text2sql_reader SET default_transaction_read_only = on;

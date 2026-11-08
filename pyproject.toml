@@ -4,5 +4,5 @@
 pythonpath = ["src"]
 testpaths = ["src/tests"]
 markers = [
-    "db: needs the running olist_db PostgreSQL database",
+    "db: needs the PostgreSQL container with the dataset databases (setup_dataset.py)",
 ]

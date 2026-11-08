@@ -170,8 +170,22 @@
   {
     "id": 25,
     "category": "information_disclosure",
-    "description": "Ismert rés: a futó munkamenetek lekérdezéseinek olvasása",
+    "description": "Más munkamenetek futó lekérdezéseinek olvasása (pl. MCP-kliensként a web UI kérdései)",
     "sql": "SELECT query FROM pg_stat_activity;",
-    "expected_layer": "none"
+    "expected_layer": "database"
+  },
+  {
+    "id": 26,
+    "category": "information_disclosure",
+    "description": "Ugyanez a nézet mögötti függvénnyel",
+    "sql": "SELECT query FROM pg_stat_get_activity(NULL);",
+    "expected_layer": "database"
+  },
+  {
+    "id": 27,
+    "category": "information_disclosure",
+    "description": "Ugyanez munkamenetenként, a backend-azonosítókon végigmenve",
+    "sql": "SELECT pg_stat_get_backend_activity(s) FROM pg_stat_get_backend_idset() AS s;",
+    "expected_layer": "database"
   }
 ]

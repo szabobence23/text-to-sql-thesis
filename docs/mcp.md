@@ -114,13 +114,13 @@ Mit mutat ez a futás:
 
 ## Biztonság és adatvédelem
 
-- **Írni nem lehet.** A `run_sql` ugyanazon a láncon megy át, mint a pipeline saját lekérdezései: szerkezeti ellenőrzés, függvénytiltólista, a PostgreSQL `PREPARE`-alapú sémaellenőrzése, végül futtatás csak olvasási jogú szerepkörrel, rollbackkel és 10 másodperces időkorláttal. Az `attacks.json` 25 támadása MCP-n át is mind a várt rétegen akadt el, és minden esetben ugyanazon, mint közvetlen futtatásnál:
+- **Írni nem lehet.** A `run_sql` ugyanazon a láncon megy át, mint a pipeline saját lekérdezései: szerkezeti ellenőrzés, függvénytiltólista, a PostgreSQL `PREPARE`-alapú sémaellenőrzése, végül futtatás csak olvasási jogú szerepkörrel, rollbackkel és 10 másodperces időkorláttal. Az `attacks.json` 27 támadása MCP-n át is mind a várt rétegen akadt el, és minden esetben ugyanazon, mint közvetlen futtatásnál:
 
   ```
   python src/evaluation/attack_evaluator.py --dataset olist --via-mcp
   ```
 
-- **Ismert rés:** a `SELECT query FROM pg_stat_activity` lefut (#25). MCP-n át ez azt jelenti, hogy egy külső kliens láthatja ugyanannak a szerepkörnek a többi munkamenetét, például a web UI éppen futó lekérdezéseinek szövegét.
+- **Bezárt rés: más munkamenetek lekérdezései.** Az alkalmazás minden része (web UI, MCP-szerver, kiértékelő) ugyanazzal a szerepkörrel csatlakozik. A PostgreSQL alapból megmutatja egy szerepkörnek a saját többi munkamenetének futó lekérdezését, így egy MCP-kliens elolvashatta volna például a web UI kérdéseinek SQL-jét. A `database/readonly_role.sql` ezért elveszi a jogot a `pg_stat_activity` nézetre és a mögötte lévő `pg_stat_get_activity` és `pg_stat_get_backend_activity` függvényre. Meglévő adatbázison így lehet alkalmazni: `python database/setup_dataset.py <név> --grants-only`. Előtte a #25–27 támadás átjutott, utána mindhármat az adatbázis állítja meg (27/27).
 - **Az adatok elhagyhatják a gépet.** Felhőben futó kliens modellnél (Claude) az eszközök eredménye, vagyis a sorok, a séma és a példák, eljut a modellhez. Ez eltér a „minden helyben fut” alapelvtől. Az `ask_database` legfeljebb 50 sort ad vissza, a `run_sql` alapból 50-et, legfeljebb 200-at. Teljesen helyi működéshez helyi modellt futtató MCP-kliens kell.
 - **A szerver csak helyben érhető el.** stdio kapcsolaton fut, hálózati portot nem nyit.
 
