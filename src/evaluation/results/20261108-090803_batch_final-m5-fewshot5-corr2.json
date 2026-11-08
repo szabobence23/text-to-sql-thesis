@@ -1,0 +1,284 @@
+{
+  "batch": {
+    "run_name": "final-m5-fewshot5-corr2",
+    "started_at": "2026-11-08T09:08:03",
+    "git": {
+      "commit": "ea83c19124fc4671f6d413f90c9cb22f3f26b188",
+      "dirty": false
+    },
+    "evaluator_args": [
+      "--sql-examples",
+      "5",
+      "--correction-rounds",
+      "2"
+    ],
+    "files": [
+      "20261108-090804_olist-hu_qwen2.5-coder-7b_final-m5-fewshot5-corr2-r1.json",
+      "20261108-091012_olist-en_qwen2.5-coder-7b_final-m5-fewshot5-corr2-r1.json",
+      "20261108-091215_f1-hu_qwen2.5-coder-7b_final-m5-fewshot5-corr2-r1.json",
+      "20261108-091445_f1-en_qwen2.5-coder-7b_final-m5-fewshot5-corr2-r1.json",
+      "20261108-091713_adventureworks-hu_qwen2.5-coder-7b_final-m5-fewshot5-corr2-r1.json",
+      "20261108-092005_adventureworks-en_qwen2.5-coder-7b_final-m5-fewshot5-corr2-r1.json"
+    ]
+  },
+  "summary": [
+    {
+      "dataset": "adventureworks",
+      "language": "en",
+      "setup": "javítás=2 hintek=be qwen2.5-coder:7b few-shot=5",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.96,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.78,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.84,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.8214285714285714,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.75,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 3.6784000319999177,
+      "mean_prompt_tokens": 5832.26,
+      "dirty_runs": 0,
+      "mismatched_fields": [],
+      "files": [
+        "20261108-092005_adventureworks-en_qwen2.5-coder-7b_final-m5-fewshot5-corr2-r1.json"
+      ]
+    },
+    {
+      "dataset": "adventureworks",
+      "language": "hu",
+      "setup": "javítás=2 hintek=be qwen2.5-coder:7b few-shot=5",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.98,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.58,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.62,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.6428571428571429,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.25,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 3.311050718004117,
+      "mean_prompt_tokens": 5668.82,
+      "dirty_runs": 0,
+      "mismatched_fields": [],
+      "files": [
+        "20261108-091713_adventureworks-hu_qwen2.5-coder-7b_final-m5-fewshot5-corr2-r1.json"
+      ]
+    },
+    {
+      "dataset": "f1",
+      "language": "en",
+      "setup": "javítás=2 hintek=be qwen2.5-coder:7b few-shot=5",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.74,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.84,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.8620689655172413,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.6666666666666666,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 2.8695665400009602,
+      "mean_prompt_tokens": 2063.7,
+      "dirty_runs": 0,
+      "mismatched_fields": [],
+      "files": [
+        "20261108-091445_f1-en_qwen2.5-coder-7b_final-m5-fewshot5-corr2-r1.json"
+      ]
+    },
+    {
+      "dataset": "f1",
+      "language": "hu",
+      "setup": "javítás=2 hintek=be qwen2.5-coder:7b few-shot=5",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.98,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.56,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.68,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.6206896551724138,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.5833333333333334,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 2.8918038660031744,
+      "mean_prompt_tokens": 2079.64,
+      "dirty_runs": 0,
+      "mismatched_fields": [],
+      "files": [
+        "20261108-091215_f1-hu_qwen2.5-coder-7b_final-m5-fewshot5-corr2-r1.json"
+      ]
+    },
+    {
+      "dataset": "olist",
+      "language": "en",
+      "setup": "javítás=2 hintek=be qwen2.5-coder:7b few-shot=5",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.98,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.66,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.76,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.8148148148148148,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.5,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 2.2303589900024234,
+      "mean_prompt_tokens": 1066.36,
+      "dirty_runs": 0,
+      "mismatched_fields": [],
+      "files": [
+        "20261108-091012_olist-en_qwen2.5-coder-7b_final-m5-fewshot5-corr2-r1.json"
+      ]
+    },
+    {
+      "dataset": "olist",
+      "language": "hu",
+      "setup": "javítás=2 hintek=be qwen2.5-coder:7b few-shot=5",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.98,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.52,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.62,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {
+        "easy": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "medium": {
+          "mean": 0.6666666666666666,
+          "std": 0.0
+        },
+        "hard": {
+          "mean": 0.2857142857142857,
+          "std": 0.0
+        }
+      },
+      "unstable_questions": [],
+      "mean_generation_s": 2.3286224220029546,
+      "mean_prompt_tokens": 1200.22,
+      "dirty_runs": 0,
+      "mismatched_fields": [],
+      "files": [
+        "20261108-090804_olist-hu_qwen2.5-coder-7b_final-m5-fewshot5-corr2-r1.json"
+      ]
+    }
+  ]
+}

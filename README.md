@@ -46,6 +46,7 @@ Az adatbázisok létrehozása: az adatfájlokat a `datasets/<név>/data/` mappá
 | Kiértékelés | `python src\evaluation\evaluator.py --dataset f1 --language hu --run-name proba` |
 | Ismételt / több adatbázisos mérés | `python src\evaluation\run_batch.py --run-name proba --repeats 1` |
 | Eredmények összesítése | `python src\evaluation\report.py src\evaluation\results\*_proba*.json` |
+| Beállítások összevetése (McNemar) | `python src\evaluation\compare.py proba-a proba-b --reference proba-a` |
 | Támadásmérés | `python src\evaluation\attack_evaluator.py --dataset olist` |
 | Tesztek | `python -m pytest` (adatbázis nélkül: `-m "not db"`) |
 
@@ -54,5 +55,6 @@ A kiértékelés minden futás eredményét egy JSON-fájlba menti a `src/evalua
 ## További dokumentáció
 
 - [datasets/README.md](datasets/README.md): adatkészletek, és hogyan lehet újat hozzáadni
+- [docs/results.md](docs/results.md): a végső mérések táblázatai, szignifikanciatesztekkel
 - [docs/mcp.md](docs/mcp.md): az MCP-szerver, a bekötés és a biztonság
 - [CLAUDE.md](CLAUDE.md): részletes architektúra és a mérések története (angolul)
