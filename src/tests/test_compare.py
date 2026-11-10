@@ -1,6 +1,6 @@
 import pytest
 
-from evaluation.compare import format_p, mcnemar_exact, wilson
+from evaluation.compare import DATASET_ORDER, format_p, mcnemar_exact, ordered, wilson
 
 
 def test_mcnemar_exact():
@@ -25,3 +25,9 @@ def test_format_p():
     assert format_p(0.000508) == "< 0.001"
     assert format_p(0.0768) == "0.077"
     assert format_p(1.0) == "1.000"
+
+
+def test_known_names_keep_their_order_others_follow():
+    assert ordered({"bird_financial", "f1", "olist", "bird_card_games"}, DATASET_ORDER) == [
+        "olist", "f1", "bird_card_games", "bird_financial",
+    ]

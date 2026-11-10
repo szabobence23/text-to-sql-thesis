@@ -1,0 +1,14 @@
+{
+  "name": "bird_toxicology",
+  "label": {
+    "hu": "BIRD: Toxikológia",
+    "en": "BIRD: Toxicology"
+  },
+  "summary": {
+    "hu": "molekulák, atomok, kötések és kapcsolataik (4 tábla; BIRD Mini-Dev, csak kiértékeléshez)",
+    "en": "molecules, atoms, bonds and their connections (4 tables; BIRD Mini-Dev, evaluation only)"
+  },
+  "db_name": "bird_toxicology",
+  "description": "BIRD Mini-Dev (bird-bench.github.io, CC BY-SA 4.0), PostgreSQL version (minidev.zip, MINIDEV_postgresql/BIRD_dev.sql), database toxicology: molecules, atoms, bonds and their connections (4 tables). English questions with evidence.",
+  "listed": false
+}

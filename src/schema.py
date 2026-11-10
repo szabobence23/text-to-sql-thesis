@@ -1,3 +1,5 @@
+import re
+
 from psycopg import sql as psql
 
 
@@ -52,6 +54,21 @@ def qualified_name(schema, table):
     # public tables keep their bare names, so datasets in public get
     # exactly the schema text they had before multi-schema support.
     return table if schema == "public" else f"{schema}.{table}"
+
+
+_PLAIN_IDENTIFIER = re.compile(r"[a-z_][a-z0-9_]*")
+
+
+def sql_identifier(name):
+    """
+    A name as a query has to write it: double-quoted unless it is a plain
+    lowercase identifier (BIRD's "Free Meal Count (K-12)"). Plain names,
+    every name of the other datasets, are left as they are, so their
+    schema text does not change.
+    """
+    if _PLAIN_IDENTIFIER.fullmatch(name):
+        return name
+    return '"' + name.replace('"', '""') + '"'
 
 
 def fetch_catalog(conn, schemas=("public",)):
@@ -151,17 +168,17 @@ def get_schema(conn, database_name, hints="", schemas=("public",), tables=None, 
         values = column_values.get((table_schema, table_name, column_name))
         if values:
             listed = ", ".join(_quote(v) for v in values)
-            schema += f"- {column_name} {data_type} (values: {listed})\n"
+            schema += f"- {sql_identifier(column_name)} {data_type} (values: {listed})\n"
         else:
-            schema += f"- {column_name} {data_type}\n"
+            schema += f"- {sql_identifier(column_name)} {data_type}\n"
 
     schema += "\nRelationships:\n"
 
     for (table_schema, table_name, column_name,
          foreign_schema, foreign_table, foreign_column) in relationships:
         schema += (
-            f"- {qualified_name(table_schema, table_name)}.{column_name} "
-            f"-> {qualified_name(foreign_schema, foreign_table)}.{foreign_column}\n"
+            f"- {qualified_name(table_schema, table_name)}.{sql_identifier(column_name)} "
+            f"-> {qualified_name(foreign_schema, foreign_table)}.{sql_identifier(foreign_column)}\n"
         )
 
     if hints:

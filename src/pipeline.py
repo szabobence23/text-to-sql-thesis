@@ -121,6 +121,11 @@ class PipelineConfig:
     # standings of a season, wins from results) instead of a hint.
     # Needs make_example_retriever. 0 = no examples (baseline).
     sql_examples: int = 0
+    # External knowledge a benchmark gives with each question (BIRD's
+    # "evidence": what a term means in the columns, a formula) goes into
+    # the SQL prompt, and into the schema search and table selection as
+    # part of the question. Only the evaluator has it, from the test case.
+    question_evidence: bool = False
     # Ollama embedding model for "dense" and "hybrid".
     embedding_model: str = "bge-m3"
     # Reject queries that call a dangerous function (see
@@ -318,6 +323,8 @@ class PipelineResult:
     examples: list | None = None
     # With sql_examples: the examples in the SQL prompt ({id, question, score}).
     sql_examples: list | None = None
+    # With question_evidence: the external knowledge shown with the question.
+    evidence: str | None = None
 
     @property
     def correction_rounds(self):
@@ -371,7 +378,7 @@ def _examples_text(matches):
 
 
 def run_pipeline(conn, question, schema, config: PipelineConfig, retriever=None,
-                 example_retriever=None) -> PipelineResult:
+                 example_retriever=None, evidence=None) -> PipelineResult:
     """
     Question -> (schema retrieval) -> SQL generation -> validation ->
     execution, and when the query fails validation or execution, up to
@@ -385,12 +392,17 @@ def run_pipeline(conn, question, schema, config: PipelineConfig, retriever=None,
     retrieval mode, retriever (from make_schema_retriever) chooses the
     tables instead and schema is not used. With sql_examples,
     example_retriever (from make_example_retriever) finds the solved
-    examples for the SQL prompt.
+    examples for the SQL prompt. evidence (the test case's external
+    knowledge) is used only with question_evidence.
     """
     attempts = []
     pre_timings = {}
     schema_tables = retrieval_query = translation = None
     candidate_tables = selection = examples = None
+    evidence = (evidence or None) if config.question_evidence else None
+    # The search and the table selection read the evidence as part of
+    # the question; the SQL prompt gets it as its own block.
+    search_text = f"{question}\nExternal knowledge: {evidence}" if evidence else question
 
     if config.schema_retrieval in RETRIEVAL_METHODS:
         if retriever is None:
@@ -399,10 +411,10 @@ def run_pipeline(conn, question, schema, config: PipelineConfig, retriever=None,
                 "from make_schema_retriever"
             )
 
-        retrieval_query = question
+        retrieval_query = search_text
         if config.translate_for_retrieval:
             start = time.perf_counter()
-            translation = translate_question(question, config.llm)
+            translation = translate_question(search_text, config.llm)
             pre_timings["translation_s"] = time.perf_counter() - start
             retrieval_query = translation.text
 
@@ -428,7 +440,7 @@ def run_pipeline(conn, question, schema, config: PipelineConfig, retriever=None,
                     extra = [t for m in matches for t in m.example.tables if t not in candidate_tables]
                     candidate_tables = candidate_tables + list(dict.fromkeys(extra))
             selection = choose_tables(
-                question, retriever.describe(candidate_tables), config.llm,
+                search_text, retriever.describe(candidate_tables), config.llm,
                 config.table_selection_style, examples_text,
             )
             chosen = parse_table_choice(selection.text, candidate_tables)
@@ -458,7 +470,7 @@ def run_pipeline(conn, question, schema, config: PipelineConfig, retriever=None,
         examples_text = format_sql_examples(matches)
 
     start = time.perf_counter()
-    generation = generate_sql(question, schema, config.llm, examples_text)
+    generation = generate_sql(question, schema, config.llm, examples_text, evidence=evidence)
     attempt, columns, rows = _run_attempt(conn, generation, time.perf_counter() - start, config)
     attempts.append(attempt)
 
@@ -466,7 +478,7 @@ def run_pipeline(conn, question, schema, config: PipelineConfig, retriever=None,
         failed = [(a.raw_response, a.error) for a in attempts]
 
         start = time.perf_counter()
-        generation = correct_sql(question, schema, failed, config.llm, examples_text)
+        generation = correct_sql(question, schema, failed, config.llm, examples_text, evidence=evidence)
         attempt, columns, rows = _run_attempt(conn, generation, time.perf_counter() - start, config)
         attempts.append(attempt)
 
@@ -505,4 +517,5 @@ def run_pipeline(conn, question, schema, config: PipelineConfig, retriever=None,
         table_selection=selection,
         examples=examples,
         sql_examples=sql_examples,
+        evidence=evidence,
     )

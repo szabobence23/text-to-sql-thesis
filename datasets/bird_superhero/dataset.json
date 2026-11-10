@@ -1,0 +1,14 @@
+{
+  "name": "bird_superhero",
+  "label": {
+    "hu": "BIRD: Szuperhősök",
+    "en": "BIRD: Superheroes"
+  },
+  "summary": {
+    "hu": "hősök képességekkel, tulajdonságokkal, kiadókkal (10 tábla; BIRD Mini-Dev, csak kiértékeléshez)",
+    "en": "heroes with powers, attributes, publishers (10 tables; BIRD Mini-Dev, evaluation only)"
+  },
+  "db_name": "bird_superhero",
+  "description": "BIRD Mini-Dev (bird-bench.github.io, CC BY-SA 4.0), PostgreSQL version (minidev.zip, MINIDEV_postgresql/BIRD_dev.sql), database superhero: heroes with powers, attributes, publishers (10 tables). English questions with evidence.",
+  "listed": false
+}

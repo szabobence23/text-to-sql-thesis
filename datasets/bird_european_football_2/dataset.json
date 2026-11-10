@@ -1,0 +1,14 @@
+{
+  "name": "bird_european_football_2",
+  "label": {
+    "hu": "BIRD: Európai labdarúgás",
+    "en": "BIRD: European football"
+  },
+  "summary": {
+    "hu": "mérkőzések, ligák, csapatok és játékosok jellemzőkkel (7 tábla; BIRD Mini-Dev, csak kiértékeléshez)",
+    "en": "matches, leagues, teams and players with attributes (7 tables; BIRD Mini-Dev, evaluation only)"
+  },
+  "db_name": "bird_european_football_2",
+  "description": "BIRD Mini-Dev (bird-bench.github.io, CC BY-SA 4.0), PostgreSQL version (minidev.zip, MINIDEV_postgresql/BIRD_dev.sql), database european_football_2: matches, leagues, teams and players with attributes (7 tables). English questions with evidence.",
+  "listed": false
+}

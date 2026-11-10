@@ -4,6 +4,9 @@ Result comparison for execution accuracy (EX).
 strict:  same rows with the same columns in the same column order.
 relaxed: every ground-truth column appears somewhere in the generated
          result (extra columns allowed), with the same rows.
+set:     BIRD's official EX: the same set of rows (column order counts,
+         row order and duplicate rows do not), for comparison with
+         published BIRD results.
 
 Row order only matters when the ground-truth query has a top-level
 ORDER BY (Spider convention); otherwise rows are compared as multisets.
@@ -99,6 +102,11 @@ def relaxed_match(expected, generated, ordered) -> bool:
         )
 
     return assign(0, [])
+
+
+def set_match(expected, generated) -> bool:
+    """BIRD's EX: set(predicted rows) == set(ground-truth rows)."""
+    return set(expected) == set(generated)
 
 
 def match_any(expected_results, generated, ordered_flags):

@@ -1,0 +1,14 @@
+{
+  "name": "bird_card_games",
+  "label": {
+    "hu": "BIRD: Kártyajáték",
+    "en": "BIRD: Card games"
+  },
+  "summary": {
+    "hu": "Magic: The Gathering kártyák, kiadások, legalitás, szabályok, fordítások (6 tábla; BIRD Mini-Dev, csak kiértékeléshez)",
+    "en": "Magic: The Gathering cards, sets, legalities, rulings, translations (6 tables; BIRD Mini-Dev, evaluation only)"
+  },
+  "db_name": "bird_card_games",
+  "description": "BIRD Mini-Dev (bird-bench.github.io, CC BY-SA 4.0), PostgreSQL version (minidev.zip, MINIDEV_postgresql/BIRD_dev.sql), database card_games: Magic: The Gathering cards, sets, legalities, rulings, translations (6 tables). English questions with evidence.",
+  "listed": false
+}

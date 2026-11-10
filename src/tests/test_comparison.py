@@ -8,6 +8,7 @@ from evaluation.comparison import (
     match_any,
     normalize_rows,
     relaxed_match,
+    set_match,
     strict_match,
 )
 
@@ -97,3 +98,11 @@ def test_match_any_prefers_the_ground_truth_then_alternatives():
     # Extra columns: relaxed match only.
     assert match_any(accepted, [("cama_mesa_banho", 11115, 7)], [True, True]) == (False, True, 1)
     assert match_any(accepted, [("moveis_decoracao", 8334)], [True, True]) == (False, False, None)
+
+
+def test_set_match_is_birds_ex():
+    # Row order and duplicates do not count, column order does.
+    assert set_match([(1, "a"), (2, "b")], [(2, "b"), (1, "a"), (1, "a")])
+    assert not set_match([(1, "a")], [("a", 1)])
+    assert not set_match([(1,)], [(1,), (2,)])
+    assert set_match([], [])

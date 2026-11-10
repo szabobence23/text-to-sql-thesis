@@ -1,0 +1,14 @@
+{
+  "name": "bird_thrombosis_prediction",
+  "label": {
+    "hu": "BIRD: Trombózis-előrejelzés",
+    "en": "BIRD: Thrombosis prediction"
+  },
+  "summary": {
+    "hu": "betegek, vizsgálatok és laboreredmények (3 tábla; BIRD Mini-Dev, csak kiértékeléshez)",
+    "en": "patients, examinations and laboratory results (3 tables; BIRD Mini-Dev, evaluation only)"
+  },
+  "db_name": "bird_thrombosis_prediction",
+  "description": "BIRD Mini-Dev (bird-bench.github.io, CC BY-SA 4.0), PostgreSQL version (minidev.zip, MINIDEV_postgresql/BIRD_dev.sql), database thrombosis_prediction: patients, examinations and laboratory results (3 tables). English questions with evidence.",
+  "listed": false
+}

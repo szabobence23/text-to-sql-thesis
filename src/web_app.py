@@ -27,7 +27,7 @@ from pydantic import BaseModel, Field
 
 import service
 from chat_store import ChatStore
-from dataset_loader import DEFAULT_DATASET, DEFAULT_LANGUAGE, available_datasets, load_dataset
+from dataset_loader import DEFAULT_DATASET, DEFAULT_LANGUAGE, listed_datasets, load_dataset
 from service import jsonable
 from sql_tables import format_tables
 
@@ -140,7 +140,7 @@ def create_app(store: ChatStore | None = None, answer=answer_question) -> FastAP
     @app.get("/api/datasets")
     def datasets(language: Literal["hu", "en"] = "hu"):
         items = []
-        for name in available_datasets():
+        for name in listed_datasets():
             dataset = load_dataset(name)
             items.append({
                 "name": name,
@@ -175,7 +175,7 @@ def create_app(store: ChatStore | None = None, answer=answer_question) -> FastAP
             raise HTTPException(422, "Üres kérdés")
 
         if body.conversation_id is None:
-            if body.dataset not in available_datasets():
+            if body.dataset not in listed_datasets():
                 raise HTTPException(404, "Nincs ilyen adatbázis")
             dataset = body.dataset
             conversation_id = store.create_conversation(title_of(question), dataset)

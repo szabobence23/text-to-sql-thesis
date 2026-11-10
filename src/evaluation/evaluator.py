@@ -25,10 +25,12 @@ from evaluation.comparison import (
     is_order_sensitive,
     match_any,
     normalize_rows,
+    set_match,
 )
 from llm import (
     ANSWER_PROMPT_SHA256,
     CORRECTION_PROMPT_SHA256,
+    EVIDENCE_SHA256,
     PROMPT_SHA256,
     SQL_EXAMPLES_SHA256,
     TABLE_SELECTION_EXAMPLES_SHA256,
@@ -120,7 +122,9 @@ def evaluate_test_case(conn, schema, config, case, expected_results, retriever=N
     else:
         schema_tables = None  # every table
 
-    result = run_pipeline(conn, case["question"], schema, config, retriever, examples)
+    result = run_pipeline(
+        conn, case["question"], schema, config, retriever, examples, case.get("evidence")
+    )
 
     # A retriever chose the tables inside the pipeline.
     if result.schema_tables is not None:
@@ -132,8 +136,10 @@ def evaluate_test_case(conn, schema, config, case, expected_results, retriever=N
 
     if generated_rows is None:
         strict, relaxed, matched = False, False, None
+        set_ex = False
     else:
         strict, relaxed, matched = match_any(expected_results, generated_rows, ordered_flags)
+        set_ex = any(set_match(expected, generated_rows) for expected in expected_results)
 
     # A correction only runs after the first attempt failed, so the
     # first attempt is exactly what a run without correction produces.
@@ -168,6 +174,8 @@ def evaluate_test_case(conn, schema, config, case, expected_results, retriever=N
         "examples": result.examples,
         # With sql_examples: the solved examples in the SQL prompt.
         "sql_examples": result.sql_examples,
+        # With question_evidence: the external knowledge in the prompt.
+        "evidence": result.evidence,
         "expected_result": expected_results[0],
         # Which accepted answer matched: 0 = the ground truth,
         # 1.. = an alternative_sql; None = no match.
@@ -181,10 +189,13 @@ def evaluate_test_case(conn, schema, config, case, expected_results, retriever=N
         "generated_result": generated_rows,
         "strict_match": strict,
         "relaxed_match": relaxed,
+        # BIRD's official EX (comparison.set_match).
+        "set_match": set_ex,
         "correction_rounds": result.correction_rounds,
         "first_attempt_execution_success": result.attempts[0].executed,
         "first_attempt_strict_match": strict and not corrected,
         "first_attempt_relaxed_match": relaxed and not corrected,
+        "first_attempt_set_match": set_ex and not corrected,
         "attempts": [asdict(a) for a in result.attempts],
         # Not scored automatically: correctness is measured on the SQL.
         "answer": asdict(result.answer) if result.answer else None,
@@ -217,6 +228,7 @@ def summarize(results):
             name: {
                 "strict_ex": rate("strict_match", group),
                 "relaxed_ex": rate("relaxed_match", group),
+                "set_ex": rate("set_match", group),
             }
             for name, group in sorted(groups.items())
         }
@@ -227,10 +239,12 @@ def summarize(results):
         "execution_success": rate("execution_success"),
         "strict_ex": rate("strict_match"),
         "relaxed_ex": rate("relaxed_match"),
+        "set_ex": rate("set_match"),
         "first_attempt": {
             "execution_success": rate("first_attempt_execution_success"),
             "strict_ex": rate("first_attempt_strict_match"),
             "relaxed_ex": rate("first_attempt_relaxed_match"),
+            "set_ex": rate("first_attempt_set_match"),
         },
         "correction": {
             "triggered": len(corrected),
@@ -344,6 +358,11 @@ def parse_args():
         action="store_true",
         help="a példák nem kerülnek a szűrőpromptba, csak a tábláik a jelöltek közé (--example-candidates)",
     )
+    parser.add_argument(
+        "--evidence",
+        action="store_true",
+        help="a tesztesethez adott külső tudás (BIRD evidence) a promptban és a keresésben",
+    )
     parser.add_argument("--embedding-model", default="bge-m3")
     parser.add_argument(
         "--no-function-blocklist",
@@ -409,6 +428,7 @@ def main():
         example_candidates=args.example_candidates,
         selection_examples_in_prompt=not args.no_examples_in_prompt,
         sql_examples=args.sql_examples,
+        question_evidence=args.evidence,
         embedding_model=args.embedding_model,
         block_functions=not args.no_function_blocklist,
         max_correction_rounds=args.correction_rounds,
@@ -481,6 +501,7 @@ def main():
     print_rate("Sikeres végrehajtás", summary["execution_success"])
     print_rate("Execution accuracy (strict)", summary["strict_ex"])
     print_rate("Execution accuracy (relaxed)", summary["relaxed_ex"])
+    print_rate("Execution accuracy (set, BIRD)", summary["set_ex"])
 
     if config.max_correction_rounds:
         first = summary["first_attempt"]
@@ -489,6 +510,7 @@ def main():
         print_rate("  Sikeres végrehajtás", first["execution_success"])
         print_rate("  Execution accuracy (strict)", first["strict_ex"])
         print_rate("  Execution accuracy (relaxed)", first["relaxed_ex"])
+        print_rate("  Execution accuracy (set, BIRD)", first["set_ex"])
         print(
             f"Javítás indult: {correction['triggered']} esetben, "
             f"ebből lefutott: {correction['fixed_execution']}, "
@@ -537,6 +559,7 @@ def main():
                 if config.selection_examples and config.selection_examples_in_prompt else None
             ),
             "sql_examples_sha256": SQL_EXAMPLES_SHA256 if config.sql_examples else None,
+            "evidence_sha256": EVIDENCE_SHA256 if config.question_evidence else None,
             "examples_sha256": (
                 sha256(open(dataset.examples_path, encoding="utf-8").read())
                 if config.selection_examples or config.sql_examples else None

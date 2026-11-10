@@ -1,0 +1,14 @@
+{
+  "name": "bird_debit_card_specializing",
+  "label": {
+    "hu": "BIRD: Bankkártyák",
+    "en": "BIRD: Debit cards"
+  },
+  "summary": {
+    "hu": "benzinkúti kártyás ügyfelek, tranzakciók, havi fogyasztás (5 tábla; BIRD Mini-Dev, csak kiértékeléshez)",
+    "en": "gas station card customers, transactions, monthly consumption (5 tables; BIRD Mini-Dev, evaluation only)"
+  },
+  "db_name": "bird_debit_card_specializing",
+  "description": "BIRD Mini-Dev (bird-bench.github.io, CC BY-SA 4.0), PostgreSQL version (minidev.zip, MINIDEV_postgresql/BIRD_dev.sql), database debit_card_specializing: gas station card customers, transactions, monthly consumption (5 tables). English questions with evidence.",
+  "listed": false
+}

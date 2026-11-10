@@ -1,0 +1,386 @@
+[
+  {
+    "id": 1312,
+    "question": "What's Angela Sanders's major?",
+    "evidence": "Angela Sanders is the full name; full name refers to first_name, last_name; major refers to major_name.",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT T2.major_name FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T1.first_name = 'Angela' AND T1.last_name = 'Sanders'"
+  },
+  {
+    "id": 1317,
+    "question": "Among the students from the Student_Club who attended the event \"Women's Soccer\", how many of them want a T-shirt that's in medium size?",
+    "evidence": "Women's Soccer is an event name; T-shirt that is in medium size refers to t_shirt_size = 'Medium'",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT COUNT(T1.event_id) FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event INNER JOIN member AS T3 ON T2.link_to_member = T3.member_id WHERE T1.event_name = 'Women''s Soccer' AND T3.t_shirt_size = 'Medium'"
+  },
+  {
+    "id": 1322,
+    "question": "Among the events attended by more than 10 members of the Student_Club, how many of them are meetings?",
+    "evidence": "meetings events refers to type = 'Meeting'; attended by more than 10 members refers to COUNT(event_id) > 10",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT T1.event_name FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 10 EXCEPT SELECT T1.event_name FROM event AS T1 WHERE T1.type = 'Meeting'"
+  },
+  {
+    "id": 1323,
+    "question": "List all the names of events that had an attendance of over 20 students but were not fundraisers.",
+    "evidence": "name of events refers to event_name; attendance of over 20 students COUNT(event_id) > 20.",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT T1.event_name FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 20 EXCEPT SELECT T1.event_name FROM event AS T1 WHERE T1.type = 'Fundraiser'"
+  },
+  {
+    "id": 1331,
+    "question": "What is the amount of the funds that the Vice President received?",
+    "evidence": "'Vice President' is a position of Student Club; funds received refers to amount.",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT T2.amount FROM member AS T1 INNER JOIN income AS T2 ON T1.member_id = T2.link_to_member WHERE T1.position = 'Vice President'"
+  },
+  {
+    "id": 1334,
+    "question": "List the full name of the Student_Club members that grew up in Illinois state.",
+    "evidence": "full name of member refers to first_name, last_name",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT T1.first_name, T1.last_name FROM member AS T1 INNER JOIN zip_code AS T2 ON T1.zip = T2.zip_code WHERE T2.state = 'Illinois'"
+  },
+  {
+    "id": 1338,
+    "question": "Was each expense in October Meeting on October 8, 2019 approved?",
+    "evidence": "event_name = 'October Meeting' where event_date = '2019-10-08'; approved = True means expenses was approved; approved = False means expenses was not approved",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT T3.approved FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget WHERE T1.event_name = 'October Meeting' AND T1.event_date LIKE '2019-10-08%'"
+  },
+  {
+    "id": 1339,
+    "question": "Calculate the total average cost that Elijah Allen spent in the events on September and October.",
+    "evidence": "Elijah Allen is the full name; full name refers to first_name, last_name; The 5th and 6th string of the expense_date in the expense table can refer to month; events in September and October refers to month(expense_date) = 9 OR month(expense_date) = 10",
+    "category": "bird",
+    "difficulty": "challenging",
+    "ground_truth_sql": "SELECT AVG(T2.cost) FROM member AS T1 INNER JOIN expense AS T2 ON T1.member_id = T2.link_to_member WHERE T1.last_name = 'Allen' AND T1.first_name = 'Elijah' AND (SUBSTR(T2.expense_date, 6, 2) = '09' OR SUBSTR(T2.expense_date, 6, 2) = '10')"
+  },
+  {
+    "id": 1340,
+    "question": "Calculate the difference of the total amount spent in all events by the Student_Club in year 2019 and 2020.",
+    "evidence": "The first 4 strings of the event_date values in the event table can represent year; The difference of the total amount spent = SUBTRACT(spent where YEAR(event_date) = 2019, spent where YEAR(event_date) = 2020)",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT SUM(CASE WHEN SUBSTR(T1.event_date, 1, 4) = '2019' THEN T2.spent ELSE 0 END) - SUM(CASE WHEN SUBSTR(T1.event_date, 1, 4) = '2020' THEN T2.spent ELSE 0 END) AS num FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event"
+  },
+  {
+    "id": 1344,
+    "question": "What was the notes of the fundraising on 2019/9/14?",
+    "evidence": "fundraising on 2019/9/14 refers to source = 'Fundraising' where date_received = '2019-09-14'",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT notes FROM income WHERE source = 'Fundraising' AND date_received = '2019-09-14'"
+  },
+  {
+    "id": 1346,
+    "question": "Tell the phone number of \"Carlo Jacobs\".",
+    "evidence": "Carlo Jacobs is the full name; full name refers to first_name, last_name;",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT phone FROM member WHERE first_name = 'Carlo' AND last_name = 'Jacobs'"
+  },
+  {
+    "id": 1350,
+    "question": "What is the status of the event which bought \"Post Cards, Posters\" on 2019/8/20?",
+    "evidence": "'Post Cards, Posters' is an expense description; on 2019/8/20 refers to expense_date = '2019-8-20'; status of event refers to event_status",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT T1.event_status FROM budget AS T1 INNER JOIN expense AS T2 ON T1.budget_id = T2.link_to_budget WHERE T2.expense_description = 'Post Cards, Posters' AND T2.expense_date = '2019-08-20'"
+  },
+  {
+    "id": 1351,
+    "question": "What was Brent Thomason's major?",
+    "evidence": "Brent Thomason is the full name; full name refers to first_name, last_name; major refers to major_name",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT T2.major_name FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T1.first_name = 'Brent' AND T1.last_name = 'Thomason'"
+  },
+  {
+    "id": 1352,
+    "question": "For all the club members from \"Business\" major, how many of them wear medium size t-shirt?",
+    "evidence": "'Business' is a major name; wear medium size t-shirt refers to t_shirt_size = 'Medium'",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT COUNT(T1.member_id) FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T2.major_name = 'Business' AND T1.t_shirt_size = 'Medium'"
+  },
+  {
+    "id": 1356,
+    "question": "Which department was the President of the club in?",
+    "evidence": "'President' is a position of Student Club",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT T2.department FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T1.position = 'President'"
+  },
+  {
+    "id": 1357,
+    "question": "State the date Connor Hilton paid his/her dues.",
+    "evidence": "Connor Hilton is the full name; full name refers to first_name, last_name; date the dues was paid refers to date_received where source = 'Dues';",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT T2.date_received FROM member AS T1 INNER JOIN income AS T2 ON T1.member_id = T2.link_to_member WHERE T1.first_name = 'Connor' AND T1.last_name = 'Hilton' AND T2.source = 'Dues'"
+  },
+  {
+    "id": 1359,
+    "question": "How many times was the budget in Advertisement for \"Yearly Kickoff\" meeting more than \"October Meeting\"?",
+    "evidence": "budget in Advertisement refer to category = 'Advertisement' in the budget table; DIVIDE(SUM(amount when event_name = 'Yearly Kickoff'), SUM(amount when event_name = 'October Meeting'))",
+    "category": "bird",
+    "difficulty": "challenging",
+    "ground_truth_sql": "SELECT CAST(SUM(CASE WHEN T2.event_name = 'Yearly Kickoff' THEN T1.amount ELSE 0 END) AS REAL) / NULLIF(SUM(CASE WHEN T2.event_name = 'October Meeting' THEN T1.amount ELSE 0 END), 0) FROM budget AS T1 INNER JOIN event AS T2 ON T1.link_to_event = T2.event_id WHERE T1.category = 'Advertisement' AND T2.type = 'Meeting'"
+  },
+  {
+    "id": 1361,
+    "question": "What is the total cost of the pizzas for all the events?",
+    "evidence": "total cost of the pizzas refers to SUM(cost) where expense_description = 'Pizza'",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT SUM(cost) FROM expense WHERE expense_description = 'Pizza'"
+  },
+  {
+    "id": 1362,
+    "question": "How many cities are there in Orange County, Virginia?",
+    "evidence": "Orange County is the county name, Virginia is the state name",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT COUNT(city) FROM zip_code WHERE county = 'Orange County' AND state = 'Virginia'"
+  },
+  {
+    "id": 1368,
+    "question": "What does the person with the phone number \"809-555-3360\" major in?",
+    "evidence": "major in refers to major_name",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT T2.major_name FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T1.phone = '809-555-3360'"
+  },
+  {
+    "id": 1371,
+    "question": "How many members attended the \"Women's Soccer\" event?",
+    "evidence": "'Women's Soccer' is the event name;",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT COUNT(T2.link_to_member) FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event WHERE T1.event_name = 'Women''s Soccer'"
+  },
+  {
+    "id": 1375,
+    "question": "List all the members of the \"School of Applied Sciences, Technology and Education\" department.",
+    "evidence": "list all members means to list all the full name; full name refers to first_name, last_name;",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT T1.first_name, T1.last_name FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T2.department = 'School of Applied Sciences, Technology and Education'"
+  },
+  {
+    "id": 1376,
+    "question": "Among all the closed events, which event has the highest spend-to-budget ratio?",
+    "evidence": "closed events refers to event_name where status = 'Closed'; highest spend-to budget ratio refers to MAX(DIVIDE(spent, amount))",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT T2.event_name FROM budget AS T1 INNER JOIN event AS T2 ON T1.link_to_event = T2.event_id WHERE T2.status = 'Closed' ORDER BY T1.spent / NULLIF(T1.amount, 0) DESC NULLS LAST LIMIT 1"
+  },
+  {
+    "id": 1378,
+    "question": "What is the highest amount of budget spend for an event?",
+    "evidence": "highest amount of budget spend refers to MAX(spent)",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT MAX(spent) FROM budget"
+  },
+  {
+    "id": 1380,
+    "question": "What is the total amount of money spent for food?",
+    "evidence": "total amount of money spent refers to SUM(spent); spent for food refers to category = 'Food'",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT SUM(spent) FROM budget WHERE category = 'Food'"
+  },
+  {
+    "id": 1381,
+    "question": "List the name of students that have attended more than 7 events.",
+    "evidence": "name of students means the full name; full name refers to first_name, last_name; attended more than 7 events refers to COUNT(link_to_event) > 7",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT T1.first_name, T1.last_name FROM member AS T1 INNER JOIN attendance AS T2 ON T1.member_id = T2.link_to_member GROUP BY T1.member_id, T1.first_name, T1.last_name HAVING COUNT(T2.link_to_event) > 7"
+  },
+  {
+    "id": 1387,
+    "question": "Which student has been entrusted to manage the budget for the Yearly Kickoff?",
+    "evidence": "name of students means the full name; full name refers to first_name, last_name;'Yearly Kickoff' is an event name;",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT T4.first_name, T4.last_name FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget INNER JOIN member AS T4 ON T3.link_to_member = T4.member_id WHERE T1.event_name = 'Yearly Kickoff'"
+  },
+  {
+    "id": 1389,
+    "question": "Which event has the lowest cost?",
+    "evidence": "event refers to event_name; lowest cost means MIN(cost)",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT T1.event_name FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget ORDER BY T3.cost NULLS FIRST LIMIT 1"
+  },
+  {
+    "id": 1390,
+    "question": "Based on the total cost for all event, what is the percentage of cost for Yearly Kickoff event?",
+    "evidence": "percentage = DIVIDE(SUM(cost where event_name = 'Yearly Kickoff'), SUM(cost)) * 100",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT CAST(SUM(CASE WHEN T1.event_name = 'Yearly Kickoff' THEN T3.cost ELSE 0 END) AS REAL) * 100 / NULLIF(SUM(T3.cost), 0) FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget"
+  },
+  {
+    "id": 1392,
+    "question": "Indicate the top source of funds received in September 2019 based on their amount.",
+    "evidence": "top source funds refers to MAX(source); September 2019 means date_received BETWEEN '2019-09-01' and '2019-09-30'",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT source FROM income WHERE date_received BETWEEN '2019-09-01' AND '2019-09-30' ORDER BY source DESC NULLS LAST LIMIT 1"
+  },
+  {
+    "id": 1394,
+    "question": "How many members of the Student_Club have major in 'Physics Teaching'?",
+    "evidence": "'Physics Teaching' is the major_name;",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT COUNT(T2.member_id) FROM major AS T1 INNER JOIN member AS T2 ON T1.major_id = T2.link_to_major WHERE T1.major_name = 'Physics Teaching'"
+  },
+  {
+    "id": 1398,
+    "question": "Name the event with the highest amount spent on advertisement.",
+    "evidence": "Name of event refers to event_name; highest amount spent on advertisement refers to MAX(spent) where category = 'Advertisement'",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT T2.event_name FROM budget AS T1 INNER JOIN event AS T2 ON T1.link_to_event = T2.event_id WHERE T1.category = 'Advertisement' ORDER BY T1.spent DESC NULLS LAST LIMIT 1"
+  },
+  {
+    "id": 1399,
+    "question": "Did Maya Mclean attend the 'Women's Soccer' event?",
+    "evidence": "Maya Mclean is the full name; full name refers to first_name, last_name; 'Women's Soccer' is an event_name",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT CASE WHEN T3.event_name = 'Women''s Soccer' THEN 'YES' END AS result FROM member AS T1 INNER JOIN attendance AS T2 ON T1.member_id = T2.link_to_member INNER JOIN event AS T3 ON T2.link_to_event = T3.event_id WHERE T1.first_name = 'Maya' AND T1.last_name = 'Mclean'"
+  },
+  {
+    "id": 1401,
+    "question": "Indicate the cost of posters for 'September Speaker' event.",
+    "evidence": "'Posters' is the expense description; 'September Speaker' is an event name",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT T3.cost FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget WHERE T1.event_name = 'September Speaker' AND T3.expense_description = 'Posters'"
+  },
+  {
+    "id": 1403,
+    "question": "Indicate the name of the closed event whose cost has exceeded the budget the most.",
+    "evidence": "closed events refers to event_name where status = 'Closed'; exceed the budget the most refers to MIN(remaining) where remaining < 0",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT T2.event_name FROM budget AS T1 INNER JOIN event AS T2 ON T2.event_id = T1.link_to_event WHERE T1.event_status = 'Closed' AND T1.remaining < 0 ORDER BY T1.remaining NULLS FIRST LIMIT 1"
+  },
+  {
+    "id": 1404,
+    "question": "Identify the type of expenses and their total value approved for 'October Meeting' event.",
+    "evidence": "total value refers to SUM(cost); 'October Meeting' is an event name;",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT T1.type, SUM(T3.cost) FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget WHERE T1.event_name = 'October Meeting' GROUP BY T1.type"
+  },
+  {
+    "id": 1405,
+    "question": "Calculate the amount budgeted for 'April Speaker' event. List all the budgeted categories for said event in an ascending order based on their amount budgeted.",
+    "evidence": "'April Speaker' is an event name; amount budgeted refers to SUM(amount); budget categories refers to category",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT T2.category, SUM(T2.amount) FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event WHERE T1.event_name = 'April Speaker' GROUP BY T2.category ORDER BY SUM(T2.amount) ASC"
+  },
+  {
+    "id": 1409,
+    "question": "Mention the total expense used on 8/20/2019.",
+    "evidence": "total expense refers SUM(cost) where expense_date = '2019-08-20'",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT SUM(cost) FROM expense WHERE expense_date = '2019-08-20'"
+  },
+  {
+    "id": 1410,
+    "question": "List out the full name and total cost that member id \"rec4BLdZHS2Blfp4v\" incurred?",
+    "evidence": "full name refers to first_name, last name",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT T1.first_name, T1.last_name, SUM(T2.cost) FROM member AS T1 INNER JOIN expense AS T2 ON T1.member_id = T2.link_to_member WHERE T1.member_id = 'rec4BLdZHS2Blfp4v' GROUP BY T1.first_name, T1.last_name"
+  },
+  {
+    "id": 1411,
+    "question": "State what kind of expenses that Sacha Harrison incurred?",
+    "evidence": "kind of expenses refers to expense_description; Sacha Harrison is the full name; full name refers to first_name, last_name;",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT T2.expense_description FROM member AS T1 INNER JOIN expense AS T2 ON T1.member_id = T2.link_to_member WHERE T1.first_name = 'Sacha' AND T1.last_name = 'Harrison'"
+  },
+  {
+    "id": 1422,
+    "question": "State the category of events were held at MU 215.",
+    "evidence": "'MU 215' is the location of event; ",
+    "category": "bird",
+    "difficulty": "simple",
+    "ground_truth_sql": "SELECT DISTINCT T2.category FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event WHERE T1.location = 'MU 215'"
+  },
+  {
+    "id": 1426,
+    "question": "List the last name of members with a major in environmental engineering and include its department and college name.",
+    "evidence": "'Environmental Engineering' is the major_name;",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT T2.last_name, T1.department, T1.college FROM major AS T1 INNER JOIN member AS T2 ON T1.major_id = T2.link_to_major WHERE T2.position = 'Member' AND T1.major_name = 'Environmental Engineering'"
+  },
+  {
+    "id": 1427,
+    "question": "What are the budget category of the events located at MU 215 and a guest speaker type with a 0 budget spent?",
+    "evidence": "budget category refers to category; events located at refers to location; type = 'Guest Speaker'; 0 budget spent refers to spent = 0; ",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT DISTINCT T2.category, T1.type FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event WHERE T1.location = 'MU 215' AND T2.spent = 0 AND T1.type = 'Guest Speaker'"
+  },
+  {
+    "id": 1432,
+    "question": "Among the members with t-shirt size of medium, what is the percentage of the amount 50 received by the Student_Club?",
+    "evidence": "t_shirt_size = 'Medium' where position = 'Member'; percentage = DIVIDE(COUNT(amount = 50), COUNT(member_id)) * 100",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT CAST(SUM(CASE WHEN T2.amount = 50 THEN 1.0 ELSE 0 END) AS REAL) * 100 / NULLIF(COUNT(T2.income_id), 0) FROM member AS T1 INNER JOIN income AS T2 ON T1.member_id = T2.link_to_member WHERE T1.position = 'Member' AND T1.t_shirt_size = 'Medium'"
+  },
+  {
+    "id": 1435,
+    "question": "List the names of closed event as \"game\" that was closed from 3/15/2019 to 3/20/2020.",
+    "evidence": "name of events refers event_name; game event that was closed refers to type = 'Game' where status = 'Closed'; event_date BETWEEN '2019-03-15' and '2020-03-20'; ",
+    "category": "bird",
+    "difficulty": "moderate",
+    "ground_truth_sql": "SELECT DISTINCT event_name FROM event WHERE type = 'Game' AND DATE(SUBSTR(event_date, 1, 10)) BETWEEN '2019-03-15' AND '2020-03-20' AND status = 'Closed'"
+  },
+  {
+    "id": 1457,
+    "question": "Give the full name and contact number of members who had to spend more than average on each expense.",
+    "evidence": "full name refers to first_name, last_name; contact number refers to phone; had spent more than average on each expense refers to cost > AVG(cost)",
+    "category": "bird",
+    "difficulty": "challenging",
+    "ground_truth_sql": "SELECT DISTINCT T3.first_name, T3.last_name, T3.phone FROM expense AS T1 INNER JOIN budget AS T2 ON T1.link_to_budget = T2.budget_id INNER JOIN member AS T3 ON T3.member_id = T1.link_to_member WHERE T1.cost > (SELECT AVG(T1.cost) FROM expense AS T1 INNER JOIN budget AS T2 ON T1.link_to_budget = T2.budget_id INNER JOIN member AS T3 ON T3.member_id = T1.link_to_member)"
+  },
+  {
+    "id": 1460,
+    "question": "Write the full name of the member who spent money for water, veggie tray and supplies and include the cost of it.",
+    "evidence": "full name refers to first_name, last name; spent money for refers expense description; expense_description = 'Water, Veggie tray, supplies'",
+    "category": "bird",
+    "difficulty": "challenging",
+    "ground_truth_sql": "SELECT T2.first_name, T2.last_name, T1.cost FROM expense AS T1 INNER JOIN member AS T2 ON T1.link_to_member = T2.member_id WHERE T1.expense_description = 'Water, Veggie tray, supplies'"
+  },
+  {
+    "id": 1464,
+    "question": "Write the full names of students who received funds on the date of 9/9/2019 and include the amount received.",
+    "evidence": "full name refers to first_name, last_name, amount of funds received refers to amount, received funds on date refers to date_received",
+    "category": "bird",
+    "difficulty": "challenging",
+    "ground_truth_sql": "SELECT DISTINCT T3.first_name, T3.last_name, T4.amount FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event INNER JOIN member AS T3 ON T3.member_id = T2.link_to_member INNER JOIN income AS T4 ON T4.link_to_member = T3.member_id WHERE T4.date_received = '2019-09-09'"
+  }
+]

@@ -11,7 +11,7 @@ from mcp import Client, StdioServerParameters
 
 import mcp_server
 import service
-from dataset_loader import available_datasets
+from dataset_loader import listed_datasets
 
 
 SERVER_SCRIPT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "mcp_server.py")
@@ -63,7 +63,7 @@ def test_tools_are_listed_read_only():
     assert set(tools) == {"list_databases", "ask_database", "get_schema", "find_tables", "find_examples", "run_sql"}
     assert all(tool.annotations.read_only_hint for tool in tools.values())
     database = tools["ask_database"].input_schema["properties"]["database"]
-    assert database["enum"] == available_datasets()
+    assert database["enum"] == listed_datasets()
 
 
 def test_list_databases():
@@ -71,7 +71,7 @@ def test_list_databases():
 
     assert not result.is_error
     databases = result.structured_content["result"]
-    assert [d["name"] for d in databases] == available_datasets()
+    assert [d["name"] for d in databases] == listed_datasets()
     olist = next(d for d in databases if d["name"] == "olist")
     assert olist["label"] and olist["summary"] and olist["description"]
 
@@ -194,4 +194,4 @@ def test_stdio_server_starts():
     result = call("list_databases", server=server)
 
     assert not result.is_error
-    assert [d["name"] for d in result.structured_content["result"]] == available_datasets()
+    assert [d["name"] for d in result.structured_content["result"]] == listed_datasets()

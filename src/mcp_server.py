@@ -28,7 +28,7 @@ from mcp_types import ToolAnnotations
 from pydantic import BaseModel, Field
 
 import service
-from dataset_loader import available_datasets, load_dataset
+from dataset_loader import listed_datasets, load_dataset
 from service import jsonable
 from sql_tables import format_tables
 
@@ -50,7 +50,7 @@ pick the database. Two ways to answer a question:
 
 Questions may be in any language; most test questions are Hungarian."""
 
-DatabaseName = Literal[*available_datasets()]
+DatabaseName = Literal[*listed_datasets()]
 READ_ONLY = ToolAnnotations(readOnlyHint=True, destructiveHint=False, openWorldHint=False)
 
 Question = Annotated[str, Field(min_length=1, max_length=2000, description="The question, in natural language")]
@@ -122,7 +122,7 @@ mcp = MCPServer(name="text-to-sql", instructions=INSTRUCTIONS, log_level="WARNIN
 def list_databases() -> list[DatabaseInfo]:
     """List the databases the other tools can query, with what each one holds."""
     infos = []
-    for name in available_datasets():
+    for name in listed_datasets():
         dataset = load_dataset(name)
         infos.append(DatabaseInfo(
             name=name,

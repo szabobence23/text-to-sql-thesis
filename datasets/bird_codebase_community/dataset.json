@@ -1,0 +1,14 @@
+{
+  "name": "bird_codebase_community",
+  "label": {
+    "hu": "BIRD: Kérdés-válasz közösség",
+    "en": "BIRD: Codebase community"
+  },
+  "summary": {
+    "hu": "Stack Exchange bejegyzések, felhasználók, kommentek, szavazatok, jelvények (8 tábla; BIRD Mini-Dev, csak kiértékeléshez)",
+    "en": "Stack Exchange posts, users, comments, votes, badges (8 tables; BIRD Mini-Dev, evaluation only)"
+  },
+  "db_name": "bird_codebase_community",
+  "description": "BIRD Mini-Dev (bird-bench.github.io, CC BY-SA 4.0), PostgreSQL version (minidev.zip, MINIDEV_postgresql/BIRD_dev.sql), database codebase_community: Stack Exchange posts, users, comments, votes, badges (8 tables). English questions with evidence.",
+  "listed": false
+}

@@ -29,6 +29,14 @@ def load_cases(name, language):
         return json.load(file)
 
 
+def base_language(dataset):
+    # Translations must match it: Hungarian, or the only language of an
+    # English-only benchmark import.
+    if DEFAULT_LANGUAGE in dataset.languages:
+        return DEFAULT_LANGUAGE
+    return dataset.languages[0]
+
+
 def test_olist_is_available():
     assert "olist" in available_datasets()
 
@@ -45,7 +53,11 @@ def test_dataset_is_complete(name):
     assert dataset.db_name
     assert os.path.exists(dataset.schema_sql_path)
     assert os.path.exists(dataset.import_sql_path)
-    assert DEFAULT_LANGUAGE in dataset.languages
+    assert dataset.languages
+    # The web UI and the MCP server offer listed datasets, in Hungarian
+    # first; only an evaluation-only benchmark import may lack it.
+    if dataset.listed:
+        assert DEFAULT_LANGUAGE in dataset.languages
     # Shown in the web UI's database picker, in both UI languages.
     for language in ("hu", "en"):
         assert dataset.labels.get(language) and dataset.summaries.get(language)
@@ -87,7 +99,7 @@ def test_translations_differ_only_in_question(name, language):
         return [{k: v for k, v in case.items() if k != "question"} for case in cases]
 
     assert without_question(load_cases(name, language)) == without_question(
-        load_cases(name, DEFAULT_LANGUAGE)
+        load_cases(name, base_language(load_dataset(name)))
     )
 
 
@@ -113,7 +125,7 @@ def test_ground_truth_tables_exist(name):
     finally:
         conn.close()
 
-    for case in load_cases(name, DEFAULT_LANGUAGE):
+    for case in load_cases(name, base_language(dataset)):
         for sql in [case["ground_truth_sql"], *case.get("alternative_sql", [])]:
             missing = tables_in_sql(sql) - existing
             assert not missing, f"case {case['id']}: {missing}"

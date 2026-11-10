@@ -1,7 +1,7 @@
 """
-Compare setups measured with run_batch.py: accuracy per dataset and
-language, a 95% confidence interval, and a paired exact McNemar test per
-question against a reference setup.
+Compare setups measured with run_batch.py: accuracy per dataset (or per
+difficulty, --columns difficulty) and language, a 95% confidence interval,
+and a paired exact McNemar test per question against a reference setup.
 
     python src/evaluation/compare.py final-m1-baseline final-m2-rag \
         --labels "Alap" "+ RAG" --reference final-m1-baseline --markdown docs/results.md
@@ -29,7 +29,9 @@ from evaluation.evaluator import DEFAULT_OUTPUT_DIR
 
 DATASET_ORDER = ["olist", "f1", "adventureworks", "sales"]
 DATASET_LABELS = {"olist": "Olist", "f1": "F1", "adventureworks": "AdventureWorks", "sales": "sales"}
-METRICS = {"relaxed": "relaxed_match", "strict": "strict_match"}
+# BIRD's levels after ours; other names follow alphabetically.
+DIFFICULTY_ORDER = ["easy", "medium", "hard", "simple", "moderate", "challenging"]
+METRICS = {"relaxed": "relaxed_match", "strict": "strict_match", "set": "set_match"}
 # Runs compared question by question must agree on these.
 MUST_MATCH = ["test_cases_sha256", "model_digest", "prompt_sha256"]
 
@@ -55,15 +57,31 @@ def load_setup(name_or_path, results_dir):
     return {"name": batch["run_name"], "args": batch["evaluator_args"], "git": batch["git"], "runs": runs}
 
 
-def outcomes(setup, metric):
-    """{(dataset, language, question id): correct}"""
+def questions(setup):
+    """{(dataset, language, question id): result of that question}"""
     result = {}
     for run in setup["runs"]:
         dataset = run["run"]["pipeline"]["dataset"]
         language = run["run"]["test_cases_language"]
         for question in run["results"]:
-            result[(dataset, language, question["id"])] = bool(question[METRICS[metric]])
+            result[(dataset, language, question["id"])] = question
     return result
+
+
+def outcomes(setup, metric):
+    """{(dataset, language, question id): correct}"""
+    field = METRICS[metric]
+    result = {}
+    for key, question in questions(setup).items():
+        if field not in question:
+            sys.exit(f"{setup['name']}: nincs {field} az eredményekben (régebbi futás)")
+        result[key] = bool(question[field])
+    return result
+
+
+def ordered(names, order):
+    """Known names in their usual order, then the rest alphabetically."""
+    return [n for n in order if n in names] + sorted(n for n in names if n not in order)
 
 
 def wilson(correct, total, z=1.96):
@@ -89,19 +107,21 @@ def format_p(p):
     return "< 0.001" if p < 0.001 else f"{p:.3f}"
 
 
-def compare(setups, labels, reference, metric):
+def compare(setups, labels, reference, metric, columns="dataset"):
     """Rows of the comparison table and warnings, as plain data."""
     ref = outcomes(setups[reference], metric)
+    difficulty = {key: q["difficulty"] for key, q in questions(setups[reference]).items()}
     rows = []
     for setup, label in zip(setups, labels):
         result = outcomes(setup, metric)
         if result.keys() != ref.keys():
             sys.exit(f"{setup['name']}: nem ugyanazok a kérdések, mint a viszonyítási alapban")
 
-        by_dataset = defaultdict(list)
+        by_group = defaultdict(list)
         by_language = defaultdict(list)
-        for (dataset, language, _), correct in result.items():
-            by_dataset[dataset].append(correct)
+        for key, correct in result.items():
+            dataset, language, _ = key
+            by_group[dataset if columns == "dataset" else difficulty[key]].append(correct)
             by_language[language].append(correct)
 
         better = sum(result[k] and not ref[k] for k in ref)  # right only here
@@ -112,7 +132,7 @@ def compare(setups, labels, reference, metric):
             "label": label,
             "name": setup["name"],
             "args": " ".join(setup["args"]) or "(alap)",
-            "datasets": {d: (sum(v), len(v)) for d, v in by_dataset.items()},
+            "groups": {g: (sum(v), len(v)) for g, v in by_group.items()},
             "languages": {l: (sum(v), len(v)) for l, v in by_language.items()},
             "correct": correct,
             "total": total,
@@ -129,24 +149,32 @@ def compare(setups, labels, reference, metric):
     if any(dirty for _, dirty in commits):
         warnings.append("Legalább egy setup commitolatlan kóddal futott (dirty).")
     for key in MUST_MATCH:
-        values = {run["run"].get(key) for s in setups for run in s["runs"]
-                  if run["run"]["test_cases_language"] == "hu" and run["run"]["pipeline"]["dataset"] == "olist"}
-        if len(values) > 1:
-            warnings.append(f"Eltérő {key} a setupok között (Olist, hu).")
+        values = defaultdict(set)
+        for s in setups:
+            for run in s["runs"]:
+                values[(run["run"]["pipeline"]["dataset"], run["run"]["test_cases_language"])].add(run["run"].get(key))
+        differing = sorted(f"{d}/{l}" for (d, l), v in values.items() if len(v) > 1)
+        if differing:
+            warnings.append(f"Eltérő {key} a setupok között: {', '.join(differing)}.")
     return rows, warnings
 
 
-def markdown(rows, labels, reference, metric, warnings, setups):
-    datasets = [d for d in DATASET_ORDER if d in rows[0]["datasets"]]
+def markdown(rows, labels, reference, metric, warnings, setups, columns="dataset"):
+    if columns == "dataset":
+        groups = ordered(rows[0]["groups"], DATASET_ORDER)
+        group_labels = [DATASET_LABELS.get(g, g) for g in groups]
+    else:
+        groups = ordered(rows[0]["groups"], DIFFICULTY_ORDER)
+        group_labels = groups
     languages = sorted(rows[0]["languages"], key=lambda l: (l != "hu", l))  # hu first
-    head = ["Beállítás", *(DATASET_LABELS[d] for d in datasets), *languages, "Összesen", "95% CI",
+    head = ["Beállítás", *group_labels, *languages, "Összesen", "95% CI",
             f"Δ vs. {labels[reference]}", "+/−", "McNemar p"]
     lines = ["| " + " | ".join(head) + " |", "|" + "---|" * len(head)]
     for i, row in enumerate(rows):
         delta = row["correct"] - rows[reference]["correct"]
         cells = [
             row["label"],
-            *(f"{row['datasets'][d][0]}/{row['datasets'][d][1]}" for d in datasets),
+            *(f"{row['groups'][g][0]}/{row['groups'][g][1]}" for g in groups),
             *(f"{row['languages'][l][0]}/{row['languages'][l][1]}" for l in languages),
             f"**{row['correct']}/{row['total']}** ({row['correct'] / row['total']:.0%})",
             f"{row['ci'][0]:.0%}–{row['ci'][1]:.0%}",
@@ -170,7 +198,10 @@ def parse_args():
     parser.add_argument("setups", nargs="+", help="batch-nevek vagy batch-fájlok")
     parser.add_argument("--labels", nargs="+", help="megjelenített nevek, a setupok sorrendjében")
     parser.add_argument("--reference", default=None, help="a viszonyítási alap batch-neve (alapértelmezés: az első)")
-    parser.add_argument("--metric", choices=sorted(METRICS), default="relaxed")
+    parser.add_argument("--metric", choices=sorted(METRICS), default="relaxed",
+                        help="relaxed / strict EX, vagy set: a BIRD hivatalos EX-e")
+    parser.add_argument("--columns", choices=["dataset", "difficulty"], default="dataset",
+                        help="oszlopok adatbázisonként vagy nehézség szerint")
     parser.add_argument("--results-dir", default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--markdown", help="a táblázat mentése ebbe a markdown-fájlba")
     return parser.parse_args()
@@ -185,8 +216,8 @@ def main():
     names = [s["name"] for s in setups]
     reference = names.index(args.reference) if args.reference else 0
 
-    rows, warnings = compare(setups, labels, reference, args.metric)
-    text = markdown(rows, labels, reference, args.metric, warnings, setups)
+    rows, warnings = compare(setups, labels, reference, args.metric, args.columns)
+    text = markdown(rows, labels, reference, args.metric, warnings, setups, args.columns)
     print(text)
 
     if args.markdown:

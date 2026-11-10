@@ -35,6 +35,10 @@ class Dataset:
     # the default language).
     labels: dict = field(default_factory=dict, hash=False, compare=False)
     summaries: dict = field(default_factory=dict, hash=False, compare=False)
+    # False: an evaluation-only database (a benchmark import such as
+    # BIRD, English questions only), not offered by the web UI or the
+    # MCP server.
+    listed: bool = True
 
     def label(self, language: str = DEFAULT_LANGUAGE) -> str:
         return self.labels.get(language) or self.labels.get(DEFAULT_LANGUAGE) or self.name
@@ -106,6 +110,11 @@ def available_datasets() -> list[str]:
     )
 
 
+def listed_datasets() -> list[str]:
+    """The datasets the web UI and the MCP server offer."""
+    return [name for name in available_datasets() if load_dataset(name).listed]
+
+
 def _by_language(value) -> dict:
     if isinstance(value, str):
         return {DEFAULT_LANGUAGE: value}
@@ -133,4 +142,5 @@ def load_dataset(name: str) -> Dataset:
         schemas=tuple(config.get("schemas", ["public"])),
         labels=_by_language(config.get("label")),
         summaries=_by_language(config.get("summary")),
+        listed=config.get("listed", True),
     )

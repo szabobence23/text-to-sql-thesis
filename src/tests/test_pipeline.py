@@ -102,13 +102,15 @@ class FakeBackend:
         sql = self.generated.pop(0)
         return Generation(sql=sql, raw_response=sql, prompt_tokens=10, completion_tokens=5)
 
-    def generate(self, question, schema, settings, examples_text=None):
+    def generate(self, question, schema, settings, examples_text=None, evidence=None):
         self.generate_examples = examples_text
+        self.generate_evidence = evidence
         return self._next()
 
-    def correct(self, question, schema, failed_attempts, settings, examples_text=None):
+    def correct(self, question, schema, failed_attempts, settings, examples_text=None, evidence=None):
         self.correction_calls.append(list(failed_attempts))
         self.correct_examples = examples_text
+        self.correct_evidence = evidence
         return self._next()
 
     def validate(self, conn, sql, block_functions=True):
@@ -267,7 +269,9 @@ def test_translation_is_used_only_for_retrieval(monkeypatch):
     seen = []
     monkeypatch.setattr(
         pipeline, "generate_sql",
-        lambda question, schema, settings, examples_text=None: seen.append((question, schema)) or backend._next(),
+        lambda question, schema, settings, examples_text=None, evidence=None: (
+            seen.append((question, schema)) or backend._next()
+        ),
     )
     retriever = FakeRetriever([("public", "orders")])
 
@@ -525,3 +529,38 @@ def test_sql_examples_need_an_example_retriever(monkeypatch):
         run(PipelineConfig(sql_examples=3))
     with pytest.raises(ValueError, match="negative"):
         PipelineConfig(sql_examples=-1)
+
+
+def test_evidence_is_used_only_with_its_switch(monkeypatch):
+    backend = FakeBackend(monkeypatch, ["bad", "good"], {"bad": "invalid", "good": "ok"})
+
+    result = run_pipeline(None, "question", "schema", PipelineConfig(), evidence="x = 1")
+
+    assert backend.generate_evidence is None
+    assert result.evidence is None
+
+    backend = FakeBackend(monkeypatch, ["bad", "good"], {"bad": "invalid", "good": "ok"})
+    config = PipelineConfig(question_evidence=True, max_correction_rounds=1)
+    result = run_pipeline(None, "question", "schema", config, evidence="x = 1")
+
+    # The correction continues the same prompt, evidence included.
+    assert backend.generate_evidence == backend.correct_evidence == "x = 1"
+    assert result.evidence == "x = 1"
+
+
+def test_evidence_is_part_of_the_search_and_the_selection(monkeypatch):
+    FakeBackend(monkeypatch, ["good"], {"good": "ok"})
+    monkeypatch.setattr(pipeline, "load_schema", lambda conn, config, tables=None: "small schema")
+    asked = []
+    monkeypatch.setattr(
+        pipeline, "choose_tables",
+        lambda q, t, s, style, examples=None: asked.append(q) or TableSelection("orders", 4, 1),
+    )
+    retriever = FakeSelectingRetriever([("public", "orders"), ("public", "sellers")])
+
+    config = PipelineConfig(schema_retrieval="dense", table_selection=True, question_evidence=True)
+    result = run_pipeline(None, "question", "full schema", config, retriever, evidence="x = 1")
+
+    assert retriever.queries == ["question\nExternal knowledge: x = 1"]
+    assert asked == ["question\nExternal knowledge: x = 1"]
+    assert result.retrieval_query == "question\nExternal knowledge: x = 1"

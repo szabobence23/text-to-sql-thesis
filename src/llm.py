@@ -38,6 +38,16 @@ EXAMPLES (solved questions for this database; follow their patterns, but answer 
 {examples}
 """
 
+# Optional block of the SQL prompt (pipeline: question_evidence): the
+# external knowledge a benchmark gives with the question (BIRD's
+# "evidence", e.g. "rich refers to balance > 100000"), just before the
+# question. Inserted only when there is evidence, so PROMPT_TEMPLATE and
+# its hash stay as they were.
+EVIDENCE_BLOCK = """
+EXTERNAL KNOWLEDGE (given with the question):
+{evidence}
+"""
+
 # Sent after a failed attempt, continuing the same conversation, so the
 # first-attempt prompt stays identical to the baseline.
 CORRECTION_TEMPLATE = """
@@ -207,6 +217,7 @@ TABLE_SELECTION_PROMPT_SHA256S = {
 }
 TABLE_SELECTION_EXAMPLES_SHA256 = _sha256(TABLE_SELECTION_EXAMPLES_BLOCK)
 SQL_EXAMPLES_SHA256 = _sha256(SQL_EXAMPLES_BLOCK)
+EVIDENCE_SHA256 = _sha256(EVIDENCE_BLOCK)
 
 
 def model_digest(model):
@@ -262,22 +273,30 @@ def extract_sql(text: str) -> str:
     return text.strip()
 
 
-def sql_prompt(question, schema, examples_text=None):
-    """The SQL prompt; examples_text (solved examples) goes before the question."""
+def sql_prompt(question, schema, examples_text=None, evidence=None):
+    """
+    The SQL prompt; examples_text (solved examples), then evidence
+    (external knowledge given with the question) go before the question.
+    """
     prompt = PROMPT_TEMPLATE.format(schema=schema, question=question)
+    blocks = ""
     if examples_text:
-        block = SQL_EXAMPLES_BLOCK.format(examples=examples_text)
-        prompt = prompt.replace("\nUSER QUESTION:", block + "\nUSER QUESTION:", 1)
+        blocks += SQL_EXAMPLES_BLOCK.format(examples=examples_text)
+    if evidence:
+        blocks += EVIDENCE_BLOCK.format(evidence=evidence)
+    if blocks:
+        prompt = prompt.replace("\nUSER QUESTION:", blocks + "\nUSER QUESTION:", 1)
     return prompt
 
 
-def generate_sql(question, schema, settings: LLMSettings, examples_text=None) -> Generation:
-    prompt = sql_prompt(question, schema, examples_text)
+def generate_sql(question, schema, settings: LLMSettings, examples_text=None, evidence=None) -> Generation:
+    prompt = sql_prompt(question, schema, examples_text, evidence)
 
     return _chat([{"role": "user", "content": prompt}], settings)
 
 
-def correct_sql(question, schema, failed_attempts, settings: LLMSettings, examples_text=None) -> Generation:
+def correct_sql(question, schema, failed_attempts, settings: LLMSettings, examples_text=None,
+                evidence=None) -> Generation:
     """
     Ask for a fixed query after failed attempts.
 
@@ -285,7 +304,7 @@ def correct_sql(question, schema, failed_attempts, settings: LLMSettings, exampl
     sees every earlier attempt with its error, so it does not repeat one.
     The first message is the same prompt as the first attempt's.
     """
-    prompt = sql_prompt(question, schema, examples_text)
+    prompt = sql_prompt(question, schema, examples_text, evidence)
     messages = [{"role": "user", "content": prompt}]
 
     for raw_response, error in failed_attempts:

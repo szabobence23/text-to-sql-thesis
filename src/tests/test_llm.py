@@ -138,3 +138,14 @@ def test_sql_examples_come_right_before_the_question():
     assert prompt.index("schema") < prompt.index("Question: x") < prompt.index("USER QUESTION:")
     block = llm.SQL_EXAMPLES_BLOCK.format(examples=examples)
     assert prompt.replace(block, "") == llm.sql_prompt("q", "schema")
+
+
+def test_evidence_comes_after_examples_right_before_the_question():
+    examples = "Question: x\nSQL: SELECT 1;"
+    prompt = llm.sql_prompt("q", "schema", examples, evidence="rich = balance > 100000")
+
+    assert prompt.index("Question: x") < prompt.index("rich = balance") < prompt.index("USER QUESTION:")
+    block = llm.EVIDENCE_BLOCK.format(evidence="rich = balance > 100000")
+    assert prompt.replace(block, "") == llm.sql_prompt("q", "schema", examples)
+    # No evidence (BIRD has a few empty ones): the prompt is unchanged.
+    assert llm.sql_prompt("q", "schema", evidence="") == llm.sql_prompt("q", "schema")

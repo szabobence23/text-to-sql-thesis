@@ -1,0 +1,14 @@
+{
+  "name": "bird_formula_1",
+  "label": {
+    "hu": "BIRD: Forma–1 (BIRD)",
+    "en": "BIRD: Formula 1 (BIRD)"
+  },
+  "summary": {
+    "hu": "futamok, versenyzők, csapatok, eredmények, pontversenyek, köridők (13 tábla; BIRD Mini-Dev, csak kiértékeléshez)",
+    "en": "races, drivers, constructors, results, standings, lap times (13 tables; BIRD Mini-Dev, evaluation only)"
+  },
+  "db_name": "bird_formula_1",
+  "description": "BIRD Mini-Dev (bird-bench.github.io, CC BY-SA 4.0), PostgreSQL version (minidev.zip, MINIDEV_postgresql/BIRD_dev.sql), database formula_1: races, drivers, constructors, results, standings, lap times (13 tables). English questions with evidence.",
+  "listed": false
+}
