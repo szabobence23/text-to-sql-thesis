@@ -1,0 +1,5427 @@
+{
+  "run": {
+    "started_at": "2026-11-10T23:58:25",
+    "git": {
+      "commit": "a247a62b2cb70b512eb7ee524b1776ab3541b7ca",
+      "dirty": false
+    },
+    "pipeline": {
+      "dataset": "bird_debit_card_specializing",
+      "llm": {
+        "model": "qwen2.5-coder:7b",
+        "temperature": 0.0,
+        "seed": 42,
+        "num_ctx": 8192
+      },
+      "schema_hints": true,
+      "column_values": false,
+      "column_values_max": 50,
+      "schema_retrieval": "full",
+      "retrieval_k": 5,
+      "retrieval_fk_expansion": true,
+      "retrieval_descriptions": false,
+      "translate_for_retrieval": false,
+      "table_selection": false,
+      "table_selection_style": "strict",
+      "selection_keep_top": 0,
+      "selection_examples": 0,
+      "example_candidates": false,
+      "selection_examples_in_prompt": true,
+      "sql_examples": 0,
+      "question_evidence": false,
+      "embedding_model": "bge-m3",
+      "block_functions": true,
+      "max_correction_rounds": 0,
+      "natural_language_answer": false,
+      "answer_max_rows": 50
+    },
+    "model_digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+    "embedding_model_digest": null,
+    "translate_prompt_sha256": null,
+    "table_selection_prompt_sha256": null,
+    "table_selection_examples_sha256": null,
+    "sql_examples_sha256": null,
+    "evidence_sha256": null,
+    "examples_sha256": null,
+    "prompt_sha256": "99da7ecb190dc2876f2c31f4b8f13f51687394725a30debe1632895b058b2d4a",
+    "correction_prompt_sha256": "18936e160c444acb215efe64089ac135fadb9dbaf3ddecba9dcd16f6af912024",
+    "answer_prompt_sha256": "f45181a3fceda6ac5f3ec0794f6effb5c87233571d961c573d9e6d8034f96eb9",
+    "database": "bird_debit_card_specializing",
+    "db_user": "text2sql_reader",
+    "test_cases_file": "datasets\\bird_debit_card_specializing\\test_cases\\en.json",
+    "test_cases_language": "en",
+    "test_cases_sha256": "4e32537cb79c80ca8d34c0d737aba5fe6994aade12c1eb06932f73474dec275b",
+    "schema_sha256": "0157ff88c27ab2534abff9c7d534b484fc897766a106bff0b7a43a3833defed4",
+    "schema_text": "Database: bird_debit_card_specializing\n\nTable: customers\n- customerid bigint\n- segment text\n- currency text\nTable: gasstations\n- gasstationid bigint\n- chainid bigint\n- country text\n- segment text\nTable: products\n- productid bigint\n- description text\nTable: transactions_1k\n- transactionid bigint\n- date date\n- time text\n- customerid bigint\n- cardid bigint\n- gasstationid bigint\n- productid bigint\n- amount bigint\n- price real\nTable: yearmonth\n- customerid bigint\n- date text\n- consumption real\n\nRelationships:\n"
+  },
+  "summary": {
+    "total_questions": 30,
+    "valid_sql": {
+      "count": 27,
+      "total": 30,
+      "rate": 0.9
+    },
+    "execution_success": {
+      "count": 26,
+      "total": 30,
+      "rate": 0.8666666666666667
+    },
+    "strict_ex": {
+      "count": 5,
+      "total": 30,
+      "rate": 0.16666666666666666
+    },
+    "relaxed_ex": {
+      "count": 5,
+      "total": 30,
+      "rate": 0.16666666666666666
+    },
+    "set_ex": {
+      "count": 6,
+      "total": 30,
+      "rate": 0.2
+    },
+    "first_attempt": {
+      "execution_success": {
+        "count": 26,
+        "total": 30,
+        "rate": 0.8666666666666667
+      },
+      "strict_ex": {
+        "count": 5,
+        "total": 30,
+        "rate": 0.16666666666666666
+      },
+      "relaxed_ex": {
+        "count": 5,
+        "total": 30,
+        "rate": 0.16666666666666666
+      },
+      "set_ex": {
+        "count": 6,
+        "total": 30,
+        "rate": 0.2
+      }
+    },
+    "correction": {
+      "triggered": 0,
+      "fixed_execution": 0,
+      "fixed_strict": 0,
+      "fixed_relaxed": 0,
+      "mean_rounds_when_triggered": 0
+    },
+    "answer": {
+      "answered": 0,
+      "mean_answer_s": 0,
+      "mean_prompt_tokens": 0,
+      "mean_completion_tokens": 0
+    },
+    "by_category": {
+      "bird": {
+        "strict_ex": {
+          "count": 5,
+          "total": 30,
+          "rate": 0.16666666666666666
+        },
+        "relaxed_ex": {
+          "count": 5,
+          "total": 30,
+          "rate": 0.16666666666666666
+        },
+        "set_ex": {
+          "count": 6,
+          "total": 30,
+          "rate": 0.2
+        }
+      }
+    },
+    "by_difficulty": {
+      "challenging": {
+        "strict_ex": {
+          "count": 0,
+          "total": 4,
+          "rate": 0.0
+        },
+        "relaxed_ex": {
+          "count": 0,
+          "total": 4,
+          "rate": 0.0
+        },
+        "set_ex": {
+          "count": 0,
+          "total": 4,
+          "rate": 0.0
+        }
+      },
+      "moderate": {
+        "strict_ex": {
+          "count": 2,
+          "total": 12,
+          "rate": 0.16666666666666666
+        },
+        "relaxed_ex": {
+          "count": 2,
+          "total": 12,
+          "rate": 0.16666666666666666
+        },
+        "set_ex": {
+          "count": 2,
+          "total": 12,
+          "rate": 0.16666666666666666
+        }
+      },
+      "simple": {
+        "strict_ex": {
+          "count": 3,
+          "total": 14,
+          "rate": 0.21428571428571427
+        },
+        "relaxed_ex": {
+          "count": 3,
+          "total": 14,
+          "rate": 0.21428571428571427
+        },
+        "set_ex": {
+          "count": 4,
+          "total": 14,
+          "rate": 0.2857142857142857
+        }
+      }
+    },
+    "mean_table_recall": 1.0,
+    "tables_complete": {
+      "count": 30,
+      "total": 30,
+      "rate": 1.0
+    },
+    "mean_generation_s": 4.1025441300007515,
+    "mean_prompt_tokens": 263.6666666666667,
+    "mean_completion_tokens": 98.66666666666667
+  },
+  "results": [
+    {
+      "id": 1471,
+      "question": "What is the ratio of customers who pay in EUR against customers who pay in CZK?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT CAST(SUM(CASE WHEN Currency = 'EUR' THEN 1 ELSE 0 END) AS REAL) / NULLIF(SUM(CASE WHEN Currency = 'CZK' THEN 1 ELSE 0 END), 0) FROM customers",
+      "order_sensitive": false,
+      "gold_tables": [
+        "customers"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          0.0657
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT \n    (COUNT(CASE WHEN c.currency = 'EUR' THEN 1 END) * 1.0 / \n     COUNT(CASE WHEN c.currency = 'CZK' THEN 1 END)) AS ratio\nFROM \n    customers c\nJOIN \n    transactions_1k t ON c.customerid = t.customerid;",
+      "raw_response": "```sql\nSELECT \n    (COUNT(CASE WHEN c.currency = 'EUR' THEN 1 END) * 1.0 / \n     COUNT(CASE WHEN c.currency = 'CZK' THEN 1 END)) AS ratio\nFROM \n    customers c\nJOIN \n    transactions_1k t ON c.customerid = t.customerid;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          0.0707
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT \n    (COUNT(CASE WHEN c.currency = 'EUR' THEN 1 END) * 1.0 / \n     COUNT(CASE WHEN c.currency = 'CZK' THEN 1 END)) AS ratio\nFROM \n    customers c\nJOIN \n    transactions_1k t ON c.customerid = t.customerid;",
+          "raw_response": "```sql\nSELECT \n    (COUNT(CASE WHEN c.currency = 'EUR' THEN 1 END) * 1.0 / \n     COUNT(CASE WHEN c.currency = 'CZK' THEN 1 END)) AS ratio\nFROM \n    customers c\nJOIN \n    transactions_1k t ON c.customerid = t.customerid;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 257,
+          "completion_tokens": 75,
+          "timings": {
+            "generation_s": 3.13689720002003,
+            "validation_s": 0.006592500023543835,
+            "execution_s": 0.01267949992325157
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 257,
+      "prompt_tokens": 257,
+      "completion_tokens": 75,
+      "timings": {
+        "generation_s": 3.13689720002003,
+        "validation_s": 0.006592500023543835,
+        "execution_s": 0.01267949992325157
+      }
+    },
+    {
+      "id": 1472,
+      "question": "In 2012, who had the least consumption in LAM?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T1.CustomerID FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID WHERE T1.Segment = 'LAM' AND SUBSTR(T2.Date, 1, 4) = '2012' GROUP BY T1.CustomerID ORDER BY SUM(T2.Consumption) ASC NULLS FIRST LIMIT 1",
+      "order_sensitive": true,
+      "gold_tables": [
+        "customers",
+        "yearmonth"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          47273
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT c.customerid, c.segment, c.currency, ym.consumption\nFROM customers c\nJOIN yearmonth ym ON c.customerid = ym.customerid\nWHERE ym.date LIKE '2012%' AND c.segment = 'LAM'\nORDER BY ym.consumption ASC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT c.customerid, c.segment, c.currency, ym.consumption\nFROM customers c\nJOIN yearmonth ym ON c.customerid = ym.customerid\nWHERE ym.date LIKE '2012%' AND c.segment = 'LAM'\nORDER BY ym.consumption ASC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          7653,
+          "LAM",
+          "CZK",
+          -1651.79
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT c.customerid, c.segment, c.currency, ym.consumption\nFROM customers c\nJOIN yearmonth ym ON c.customerid = ym.customerid\nWHERE ym.date LIKE '2012%' AND c.segment = 'LAM'\nORDER BY ym.consumption ASC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT c.customerid, c.segment, c.currency, ym.consumption\nFROM customers c\nJOIN yearmonth ym ON c.customerid = ym.customerid\nWHERE ym.date LIKE '2012%' AND c.segment = 'LAM'\nORDER BY ym.consumption ASC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 255,
+          "completion_tokens": 73,
+          "timings": {
+            "generation_s": 2.8599488999461755,
+            "validation_s": 0.0036200000904500484,
+            "execution_s": 0.04184690001420677
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 255,
+      "prompt_tokens": 255,
+      "completion_tokens": 73,
+      "timings": {
+        "generation_s": 2.8599488999461755,
+        "validation_s": 0.0036200000904500484,
+        "execution_s": 0.04184690001420677
+      }
+    },
+    {
+      "id": 1473,
+      "question": "What was the average monthly consumption of customers in SME for the year 2013?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT AVG(T2.Consumption) / NULLIF(12, 0) FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID WHERE SUBSTR(T2.Date, 1, 4) = '2013' AND T1.Segment = 'SME'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "customers",
+        "yearmonth"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          459.9563
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT AVG(consumption) AS average_monthly_consumption\nFROM yearmonth\nJOIN customers ON yearmonth.customerid = customers.customerid\nWHERE customers.segment = 'SME' AND date LIKE '2013%';",
+      "raw_response": "```sql\nSELECT AVG(consumption) AS average_monthly_consumption\nFROM yearmonth\nJOIN customers ON yearmonth.customerid = customers.customerid\nWHERE customers.segment = 'SME' AND date LIKE '2013%';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          5519.4752
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT AVG(consumption) AS average_monthly_consumption\nFROM yearmonth\nJOIN customers ON yearmonth.customerid = customers.customerid\nWHERE customers.segment = 'SME' AND date LIKE '2013%';",
+          "raw_response": "```sql\nSELECT AVG(consumption) AS average_monthly_consumption\nFROM yearmonth\nJOIN customers ON yearmonth.customerid = customers.customerid\nWHERE customers.segment = 'SME' AND date LIKE '2013%';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 258,
+          "completion_tokens": 52,
+          "timings": {
+            "generation_s": 2.111806600005366,
+            "validation_s": 0.0034326999448239803,
+            "execution_s": 0.04688969999551773
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 258,
+      "prompt_tokens": 258,
+      "completion_tokens": 52,
+      "timings": {
+        "generation_s": 2.111806600005366,
+        "validation_s": 0.0034326999448239803,
+        "execution_s": 0.04688969999551773
+      }
+    },
+    {
+      "id": 1476,
+      "question": "What was the difference in gas consumption between CZK-paying customers and EUR-paying customers in 2012?",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT SUM(CASE WHEN T1.Currency = 'CZK' THEN CAST(T2.Consumption AS float) ELSE 0 END) -SUM(CASE WHEN T1.Currency = 'EUR' THEN CAST(T2.Consumption AS float) ELSE 0 END) FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID WHERE substring(T2.Date, 1, 4) = '2012'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "customers",
+        "yearmonth"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          402524570.0228
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT \n    (SELECT SUM(consumption) \n     FROM yearmonth \n     JOIN customers ON yearmonth.customerid = customers.customerid \n     WHERE customers.currency = 'CZK' AND EXTRACT(YEAR FROM yearmonth.date) = 2012) -\n    (SELECT SUM(consumption) \n     FROM yearmonth \n     JOIN customers ON yearmonth.customerid = customers.customerid \n     WHERE customers.currency = 'EUR' AND EXTRACT(YEAR FROM yearmonth.date) = 2012) AS consumption_difference;",
+      "raw_response": "```sql\nSELECT \n    (SELECT SUM(consumption) \n     FROM yearmonth \n     JOIN customers ON yearmonth.customerid = customers.customerid \n     WHERE customers.currency = 'CZK' AND EXTRACT(YEAR FROM yearmonth.date) = 2012) -\n    (SELECT SUM(consumption) \n     FROM yearmonth \n     JOIN customers ON yearmonth.customerid = customers.customerid \n     WHERE customers.currency = 'EUR' AND EXTRACT(YEAR FROM yearmonth.date) = 2012) AS consumption_difference;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: function pg_catalog.extract(unknown, text) does not exist\nLINE 5:      WHERE customers.currency = 'CZK' AND EXTRACT(YEAR FROM ...\n                                                  ^\nHINT:  No function matches the given name and argument types. You might need to add explicit type casts.",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT \n    (SELECT SUM(consumption) \n     FROM yearmonth \n     JOIN customers ON yearmonth.customerid = customers.customerid \n     WHERE customers.currency = 'CZK' AND EXTRACT(YEAR FROM yearmonth.date) = 2012) -\n    (SELECT SUM(consumption) \n     FROM yearmonth \n     JOIN customers ON yearmonth.customerid = customers.customerid \n     WHERE customers.currency = 'EUR' AND EXTRACT(YEAR FROM yearmonth.date) = 2012) AS consumption_difference;",
+          "raw_response": "```sql\nSELECT \n    (SELECT SUM(consumption) \n     FROM yearmonth \n     JOIN customers ON yearmonth.customerid = customers.customerid \n     WHERE customers.currency = 'CZK' AND EXTRACT(YEAR FROM yearmonth.date) = 2012) -\n    (SELECT SUM(consumption) \n     FROM yearmonth \n     JOIN customers ON yearmonth.customerid = customers.customerid \n     WHERE customers.currency = 'EUR' AND EXTRACT(YEAR FROM yearmonth.date) = 2012) AS consumption_difference;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: function pg_catalog.extract(unknown, text) does not exist\nLINE 5:      WHERE customers.currency = 'CZK' AND EXTRACT(YEAR FROM ...\n                                                  ^\nHINT:  No function matches the given name and argument types. You might need to add explicit type casts.",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 262,
+          "completion_tokens": 118,
+          "timings": {
+            "generation_s": 4.711307099903934,
+            "validation_s": 0.005283000064082444
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 262,
+      "prompt_tokens": 262,
+      "completion_tokens": 118,
+      "timings": {
+        "generation_s": 4.711307099903934,
+        "validation_s": 0.005283000064082444
+      }
+    },
+    {
+      "id": 1479,
+      "question": "Which year recorded the most consumption of gas paid in CZK?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT SUBSTR(T2.Date, 1, 4) FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID WHERE T1.Currency = 'CZK' GROUP BY SUBSTR(T2.Date, 1, 4) ORDER BY SUM(T2.Consumption) DESC NULLS LAST LIMIT 1",
+      "order_sensitive": true,
+      "gold_tables": [
+        "customers",
+        "yearmonth"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "2013"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT date\nFROM yearmonth\nWHERE currency = 'CZK'\nORDER BY consumption DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT date\nFROM yearmonth\nWHERE currency = 'CZK'\nORDER BY consumption DESC\nLIMIT 1;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column \"currency\" does not exist\nLINE 3: WHERE currency = 'CZK'\n              ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT date\nFROM yearmonth\nWHERE currency = 'CZK'\nORDER BY consumption DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT date\nFROM yearmonth\nWHERE currency = 'CZK'\nORDER BY consumption DESC\nLIMIT 1;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column \"currency\" does not exist\nLINE 3: WHERE currency = 'CZK'\n              ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 252,
+          "completion_tokens": 29,
+          "timings": {
+            "generation_s": 1.2580810999497771,
+            "validation_s": 0.002768700011074543
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 252,
+      "prompt_tokens": 252,
+      "completion_tokens": 29,
+      "timings": {
+        "generation_s": 1.2580810999497771,
+        "validation_s": 0.002768700011074543
+      }
+    },
+    {
+      "id": 1480,
+      "question": "What was the gas consumption peak month for SME customers in 2013?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT SUBSTR(T2.Date, 5, 2) FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID WHERE SUBSTR(T2.Date, 1, 4) = '2013' AND T1.Segment = 'SME' GROUP BY SUBSTR(T2.Date, 5, 2) ORDER BY SUM(T2.Consumption) DESC NULLS LAST LIMIT 1",
+      "order_sensitive": true,
+      "gold_tables": [
+        "customers",
+        "yearmonth"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "04"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT date, MAX(consumption) AS peak_consumption\nFROM yearmonth\nJOIN customers ON yearmonth.customerid = customers.customerid\nWHERE customers.segment = 'SME' AND date LIKE '2013%'\nGROUP BY date\nORDER BY peak_consumption DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT date, MAX(consumption) AS peak_consumption\nFROM yearmonth\nJOIN customers ON yearmonth.customerid = customers.customerid\nWHERE customers.segment = 'SME' AND date LIKE '2013%'\nGROUP BY date\nORDER BY peak_consumption DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "201304",
+          786530.8
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT date, MAX(consumption) AS peak_consumption\nFROM yearmonth\nJOIN customers ON yearmonth.customerid = customers.customerid\nWHERE customers.segment = 'SME' AND date LIKE '2013%'\nGROUP BY date\nORDER BY peak_consumption DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT date, MAX(consumption) AS peak_consumption\nFROM yearmonth\nJOIN customers ON yearmonth.customerid = customers.customerid\nWHERE customers.segment = 'SME' AND date LIKE '2013%'\nGROUP BY date\nORDER BY peak_consumption DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 256,
+          "completion_tokens": 66,
+          "timings": {
+            "generation_s": 2.6604714000131935,
+            "validation_s": 0.003826900036074221,
+            "execution_s": 0.05703419994097203
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 256,
+      "prompt_tokens": 256,
+      "completion_tokens": 66,
+      "timings": {
+        "generation_s": 2.6604714000131935,
+        "validation_s": 0.003826900036074221,
+        "execution_s": 0.05703419994097203
+      }
+    },
+    {
+      "id": 1481,
+      "question": "What is the difference in the annual average consumption of the customers with the least amount of consumption paid in CZK for 2013 between SME and LAM, LAM and KAM, and KAM and SME?",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT CAST(SUM(CASE WHEN T1.Segment = 'SME' THEN T2.Consumption ELSE 0 END) AS REAL) / NULLIF(COUNT(T1.CustomerID), 0) - CAST(SUM(CASE WHEN T1.Segment = 'LAM' THEN T2.Consumption ELSE 0 END) AS REAL) / NULLIF(COUNT(T1.CustomerID), 0), CAST(SUM(CASE WHEN T1.Segment = 'LAM' THEN T2.Consumption ELSE 0 END) AS REAL) / NULLIF(COUNT(T1.CustomerID), 0) - CAST(SUM(CASE WHEN T1.Segment = 'KAM' THEN T2.Consumption ELSE 0 END) AS REAL) / NULLIF(COUNT(T1.CustomerID), 0), CAST(SUM(CASE WHEN T1.Segment = 'KAM' THEN T2.Consumption ELSE 0 END) AS REAL) / NULLIF(COUNT(T1.CustomerID), 0) - CAST(SUM(CASE WHEN T1.Segment = 'SME' THEN T2.Consumption ELSE 0 END) AS REAL) / NULLIF(COUNT(T1.CustomerID), 0) FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID WHERE T1.Currency = 'CZK' AND T2.Consumption = (SELECT MIN(Consumption) FROM yearmonth) AND T2.Date::text BETWEEN '201301' AND '201312'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "customers",
+        "yearmonth"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          0.0,
+          582092.875,
+          -582092.875
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT \n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'SME'\n           )\n     )\n    ) - \n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'LAM'\n           )\n     )\n    ) AS SME_to_LAM,\n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'LAM'\n           )\n     )\n    ) - \n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'KAM'\n           )\n     )\n    ) AS LAM_to_KAM,\n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'KAM'\n           )\n     )\n    ) - \n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'SME'\n           )\n     )\n    ) AS KAM_to_SME;",
+      "raw_response": "```sql\nSELECT \n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'SME'\n           )\n     )\n    ) - \n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'LAM'\n           )\n     )\n    ) AS SME_to_LAM,\n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'LAM'\n           )\n     )\n    ) - \n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'KAM'\n           )\n     )\n    ) AS LAM_to_KAM,\n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'KAM'\n           )\n     )\n    ) - \n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'SME'\n           )\n     )\n    ) AS KAM_to_SME;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column \"currency\" does not exist\nLINE 8:            AND currency = 'CZK' \n                       ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT \n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'SME'\n           )\n     )\n    ) - \n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'LAM'\n           )\n     )\n    ) AS SME_to_LAM,\n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'LAM'\n           )\n     )\n    ) - \n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'KAM'\n           )\n     )\n    ) AS LAM_to_KAM,\n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'KAM'\n           )\n     )\n    ) - \n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'SME'\n           )\n     )\n    ) AS KAM_to_SME;",
+          "raw_response": "```sql\nSELECT \n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'SME'\n           )\n     )\n    ) - \n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'LAM'\n           )\n     )\n    ) AS SME_to_LAM,\n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'LAM'\n           )\n     )\n    ) - \n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'KAM'\n           )\n     )\n    ) AS LAM_to_KAM,\n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'KAM'\n           )\n     )\n    ) - \n    (SELECT AVG(consumption) \n     FROM yearmonth \n     WHERE customerid IN (\n         SELECT customerid \n         FROM transactions_1k \n         WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n           AND currency = 'CZK' \n           AND customerid IN (\n               SELECT customerid \n               FROM yearmonth \n               WHERE date BETWEEN '2013-01-01' AND '2013-12-31' \n                 AND segment = 'SME'\n           )\n     )\n    ) AS KAM_to_SME;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column \"currency\" does not exist\nLINE 8:            AND currency = 'CZK' \n                       ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 285,
+          "completion_tokens": 825,
+          "timings": {
+            "generation_s": 33.83297270000912,
+            "validation_s": 0.009465999901294708
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 285,
+      "prompt_tokens": 285,
+      "completion_tokens": 825,
+      "timings": {
+        "generation_s": 33.83297270000912,
+        "validation_s": 0.009465999901294708
+      }
+    },
+    {
+      "id": 1482,
+      "question": "Which of the three segments—SME, LAM and KAM—has the biggest and lowest percentage increases in consumption paid in EUR between 2012 and 2013?",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT CAST((SUM(CASE WHEN T1.Segment = 'SME' AND T2.Date LIKE '2013%' THEN T2.Consumption ELSE 0 END) - SUM(CASE WHEN T1.Segment = 'SME' AND T2.Date LIKE '2012%' THEN T2.Consumption ELSE 0 END)) AS REAL) * 100 / NULLIF(SUM(CASE WHEN T1.Segment = 'SME' AND T2.Date LIKE '2012%' THEN T2.Consumption ELSE 0 END), 0), CAST(SUM(CASE WHEN T1.Segment = 'LAM' AND T2.Date LIKE '2013%' THEN T2.Consumption ELSE 0 END) - SUM(CASE WHEN T1.Segment = 'LAM' AND T2.Date LIKE '2012%' THEN T2.Consumption ELSE 0 END) AS REAL) * 100 / NULLIF(SUM(CASE WHEN T1.Segment = 'LAM' AND T2.Date LIKE '2012%' THEN T2.Consumption ELSE 0 END), 0), CAST(SUM(CASE WHEN T1.Segment = 'KAM' AND T2.Date LIKE '2013%' THEN T2.Consumption ELSE 0 END) - SUM(CASE WHEN T1.Segment = 'KAM' AND T2.Date LIKE '2012%' THEN T2.Consumption ELSE 0 END) AS REAL) * 100 / NULLIF(SUM(CASE WHEN T1.Segment = 'KAM' AND T2.Date LIKE '2012%' THEN T2.Consumption ELSE 0 END), 0) FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID",
+      "order_sensitive": false,
+      "gold_tables": [
+        "customers",
+        "yearmonth"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          545.4063,
+          681.5838,
+          708.112
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "WITH consumption_data AS (\n    SELECT \n        c.segment,\n        SUM(y.consumption) AS total_consumption\n    FROM \n        yearmonth y\n    JOIN \n        customers c ON y.customerid = c.customerid\n    WHERE \n        y.date BETWEEN '2012-01-01' AND '2013-12-31'\n        AND c.currency = 'EUR'\n    GROUP BY \n        c.segment\n)\nSELECT \n    segment,\n    total_consumption,\n    (total_consumption - LAG(total_consumption) OVER (ORDER BY segment)) / LAG(total_consumption) OVER (ORDER BY segment) * 100 AS percentage_increase\nFROM \n    consumption_data\nORDER BY \n    percentage_increase DESC, percentage_increase ASC\nLIMIT 2;",
+      "raw_response": "```sql\nWITH consumption_data AS (\n    SELECT \n        c.segment,\n        SUM(y.consumption) AS total_consumption\n    FROM \n        yearmonth y\n    JOIN \n        customers c ON y.customerid = c.customerid\n    WHERE \n        y.date BETWEEN '2012-01-01' AND '2013-12-31'\n        AND c.currency = 'EUR'\n    GROUP BY \n        c.segment\n)\nSELECT \n    segment,\n    total_consumption,\n    (total_consumption - LAG(total_consumption) OVER (ORDER BY segment)) / LAG(total_consumption) OVER (ORDER BY segment) * 100 AS percentage_increase\nFROM \n    consumption_data\nORDER BY \n    percentage_increase DESC, percentage_increase ASC\nLIMIT 2;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "KAM",
+          4776452.5,
+          null
+        ],
+        [
+          "SME",
+          8031044.5,
+          64.3287
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "WITH consumption_data AS (\n    SELECT \n        c.segment,\n        SUM(y.consumption) AS total_consumption\n    FROM \n        yearmonth y\n    JOIN \n        customers c ON y.customerid = c.customerid\n    WHERE \n        y.date BETWEEN '2012-01-01' AND '2013-12-31'\n        AND c.currency = 'EUR'\n    GROUP BY \n        c.segment\n)\nSELECT \n    segment,\n    total_consumption,\n    (total_consumption - LAG(total_consumption) OVER (ORDER BY segment)) / LAG(total_consumption) OVER (ORDER BY segment) * 100 AS percentage_increase\nFROM \n    consumption_data\nORDER BY \n    percentage_increase DESC, percentage_increase ASC\nLIMIT 2;",
+          "raw_response": "```sql\nWITH consumption_data AS (\n    SELECT \n        c.segment,\n        SUM(y.consumption) AS total_consumption\n    FROM \n        yearmonth y\n    JOIN \n        customers c ON y.customerid = c.customerid\n    WHERE \n        y.date BETWEEN '2012-01-01' AND '2013-12-31'\n        AND c.currency = 'EUR'\n    GROUP BY \n        c.segment\n)\nSELECT \n    segment,\n    total_consumption,\n    (total_consumption - LAG(total_consumption) OVER (ORDER BY segment)) / LAG(total_consumption) OVER (ORDER BY segment) * 100 AS percentage_increase\nFROM \n    consumption_data\nORDER BY \n    percentage_increase DESC, percentage_increase ASC\nLIMIT 2;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 279,
+          "completion_tokens": 173,
+          "timings": {
+            "generation_s": 6.748295800061896,
+            "validation_s": 0.005949300015345216,
+            "execution_s": 0.07850279996637255
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 279,
+      "prompt_tokens": 279,
+      "completion_tokens": 173,
+      "timings": {
+        "generation_s": 6.748295800061896,
+        "validation_s": 0.005949300015345216,
+        "execution_s": 0.07850279996637255
+      }
+    },
+    {
+      "id": 1483,
+      "question": "How much did customer 6 consume in total between August and November 2013?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT SUM(Consumption) FROM yearmonth WHERE CustomerID = 6 AND Date BETWEEN '201308' AND '201311'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "yearmonth"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          1224.96
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT SUM(consumption) AS total_consumption\nFROM yearmonth\nWHERE customerid = 6\n  AND date BETWEEN '2013-08' AND '2013-11';",
+      "raw_response": "```sql\nSELECT SUM(consumption) AS total_consumption\nFROM yearmonth\nWHERE customerid = 6\n  AND date BETWEEN '2013-08' AND '2013-11';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          1117.74
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT SUM(consumption) AS total_consumption\nFROM yearmonth\nWHERE customerid = 6\n  AND date BETWEEN '2013-08' AND '2013-11';",
+          "raw_response": "```sql\nSELECT SUM(consumption) AS total_consumption\nFROM yearmonth\nWHERE customerid = 6\n  AND date BETWEEN '2013-08' AND '2013-11';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 258,
+          "completion_tokens": 50,
+          "timings": {
+            "generation_s": 2.022199900005944,
+            "validation_s": 0.0036410000175237656,
+            "execution_s": 0.021955000003799796
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 258,
+      "prompt_tokens": 258,
+      "completion_tokens": 50,
+      "timings": {
+        "generation_s": 2.022199900005944,
+        "validation_s": 0.0036410000175237656,
+        "execution_s": 0.021955000003799796
+      }
+    },
+    {
+      "id": 1484,
+      "question": "How many more \"discount\" gas stations does the Czech Republic have compared to Slovakia?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT SUM(CASE WHEN Country = 'CZE' THEN 1 ELSE 0 END) - SUM(CASE WHEN Country = 'SVK' THEN 1 ELSE 0 END) FROM gasstations WHERE Segment = 'Discount'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "gasstations"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          176
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT \n    (SELECT COUNT(*) FROM gasstations WHERE country = 'Czech Republic' AND segment = 'discount') -\n    (SELECT COUNT(*) FROM gasstations WHERE country = 'Slovakia' AND segment = 'discount') AS difference;",
+      "raw_response": "```sql\nSELECT \n    (SELECT COUNT(*) FROM gasstations WHERE country = 'Czech Republic' AND segment = 'discount') -\n    (SELECT COUNT(*) FROM gasstations WHERE country = 'Slovakia' AND segment = 'discount') AS difference;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          0
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT \n    (SELECT COUNT(*) FROM gasstations WHERE country = 'Czech Republic' AND segment = 'discount') -\n    (SELECT COUNT(*) FROM gasstations WHERE country = 'Slovakia' AND segment = 'discount') AS difference;",
+          "raw_response": "```sql\nSELECT \n    (SELECT COUNT(*) FROM gasstations WHERE country = 'Czech Republic' AND segment = 'discount') -\n    (SELECT COUNT(*) FROM gasstations WHERE country = 'Slovakia' AND segment = 'discount') AS difference;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 256,
+          "completion_tokens": 55,
+          "timings": {
+            "generation_s": 2.1977341999299824,
+            "validation_s": 0.0038855000166222453,
+            "execution_s": 0.0027022999711334705
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 256,
+      "prompt_tokens": 256,
+      "completion_tokens": 55,
+      "timings": {
+        "generation_s": 2.1977341999299824,
+        "validation_s": 0.0038855000166222453,
+        "execution_s": 0.0027022999711334705
+      }
+    },
+    {
+      "id": 1486,
+      "question": "Is it true that more SMEs pay in Czech koruna than in euros? If so, how many more?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT SUM(CASE WHEN Currency = 'CZK' THEN 1 ELSE 0 END) - SUM(CASE WHEN Currency = 'EUR' THEN 1 ELSE 0 END) FROM customers WHERE Segment = 'SME'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "customers"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          23505
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT \n    (SELECT COUNT(*) FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid WHERE c.segment = 'SME' AND c.currency = 'CZK') -\n    (SELECT COUNT(*) FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid WHERE c.segment = 'SME' AND c.currency = 'EUR') AS difference;",
+      "raw_response": "```sql\nSELECT \n    (SELECT COUNT(*) FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid WHERE c.segment = 'SME' AND c.currency = 'CZK') -\n    (SELECT COUNT(*) FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid WHERE c.segment = 'SME' AND c.currency = 'EUR') AS difference;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          222
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT \n    (SELECT COUNT(*) FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid WHERE c.segment = 'SME' AND c.currency = 'CZK') -\n    (SELECT COUNT(*) FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid WHERE c.segment = 'SME' AND c.currency = 'EUR') AS difference;",
+          "raw_response": "```sql\nSELECT \n    (SELECT COUNT(*) FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid WHERE c.segment = 'SME' AND c.currency = 'CZK') -\n    (SELECT COUNT(*) FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid WHERE c.segment = 'SME' AND c.currency = 'EUR') AS difference;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 262,
+          "completion_tokens": 87,
+          "timings": {
+            "generation_s": 3.4169741000514477,
+            "validation_s": 0.00452780001796782,
+            "execution_s": 0.0050623000133782625
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 262,
+      "prompt_tokens": 262,
+      "completion_tokens": 87,
+      "timings": {
+        "generation_s": 3.4169741000514477,
+        "validation_s": 0.00452780001796782,
+        "execution_s": 0.0050623000133782625
+      }
+    },
+    {
+      "id": 1490,
+      "question": "How many percent of LAM customer consumed more than 46.73?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT CAST(SUM(CASE WHEN T2.Consumption > 46.73 THEN 1 ELSE 0 END) AS REAL) * 100 / NULLIF(COUNT(T1.CustomerID), 0) FROM customers AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID WHERE T1.Segment = 'LAM'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "customers",
+        "yearmonth"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          98.5268
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT \n    (COUNT(*) FILTER (WHERE T2.consumption > 46.73) * 100.0 / COUNT(*)) AS percentage\nFROM \n    customers AS T1\nJOIN \n    yearmonth AS T2 ON T1.customerid = T2.customerid\nWHERE \n    T1.segment = 'LAM';",
+      "raw_response": "```sql\nSELECT \n    (COUNT(*) FILTER (WHERE T2.consumption > 46.73) * 100.0 / COUNT(*)) AS percentage\nFROM \n    customers AS T1\nJOIN \n    yearmonth AS T2 ON T1.customerid = T2.customerid\nWHERE \n    T1.segment = 'LAM';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          98.5268
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT \n    (COUNT(*) FILTER (WHERE T2.consumption > 46.73) * 100.0 / COUNT(*)) AS percentage\nFROM \n    customers AS T1\nJOIN \n    yearmonth AS T2 ON T1.customerid = T2.customerid\nWHERE \n    T1.segment = 'LAM';",
+          "raw_response": "```sql\nSELECT \n    (COUNT(*) FILTER (WHERE T2.consumption > 46.73) * 100.0 / COUNT(*)) AS percentage\nFROM \n    customers AS T1\nJOIN \n    yearmonth AS T2 ON T1.customerid = T2.customerid\nWHERE \n    T1.segment = 'LAM';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 256,
+          "completion_tokens": 79,
+          "timings": {
+            "generation_s": 3.4237828999757767,
+            "validation_s": 0.004085600026883185,
+            "execution_s": 0.033235899987630546
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 256,
+      "prompt_tokens": 256,
+      "completion_tokens": 79,
+      "timings": {
+        "generation_s": 3.4237828999757767,
+        "validation_s": 0.004085600026883185,
+        "execution_s": 0.033235899987630546
+      }
+    },
+    {
+      "id": 1493,
+      "question": "In February 2012, what percentage of customers consumed more than 528.3?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT CAST(SUM(CASE WHEN Consumption > 528.3 THEN 1 ELSE 0 END) AS REAL) * 100 / NULLIF(COUNT(CustomerID), 0) FROM yearmonth WHERE Date = '201202'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "yearmonth"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          66.623
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT \n    (COUNT(*) FILTER (WHERE consumption > 528.3) * 100.0 / COUNT(*)) AS percentage\nFROM \n    yearmonth\nWHERE \n    date LIKE '2012-02-%';",
+      "raw_response": "```sql\nSELECT \n    (COUNT(*) FILTER (WHERE consumption > 528.3) * 100.0 / COUNT(*)) AS percentage\nFROM \n    yearmonth\nWHERE \n    date LIKE '2012-02-%';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": false,
+      "execution_error": "division by zero",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT \n    (COUNT(*) FILTER (WHERE consumption > 528.3) * 100.0 / COUNT(*)) AS percentage\nFROM \n    yearmonth\nWHERE \n    date LIKE '2012-02-%';",
+          "raw_response": "```sql\nSELECT \n    (COUNT(*) FILTER (WHERE consumption > 528.3) * 100.0 / COUNT(*)) AS percentage\nFROM \n    yearmonth\nWHERE \n    date LIKE '2012-02-%';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": false,
+          "execution_error": "division by zero",
+          "prompt_tokens": 261,
+          "completion_tokens": 58,
+          "timings": {
+            "generation_s": 2.5531322999158874,
+            "validation_s": 0.00391440000385046,
+            "execution_s": 0.02733579999767244
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 261,
+      "prompt_tokens": 261,
+      "completion_tokens": 58,
+      "timings": {
+        "generation_s": 2.5531322999158874,
+        "validation_s": 0.00391440000385046,
+        "execution_s": 0.02733579999767244
+      }
+    },
+    {
+      "id": 1498,
+      "question": "What is the highest monthly consumption in the year 2012?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT SUM(CAST(Consumption AS float)) FROM yearmonth WHERE SUBSTR(Date, 1, 4) = '2012' GROUP BY SUBSTR(Date, 5, 2) ORDER BY SUM(Consumption) DESC NULLS LAST LIMIT 1",
+      "order_sensitive": true,
+      "gold_tables": [
+        "yearmonth"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          51787161.7144
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT MAX(consumption) AS highest_monthly_consumption\nFROM yearmonth\nWHERE date LIKE '2012%';",
+      "raw_response": "```sql\nSELECT MAX(consumption) AS highest_monthly_consumption\nFROM yearmonth\nWHERE date LIKE '2012%';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          445279.7
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT MAX(consumption) AS highest_monthly_consumption\nFROM yearmonth\nWHERE date LIKE '2012%';",
+          "raw_response": "```sql\nSELECT MAX(consumption) AS highest_monthly_consumption\nFROM yearmonth\nWHERE date LIKE '2012%';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 254,
+          "completion_tokens": 32,
+          "timings": {
+            "generation_s": 1.4800439999671653,
+            "validation_s": 0.0035351000260561705,
+            "execution_s": 0.029715999960899353
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 254,
+      "prompt_tokens": 254,
+      "completion_tokens": 32,
+      "timings": {
+        "generation_s": 1.4800439999671653,
+        "validation_s": 0.0035351000260561705,
+        "execution_s": 0.029715999960899353
+      }
+    },
+    {
+      "id": 1500,
+      "question": "Please list the product description of the products consumed in September, 2013.",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT T3.Description FROM transactions_1k AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID INNER JOIN products AS T3 ON T1.ProductID = T3.ProductID WHERE T2.Date = '201309'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "products",
+        "transactions_1k",
+        "yearmonth"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Diesel"
+        ],
+        [
+          "Nat.Super"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Nat.Super"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Autoprísluš."
+        ],
+        [
+          "Provoz.nápl."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel aditiv"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Nat.Super"
+        ],
+        [
+          "Nat.Super"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Autokozmetik"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Nat.Super"
+        ],
+        [
+          "Nat.Super"
+        ],
+        [
+          "Nat.Super"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Nat.Super"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Umývanie voz"
+        ],
+        [
+          "Nat.Super"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Nat.Super"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Prev.náplne"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Umývanie voz"
+        ],
+        [
+          "Prev.náplne"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Umývanie voz"
+        ],
+        [
+          "Nat.Super"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel aditiv"
+        ],
+        [
+          "Prev.náplne"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Oleje,tuky"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nemrz.kapal."
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Provoz.nápl."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Zpr.nakupu"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Dalnic.popl."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Autoprísluš."
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Provoz.nápl."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural Spec"
+        ],
+        [
+          "Nemrz.kapal."
+        ],
+        [
+          "Natural +"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nemrz.kapal."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Oleje,tuky"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nemrz.kapal."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Autoprísluš."
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nemrz.kapal."
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural +"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta Plus"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta Plus"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nemrz.kapal."
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Autokosmet."
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Autokosmet."
+        ],
+        [
+          "Autoprísluš."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta Plus"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Autokosmet."
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural Plus"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural Plus"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nemrz.kapal."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Oleje,tuky"
+        ],
+        [
+          "Additivum"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Provoz.nápl."
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Autokosmet."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Dalnic.popl."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Dalnic.popl."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Provoz.nápl."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Provoz.nápl."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Provoz.nápl."
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Provoz.nápl."
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural Spec"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Zpr.nakupu"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta Plus"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Zpr.nakupu"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nemrz.kapal."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Oleje,tuky"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Provoz.nápl."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Autoprísluš."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Autokosmet."
+        ],
+        [
+          "Natural Plus"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta Plus"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Provoz.nápl."
+        ],
+        [
+          "Knihy,nov."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nemrz.kapal."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Provoz.nápl."
+        ],
+        [
+          "Potraviny"
+        ],
+        [
+          "Nafta Plus"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Autoprísluš."
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nemrz.kapal."
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural Spec"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nemrz.kapal."
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Provoz.nápl."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural +"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nemrz.kapal."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural Plus"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Provoz.nápl."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "LPG"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta Plus"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Obcerstvení"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural Plus"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nemrz.kapal."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Zboží nesp."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Potraviny"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta Plus"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta Plus"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Potraviny"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Potraviny"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nemrz.kapal."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Oleje,tuky"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta Plus"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nat.Super"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Zpr.nakupu"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural Spec"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Provoz.nápl."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Provoz.nápl."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Autokosmet."
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Oleje,tuky"
+        ],
+        [
+          "Nemrz.kapal."
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta Plus"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "LPG"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Dalnic.popl."
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nemrz.kapal."
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta Plus"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Provoz.nápl."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nemrz.kapal."
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Provoz.nápl."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Autokosmet."
+        ],
+        [
+          "Nemrz.kapal."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "LPG"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Zboží nesp."
+        ],
+        [
+          "Obcerstvení"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "LPG"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel"
+        ],
+        [
+          "Diesel aditiv"
+        ],
+        [
+          "Umývanie voz"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Provoz.nápl."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Nafta"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT p.description\nFROM transactions_1k t\nJOIN products p ON t.productid = p.productid\nWHERE t.date BETWEEN '2013-09-01' AND '2013-09-30';",
+      "raw_response": "```sql\nSELECT p.description\nFROM transactions_1k t\nJOIN products p ON t.productid = p.productid\nWHERE t.date BETWEEN '2013-09-01' AND '2013-09-30';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT p.description\nFROM transactions_1k t\nJOIN products p ON t.productid = p.productid\nWHERE t.date BETWEEN '2013-09-01' AND '2013-09-30';",
+          "raw_response": "```sql\nSELECT p.description\nFROM transactions_1k t\nJOIN products p ON t.productid = p.productid\nWHERE t.date BETWEEN '2013-09-01' AND '2013-09-30';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 257,
+          "completion_tokens": 57,
+          "timings": {
+            "generation_s": 2.507235200027935,
+            "validation_s": 0.003914700006134808,
+            "execution_s": 0.002005700021982193
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 257,
+      "prompt_tokens": 257,
+      "completion_tokens": 57,
+      "timings": {
+        "generation_s": 2.507235200027935,
+        "validation_s": 0.003914700006134808,
+        "execution_s": 0.002005700021982193
+      }
+    },
+    {
+      "id": 1501,
+      "question": "Please list the countries of the gas stations with transactions taken place in June, 2013.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT DISTINCT T2.Country FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID INNER JOIN yearmonth AS T3 ON T1.CustomerID = T3.CustomerID WHERE T3.Date = '201306'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "gasstations",
+        "transactions_1k",
+        "yearmonth"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "SVK"
+        ],
+        [
+          "CZE"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT DISTINCT g.country\nFROM gasstations g\nJOIN transactions_1k t ON g.gasstationid = t.gasstationid\nWHERE t.date BETWEEN '2013-06-01' AND '2013-06-30';",
+      "raw_response": "```sql\nSELECT DISTINCT g.country\nFROM gasstations g\nJOIN transactions_1k t ON g.gasstationid = t.gasstationid\nWHERE t.date BETWEEN '2013-06-01' AND '2013-06-30';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT DISTINCT g.country\nFROM gasstations g\nJOIN transactions_1k t ON g.gasstationid = t.gasstationid\nWHERE t.date BETWEEN '2013-06-01' AND '2013-06-30';",
+          "raw_response": "```sql\nSELECT DISTINCT g.country\nFROM gasstations g\nJOIN transactions_1k t ON g.gasstationid = t.gasstationid\nWHERE t.date BETWEEN '2013-06-01' AND '2013-06-30';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 260,
+          "completion_tokens": 63,
+          "timings": {
+            "generation_s": 2.744051899993792,
+            "validation_s": 0.0034808999625965953,
+            "execution_s": 0.0019039999460801482
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 260,
+      "prompt_tokens": 260,
+      "completion_tokens": 63,
+      "timings": {
+        "generation_s": 2.744051899993792,
+        "validation_s": 0.0034808999625965953,
+        "execution_s": 0.0019039999460801482
+      }
+    },
+    {
+      "id": 1505,
+      "question": "Among the customers who paid in euro, how many of them have a monthly consumption of over 1000?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT COUNT(*) FROM yearmonth AS T1 INNER JOIN customers AS T2 ON T1.CustomerID = T2.CustomerID WHERE T2.Currency = 'EUR' AND T1.Consumption > 1000.00",
+      "order_sensitive": false,
+      "gold_tables": [
+        "customers",
+        "yearmonth"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          2730
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT COUNT(DISTINCT c.customerid)\nFROM customers c\nJOIN transactions_1k t ON c.customerid = t.customerid\nJOIN yearmonth ym ON c.customerid = ym.customerid\nWHERE c.currency = 'euro' AND ym.consumption > 1000;",
+      "raw_response": "```sql\nSELECT COUNT(DISTINCT c.customerid)\nFROM customers c\nJOIN transactions_1k t ON c.customerid = t.customerid\nJOIN yearmonth ym ON c.customerid = ym.customerid\nWHERE c.currency = 'euro' AND ym.consumption > 1000;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          0
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(DISTINCT c.customerid)\nFROM customers c\nJOIN transactions_1k t ON c.customerid = t.customerid\nJOIN yearmonth ym ON c.customerid = ym.customerid\nWHERE c.currency = 'euro' AND ym.consumption > 1000;",
+          "raw_response": "```sql\nSELECT COUNT(DISTINCT c.customerid)\nFROM customers c\nJOIN transactions_1k t ON c.customerid = t.customerid\nJOIN yearmonth ym ON c.customerid = ym.customerid\nWHERE c.currency = 'euro' AND ym.consumption > 1000;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 263,
+          "completion_tokens": 69,
+          "timings": {
+            "generation_s": 2.9657754000509158,
+            "validation_s": 0.00434410001616925,
+            "execution_s": 0.004869599943049252
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 263,
+      "prompt_tokens": 263,
+      "completion_tokens": 69,
+      "timings": {
+        "generation_s": 2.9657754000509158,
+        "validation_s": 0.00434410001616925,
+        "execution_s": 0.004869599943049252
+      }
+    },
+    {
+      "id": 1506,
+      "question": "Please list the product descriptions of the transactions taken place in the gas stations in the Czech Republic.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT DISTINCT T3.Description FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID INNER JOIN products AS T3 ON T1.ProductID = T3.ProductID WHERE T2.Country = 'CZE'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "gasstations",
+        "products",
+        "transactions_1k"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Dalnic.popl."
+        ],
+        [
+          "Zpr.nakupu"
+        ],
+        [
+          "Autoprísluš."
+        ],
+        [
+          "Zboží nesp."
+        ],
+        [
+          "Diesel +"
+        ],
+        [
+          "Obcerstvení"
+        ],
+        [
+          "Nemrz.kapal."
+        ],
+        [
+          "Nafta"
+        ],
+        [
+          "Natural Plus"
+        ],
+        [
+          "Autokosmet."
+        ],
+        [
+          "Natural"
+        ],
+        [
+          "Natural +"
+        ],
+        [
+          "Knihy,nov."
+        ],
+        [
+          "Provoz.nápl."
+        ],
+        [
+          "Oleje,tuky"
+        ],
+        [
+          "Potraviny"
+        ],
+        [
+          "Mytí vozidel"
+        ],
+        [
+          "LPG"
+        ],
+        [
+          "Additivum"
+        ],
+        [
+          "Natural Spec"
+        ],
+        [
+          "Nafta Plus"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT p.description\nFROM transactions_1k t\nJOIN gasstations g ON t.gasstationid = g.gasstationid\nJOIN products p ON t.productid = p.productid\nWHERE g.country = 'Czech Republic';",
+      "raw_response": "```sql\nSELECT p.description\nFROM transactions_1k t\nJOIN gasstations g ON t.gasstationid = g.gasstationid\nJOIN products p ON t.productid = p.productid\nWHERE g.country = 'Czech Republic';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT p.description\nFROM transactions_1k t\nJOIN gasstations g ON t.gasstationid = g.gasstationid\nJOIN products p ON t.productid = p.productid\nWHERE g.country = 'Czech Republic';",
+          "raw_response": "```sql\nSELECT p.description\nFROM transactions_1k t\nJOIN gasstations g ON t.gasstationid = g.gasstationid\nJOIN products p ON t.productid = p.productid\nWHERE g.country = 'Czech Republic';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 258,
+          "completion_tokens": 54,
+          "timings": {
+            "generation_s": 2.4113891000160947,
+            "validation_s": 0.004089899943210185,
+            "execution_s": 0.00257939996663481
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 258,
+      "prompt_tokens": 258,
+      "completion_tokens": 54,
+      "timings": {
+        "generation_s": 2.4113891000160947,
+        "validation_s": 0.004089899943210185,
+        "execution_s": 0.00257939996663481
+      }
+    },
+    {
+      "id": 1507,
+      "question": "Please list the disparate time of the transactions taken place in the gas stations from chain no. 11.",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT DISTINCT T1.Time FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID WHERE T2.ChainID = 11",
+      "order_sensitive": false,
+      "gold_tables": [
+        "gasstations",
+        "transactions_1k"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "11:55:00"
+        ],
+        [
+          "14:29:00"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT DISTINCT time\nFROM transactions_1k\nWHERE gasstationid IN (\n    SELECT gasstationid\n    FROM gasstations\n    WHERE chainid = 11\n);",
+      "raw_response": "```sql\nSELECT DISTINCT time\nFROM transactions_1k\nWHERE gasstationid IN (\n    SELECT gasstationid\n    FROM gasstations\n    WHERE chainid = 11\n);\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "11:55:00"
+        ],
+        [
+          "14:29:00"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT DISTINCT time\nFROM transactions_1k\nWHERE gasstationid IN (\n    SELECT gasstationid\n    FROM gasstations\n    WHERE chainid = 11\n);",
+          "raw_response": "```sql\nSELECT DISTINCT time\nFROM transactions_1k\nWHERE gasstationid IN (\n    SELECT gasstationid\n    FROM gasstations\n    WHERE chainid = 11\n);\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 261,
+          "completion_tokens": 42,
+          "timings": {
+            "generation_s": 1.8978392999852076,
+            "validation_s": 0.007167099975049496,
+            "execution_s": 0.002530600060708821
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 261,
+      "prompt_tokens": 261,
+      "completion_tokens": 42,
+      "timings": {
+        "generation_s": 1.8978392999852076,
+        "validation_s": 0.007167099975049496,
+        "execution_s": 0.002530600060708821
+      }
+    },
+    {
+      "id": 1509,
+      "question": "Among the transactions made in the gas stations in the Czech Republic, how many of them are taken place after 2012/1/1?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT COUNT(T1.TransactionID) FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID WHERE T2.Country = 'CZE' AND TO_CHAR(CAST(T1.Date AS TIMESTAMP), 'YYYY') >= '2012'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "gasstations",
+        "transactions_1k"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          933
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT COUNT(*)\nFROM transactions_1k\nJOIN gasstations ON transactions_1k.gasstationid = gasstations.gasstationid\nWHERE gasstations.country = 'Czech Republic' AND transactions_1k.date > '2012-01-01';",
+      "raw_response": "```sql\nSELECT COUNT(*)\nFROM transactions_1k\nJOIN gasstations ON transactions_1k.gasstationid = gasstations.gasstationid\nWHERE gasstations.country = 'Czech Republic' AND transactions_1k.date > '2012-01-01';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          0
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(*)\nFROM transactions_1k\nJOIN gasstations ON transactions_1k.gasstationid = gasstations.gasstationid\nWHERE gasstations.country = 'Czech Republic' AND transactions_1k.date > '2012-01-01';",
+          "raw_response": "```sql\nSELECT COUNT(*)\nFROM transactions_1k\nJOIN gasstations ON transactions_1k.gasstationid = gasstations.gasstationid\nWHERE gasstations.country = 'Czech Republic' AND transactions_1k.date > '2012-01-01';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 270,
+          "completion_tokens": 64,
+          "timings": {
+            "generation_s": 2.8364384000888094,
+            "validation_s": 0.0040252999169752,
+            "execution_s": 0.002296700025908649
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 270,
+      "prompt_tokens": 270,
+      "completion_tokens": 64,
+      "timings": {
+        "generation_s": 2.8364384000888094,
+        "validation_s": 0.0040252999169752,
+        "execution_s": 0.002296700025908649
+      }
+    },
+    {
+      "id": 1514,
+      "question": "What kind of currency did the customer paid at 16:25:00 in 2012/8/24?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT DISTINCT T3.Currency FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID INNER JOIN customers AS T3 ON T1.CustomerID = T3.CustomerID WHERE T1.Date = '2012-08-24' AND T1.Time = '16:25:00'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "customers",
+        "gasstations",
+        "transactions_1k"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "CZK"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT c.currency\nFROM customers c\nJOIN transactions_1k t ON c.customerid = t.customerid\nWHERE t.date = '2012-08-24' AND t.time = '16:25:00';",
+      "raw_response": "```sql\nSELECT c.currency\nFROM customers c\nJOIN transactions_1k t ON c.customerid = t.customerid\nWHERE t.date = '2012-08-24' AND t.time = '16:25:00';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "CZK"
+        ],
+        [
+          "CZK"
+        ],
+        [
+          "CZK"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT c.currency\nFROM customers c\nJOIN transactions_1k t ON c.customerid = t.customerid\nWHERE t.date = '2012-08-24' AND t.time = '16:25:00';",
+          "raw_response": "```sql\nSELECT c.currency\nFROM customers c\nJOIN transactions_1k t ON c.customerid = t.customerid\nWHERE t.date = '2012-08-24' AND t.time = '16:25:00';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 269,
+          "completion_tokens": 58,
+          "timings": {
+            "generation_s": 2.5803255999926478,
+            "validation_s": 0.0038496999768540263,
+            "execution_s": 0.0020274000708013773
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 269,
+      "prompt_tokens": 269,
+      "completion_tokens": 58,
+      "timings": {
+        "generation_s": 2.5803255999926478,
+        "validation_s": 0.0038496999768540263,
+        "execution_s": 0.0020274000708013773
+      }
+    },
+    {
+      "id": 1515,
+      "question": "What segment did the customer have at 2012/8/23 21:20:00?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT T2.Segment FROM transactions_1k AS T1 INNER JOIN customers AS T2 ON T1.CustomerID = T2.CustomerID WHERE T1.date = '2012-08-23' AND T1.time = '21:20:00'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "customers",
+        "transactions_1k"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "KAM"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT c.segment\nFROM customers c\nJOIN transactions_1k t ON c.customerid = t.customerid\nWHERE t.date = '2012-08-23' AND t.time = '21:20:00';",
+      "raw_response": "```sql\nSELECT c.segment\nFROM customers c\nJOIN transactions_1k t ON c.customerid = t.customerid\nWHERE t.date = '2012-08-23' AND t.time = '21:20:00';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "KAM"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT c.segment\nFROM customers c\nJOIN transactions_1k t ON c.customerid = t.customerid\nWHERE t.date = '2012-08-23' AND t.time = '21:20:00';",
+          "raw_response": "```sql\nSELECT c.segment\nFROM customers c\nJOIN transactions_1k t ON c.customerid = t.customerid\nWHERE t.date = '2012-08-23' AND t.time = '21:20:00';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 266,
+          "completion_tokens": 58,
+          "timings": {
+            "generation_s": 2.5711605000542477,
+            "validation_s": 0.004127100110054016,
+            "execution_s": 0.002218900015577674
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 266,
+      "prompt_tokens": 266,
+      "completion_tokens": 58,
+      "timings": {
+        "generation_s": 2.5711605000542477,
+        "validation_s": 0.004127100110054016,
+        "execution_s": 0.002218900015577674
+      }
+    },
+    {
+      "id": 1521,
+      "question": "For all the transactions happened during 8:00-9:00 in 2012/8/26, how many happened in CZE?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT COUNT(T1.TransactionID) FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID WHERE T1.Date = '2012-08-26' AND T1.Time BETWEEN '08:00:00' AND '09:00:00' AND T2.Country = 'CZE'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "gasstations",
+        "transactions_1k"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          14
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT COUNT(*)\nFROM transactions_1k\nJOIN gasstations ON transactions_1k.gasstationid = gasstations.gasstationid\nWHERE transactions_1k.date = '2012-08-26'\n  AND transactions_1k.time BETWEEN '08:00' AND '09:00'\n  AND gasstations.country = 'CZE';",
+      "raw_response": "```sql\nSELECT COUNT(*)\nFROM transactions_1k\nJOIN gasstations ON transactions_1k.gasstationid = gasstations.gasstationid\nWHERE transactions_1k.date = '2012-08-26'\n  AND transactions_1k.time BETWEEN '08:00' AND '09:00'\n  AND gasstations.country = 'CZE';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          14
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(*)\nFROM transactions_1k\nJOIN gasstations ON transactions_1k.gasstationid = gasstations.gasstationid\nWHERE transactions_1k.date = '2012-08-26'\n  AND transactions_1k.time BETWEEN '08:00' AND '09:00'\n  AND gasstations.country = 'CZE';",
+          "raw_response": "```sql\nSELECT COUNT(*)\nFROM transactions_1k\nJOIN gasstations ON transactions_1k.gasstationid = gasstations.gasstationid\nWHERE transactions_1k.date = '2012-08-26'\n  AND transactions_1k.time BETWEEN '08:00' AND '09:00'\n  AND gasstations.country = 'CZE';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 274,
+          "completion_tokens": 87,
+          "timings": {
+            "generation_s": 3.759985400014557,
+            "validation_s": 0.0036287999246269464,
+            "execution_s": 0.0018168000970035791
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 274,
+      "prompt_tokens": 274,
+      "completion_tokens": 87,
+      "timings": {
+        "generation_s": 3.759985400014557,
+        "validation_s": 0.0036287999246269464,
+        "execution_s": 0.0018168000970035791
+      }
+    },
+    {
+      "id": 1524,
+      "question": "What's the nationality of the customer who spent 548.4 in 2012/8/24?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT T2.Country FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID WHERE T1.Date = '2012-08-24' AND T1.Price = '548.4'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "gasstations",
+        "transactions_1k"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "CZE"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT c.segment AS nationality\nFROM customers c\nJOIN transactions_1k t ON c.customerid = t.customerid\nWHERE t.date = '2012-08-24' AND t.price = 548.4;",
+      "raw_response": "```sql\nSELECT c.segment AS nationality\nFROM customers c\nJOIN transactions_1k t ON c.customerid = t.customerid\nWHERE t.date = '2012-08-24' AND t.price = 548.4;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT c.segment AS nationality\nFROM customers c\nJOIN transactions_1k t ON c.customerid = t.customerid\nWHERE t.date = '2012-08-24' AND t.price = 548.4;",
+          "raw_response": "```sql\nSELECT c.segment AS nationality\nFROM customers c\nJOIN transactions_1k t ON c.customerid = t.customerid\nWHERE t.date = '2012-08-24' AND t.price = 548.4;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 266,
+          "completion_tokens": 57,
+          "timings": {
+            "generation_s": 2.513465099968016,
+            "validation_s": 0.004727000021375716,
+            "execution_s": 0.0022596000926569104
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 266,
+      "prompt_tokens": 266,
+      "completion_tokens": 57,
+      "timings": {
+        "generation_s": 2.513465099968016,
+        "validation_s": 0.004727000021375716,
+        "execution_s": 0.0022596000926569104
+      }
+    },
+    {
+      "id": 1525,
+      "question": "What is the percentage of the customers who used EUR in 2012/8/25?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT CAST(SUM(CASE WHEN T2.Currency = 'EUR' THEN 1 ELSE 0 END) AS REAL) * 100 / NULLIF(COUNT(T1.CustomerID), 0) FROM transactions_1k AS T1 INNER JOIN customers AS T2 ON T1.CustomerID = T2.CustomerID WHERE T1.Date = '2012-08-25'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "customers",
+        "transactions_1k"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          1.6471
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT \n    (COUNT(CASE WHEN T1.currency = 'EUR' THEN 1 ELSE NULL END) * 100.0 / COUNT(T1.customerid)) AS percentage\nFROM \n    customers AS T1\nJOIN \n    transactions_1k AS T2 ON T1.customerid = T2.customerid\nWHERE \n    T2.date = '2012-08-25';",
+      "raw_response": "```sql\nSELECT \n    (COUNT(CASE WHEN T1.currency = 'EUR' THEN 1 ELSE NULL END) * 100.0 / COUNT(T1.customerid)) AS percentage\nFROM \n    customers AS T1\nJOIN \n    transactions_1k AS T2 ON T1.customerid = T2.customerid\nWHERE \n    T2.date = '2012-08-25';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          1.6471
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT \n    (COUNT(CASE WHEN T1.currency = 'EUR' THEN 1 ELSE NULL END) * 100.0 / COUNT(T1.customerid)) AS percentage\nFROM \n    customers AS T1\nJOIN \n    transactions_1k AS T2 ON T1.customerid = T2.customerid\nWHERE \n    T2.date = '2012-08-25';",
+          "raw_response": "```sql\nSELECT \n    (COUNT(CASE WHEN T1.currency = 'EUR' THEN 1 ELSE NULL END) * 100.0 / COUNT(T1.customerid)) AS percentage\nFROM \n    customers AS T1\nJOIN \n    transactions_1k AS T2 ON T1.customerid = T2.customerid\nWHERE \n    T2.date = '2012-08-25';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 261,
+          "completion_tokens": 92,
+          "timings": {
+            "generation_s": 3.9481965000741184,
+            "validation_s": 0.0044787999941036105,
+            "execution_s": 0.00792639993596822
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 261,
+      "prompt_tokens": 261,
+      "completion_tokens": 92,
+      "timings": {
+        "generation_s": 3.9481965000741184,
+        "validation_s": 0.0044787999941036105,
+        "execution_s": 0.00792639993596822
+      }
+    },
+    {
+      "id": 1526,
+      "question": "For the customer who paid 634.8 in 2012/8/25, what was the consumption decrease rate from Year 2012 to 2013?",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT CAST(SUM(CASE WHEN SUBSTR(Date, 1, 4) = '2012' THEN Consumption ELSE 0 END) - SUM(CASE WHEN SUBSTR(Date, 1, 4) = '2013' THEN Consumption ELSE 0 END) AS REAL) / NULLIF(SUM(CASE WHEN SUBSTR(Date, 1, 4) = '2012' THEN Consumption ELSE 0 END), 0) FROM yearmonth WHERE CustomerID = (SELECT T1.CustomerID FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID WHERE T1.Date = '2012-08-25' AND T1.Price = 1513.12 )",
+      "order_sensitive": false,
+      "gold_tables": [
+        "gasstations",
+        "transactions_1k",
+        "yearmonth"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          null
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT \n    (y2013.consumption - y2012.consumption) / y2012.consumption AS consumption_decrease_rate\nFROM \n    yearmonth y2012\nJOIN \n    yearmonth y2013\nON \n    y2012.customerid = y2013.customerid\nWHERE \n    y2012.date = '2012-08-25' \n    AND y2013.date = '2013-08-25';",
+      "raw_response": "```sql\nSELECT \n    (y2013.consumption - y2012.consumption) / y2012.consumption AS consumption_decrease_rate\nFROM \n    yearmonth y2012\nJOIN \n    yearmonth y2013\nON \n    y2012.customerid = y2013.customerid\nWHERE \n    y2012.date = '2012-08-25' \n    AND y2013.date = '2013-08-25';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT \n    (y2013.consumption - y2012.consumption) / y2012.consumption AS consumption_decrease_rate\nFROM \n    yearmonth y2012\nJOIN \n    yearmonth y2013\nON \n    y2012.customerid = y2013.customerid\nWHERE \n    y2012.date = '2012-08-25' \n    AND y2013.date = '2013-08-25';",
+          "raw_response": "```sql\nSELECT \n    (y2013.consumption - y2012.consumption) / y2012.consumption AS consumption_decrease_rate\nFROM \n    yearmonth y2012\nJOIN \n    yearmonth y2013\nON \n    y2012.customerid = y2013.customerid\nWHERE \n    y2012.date = '2012-08-25' \n    AND y2013.date = '2013-08-25';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 282,
+          "completion_tokens": 127,
+          "timings": {
+            "generation_s": 5.22047780000139,
+            "validation_s": 0.0037739999825134873,
+            "execution_s": 0.002514700056053698
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 282,
+      "prompt_tokens": 282,
+      "completion_tokens": 127,
+      "timings": {
+        "generation_s": 5.22047780000139,
+        "validation_s": 0.0037739999825134873,
+        "execution_s": 0.002514700056053698
+      }
+    },
+    {
+      "id": 1528,
+      "question": "What is the percentage of \"premium\" against the overall segment in Country = \"SVK\"?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT CAST(SUM(CASE WHEN Country = 'SVK' AND Segment = 'Premium' THEN 1 ELSE 0 END) AS REAL) * 100 / NULLIF(SUM(CASE WHEN Country = 'SVK' THEN 1 ELSE 0 END), 0) FROM gasstations",
+      "order_sensitive": false,
+      "gold_tables": [
+        "gasstations"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          35.6818
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT \n    (COUNT(CASE WHEN c.segment = 'premium' THEN 1 ELSE NULL END) * 100.0 / COUNT(c.customerid)) AS premium_percentage\nFROM \n    customers c\nJOIN \n    transactions_1k t ON c.customerid = t.customerid\nJOIN \n    gasstations g ON t.gasstationid = g.gasstationid\nWHERE \n    g.country = 'SVK';",
+      "raw_response": "```sql\nSELECT \n    (COUNT(CASE WHEN c.segment = 'premium' THEN 1 ELSE NULL END) * 100.0 / COUNT(c.customerid)) AS premium_percentage\nFROM \n    customers c\nJOIN \n    transactions_1k t ON c.customerid = t.customerid\nJOIN \n    gasstations g ON t.gasstationid = g.gasstationid\nWHERE \n    g.country = 'SVK';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          0.0
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT \n    (COUNT(CASE WHEN c.segment = 'premium' THEN 1 ELSE NULL END) * 100.0 / COUNT(c.customerid)) AS premium_percentage\nFROM \n    customers c\nJOIN \n    transactions_1k t ON c.customerid = t.customerid\nJOIN \n    gasstations g ON t.gasstationid = g.gasstationid\nWHERE \n    g.country = 'SVK';",
+          "raw_response": "```sql\nSELECT \n    (COUNT(CASE WHEN c.segment = 'premium' THEN 1 ELSE NULL END) * 100.0 / COUNT(c.customerid)) AS premium_percentage\nFROM \n    customers c\nJOIN \n    transactions_1k t ON c.customerid = t.customerid\nJOIN \n    gasstations g ON t.gasstationid = g.gasstationid\nWHERE \n    g.country = 'SVK';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 258,
+          "completion_tokens": 95,
+          "timings": {
+            "generation_s": 3.901329100015573,
+            "validation_s": 0.0047536001075059175,
+            "execution_s": 0.002939100028015673
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 258,
+      "prompt_tokens": 258,
+      "completion_tokens": 95,
+      "timings": {
+        "generation_s": 3.901329100015573,
+        "validation_s": 0.0047536001075059175,
+        "execution_s": 0.002939100028015673
+      }
+    },
+    {
+      "id": 1529,
+      "question": "What is the amount spent by customer \"38508\" at the gas stations? How much had the customer spent in January 2012?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT SUM(T1.Price ), SUM(CASE WHEN T3.Date = '201201' THEN T1.Price ELSE 0 END) FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID INNER JOIN yearmonth AS T3 ON T1.CustomerID = T3.CustomerID WHERE T1.CustomerID = '38508'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "gasstations",
+        "transactions_1k",
+        "yearmonth"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          68740.22,
+          3437.01
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT SUM(amount) AS total_spent, SUM(CASE WHEN date BETWEEN '2012-01-01' AND '2012-01-31' THEN amount ELSE 0 END) AS spent_in_january_2012\nFROM transactions_1k\nWHERE customerid = 38508;",
+      "raw_response": "```sql\nSELECT SUM(amount) AS total_spent, SUM(CASE WHEN date BETWEEN '2012-01-01' AND '2012-01-31' THEN amount ELSE 0 END) AS spent_in_january_2012\nFROM transactions_1k\nWHERE customerid = 38508;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          148.0,
+          0.0
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT SUM(amount) AS total_spent, SUM(CASE WHEN date BETWEEN '2012-01-01' AND '2012-01-31' THEN amount ELSE 0 END) AS spent_in_january_2012\nFROM transactions_1k\nWHERE customerid = 38508;",
+          "raw_response": "```sql\nSELECT SUM(amount) AS total_spent, SUM(CASE WHEN date BETWEEN '2012-01-01' AND '2012-01-31' THEN amount ELSE 0 END) AS spent_in_january_2012\nFROM transactions_1k\nWHERE customerid = 38508;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 272,
+          "completion_tokens": 81,
+          "timings": {
+            "generation_s": 3.3141318999696523,
+            "validation_s": 0.003954699961468577,
+            "execution_s": 0.0018464999739080667
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 272,
+      "prompt_tokens": 272,
+      "completion_tokens": 81,
+      "timings": {
+        "generation_s": 3.3141318999696523,
+        "validation_s": 0.003954699961468577,
+        "execution_s": 0.0018464999739080667
+      }
+    },
+    {
+      "id": 1531,
+      "question": "Who is the top spending customer and how much is the average price per single item purchased by this customer? What currency was being used?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T2.CustomerID, SUM(T2.Price / NULLIF(T2.Amount, 0)), T1.Currency FROM customers AS T1 INNER JOIN transactions_1k AS T2 ON T1.CustomerID = T2.CustomerID WHERE T2.CustomerID = (SELECT CustomerID FROM yearmonth ORDER BY Consumption DESC NULLS LAST LIMIT 1) GROUP BY T2.CustomerID, T1.Currency",
+      "order_sensitive": false,
+      "gold_tables": [
+        "customers",
+        "transactions_1k",
+        "yearmonth"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          12459,
+          203.8561,
+          "CZK"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT \n    c.customerid, \n    c.segment, \n    c.currency, \n    AVG(t.price) AS average_price_per_item, \n    SUM(t.amount) AS total_spending\nFROM \n    customers c\nJOIN \n    transactions_1k t ON c.customerid = t.customerid\nGROUP BY \n    c.customerid, \n    c.segment, \n    c.currency\nORDER BY \n    total_spending DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT \n    c.customerid, \n    c.segment, \n    c.currency, \n    AVG(t.price) AS average_price_per_item, \n    SUM(t.amount) AS total_spending\nFROM \n    customers c\nJOIN \n    transactions_1k t ON c.customerid = t.customerid\nGROUP BY \n    c.customerid, \n    c.segment, \n    c.currency\nORDER BY \n    total_spending DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          16358,
+          "KAM",
+          "CZK",
+          1680.188,
+          363.0
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT \n    c.customerid, \n    c.segment, \n    c.currency, \n    AVG(t.price) AS average_price_per_item, \n    SUM(t.amount) AS total_spending\nFROM \n    customers c\nJOIN \n    transactions_1k t ON c.customerid = t.customerid\nGROUP BY \n    c.customerid, \n    c.segment, \n    c.currency\nORDER BY \n    total_spending DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT \n    c.customerid, \n    c.segment, \n    c.currency, \n    AVG(t.price) AS average_price_per_item, \n    SUM(t.amount) AS total_spending\nFROM \n    customers c\nJOIN \n    transactions_1k t ON c.customerid = t.customerid\nGROUP BY \n    c.customerid, \n    c.segment, \n    c.currency\nORDER BY \n    total_spending DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 266,
+          "completion_tokens": 99,
+          "timings": {
+            "generation_s": 4.012363200075924,
+            "validation_s": 0.003906699945218861,
+            "execution_s": 0.004440700053237379
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 266,
+      "prompt_tokens": 266,
+      "completion_tokens": 99,
+      "timings": {
+        "generation_s": 4.012363200075924,
+        "validation_s": 0.003906699945218861,
+        "execution_s": 0.004440700053237379
+      }
+    },
+    {
+      "id": 1533,
+      "question": "For all the people who paid more than 29.00 per unit of product id No.5. Give their consumption status in the August of 2012.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T2.Consumption FROM transactions_1k AS T1 INNER JOIN yearmonth AS T2 ON T1.CustomerID = T2.CustomerID WHERE T1.Price / NULLIF(T1.Amount, 0) > 29.00 AND T1.ProductID = 5 AND T2.Date = '201208'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "transactions_1k",
+        "yearmonth"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          1903.2
+        ],
+        [
+          88265.39
+        ],
+        [
+          1129.2
+        ],
+        [
+          126157.7
+        ],
+        [
+          126157.7
+        ],
+        [
+          58.19
+        ],
+        [
+          1142.95
+        ],
+        [
+          8878.07
+        ],
+        [
+          69331.72
+        ],
+        [
+          45937.22
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT c.customerid, ym.date, ym.consumption\nFROM customers c\nJOIN transactions_1k t ON c.customerid = t.customerid\nJOIN yearmonth ym ON c.customerid = ym.customerid\nWHERE t.productid = 5 AND t.price > 29.00 AND ym.date = '2012-08';",
+      "raw_response": "```sql\nSELECT c.customerid, ym.date, ym.consumption\nFROM customers c\nJOIN transactions_1k t ON c.customerid = t.customerid\nJOIN yearmonth ym ON c.customerid = ym.customerid\nWHERE t.productid = 5 AND t.price > 29.00 AND ym.date = '2012-08';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT c.customerid, ym.date, ym.consumption\nFROM customers c\nJOIN transactions_1k t ON c.customerid = t.customerid\nJOIN yearmonth ym ON c.customerid = ym.customerid\nWHERE t.productid = 5 AND t.price > 29.00 AND ym.date = '2012-08';",
+          "raw_response": "```sql\nSELECT c.customerid, ym.date, ym.consumption\nFROM customers c\nJOIN transactions_1k t ON c.customerid = t.customerid\nJOIN yearmonth ym ON c.customerid = ym.customerid\nWHERE t.productid = 5 AND t.price > 29.00 AND ym.date = '2012-08';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 276,
+          "completion_tokens": 85,
+          "timings": {
+            "generation_s": 3.4785112999379635,
+            "validation_s": 0.003592299995943904,
+            "execution_s": 0.0027904000598937273
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 276,
+      "prompt_tokens": 276,
+      "completion_tokens": 85,
+      "timings": {
+        "generation_s": 3.4785112999379635,
+        "validation_s": 0.003592299995943904,
+        "execution_s": 0.0027904000598937273
+      }
+    }
+  ]
+}

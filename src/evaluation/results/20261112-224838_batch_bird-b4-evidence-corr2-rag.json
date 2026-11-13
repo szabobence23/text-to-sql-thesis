@@ -1,0 +1,362 @@
+{
+  "batch": {
+    "run_name": "bird-b4-evidence-corr2-rag",
+    "started_at": "2026-11-12T22:48:38",
+    "git": {
+      "commit": "a247a62b2cb70b512eb7ee524b1776ab3541b7ca",
+      "dirty": false
+    },
+    "evaluator_args": [
+      "--evidence",
+      "--correction-rounds",
+      "2",
+      "--rag"
+    ],
+    "files": [
+      "20261111-114003_bird_california_schools-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json",
+      "20261112-224840_bird_card_games-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json",
+      "20261112-225249_bird_codebase_community-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json",
+      "20261112-225531_bird_debit_card_specializing-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json",
+      "20261112-225819_bird_european_football_2-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json",
+      "20261112-230211_bird_financial-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json",
+      "20261112-230527_bird_formula_1-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json",
+      "20261112-231019_bird_student_club-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json",
+      "20261112-231236_bird_superhero-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json",
+      "20261112-231530_bird_thrombosis_prediction-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json",
+      "20261112-231920_bird_toxicology-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json"
+    ],
+    "note": "bird_california_schools comes from the run started 2026-11-11 11:40 (same commit, same switches), stopped after that database; the other 10 databases were run on 2026-11-12."
+  },
+  "summary": [
+    {
+      "dataset": "bird_california_schools",
+      "language": "en",
+      "setup": "javítás=2 hintek=be qwen2.5-coder:7b séma=dense k=10 szűrés",
+      "runs": 1,
+      "questions": 30,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.9333333333333333,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.26666666666666666,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.3333333333333333,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {},
+      "unstable_questions": [],
+      "mean_generation_s": 5.519724059999984,
+      "mean_prompt_tokens": 1080.2666666666667,
+      "dirty_runs": 0,
+      "mismatched_fields": [],
+      "files": [
+        "20261111-114003_bird_california_schools-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json"
+      ]
+    },
+    {
+      "dataset": "bird_card_games",
+      "language": "en",
+      "setup": "javítás=2 hintek=be qwen2.5-coder:7b séma=dense k=10 szűrés",
+      "runs": 1,
+      "questions": 52,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.9807692307692307,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.28846153846153844,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.28846153846153844,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {},
+      "unstable_questions": [],
+      "mean_generation_s": 3.034286390385275,
+      "mean_prompt_tokens": 743.4230769230769,
+      "dirty_runs": 0,
+      "mismatched_fields": [],
+      "files": [
+        "20261112-224840_bird_card_games-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json"
+      ]
+    },
+    {
+      "dataset": "bird_codebase_community",
+      "language": "en",
+      "setup": "javítás=2 hintek=be qwen2.5-coder:7b séma=dense k=10 szűrés",
+      "runs": 1,
+      "questions": 49,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.9591836734693877,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.5306122448979592,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.5510204081632653,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {},
+      "unstable_questions": [],
+      "mean_generation_s": 2.5368277081612103,
+      "mean_prompt_tokens": 451.1224489795918,
+      "dirty_runs": 0,
+      "mismatched_fields": [],
+      "files": [
+        "20261112-225249_bird_codebase_community-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json"
+      ]
+    },
+    {
+      "dataset": "bird_debit_card_specializing",
+      "language": "en",
+      "setup": "javítás=2 hintek=be qwen2.5-coder:7b séma=dense k=10 szűrés",
+      "runs": 1,
+      "questions": 30,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.9666666666666667,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.3333333333333333,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.3333333333333333,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {},
+      "unstable_questions": [],
+      "mean_generation_s": 4.7756467666680695,
+      "mean_prompt_tokens": 420.53333333333336,
+      "dirty_runs": 0,
+      "mismatched_fields": [],
+      "files": [
+        "20261112-225531_bird_debit_card_specializing-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json"
+      ]
+    },
+    {
+      "dataset": "bird_european_football_2",
+      "language": "en",
+      "setup": "javítás=2 hintek=be qwen2.5-coder:7b séma=dense k=10 szűrés",
+      "runs": 1,
+      "questions": 51,
+      "rates": {
+        "valid_sql": {
+          "mean": 1.0,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.47058823529411764,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.49019607843137253,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {},
+      "unstable_questions": [],
+      "mean_generation_s": 3.305320945098156,
+      "mean_prompt_tokens": 773.3529411764706,
+      "dirty_runs": 0,
+      "mismatched_fields": [],
+      "files": [
+        "20261112-225819_bird_european_football_2-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json"
+      ]
+    },
+    {
+      "dataset": "bird_financial",
+      "language": "en",
+      "setup": "javítás=2 hintek=be qwen2.5-coder:7b séma=dense k=10 szűrés",
+      "runs": 1,
+      "questions": 30,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.8333333333333334,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.26666666666666666,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.3,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {},
+      "unstable_questions": [],
+      "mean_generation_s": 5.689586573334236,
+      "mean_prompt_tokens": 616.1,
+      "dirty_runs": 0,
+      "mismatched_fields": [],
+      "files": [
+        "20261112-230211_bird_financial-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json"
+      ]
+    },
+    {
+      "dataset": "bird_formula_1",
+      "language": "en",
+      "setup": "javítás=2 hintek=be qwen2.5-coder:7b séma=dense k=10 szűrés",
+      "runs": 1,
+      "questions": 66,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.9545454545454546,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.3484848484848485,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.4393939393939394,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {},
+      "unstable_questions": [],
+      "mean_generation_s": 3.622081566666814,
+      "mean_prompt_tokens": 481.5151515151515,
+      "dirty_runs": 0,
+      "mismatched_fields": [],
+      "files": [
+        "20261112-230527_bird_formula_1-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json"
+      ]
+    },
+    {
+      "dataset": "bird_student_club",
+      "language": "en",
+      "setup": "javítás=2 hintek=be qwen2.5-coder:7b séma=dense k=10 szűrés",
+      "runs": 1,
+      "questions": 48,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.9791666666666666,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.6875,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.7083333333333334,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {},
+      "unstable_questions": [],
+      "mean_generation_s": 2.216842472917051,
+      "mean_prompt_tokens": 305.75,
+      "dirty_runs": 0,
+      "mismatched_fields": [],
+      "files": [
+        "20261112-231019_bird_student_club-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json"
+      ]
+    },
+    {
+      "dataset": "bird_superhero",
+      "language": "en",
+      "setup": "javítás=2 hintek=be qwen2.5-coder:7b séma=dense k=10 szűrés",
+      "runs": 1,
+      "questions": 52,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.9230769230769231,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.6923076923076923,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.7115384615384616,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {},
+      "unstable_questions": [],
+      "mean_generation_s": 2.619914794230751,
+      "mean_prompt_tokens": 340.0576923076923,
+      "dirty_runs": 0,
+      "mismatched_fields": [],
+      "files": [
+        "20261112-231236_bird_superhero-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json"
+      ]
+    },
+    {
+      "dataset": "bird_thrombosis_prediction",
+      "language": "en",
+      "setup": "javítás=2 hintek=be qwen2.5-coder:7b séma=dense k=10 szűrés",
+      "runs": 1,
+      "questions": 50,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.86,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.28,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.28,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {},
+      "unstable_questions": [],
+      "mean_generation_s": 3.8187967499994557,
+      "mean_prompt_tokens": 736.68,
+      "dirty_runs": 0,
+      "mismatched_fields": [],
+      "files": [
+        "20261112-231530_bird_thrombosis_prediction-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json"
+      ]
+    },
+    {
+      "dataset": "bird_toxicology",
+      "language": "en",
+      "setup": "javítás=2 hintek=be qwen2.5-coder:7b séma=dense k=10 szűrés",
+      "runs": 1,
+      "questions": 40,
+      "rates": {
+        "valid_sql": {
+          "mean": 0.925,
+          "std": 0.0
+        },
+        "strict_ex": {
+          "mean": 0.2,
+          "std": 0.0
+        },
+        "relaxed_ex": {
+          "mean": 0.275,
+          "std": 0.0
+        }
+      },
+      "relaxed_by_difficulty": {},
+      "unstable_questions": [],
+      "mean_generation_s": 3.084078049998061,
+      "mean_prompt_tokens": 357.45,
+      "dirty_runs": 0,
+      "mismatched_fields": [],
+      "files": [
+        "20261112-231920_bird_toxicology-en_qwen2.5-coder-7b_bird-b4-evidence-corr2-rag-r1.json"
+      ]
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 
 BSc szakdolgozat (BME). A rendszer természetes nyelvű, főként magyar kérdéseket alakít PostgreSQL-lekérdezésekké egy helyben futó nyelvi modellel (Ollama, `qwen2.5-coder:7b`), és méri, mennyit javítanak az egyes módszerek a pontosságon.
 
-- **Adatbázisok:** Olist (brazil webáruház, 9 tábla), Forma–1 (17 tábla), AdventureWorks (68 tábla, 5 séma), és a `sales` mint kis próba-adatbázis. Mindegyikhez 50 magyar és 50 angol tesztkérdés tartozik, helyes lekérdezéssel.
+- **Adatbázisok:** Olist (brazil webáruház, 9 tábla), Forma–1 (17 tábla), AdventureWorks (68 tábla, 5 séma), és a `sales` mint kis próba-adatbázis. Mindegyikhez 50 magyar és 50 angol tesztkérdés tartozik, helyes lekérdezéssel. Független ellenőrzésként a BIRD Mini-Dev benchmark 11 adatbázisa és 498 angol kérdése is mérhető (csak kiértékelésre).
 - **Módszerek, mind külön kapcsolhatók és mérhetők:**
   - sémakeresés (RAG): bge-m3 embedding, FK-hidak és LLM-es táblaválasztás;
   - dinamikus few-shot: hasonló megoldott példák a promptban;
@@ -56,5 +56,6 @@ A kiértékelés minden futás eredményét egy JSON-fájlba menti a `src/evalua
 
 - [datasets/README.md](datasets/README.md): adatkészletek, és hogyan lehet újat hozzáadni
 - [docs/results.md](docs/results.md): a végső mérések táblázatai, szignifikanciatesztekkel
+- [docs/bird.md](docs/bird.md): mérés a BIRD Mini-Dev benchmarkon, összevetés a ranglistával
 - [docs/mcp.md](docs/mcp.md): az MCP-szerver, a bekötés és a biztonság
 - [CLAUDE.md](CLAUDE.md): részletes architektúra és a mérések története (angolul)

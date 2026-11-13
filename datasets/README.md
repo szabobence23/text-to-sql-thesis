@@ -13,12 +13,17 @@ default `olist`).
                     "schemas": PostgreSQL schemas holding the tables
                     (default ["public"]); tables outside public appear
                     schema-qualified in the prompt
+                    "listed": false for evaluation-only datasets (BIRD):
+                    the web UI and the MCP server do not offer them
   schema.sql        CREATE TABLE statements, with foreign keys
   import.sql        data loading (COPY from /datasets/<name>/data/... or INSERTs)
   hints.txt         optional hand-written notes appended to the schema in the prompt
-  test_cases/       one file per question language: hu.json (required), en.json, ...
+  test_cases/       one file per question language: hu.json (required for listed
+                    datasets), en.json, ...
                     [{"id", "question", "category", "difficulty", "ground_truth_sql"}]
                     translations must match hu.json except for "question"
+                    optional "evidence": the question's external knowledge (BIRD),
+                    shown to the model only with --evidence
                     optional "alternative_sql": [further correct queries], e.g.
                     an Olist category by its Portuguese name instead of the
                     English one; an answer matching any of them is correct
@@ -46,7 +51,8 @@ default `olist`).
 
 Ground truths with `LIMIT` must not have ties at the cut-off, otherwise the
 expected result is arbitrary. Only PostgreSQL is supported; datasets from
-SQLite benchmarks (Spider, BIRD) must be converted first.
+SQLite benchmarks (Spider, BIRD) must be converted first (BIRD Mini-Dev has
+an official PostgreSQL version, see below).
 
 ## Datasets
 
@@ -63,3 +69,11 @@ SQLite benchmarks (Spider, BIRD) must be converted first.
   pinned versions and checksums in `adventureworks/SOURCES.md`; run
   `adventureworks/prepare_data.py` before `setup_dataset.py`.
 - `sales`: 4-table toy schema, smoke test and template.
+- `bird_<db>` (11 folders): the BIRD Mini-Dev benchmark (2024-06, PostgreSQL
+  version), 498 English questions with BIRD's `evidence` and difficulty
+  (simple / moderate / challenging), evaluation-only (`"listed": false`).
+  Download https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip, unpack
+  it, then `python database/import_bird.py <unpacked folder>` exports the
+  CSVs into the folders' `data/` (regenerating their other files) and builds
+  the 11 databases.
+  Results: `docs/bird.md`.

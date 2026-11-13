@@ -4,7 +4,7 @@ database: datasets/bird_<db_id>/ with dataset.json, schema.sql, import.sql,
 test_cases/en.json and excluded_cases.json, and the data as CSV files in
 data/ (gitignored).
 
-    python database/import_bird.py <minidev folder> [--keep-staging]
+    python database/import_bird.py <minidev folder> [--reload] [--keep-staging]
 
 <minidev folder> is the unpacked minidev.zip
 (https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip, 2024-06),
