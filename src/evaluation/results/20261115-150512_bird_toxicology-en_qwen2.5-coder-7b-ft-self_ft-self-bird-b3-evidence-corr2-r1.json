@@ -1,0 +1,6025 @@
+{
+  "run": {
+    "started_at": "2026-11-15T15:05:12",
+    "git": {
+      "commit": "ada7880a9437e943d5ce7b2f94f7de95332c64eb",
+      "dirty": true
+    },
+    "pipeline": {
+      "dataset": "bird_toxicology",
+      "llm": {
+        "model": "qwen2.5-coder-7b-ft-self",
+        "temperature": 0.0,
+        "seed": 42,
+        "num_ctx": 8192
+      },
+      "schema_hints": true,
+      "column_values": false,
+      "column_values_max": 50,
+      "schema_retrieval": "full",
+      "retrieval_k": 5,
+      "retrieval_fk_expansion": true,
+      "retrieval_descriptions": false,
+      "translate_for_retrieval": false,
+      "table_selection": false,
+      "table_selection_style": "strict",
+      "selection_keep_top": 0,
+      "selection_examples": 0,
+      "example_candidates": false,
+      "selection_examples_in_prompt": true,
+      "sql_examples": 0,
+      "question_evidence": true,
+      "embedding_model": "bge-m3",
+      "block_functions": true,
+      "max_correction_rounds": 2,
+      "natural_language_answer": false,
+      "answer_max_rows": 50
+    },
+    "model_digest": "9ecd8b81667167e0d477635e2d280de93805d8d2ad8e20d5dfdd9e3d113d5463",
+    "embedding_model_digest": null,
+    "translate_prompt_sha256": null,
+    "table_selection_prompt_sha256": null,
+    "table_selection_examples_sha256": null,
+    "sql_examples_sha256": null,
+    "evidence_sha256": "9bb0816972a7b4b9bbbea2b6828c975c7d30cb692a4b498048f906b874b191a4",
+    "examples_sha256": null,
+    "prompt_sha256": "99da7ecb190dc2876f2c31f4b8f13f51687394725a30debe1632895b058b2d4a",
+    "correction_prompt_sha256": "18936e160c444acb215efe64089ac135fadb9dbaf3ddecba9dcd16f6af912024",
+    "answer_prompt_sha256": "f45181a3fceda6ac5f3ec0794f6effb5c87233571d961c573d9e6d8034f96eb9",
+    "database": "bird_toxicology",
+    "db_user": "text2sql_reader",
+    "test_cases_file": "datasets\\bird_toxicology\\test_cases\\en.json",
+    "test_cases_language": "en",
+    "test_cases_sha256": "c3174983b0611e5fcf04a731da3fad1f863a62881930ae17be68d7610e33e53f",
+    "schema_sha256": "1037aaea654cdd301c88b7dce3dd3eeb36de37549e627d481b966b5351a42214",
+    "schema_text": "Database: bird_toxicology\n\nTable: atom\n- atom_id text\n- molecule_id text\n- element text\nTable: bond\n- bond_id text\n- molecule_id text\n- bond_type text\nTable: connected\n- atom_id text\n- atom_id2 text\n- bond_id text\nTable: molecule\n- molecule_id text\n- label text\n\nRelationships:\n- atom.molecule_id -> molecule.molecule_id\n- bond.molecule_id -> molecule.molecule_id\n- connected.atom_id -> atom.atom_id\n- connected.atom_id2 -> atom.atom_id\n- connected.bond_id -> bond.bond_id\n"
+  },
+  "summary": {
+    "total_questions": 40,
+    "valid_sql": {
+      "count": 36,
+      "total": 40,
+      "rate": 0.9
+    },
+    "execution_success": {
+      "count": 36,
+      "total": 40,
+      "rate": 0.9
+    },
+    "strict_ex": {
+      "count": 11,
+      "total": 40,
+      "rate": 0.275
+    },
+    "relaxed_ex": {
+      "count": 15,
+      "total": 40,
+      "rate": 0.375
+    },
+    "set_ex": {
+      "count": 13,
+      "total": 40,
+      "rate": 0.325
+    },
+    "first_attempt": {
+      "execution_success": {
+        "count": 32,
+        "total": 40,
+        "rate": 0.8
+      },
+      "strict_ex": {
+        "count": 10,
+        "total": 40,
+        "rate": 0.25
+      },
+      "relaxed_ex": {
+        "count": 14,
+        "total": 40,
+        "rate": 0.35
+      },
+      "set_ex": {
+        "count": 12,
+        "total": 40,
+        "rate": 0.3
+      }
+    },
+    "correction": {
+      "triggered": 8,
+      "fixed_execution": 4,
+      "fixed_strict": 1,
+      "fixed_relaxed": 1,
+      "mean_rounds_when_triggered": 1.625
+    },
+    "answer": {
+      "answered": 0,
+      "mean_answer_s": 0,
+      "mean_prompt_tokens": 0,
+      "mean_completion_tokens": 0
+    },
+    "by_category": {
+      "bird": {
+        "strict_ex": {
+          "count": 11,
+          "total": 40,
+          "rate": 0.275
+        },
+        "relaxed_ex": {
+          "count": 15,
+          "total": 40,
+          "rate": 0.375
+        },
+        "set_ex": {
+          "count": 13,
+          "total": 40,
+          "rate": 0.325
+        }
+      }
+    },
+    "by_difficulty": {
+      "challenging": {
+        "strict_ex": {
+          "count": 3,
+          "total": 18,
+          "rate": 0.16666666666666666
+        },
+        "relaxed_ex": {
+          "count": 4,
+          "total": 18,
+          "rate": 0.2222222222222222
+        },
+        "set_ex": {
+          "count": 5,
+          "total": 18,
+          "rate": 0.2777777777777778
+        }
+      },
+      "moderate": {
+        "strict_ex": {
+          "count": 7,
+          "total": 17,
+          "rate": 0.4117647058823529
+        },
+        "relaxed_ex": {
+          "count": 10,
+          "total": 17,
+          "rate": 0.5882352941176471
+        },
+        "set_ex": {
+          "count": 7,
+          "total": 17,
+          "rate": 0.4117647058823529
+        }
+      },
+      "simple": {
+        "strict_ex": {
+          "count": 1,
+          "total": 5,
+          "rate": 0.2
+        },
+        "relaxed_ex": {
+          "count": 1,
+          "total": 5,
+          "rate": 0.2
+        },
+        "set_ex": {
+          "count": 1,
+          "total": 5,
+          "rate": 0.2
+        }
+      }
+    },
+    "mean_table_recall": 1.0,
+    "tables_complete": {
+      "count": 40,
+      "total": 40,
+      "rate": 1.0
+    },
+    "mean_generation_s": 3.514843074998862,
+    "mean_prompt_tokens": 476.0,
+    "mean_completion_tokens": 85.5
+  },
+  "results": [
+    {
+      "id": 195,
+      "question": "What is the most common bond type?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT T.bond_type FROM (SELECT bond_type, COUNT(bond_id) FROM bond GROUP BY bond_type ORDER BY COUNT(bond_id) DESC NULLS LAST LIMIT 1) AS T",
+      "order_sensitive": false,
+      "gold_tables": [
+        "bond"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "most common bond type refers MAX(COUNT(bond_type))",
+      "expected_result": [
+        [
+          "-"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT bond_type \nFROM bond \nGROUP BY bond_type \nORDER BY COUNT(bond_type) DESC \nLIMIT 1;",
+      "raw_response": "```sql\nSELECT bond_type \nFROM bond \nGROUP BY bond_type \nORDER BY COUNT(bond_type) DESC \nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "-"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT bond_type \nFROM bond \nGROUP BY bond_type \nORDER BY COUNT(bond_type) DESC \nLIMIT 1;",
+          "raw_response": "```sql\nSELECT bond_type \nFROM bond \nGROUP BY bond_type \nORDER BY COUNT(bond_type) DESC \nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 268,
+          "completion_tokens": 30,
+          "timings": {
+            "generation_s": 1.4158596999914153,
+            "validation_s": 0.0031525999947916716,
+            "execution_s": 0.0029179999983171
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 268,
+      "prompt_tokens": 268,
+      "completion_tokens": 30,
+      "timings": {
+        "generation_s": 1.4158596999914153,
+        "validation_s": 0.0031525999947916716,
+        "execution_s": 0.0029179999983171
+      }
+    },
+    {
+      "id": 197,
+      "question": "Calculate the average number of oxygen atoms in single-bonded molecules.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT AVG(oxygen_count) FROM (SELECT T1.molecule_id, COUNT(T1.element) AS oxygen_count FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.bond_type = '-' AND T1.element = 'o' GROUP BY T1.molecule_id) AS oxygen_counts",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "bond"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "single-bonded molecules refers to bond_type = '-' ; average number of oxygen atom = AVG(element = 'o')",
+      "expected_result": [
+        [
+          99.6835
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT AVG(CASE WHEN a.element = 'o' THEN 1 ELSE 0 END) AS avg_oxygen_atoms\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id\nWHERE b.bond_type = '-';",
+      "raw_response": "```sql\nSELECT AVG(CASE WHEN a.element = 'o' THEN 1 ELSE 0 END) AS avg_oxygen_atoms\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id\nWHERE b.bond_type = '-';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          0.0801
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT AVG(CASE WHEN a.element = 'o' THEN 1 ELSE 0 END) AS avg_oxygen_atoms\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id\nWHERE b.bond_type = '-';",
+          "raw_response": "```sql\nSELECT AVG(CASE WHEN a.element = 'o' THEN 1 ELSE 0 END) AS avg_oxygen_atoms\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id\nWHERE b.bond_type = '-';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 286,
+          "completion_tokens": 55,
+          "timings": {
+            "generation_s": 2.1559701999940444,
+            "validation_s": 0.004029799994896166,
+            "execution_s": 0.029598900000564754
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 286,
+      "prompt_tokens": 286,
+      "completion_tokens": 55,
+      "timings": {
+        "generation_s": 2.1559701999940444,
+        "validation_s": 0.004029799994896166,
+        "execution_s": 0.029598900000564754
+      }
+    },
+    {
+      "id": 198,
+      "question": "On average how many carcinogenic molecules are single bonded?",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT AVG(single_bond_count) FROM (SELECT T3.molecule_id, COUNT(T1.bond_type) AS single_bond_count FROM bond AS T1 INNER JOIN atom AS T2 ON T1.molecule_id = T2.molecule_id INNER JOIN molecule AS T3 ON T3.molecule_id = T2.molecule_id WHERE T1.bond_type = '-' AND T3.label = '+' GROUP BY T3.molecule_id) AS subquery",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "bond",
+        "molecule"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "carcinogenic molecules refers to label = '+'; single-bonded refers to bond_type = '-'; average = DIVIDE(SUM(bond_type = '-'), COUNT(atom_id))",
+      "expected_result": [
+        [
+          732.125
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT AVG(CASE WHEN T3.bond_type = '-' THEN 1 ELSE 0 END) AS average_single_bonded_carcinogenic_molecules\nFROM molecule AS T1\nJOIN atom AS T2 ON T1.molecule_id = T2.molecule_id\nJOIN bond AS T3 ON T1.molecule_id = T3.molecule_id\nWHERE T1.label = '+';",
+      "raw_response": "```sql\nSELECT AVG(CASE WHEN T3.bond_type = '-' THEN 1 ELSE 0 END) AS average_single_bonded_carcinogenic_molecules\nFROM molecule AS T1\nJOIN atom AS T2 ON T1.molecule_id = T2.molecule_id\nJOIN bond AS T3 ON T1.molecule_id = T3.molecule_id\nWHERE T1.label = '+';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          0.8216
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT AVG(CASE WHEN T3.bond_type = '-' THEN 1 ELSE 0 END) AS average_single_bonded_carcinogenic_molecules\nFROM molecule AS T1\nJOIN atom AS T2 ON T1.molecule_id = T2.molecule_id\nJOIN bond AS T3 ON T1.molecule_id = T3.molecule_id\nWHERE T1.label = '+';",
+          "raw_response": "```sql\nSELECT AVG(CASE WHEN T3.bond_type = '-' THEN 1 ELSE 0 END) AS average_single_bonded_carcinogenic_molecules\nFROM molecule AS T1\nJOIN atom AS T2 ON T1.molecule_id = T2.molecule_id\nJOIN bond AS T3 ON T1.molecule_id = T3.molecule_id\nWHERE T1.label = '+';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 296,
+          "completion_tokens": 87,
+          "timings": {
+            "generation_s": 3.404093199991621,
+            "validation_s": 0.004515499997069128,
+            "execution_s": 0.0209644999995362
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 296,
+      "prompt_tokens": 296,
+      "completion_tokens": 87,
+      "timings": {
+        "generation_s": 3.404093199991621,
+        "validation_s": 0.004515499997069128,
+        "execution_s": 0.0209644999995362
+      }
+    },
+    {
+      "id": 200,
+      "question": "Find the triple-bonded molecules which are carcinogenic.",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT DISTINCT T2.molecule_id FROM bond AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.bond_type = '#' AND T2.label = '+'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "bond",
+        "molecule"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "triple-bonded molecules refers to bond_type = '#'; carcinogenic refers to label = '+'",
+      "expected_result": [
+        [
+          "TR041"
+        ],
+        [
+          "TR499"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT m.molecule_id, m.label\nFROM molecule m\nJOIN bond b ON m.molecule_id = b.molecule_id\nWHERE b.bond_type = '#'\nAND m.label = '+';",
+      "raw_response": "```sql\nSELECT m.molecule_id, m.label\nFROM molecule m\nJOIN bond b ON m.molecule_id = b.molecule_id\nWHERE b.bond_type = '#'\nAND m.label = '+';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "TR041",
+          "+"
+        ],
+        [
+          "TR041",
+          "+"
+        ],
+        [
+          "TR499",
+          "+"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT m.molecule_id, m.label\nFROM molecule m\nJOIN bond b ON m.molecule_id = b.molecule_id\nWHERE b.bond_type = '#'\nAND m.label = '+';",
+          "raw_response": "```sql\nSELECT m.molecule_id, m.label\nFROM molecule m\nJOIN bond b ON m.molecule_id = b.molecule_id\nWHERE b.bond_type = '#'\nAND m.label = '+';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 281,
+          "completion_tokens": 46,
+          "timings": {
+            "generation_s": 1.908119199986686,
+            "validation_s": 0.003703700000187382,
+            "execution_s": 0.0026991999911842868
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 281,
+      "prompt_tokens": 281,
+      "completion_tokens": 46,
+      "timings": {
+        "generation_s": 1.908119199986686,
+        "validation_s": 0.003703700000187382,
+        "execution_s": 0.0026991999911842868
+      }
+    },
+    {
+      "id": 201,
+      "question": "What is the percentage of carbon in double-bond molecules?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT CAST(COUNT(DISTINCT CASE WHEN T1.element = 'c' THEN T1.atom_id ELSE NULL END) AS REAL) * 100 / NULLIF(COUNT(DISTINCT T1.atom_id), 0) FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.bond_type = '='",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "bond"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "carbon refers to element = 'c'; double-bond molecules refers to bond_type = '='; percentage = DIVIDE(SUM(element = 'c'), COUNT(atom_id))",
+      "expected_result": [
+        [
+          38.8096
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT \n    (CAST(SUM(CASE WHEN a.element = 'c' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(a.atom_id)) * 100 AS percentage\nFROM \n    atom a\nJOIN \n    bond b ON a.molecule_id = b.molecule_id\nJOIN \n    connected c ON a.atom_id = c.atom_id\nWHERE \n    b.bond_type = '=';",
+      "raw_response": "```sql\nSELECT \n    (CAST(SUM(CASE WHEN a.element = 'c' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(a.atom_id)) * 100 AS percentage\nFROM \n    atom a\nJOIN \n    bond b ON a.molecule_id = b.molecule_id\nJOIN \n    connected c ON a.atom_id = c.atom_id\nWHERE \n    b.bond_type = '=';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          64.3488
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT \n    (CAST(SUM(CASE WHEN a.element = 'c' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(a.atom_id)) * 100 AS percentage\nFROM \n    atom a\nJOIN \n    bond b ON a.molecule_id = b.molecule_id\nJOIN \n    connected c ON a.atom_id = c.atom_id\nWHERE \n    b.bond_type = '=';",
+          "raw_response": "```sql\nSELECT \n    (CAST(SUM(CASE WHEN a.element = 'c' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(a.atom_id)) * 100 AS percentage\nFROM \n    atom a\nJOIN \n    bond b ON a.molecule_id = b.molecule_id\nJOIN \n    connected c ON a.atom_id = c.atom_id\nWHERE \n    b.bond_type = '=';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 294,
+          "completion_tokens": 92,
+          "timings": {
+            "generation_s": 3.7251152000098955,
+            "validation_s": 0.005848400003742427,
+            "execution_s": 0.02861930000653956
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 294,
+      "prompt_tokens": 294,
+      "completion_tokens": 92,
+      "timings": {
+        "generation_s": 3.7251152000098955,
+        "validation_s": 0.005848400003742427,
+        "execution_s": 0.02861930000653956
+      }
+    },
+    {
+      "id": 206,
+      "question": "What elements are in the TR004_8_9 bond atoms?",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id WHERE T2.bond_id = 'TR004_8_9'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "connected"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "TR004_8_9 bond atoms refers to bond_id = 'TR004_8_9';",
+      "expected_result": [
+        [
+          "c"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT a.element\nFROM atom a\nJOIN connected c ON a.atom_id = c.atom_id\nWHERE c.bond_id = 'TR004_8_9';",
+      "raw_response": "```sql\nSELECT a.element\nFROM atom a\nJOIN connected c ON a.atom_id = c.atom_id\nWHERE c.bond_id = 'TR004_8_9';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "c"
+        ],
+        [
+          "c"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT a.element\nFROM atom a\nJOIN connected c ON a.atom_id = c.atom_id\nWHERE c.bond_id = 'TR004_8_9';",
+          "raw_response": "```sql\nSELECT a.element\nFROM atom a\nJOIN connected c ON a.atom_id = c.atom_id\nWHERE c.bond_id = 'TR004_8_9';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 289,
+          "completion_tokens": 41,
+          "timings": {
+            "generation_s": 1.758542399998987,
+            "validation_s": 0.004014799997094087,
+            "execution_s": 0.003860500000882894
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 289,
+      "prompt_tokens": 289,
+      "completion_tokens": 41,
+      "timings": {
+        "generation_s": 1.758542399998987,
+        "validation_s": 0.004014799997094087,
+        "execution_s": 0.003860500000882894
+      }
+    },
+    {
+      "id": 207,
+      "question": "What elements are in a double type bond?",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id INNER JOIN connected AS T3 ON T1.atom_id = T3.atom_id WHERE T2.bond_type = '='",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "bond",
+        "connected"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "double type bond refers to bond_type = '=';",
+      "expected_result": [
+        [
+          "sn"
+        ],
+        [
+          "ca"
+        ],
+        [
+          "cu"
+        ],
+        [
+          "p"
+        ],
+        [
+          "h"
+        ],
+        [
+          "cl"
+        ],
+        [
+          "o"
+        ],
+        [
+          "s"
+        ],
+        [
+          "c"
+        ],
+        [
+          "br"
+        ],
+        [
+          "n"
+        ],
+        [
+          "f"
+        ],
+        [
+          "pb"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT DISTINCT a.element\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id\nWHERE b.bond_type = '=';",
+      "raw_response": "```sql\nSELECT DISTINCT a.element\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id\nWHERE b.bond_type = '=';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "sn"
+        ],
+        [
+          "k"
+        ],
+        [
+          "ca"
+        ],
+        [
+          "cu"
+        ],
+        [
+          "p"
+        ],
+        [
+          "h"
+        ],
+        [
+          "cl"
+        ],
+        [
+          "zn"
+        ],
+        [
+          "o"
+        ],
+        [
+          "s"
+        ],
+        [
+          "c"
+        ],
+        [
+          "br"
+        ],
+        [
+          "na"
+        ],
+        [
+          "n"
+        ],
+        [
+          "f"
+        ],
+        [
+          "pb"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT DISTINCT a.element\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id\nWHERE b.bond_type = '=';",
+          "raw_response": "```sql\nSELECT DISTINCT a.element\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id\nWHERE b.bond_type = '=';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 267,
+          "completion_tokens": 36,
+          "timings": {
+            "generation_s": 1.4857462999934796,
+            "validation_s": 0.003388299999642186,
+            "execution_s": 0.010329700002330355
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 267,
+      "prompt_tokens": 267,
+      "completion_tokens": 36,
+      "timings": {
+        "generation_s": 1.4857462999934796,
+        "validation_s": 0.003388299999642186,
+        "execution_s": 0.010329700002330355
+      }
+    },
+    {
+      "id": 208,
+      "question": "Which type of label is the most numerous in atoms with hydrogen?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T.label FROM (SELECT T2.label, COUNT(T2.molecule_id) FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.element = 'h' GROUP BY T2.label ORDER BY COUNT(T2.molecule_id) DESC NULLS LAST LIMIT 1) AS t",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "molecule"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "with hydrogen refers to element = 'h'; label most numerous in atoms refers to MAX(COUNT(label)); ",
+      "expected_result": [
+        [
+          "-"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT m.label\nFROM molecule m\nJOIN atom a ON m.molecule_id = a.molecule_id\nWHERE a.element = 'h'\nGROUP BY m.label\nORDER BY COUNT(m.label) DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT m.label\nFROM molecule m\nJOIN atom a ON m.molecule_id = a.molecule_id\nWHERE a.element = 'h'\nGROUP BY m.label\nORDER BY COUNT(m.label) DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "-"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT m.label\nFROM molecule m\nJOIN atom a ON m.molecule_id = a.molecule_id\nWHERE a.element = 'h'\nGROUP BY m.label\nORDER BY COUNT(m.label) DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT m.label\nFROM molecule m\nJOIN atom a ON m.molecule_id = a.molecule_id\nWHERE a.element = 'h'\nGROUP BY m.label\nORDER BY COUNT(m.label) DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 283,
+          "completion_tokens": 51,
+          "timings": {
+            "generation_s": 2.0737924999993993,
+            "validation_s": 0.004967500004568137,
+            "execution_s": 0.006848599994555116
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 283,
+      "prompt_tokens": 283,
+      "completion_tokens": 51,
+      "timings": {
+        "generation_s": 2.0737924999993993,
+        "validation_s": 0.004967500004568137,
+        "execution_s": 0.006848599994555116
+      }
+    },
+    {
+      "id": 212,
+      "question": "Which element is the least numerous in non-carcinogenic molecules?",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT T.element FROM (SELECT T1.element, COUNT(DISTINCT T1.molecule_id) FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.label = '-' GROUP BY T1.element ORDER BY COUNT(DISTINCT T1.molecule_id) ASC NULLS FIRST LIMIT 1) AS t",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "molecule"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "label = '-' means molecules are non-carcinogenic; least numerous refers to MIN(COUNT(element));",
+      "expected_result": [
+        [
+          "ca"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT a.element, COUNT(a.element) AS element_count\nFROM atom a\nJOIN molecule m ON a.molecule_id = m.molecule_id\nWHERE m.label = '-'\nGROUP BY a.element\nORDER BY element_count ASC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT a.element, COUNT(a.element) AS element_count\nFROM atom a\nJOIN molecule m ON a.molecule_id = m.molecule_id\nWHERE m.label = '-'\nGROUP BY a.element\nORDER BY element_count ASC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "k",
+          1
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT a.element, COUNT(a.element) AS element_count\nFROM atom a\nJOIN molecule m ON a.molecule_id = m.molecule_id\nWHERE m.label = '-'\nGROUP BY a.element\nORDER BY element_count ASC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT a.element, COUNT(a.element) AS element_count\nFROM atom a\nJOIN molecule m ON a.molecule_id = m.molecule_id\nWHERE m.label = '-'\nGROUP BY a.element\nORDER BY element_count ASC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 283,
+          "completion_tokens": 56,
+          "timings": {
+            "generation_s": 2.1933834999945248,
+            "validation_s": 0.004488999999011867,
+            "execution_s": 0.004461300006369129
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 283,
+      "prompt_tokens": 283,
+      "completion_tokens": 56,
+      "timings": {
+        "generation_s": 2.1933834999945248,
+        "validation_s": 0.004488999999011867,
+        "execution_s": 0.004461300006369129
+      }
+    },
+    {
+      "id": 213,
+      "question": "What type of bond is there between the atoms TR004_8 and TR004_20?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T1.bond_type FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id WHERE T2.atom_id = 'TR004_8' AND T2.atom_id2 = 'TR004_20' OR T2.atom_id2 = 'TR004_8' AND T2.atom_id = 'TR004_20'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "bond",
+        "connected"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "type of bond refers to bond_type; between the atoms TR004_8 and TR004_20 refers to atom_id = 'TR004_8' AND atom_id2 = 'TR004_20' OR another way around",
+      "expected_result": [
+        [
+          "-"
+        ],
+        [
+          "-"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT bond_type \nFROM bond \nJOIN connected ON bond.bond_id = connected.bond_id \nWHERE (connected.atom_id = 'TR004_8' AND connected.atom_id2 = 'TR004_20') OR (connected.atom_id = 'TR004_20' AND connected.atom_id2 = 'TR004_8');",
+      "raw_response": "```sql\nSELECT bond_type \nFROM bond \nJOIN connected ON bond.bond_id = connected.bond_id \nWHERE (connected.atom_id = 'TR004_8' AND connected.atom_id2 = 'TR004_20') OR (connected.atom_id = 'TR004_20' AND connected.atom_id2 = 'TR004_8');\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "-"
+        ],
+        [
+          "-"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT bond_type \nFROM bond \nJOIN connected ON bond.bond_id = connected.bond_id \nWHERE (connected.atom_id = 'TR004_8' AND connected.atom_id2 = 'TR004_20') OR (connected.atom_id = 'TR004_20' AND connected.atom_id2 = 'TR004_8');",
+          "raw_response": "```sql\nSELECT bond_type \nFROM bond \nJOIN connected ON bond.bond_id = connected.bond_id \nWHERE (connected.atom_id = 'TR004_8' AND connected.atom_id2 = 'TR004_20') OR (connected.atom_id = 'TR004_20' AND connected.atom_id2 = 'TR004_8');\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 329,
+          "completion_tokens": 83,
+          "timings": {
+            "generation_s": 3.2842004999984056,
+            "validation_s": 0.0034651000023586676,
+            "execution_s": 0.002140299999155104
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 329,
+      "prompt_tokens": 329,
+      "completion_tokens": 83,
+      "timings": {
+        "generation_s": 3.2842004999984056,
+        "validation_s": 0.0034651000023586676,
+        "execution_s": 0.002140299999155104
+      }
+    },
+    {
+      "id": 215,
+      "question": "How many atoms with iodine and with sulfur type elements are there in single bond molecules?",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT COUNT(DISTINCT CASE WHEN T1.element = 'i' THEN T1.atom_id ELSE NULL END) AS iodine_nums, COUNT(DISTINCT CASE WHEN T1.element = 's' THEN T1.atom_id ELSE NULL END) AS sulfur_nums FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id INNER JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_type = '-'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "bond",
+        "connected"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "with iodine element refer to element = 'i'; with sulfur element refers to element = 's'; single type bond refers to bond_type = '-'; Should consider the distinct atoms when counting;",
+      "expected_result": [
+        [
+          3,
+          77
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT COUNT(DISTINCT a1.atom_id) AS iodine_atoms, COUNT(DISTINCT a2.atom_id) AS sulfur_atoms\nFROM atom a1\nJOIN bond b ON a1.molecule_id = b.molecule_id AND b.bond_type = '-'\nJOIN connected c ON a1.atom_id = c.atom_id\nJOIN atom a2 ON c.atom_id2 = a2.atom_id AND a2.element = 's'\nWHERE a1.element = 'i';",
+      "raw_response": "```sql\nSELECT COUNT(DISTINCT a1.atom_id) AS iodine_atoms, COUNT(DISTINCT a2.atom_id) AS sulfur_atoms\nFROM atom a1\nJOIN bond b ON a1.molecule_id = b.molecule_id AND b.bond_type = '-'\nJOIN connected c ON a1.atom_id = c.atom_id\nJOIN atom a2 ON c.atom_id2 = a2.atom_id AND a2.element = 's'\nWHERE a1.element = 'i';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          0,
+          0
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(DISTINCT a1.atom_id) AS iodine_atoms, COUNT(DISTINCT a2.atom_id) AS sulfur_atoms\nFROM atom a1\nJOIN bond b ON a1.molecule_id = b.molecule_id AND b.bond_type = '-'\nJOIN connected c ON a1.atom_id = c.atom_id\nJOIN atom a2 ON c.atom_id2 = a2.atom_id AND a2.element = 's'\nWHERE a1.element = 'i';",
+          "raw_response": "```sql\nSELECT COUNT(DISTINCT a1.atom_id) AS iodine_atoms, COUNT(DISTINCT a2.atom_id) AS sulfur_atoms\nFROM atom a1\nJOIN bond b ON a1.molecule_id = b.molecule_id AND b.bond_type = '-'\nJOIN connected c ON a1.atom_id = c.atom_id\nJOIN atom a2 ON c.atom_id2 = a2.atom_id AND a2.element = 's'\nWHERE a1.element = 'i';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 305,
+          "completion_tokens": 103,
+          "timings": {
+            "generation_s": 4.049593200004892,
+            "validation_s": 0.004142199992202222,
+            "execution_s": 0.003057900001294911
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 305,
+      "prompt_tokens": 305,
+      "completion_tokens": 103,
+      "timings": {
+        "generation_s": 4.049593200004892,
+        "validation_s": 0.004142199992202222,
+        "execution_s": 0.003057900001294911
+      }
+    },
+    {
+      "id": 218,
+      "question": "What percentage of carcinogenic-type molecules does not contain fluorine?",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT CAST(COUNT(DISTINCT CASE WHEN T1.element <> 'f' THEN T2.molecule_id ELSE NULL END) AS REAL) * 100 / NULLIF(COUNT(DISTINCT T2.molecule_id), 0) FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.label = '+'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "molecule"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "label = '+' mean molecules are carcinogenic; contain fluorine refers to element = 'f'; percentage = DIVIDE(SUM(element = 'f') * 100, COUNT(molecule_id)) where label = '+'; Should consider the distinct atoms when counting;",
+      "expected_result": [
+        [
+          100.0
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT \n    (100 - \n        CAST(SUM(CASE WHEN T2.element = 'f' THEN 1 ELSE 0 END) AS FLOAT) * 100 / \n        COUNT(DISTINCT T2.atom_id)\n    ) AS percentage\nFROM \n    molecule AS T1\nJOIN \n    atom AS T2 ON T1.molecule_id = T2.molecule_id\nWHERE \n    T1.label = '+';",
+      "raw_response": "```sql\nSELECT \n    (100 - \n        CAST(SUM(CASE WHEN T2.element = 'f' THEN 1 ELSE 0 END) AS FLOAT) * 100 / \n        COUNT(DISTINCT T2.atom_id)\n    ) AS percentage\nFROM \n    molecule AS T1\nJOIN \n    atom AS T2 ON T1.molecule_id = T2.molecule_id\nWHERE \n    T1.label = '+';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          99.8917
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 2,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT \n    (100 - \n        CAST(SUM(CASE WHEN T3.element = 'f' THEN 1 ELSE 0 END) AS FLOAT) * 100 / \n        COUNT(DISTINCT T2.atom_id)\n    ) AS percentage\nFROM \n    molecule AS T1\nJOIN \n    atom AS T2 ON T1.molecule_id = T2.molecule_id\nLEFT JOIN \n    connected AS T3 ON T2.atom_id = T3.atom_id\nWHERE \n    T1.label = '+';",
+          "raw_response": "```sql\nSELECT \n    (100 - \n        CAST(SUM(CASE WHEN T3.element = 'f' THEN 1 ELSE 0 END) AS FLOAT) * 100 / \n        COUNT(DISTINCT T2.atom_id)\n    ) AS percentage\nFROM \n    molecule AS T1\nJOIN \n    atom AS T2 ON T1.molecule_id = T2.molecule_id\nLEFT JOIN \n    connected AS T3 ON T2.atom_id = T3.atom_id\nWHERE \n    T1.label = '+';\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column t3.element does not exist\nLINE 3:         CAST(SUM(CASE WHEN T3.element = 'f' THEN 1 ELSE 0 EN...\n                                   ^\nHINT:  Perhaps you meant to reference the column \"t2.element\".",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 315,
+          "completion_tokens": 117,
+          "timings": {
+            "generation_s": 4.762841300005675,
+            "validation_s": 0.006207800004631281
+          }
+        },
+        {
+          "sql": "SELECT \n    (100 - \n        CAST(SUM(CASE WHEN T3.element = 'f' THEN 1 ELSE 0 END) AS FLOAT) * 100 / \n        COUNT(DISTINCT T2.atom_id)\n    ) AS percentage\nFROM \n    molecule AS T1\nJOIN \n    atom AS T2 ON T1.molecule_id = T2.molecule_id\nLEFT JOIN \n    connected AS T3 ON T2.atom_id = T3.atom_id\nWHERE \n    T1.label = '+';",
+          "raw_response": "```sql\nSELECT \n    (100 - \n        CAST(SUM(CASE WHEN T3.element = 'f' THEN 1 ELSE 0 END) AS FLOAT) * 100 / \n        COUNT(DISTINCT T2.atom_id)\n    ) AS percentage\nFROM \n    molecule AS T1\nJOIN \n    atom AS T2 ON T1.molecule_id = T2.molecule_id\nLEFT JOIN \n    connected AS T3 ON T2.atom_id = T3.atom_id\nWHERE \n    T1.label = '+';\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column t3.element does not exist\nLINE 3:         CAST(SUM(CASE WHEN T3.element = 'f' THEN 1 ELSE 0 EN...\n                                   ^\nHINT:  Perhaps you meant to reference the column \"t2.element\".",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 534,
+          "completion_tokens": 117,
+          "timings": {
+            "generation_s": 4.690297499997541,
+            "validation_s": 0.004606800008332357
+          }
+        },
+        {
+          "sql": "SELECT \n    (100 - \n        CAST(SUM(CASE WHEN T2.element = 'f' THEN 1 ELSE 0 END) AS FLOAT) * 100 / \n        COUNT(DISTINCT T2.atom_id)\n    ) AS percentage\nFROM \n    molecule AS T1\nJOIN \n    atom AS T2 ON T1.molecule_id = T2.molecule_id\nWHERE \n    T1.label = '+';",
+          "raw_response": "```sql\nSELECT \n    (100 - \n        CAST(SUM(CASE WHEN T2.element = 'f' THEN 1 ELSE 0 END) AS FLOAT) * 100 / \n        COUNT(DISTINCT T2.atom_id)\n    ) AS percentage\nFROM \n    molecule AS T1\nJOIN \n    atom AS T2 ON T1.molecule_id = T2.molecule_id\nWHERE \n    T1.label = '+';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 753,
+          "completion_tokens": 98,
+          "timings": {
+            "generation_s": 3.943627300002845,
+            "validation_s": 0.0044101999956183136,
+            "execution_s": 0.003973200000473298
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 753,
+      "prompt_tokens": 1602,
+      "completion_tokens": 332,
+      "timings": {
+        "generation_s": 13.396766100006062,
+        "validation_s": 0.015224800008581951,
+        "execution_s": 0.003973200000473298
+      }
+    },
+    {
+      "id": 219,
+      "question": "What is the percentage of carcinogenic molecules in triple type bonds?",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT CAST(COUNT(DISTINCT CASE WHEN T2.label = '+' THEN T2.molecule_id ELSE NULL END) AS REAL) * 100 / NULLIF(COUNT(DISTINCT T2.molecule_id), 0) FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id INNER JOIN bond AS T3 ON T2.molecule_id = T3.molecule_id WHERE T3.bond_type = '#'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "bond",
+        "molecule"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "label = '+' mean molecules are carcinogenic; triple bond refers to bond_type = '#'; percentage = DIVIDE(SUM(bond_type = '#') * 100, COUNT(bond_id)) as percent where label = '+'",
+      "expected_result": [
+        [
+          66.6667
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT \n    (CAST(SUM(CASE WHEN b.bond_type = '#' THEN 1 ELSE 0 END) AS FLOAT) * 100 / COUNT(b.bond_id)) AS percent\nFROM \n    molecule m\nJOIN \n    bond b ON m.molecule_id = b.molecule_id\nWHERE \n    m.label = '+';",
+      "raw_response": "```sql\nSELECT \n    (CAST(SUM(CASE WHEN b.bond_type = '#' THEN 1 ELSE 0 END) AS FLOAT) * 100 / COUNT(b.bond_id)) AS percent\nFROM \n    molecule m\nJOIN \n    bond b ON m.molecule_id = b.molecule_id\nWHERE \n    m.label = '+';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          0.0808
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 1,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT \n    (DIVIDE(SUM(CASE WHEN b.bond_type = '#' THEN 1 ELSE 0 END) * 100, COUNT(b.bond_id))) AS percent\nFROM \n    molecule m\nJOIN \n    bond b ON m.molecule_id = b.molecule_id\nWHERE \n    m.label = '+';",
+          "raw_response": "```sql\nSELECT \n    (DIVIDE(SUM(CASE WHEN b.bond_type = '#' THEN 1 ELSE 0 END) * 100, COUNT(b.bond_id))) AS percent\nFROM \n    molecule m\nJOIN \n    bond b ON m.molecule_id = b.molecule_id\nWHERE \n    m.label = '+';\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: function divide(bigint, bigint) does not exist\nLINE 2:     (DIVIDE(SUM(CASE WHEN b.bond_type = '#' THEN 1 ELSE 0 EN...\n             ^\nHINT:  No function matches the given name and argument types. You might need to add explicit type casts.",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 309,
+          "completion_tokens": 75,
+          "timings": {
+            "generation_s": 3.002248300006613,
+            "validation_s": 0.003983699993113987
+          }
+        },
+        {
+          "sql": "SELECT \n    (CAST(SUM(CASE WHEN b.bond_type = '#' THEN 1 ELSE 0 END) AS FLOAT) * 100 / COUNT(b.bond_id)) AS percent\nFROM \n    molecule m\nJOIN \n    bond b ON m.molecule_id = b.molecule_id\nWHERE \n    m.label = '+';",
+          "raw_response": "```sql\nSELECT \n    (CAST(SUM(CASE WHEN b.bond_type = '#' THEN 1 ELSE 0 END) AS FLOAT) * 100 / COUNT(b.bond_id)) AS percent\nFROM \n    molecule m\nJOIN \n    bond b ON m.molecule_id = b.molecule_id\nWHERE \n    m.label = '+';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 497,
+          "completion_tokens": 77,
+          "timings": {
+            "generation_s": 2.994743400005973,
+            "validation_s": 0.0036761999945156276,
+            "execution_s": 0.004790199993294664
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 497,
+      "prompt_tokens": 806,
+      "completion_tokens": 152,
+      "timings": {
+        "generation_s": 5.996991700012586,
+        "validation_s": 0.007659899987629615,
+        "execution_s": 0.004790199993294664
+      }
+    },
+    {
+      "id": 220,
+      "question": "Please list top three elements of the toxicology of the molecule TR000 in alphabetical order.",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT DISTINCT T.element FROM atom AS T WHERE T.molecule_id = 'TR000' ORDER BY T.element NULLS FIRST LIMIT 3",
+      "order_sensitive": true,
+      "gold_tables": [
+        "atom"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "TR000 is the molecule id;",
+      "expected_result": [
+        [
+          "c"
+        ],
+        [
+          "cl"
+        ],
+        [
+          "h"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT a.element\nFROM atom a\nJOIN molecule m ON a.molecule_id = m.molecule_id\nWHERE m.molecule_id = 'TR000'\nGROUP BY a.element\nORDER BY a.element ASC\nLIMIT 3;",
+      "raw_response": "```sql\nSELECT a.element\nFROM atom a\nJOIN molecule m ON a.molecule_id = m.molecule_id\nWHERE m.molecule_id = 'TR000'\nGROUP BY a.element\nORDER BY a.element ASC\nLIMIT 3;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "c"
+        ],
+        [
+          "cl"
+        ],
+        [
+          "h"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT a.element\nFROM atom a\nJOIN molecule m ON a.molecule_id = m.molecule_id\nWHERE m.molecule_id = 'TR000'\nGROUP BY a.element\nORDER BY a.element ASC\nLIMIT 3;",
+          "raw_response": "```sql\nSELECT a.element\nFROM atom a\nJOIN molecule m ON a.molecule_id = m.molecule_id\nWHERE m.molecule_id = 'TR000'\nGROUP BY a.element\nORDER BY a.element ASC\nLIMIT 3;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 277,
+          "completion_tokens": 54,
+          "timings": {
+            "generation_s": 2.313028399992618,
+            "validation_s": 0.003949099991586991,
+            "execution_s": 0.002125799990608357
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 277,
+      "prompt_tokens": 277,
+      "completion_tokens": 54,
+      "timings": {
+        "generation_s": 2.313028399992618,
+        "validation_s": 0.003949099991586991,
+        "execution_s": 0.002125799990608357
+      }
+    },
+    {
+      "id": 226,
+      "question": "What is the percentage of double bonds in the molecule TR008? Please provide your answer as a percentage with five decimal places.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT ROUND(CAST(COUNT(CASE WHEN T.bond_type = '=' THEN T.bond_id ELSE NULL END) AS NUMERIC) * 100 / CAST(COUNT(T.bond_id) AS NUMERIC), 5) AS percentage FROM bond AS T WHERE T.molecule_id = 'TR008'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "bond"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "double bond refers to bond_type = '='; TR008 is the molecule id; percentage = DIVIDE(SUM(bond_type = '='), COUNT(bond_id)) as percent where molecule_id = 'TR008'",
+      "expected_result": [
+        [
+          3.8462
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT ROUND(CAST(SUM(CASE WHEN bond_type = '=' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(bond_id) * 100, 5) AS percent\nFROM bond\nWHERE molecule_id = 'TR008';",
+      "raw_response": "```sql\nSELECT ROUND(CAST(SUM(CASE WHEN bond_type = '=' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(bond_id) * 100, 5) AS percent\nFROM bond\nWHERE molecule_id = 'TR008';\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: function round(double precision, integer) does not exist\nLINE 1: ..._check_5c91aa087bc14dd294256e08e39f996a AS SELECT ROUND(CAST...\n                                                             ^\nHINT:  No function matches the given name and argument types. You might need to add explicit type casts.",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 2,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT ROUND(CAST(SUM(CASE WHEN bond_type = '=' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(bond_id) * 100, 5) AS percent\nFROM bond\nWHERE molecule_id = 'TR008';",
+          "raw_response": "```sql\nSELECT ROUND(CAST(SUM(CASE WHEN bond_type = '=' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(bond_id) * 100, 5) AS percent\nFROM bond\nWHERE molecule_id = 'TR008';\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: function round(double precision, integer) does not exist\nLINE 1: ..._check_3488202c605f41cdb17c6dc40efe268f AS SELECT ROUND(CAST...\n                                                             ^\nHINT:  No function matches the given name and argument types. You might need to add explicit type casts.",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 322,
+          "completion_tokens": 60,
+          "timings": {
+            "generation_s": 2.4204582999955164,
+            "validation_s": 0.003380699999979697
+          }
+        },
+        {
+          "sql": "SELECT ROUND(CAST(SUM(CASE WHEN bond_type = '=' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(bond_id) * 100, 5) AS percent\nFROM bond\nWHERE molecule_id = 'TR008';",
+          "raw_response": "```sql\nSELECT ROUND(CAST(SUM(CASE WHEN bond_type = '=' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(bond_id) * 100, 5) AS percent\nFROM bond\nWHERE molecule_id = 'TR008';\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: function round(double precision, integer) does not exist\nLINE 1: ..._check_15f2357ed3334a3b9114ef4d2b0fd662 AS SELECT ROUND(CAST...\n                                                             ^\nHINT:  No function matches the given name and argument types. You might need to add explicit type casts.",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 509,
+          "completion_tokens": 60,
+          "timings": {
+            "generation_s": 2.397977799992077,
+            "validation_s": 0.004274999999324791
+          }
+        },
+        {
+          "sql": "SELECT ROUND(CAST(SUM(CASE WHEN bond_type = '=' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(bond_id) * 100, 5) AS percent\nFROM bond\nWHERE molecule_id = 'TR008';",
+          "raw_response": "```sql\nSELECT ROUND(CAST(SUM(CASE WHEN bond_type = '=' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(bond_id) * 100, 5) AS percent\nFROM bond\nWHERE molecule_id = 'TR008';\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: function round(double precision, integer) does not exist\nLINE 1: ..._check_5c91aa087bc14dd294256e08e39f996a AS SELECT ROUND(CAST...\n                                                             ^\nHINT:  No function matches the given name and argument types. You might need to add explicit type casts.",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 698,
+          "completion_tokens": 60,
+          "timings": {
+            "generation_s": 2.397903499993845,
+            "validation_s": 0.003248699998948723
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 698,
+      "prompt_tokens": 1529,
+      "completion_tokens": 180,
+      "timings": {
+        "generation_s": 7.216339599981438,
+        "validation_s": 0.010904399998253211
+      }
+    },
+    {
+      "id": 227,
+      "question": "What is the percentage of molecules that are carcinogenic? Please provide your answer as a percentage with three decimal places.",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT ROUND(CAST((CAST(COUNT(CASE WHEN t.label = '+' THEN t.molecule_id ELSE NULL END) AS REAL) / NULLIF(COUNT(t.molecule_id), 0) * 100) AS NUMERIC), 3) AS percentage FROM molecule t",
+      "order_sensitive": false,
+      "gold_tables": [
+        "molecule"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "label = '+' mean molecules are carcinogenic; percentage = DIVIDE(SUM(label = '+'), COUNT(molecule_id)) as percent",
+      "expected_result": [
+        [
+          44.315
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT ROUND(CAST(SUM(CASE WHEN label = '+' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(molecule_id) * 100, 3) AS percent\nFROM molecule;",
+      "raw_response": "```sql\nSELECT ROUND(CAST(SUM(CASE WHEN label = '+' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(molecule_id) * 100, 3) AS percent\nFROM molecule;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: function round(double precision, integer) does not exist\nLINE 1: ..._check_8bdf60339b54480f8b991013aa66241b AS SELECT ROUND(CAST...\n                                                             ^\nHINT:  No function matches the given name and argument types. You might need to add explicit type casts.",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 2,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT ROUND(CAST(SUM(CASE WHEN label = '+' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(molecule_id) * 100, 3) AS percent\nFROM molecule;",
+          "raw_response": "```sql\nSELECT ROUND(CAST(SUM(CASE WHEN label = '+' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(molecule_id) * 100, 3) AS percent\nFROM molecule;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: function round(double precision, integer) does not exist\nLINE 1: ..._check_75e1550a1a3045a4a17f35ecf62c9725 AS SELECT ROUND(CAST...\n                                                             ^\nHINT:  No function matches the given name and argument types. You might need to add explicit type casts.",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 298,
+          "completion_tokens": 49,
+          "timings": {
+            "generation_s": 1.981999400013592,
+            "validation_s": 0.0030756000051042065
+          }
+        },
+        {
+          "sql": "SELECT ROUND(CAST(SUM(CASE WHEN label = '+' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(molecule_id) * 100, 3) AS percent\nFROM molecule;",
+          "raw_response": "```sql\nSELECT ROUND(CAST(SUM(CASE WHEN label = '+' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(molecule_id) * 100, 3) AS percent\nFROM molecule;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: function round(double precision, integer) does not exist\nLINE 1: ..._check_45e71d0fcfb34615b3d5d80cecae92fc AS SELECT ROUND(CAST...\n                                                             ^\nHINT:  No function matches the given name and argument types. You might need to add explicit type casts.",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 478,
+          "completion_tokens": 49,
+          "timings": {
+            "generation_s": 1.986262299993541,
+            "validation_s": 0.017136099995695986
+          }
+        },
+        {
+          "sql": "SELECT ROUND(CAST(SUM(CASE WHEN label = '+' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(molecule_id) * 100, 3) AS percent\nFROM molecule;",
+          "raw_response": "```sql\nSELECT ROUND(CAST(SUM(CASE WHEN label = '+' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(molecule_id) * 100, 3) AS percent\nFROM molecule;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: function round(double precision, integer) does not exist\nLINE 1: ..._check_8bdf60339b54480f8b991013aa66241b AS SELECT ROUND(CAST...\n                                                             ^\nHINT:  No function matches the given name and argument types. You might need to add explicit type casts.",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 653,
+          "completion_tokens": 49,
+          "timings": {
+            "generation_s": 1.9677940999972634,
+            "validation_s": 0.0035083999973721802
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 653,
+      "prompt_tokens": 1429,
+      "completion_tokens": 147,
+      "timings": {
+        "generation_s": 5.936055800004397,
+        "validation_s": 0.023720099998172373
+      }
+    },
+    {
+      "id": 228,
+      "question": "How much of the hydrogen in molecule TR206 is accounted for? Please provide your answer as a percentage with four decimal places.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT ROUND(CAST((CAST(COUNT(CASE WHEN T.element = 'h' THEN T.atom_id ELSE NULL END) AS REAL) * 100 / NULLIF(COUNT(T.atom_id), 0)) AS NUMERIC), 4) AS percentage FROM atom AS T WHERE T.molecule_id = 'TR206'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "hydrogen refers to element = 'h'; TR206 is the molecule id; percentage = DIVIDE(SUM(element = 'h'), COUNT(atom_id)) as percent where molecule_id = 'TR206'",
+      "expected_result": [
+        [
+          45.4545
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT ROUND(CAST(SUM(CASE WHEN element = 'h' THEN 1 ELSE 0 END) AS FLOAT) * 100 / COUNT(atom_id), 4) AS percent\nFROM atom\nWHERE molecule_id = 'TR206';",
+      "raw_response": "```sql\nSELECT ROUND(CAST(SUM(CASE WHEN element = 'h' THEN 1 ELSE 0 END) AS FLOAT) * 100 / COUNT(atom_id), 4) AS percent\nFROM atom\nWHERE molecule_id = 'TR206';\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: function round(double precision, integer) does not exist\nLINE 1: ..._check_2173c5ec40e746f8ac94c9fd034ca8c3 AS SELECT ROUND(CAST...\n                                                             ^\nHINT:  No function matches the given name and argument types. You might need to add explicit type casts.",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 2,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT ROUND(CAST(SUM(element = 'h') AS FLOAT) * 100 / COUNT(atom_id), 4) AS percent\nFROM atom\nWHERE molecule_id = 'TR206';",
+          "raw_response": "```sql\nSELECT ROUND(CAST(SUM(element = 'h') AS FLOAT) * 100 / COUNT(atom_id), 4) AS percent\nFROM atom\nWHERE molecule_id = 'TR206';\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: function sum(boolean) does not exist\nLINE 1: ...be5b211944a2828e09a63b9f7bf3 AS SELECT ROUND(CAST(SUM(elemen...\n                                                             ^\nHINT:  No function matches the given name and argument types. You might need to add explicit type casts.",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 320,
+          "completion_tokens": 48,
+          "timings": {
+            "generation_s": 2.077521199986222,
+            "validation_s": 0.0036634999996749684
+          }
+        },
+        {
+          "sql": "SELECT ROUND(CAST(SUM(element = 'h') AS FLOAT) * 100 / COUNT(atom_id), 4) AS percent\nFROM atom\nWHERE molecule_id = 'TR206';",
+          "raw_response": "```sql\nSELECT ROUND(CAST(SUM(element = 'h') AS FLOAT) * 100 / COUNT(atom_id), 4) AS percent\nFROM atom\nWHERE molecule_id = 'TR206';\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: function sum(boolean) does not exist\nLINE 1: ...f940cae24b2f8556a9eda4f80a09 AS SELECT ROUND(CAST(SUM(elemen...\n                                                             ^\nHINT:  No function matches the given name and argument types. You might need to add explicit type casts.",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 492,
+          "completion_tokens": 48,
+          "timings": {
+            "generation_s": 1.9527849000005517,
+            "validation_s": 0.0031094000005396083
+          }
+        },
+        {
+          "sql": "SELECT ROUND(CAST(SUM(CASE WHEN element = 'h' THEN 1 ELSE 0 END) AS FLOAT) * 100 / COUNT(atom_id), 4) AS percent\nFROM atom\nWHERE molecule_id = 'TR206';",
+          "raw_response": "```sql\nSELECT ROUND(CAST(SUM(CASE WHEN element = 'h' THEN 1 ELSE 0 END) AS FLOAT) * 100 / COUNT(atom_id), 4) AS percent\nFROM atom\nWHERE molecule_id = 'TR206';\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: function round(double precision, integer) does not exist\nLINE 1: ..._check_2173c5ec40e746f8ac94c9fd034ca8c3 AS SELECT ROUND(CAST...\n                                                             ^\nHINT:  No function matches the given name and argument types. You might need to add explicit type casts.",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 662,
+          "completion_tokens": 59,
+          "timings": {
+            "generation_s": 2.432504800002789,
+            "validation_s": 0.0035223000013502315
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 662,
+      "prompt_tokens": 1474,
+      "completion_tokens": 155,
+      "timings": {
+        "generation_s": 6.462810899989563,
+        "validation_s": 0.010295200001564808
+      }
+    },
+    {
+      "id": 230,
+      "question": "What are the elements of the toxicology and label of molecule TR060?",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT DISTINCT T1.element, T2.label FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.molecule_id = 'TR060'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "molecule"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "TR060 is the molecule id; ",
+      "expected_result": [
+        [
+          "o",
+          "-"
+        ],
+        [
+          "cl",
+          "-"
+        ],
+        [
+          "n",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT a.element, m.label\nFROM atom a\nJOIN molecule m ON a.molecule_id = m.molecule_id\nWHERE m.molecule_id = 'TR060';",
+      "raw_response": "```sql\nSELECT a.element, m.label\nFROM atom a\nJOIN molecule m ON a.molecule_id = m.molecule_id\nWHERE m.molecule_id = 'TR060';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "o",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "o",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "n",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "cl",
+          "-"
+        ],
+        [
+          "cl",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "c",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ],
+        [
+          "h",
+          "-"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT a.element, m.label\nFROM atom a\nJOIN molecule m ON a.molecule_id = m.molecule_id\nWHERE m.molecule_id = 'TR060';",
+          "raw_response": "```sql\nSELECT a.element, m.label\nFROM atom a\nJOIN molecule m ON a.molecule_id = m.molecule_id\nWHERE m.molecule_id = 'TR060';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 275,
+          "completion_tokens": 42,
+          "timings": {
+            "generation_s": 1.7577654000051552,
+            "validation_s": 0.003048499987926334,
+            "execution_s": 0.002409699998679571
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 275,
+      "prompt_tokens": 275,
+      "completion_tokens": 42,
+      "timings": {
+        "generation_s": 1.7577654000051552,
+        "validation_s": 0.003048499987926334,
+        "execution_s": 0.002409699998679571
+      }
+    },
+    {
+      "id": 231,
+      "question": "Which bond type accounted for the majority of the bonds found in molecule TR010 and state whether or not this molecule is carcinogenic?",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT T.bond_type FROM (SELECT T1.bond_type, COUNT(T1.molecule_id) FROM bond AS T1 WHERE T1.molecule_id = 'TR010' GROUP BY T1.bond_type ORDER BY COUNT(T1.molecule_id) DESC NULLS LAST LIMIT 1) AS T",
+      "order_sensitive": false,
+      "gold_tables": [
+        "bond"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "TR010 is the molecule id; majority of the bond found refers to MAX(COUNT(bond_type)); ",
+      "expected_result": [
+        [
+          "-"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT \n    b.bond_type, \n    COUNT(b.bond_id) AS bond_count,\n    CASE \n        WHEN COUNT(b.bond_id) = (SELECT MAX(bond_count) FROM (SELECT bond_type, COUNT(bond_id) AS bond_count FROM bond WHERE molecule_id = 'TR010' GROUP BY bond_type) subquery) THEN 'Majority'\n        ELSE 'Not Majority'\n    END AS majority_status,\n    m.label AS molecule_label\nFROM \n    bond b\nJOIN \n    molecule m ON b.molecule_id = m.molecule_id\nWHERE \n    b.molecule_id = 'TR010'\nGROUP BY \n    b.bond_type, m.label;",
+      "raw_response": "```sql\nSELECT \n    b.bond_type, \n    COUNT(b.bond_id) AS bond_count,\n    CASE \n        WHEN COUNT(b.bond_id) = (SELECT MAX(bond_count) FROM (SELECT bond_type, COUNT(bond_id) AS bond_count FROM bond WHERE molecule_id = 'TR010' GROUP BY bond_type) subquery) THEN 'Majority'\n        ELSE 'Not Majority'\n    END AS majority_status,\n    m.label AS molecule_label\nFROM \n    bond b\nJOIN \n    molecule m ON b.molecule_id = m.molecule_id\nWHERE \n    b.molecule_id = 'TR010'\nGROUP BY \n    b.bond_type, m.label;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "-",
+          16,
+          "Majority",
+          "-"
+        ],
+        [
+          "=",
+          1,
+          "Not Majority",
+          "-"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT \n    b.bond_type, \n    COUNT(b.bond_id) AS bond_count,\n    CASE \n        WHEN COUNT(b.bond_id) = (SELECT MAX(bond_count) FROM (SELECT bond_type, COUNT(bond_id) AS bond_count FROM bond WHERE molecule_id = 'TR010' GROUP BY bond_type) subquery) THEN 'Majority'\n        ELSE 'Not Majority'\n    END AS majority_status,\n    m.label AS molecule_label\nFROM \n    bond b\nJOIN \n    molecule m ON b.molecule_id = m.molecule_id\nWHERE \n    b.molecule_id = 'TR010'\nGROUP BY \n    b.bond_type, m.label;",
+          "raw_response": "```sql\nSELECT \n    b.bond_type, \n    COUNT(b.bond_id) AS bond_count,\n    CASE \n        WHEN COUNT(b.bond_id) = (SELECT MAX(bond_count) FROM (SELECT bond_type, COUNT(bond_id) AS bond_count FROM bond WHERE molecule_id = 'TR010' GROUP BY bond_type) subquery) THEN 'Majority'\n        ELSE 'Not Majority'\n    END AS majority_status,\n    m.label AS molecule_label\nFROM \n    bond b\nJOIN \n    molecule m ON b.molecule_id = m.molecule_id\nWHERE \n    b.molecule_id = 'TR010'\nGROUP BY \n    b.bond_type, m.label;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 300,
+          "completion_tokens": 150,
+          "timings": {
+            "generation_s": 5.86372009999468,
+            "validation_s": 0.018941699992865324,
+            "execution_s": 0.0025891999976010993
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 300,
+      "prompt_tokens": 300,
+      "completion_tokens": 150,
+      "timings": {
+        "generation_s": 5.86372009999468,
+        "validation_s": 0.018941699992865324,
+        "execution_s": 0.0025891999976010993
+      }
+    },
+    {
+      "id": 232,
+      "question": "Please list top three molecules that have single bonds between two atoms and are not carcinogenic in alphabetical order.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT DISTINCT T2.molecule_id FROM bond AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.bond_type = '-' AND T2.label = '-' ORDER BY T2.molecule_id NULLS FIRST LIMIT 3",
+      "order_sensitive": true,
+      "gold_tables": [
+        "bond",
+        "molecule"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "label = '-' means molecules are not carcinogenic; single type bond refers to bond_type = '-'; list top three molecules refers to return molecule_id and order by molecule_id;",
+      "expected_result": [
+        [
+          "TR002"
+        ],
+        [
+          "TR004"
+        ],
+        [
+          "TR007"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT m.molecule_id\nFROM molecule m\nJOIN bond b ON m.molecule_id = b.molecule_id\nWHERE b.bond_type = '-'\nAND m.label = '-'\nGROUP BY m.molecule_id\nORDER BY m.molecule_id\nLIMIT 3;",
+      "raw_response": "```sql\nSELECT m.molecule_id\nFROM molecule m\nJOIN bond b ON m.molecule_id = b.molecule_id\nWHERE b.bond_type = '-'\nAND m.label = '-'\nGROUP BY m.molecule_id\nORDER BY m.molecule_id\nLIMIT 3;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "TR002"
+        ],
+        [
+          "TR004"
+        ],
+        [
+          "TR007"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT m.molecule_id\nFROM molecule m\nJOIN bond b ON m.molecule_id = b.molecule_id\nWHERE b.bond_type = '-'\nAND m.label = '-'\nGROUP BY m.molecule_id\nORDER BY m.molecule_id\nLIMIT 3;",
+          "raw_response": "```sql\nSELECT m.molecule_id\nFROM molecule m\nJOIN bond b ON m.molecule_id = b.molecule_id\nWHERE b.bond_type = '-'\nAND m.label = '-'\nGROUP BY m.molecule_id\nORDER BY m.molecule_id\nLIMIT 3;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 304,
+          "completion_tokens": 61,
+          "timings": {
+            "generation_s": 2.6848088999977335,
+            "validation_s": 0.003781500010518357,
+            "execution_s": 0.0038669000059599057
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 304,
+      "prompt_tokens": 304,
+      "completion_tokens": 61,
+      "timings": {
+        "generation_s": 2.6848088999977335,
+        "validation_s": 0.003781500010518357,
+        "execution_s": 0.0038669000059599057
+      }
+    },
+    {
+      "id": 234,
+      "question": "How many bonds which involved atom 12 does molecule TR009 have?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT COUNT(T2.bond_id) FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id WHERE T1.molecule_id = 'TR009' AND T2.atom_id = T1.molecule_id || '_1' OR T2.atom_id2 = T1.molecule_id || '_2'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "bond",
+        "connected"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "TR009 is the molecule id;  involved atom 12 refers to atom_id = 'TR009_12' or atom_id2 = 'TR009_12'",
+      "expected_result": [
+        [
+          1041
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT COUNT(*) \nFROM connected \nWHERE (atom_id = 'TR009_12' OR atom_id2 = 'TR009_12') AND TRIM(BOTH '_' FROM SUBSTRING(atom_id FROM 1 FOR 8)) = 'TR009';",
+      "raw_response": "```sql\nSELECT COUNT(*) \nFROM connected \nWHERE (atom_id = 'TR009_12' OR atom_id2 = 'TR009_12') AND TRIM(BOTH '_' FROM SUBSTRING(atom_id FROM 1 FOR 8)) = 'TR009';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          0
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 1,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(*) \nFROM connected \nWHERE (atom_id = 'TR009_12' OR atom_id2 = 'TR009_12') AND molecule_id = 'TR009';",
+          "raw_response": "```sql\nSELECT COUNT(*) \nFROM connected \nWHERE (atom_id = 'TR009_12' OR atom_id2 = 'TR009_12') AND molecule_id = 'TR009';\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column \"molecule_id\" does not exist\nLINE 3: ...tom_id = 'TR009_12' OR atom_id2 = 'TR009_12') AND molecule_i...\n                                                             ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 308,
+          "completion_tokens": 50,
+          "timings": {
+            "generation_s": 2.0695821000117576,
+            "validation_s": 0.003116399995633401
+          }
+        },
+        {
+          "sql": "SELECT COUNT(*) \nFROM connected \nWHERE (atom_id = 'TR009_12' OR atom_id2 = 'TR009_12') AND TRIM(BOTH '_' FROM SUBSTRING(atom_id FROM 1 FOR 8)) = 'TR009';",
+          "raw_response": "```sql\nSELECT COUNT(*) \nFROM connected \nWHERE (atom_id = 'TR009_12' OR atom_id2 = 'TR009_12') AND TRIM(BOTH '_' FROM SUBSTRING(atom_id FROM 1 FOR 8)) = 'TR009';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 456,
+          "completion_tokens": 65,
+          "timings": {
+            "generation_s": 2.6578222999960417,
+            "validation_s": 0.004975200004992075,
+            "execution_s": 0.011467400006949902
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 456,
+      "prompt_tokens": 764,
+      "completion_tokens": 115,
+      "timings": {
+        "generation_s": 4.727404400007799,
+        "validation_s": 0.008091600000625476,
+        "execution_s": 0.011467400006949902
+      }
+    },
+    {
+      "id": 236,
+      "question": "What are the bond type and the atoms of the bond ID of TR001_6_9?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T1.bond_type, T2.atom_id, T2.atom_id2 FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id WHERE T2.bond_id = 'TR001_6_9'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "bond",
+        "connected"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "atoms refer to atom_id or atom_id2",
+      "expected_result": [
+        [
+          "-",
+          "TR001_6",
+          "TR001_9"
+        ],
+        [
+          "-",
+          "TR001_9",
+          "TR001_6"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT b.bond_type, a1.atom_id AS atom1, a2.atom_id AS atom2\nFROM bond b\nJOIN connected c ON b.bond_id = c.bond_id\nJOIN atom a1 ON c.atom_id = a1.atom_id\nJOIN atom a2 ON c.atom_id2 = a2.atom_id\nWHERE b.bond_id = 'TR001_6_9';",
+      "raw_response": "```sql\nSELECT b.bond_type, a1.atom_id AS atom1, a2.atom_id AS atom2\nFROM bond b\nJOIN connected c ON b.bond_id = c.bond_id\nJOIN atom a1 ON c.atom_id = a1.atom_id\nJOIN atom a2 ON c.atom_id2 = a2.atom_id\nWHERE b.bond_id = 'TR001_6_9';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "-",
+          "TR001_6",
+          "TR001_9"
+        ],
+        [
+          "-",
+          "TR001_9",
+          "TR001_6"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT b.bond_type, a1.atom_id AS atom1, a2.atom_id AS atom2\nFROM bond b\nJOIN connected c ON b.bond_id = c.bond_id\nJOIN atom a1 ON c.atom_id = a1.atom_id\nJOIN atom a2 ON c.atom_id2 = a2.atom_id\nWHERE b.bond_id = 'TR001_6_9';",
+          "raw_response": "```sql\nSELECT b.bond_type, a1.atom_id AS atom1, a2.atom_id AS atom2\nFROM bond b\nJOIN connected c ON b.bond_id = c.bond_id\nJOIN atom a1 ON c.atom_id = a1.atom_id\nJOIN atom a2 ON c.atom_id2 = a2.atom_id\nWHERE b.bond_id = 'TR001_6_9';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 280,
+          "completion_tokens": 90,
+          "timings": {
+            "generation_s": 3.5990030000102706,
+            "validation_s": 0.003517500008456409,
+            "execution_s": 0.005952500010607764
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 280,
+      "prompt_tokens": 280,
+      "completion_tokens": 90,
+      "timings": {
+        "generation_s": 3.5990030000102706,
+        "validation_s": 0.003517500008456409,
+        "execution_s": 0.005952500010607764
+      }
+    },
+    {
+      "id": 239,
+      "question": "How many connections does the atom 19 have?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT COUNT(T.bond_id) FROM connected AS T WHERE RIGHT(T.atom_id, 2) = '19'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "connected"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "connections refers to bond_id; atom 19 refers to atom_id like 'TR%_19';",
+      "expected_result": [
+        [
+          377
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT COUNT(*) AS connection_count\nFROM connected\nWHERE atom_id = 'TR%_19' OR atom_id2 = 'TR%_19';",
+      "raw_response": "```sql\nSELECT COUNT(*) AS connection_count\nFROM connected\nWHERE atom_id = 'TR%_19' OR atom_id2 = 'TR%_19';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          0
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(*) AS connection_count\nFROM connected\nWHERE atom_id = 'TR%_19' OR atom_id2 = 'TR%_19';",
+          "raw_response": "```sql\nSELECT COUNT(*) AS connection_count\nFROM connected\nWHERE atom_id = 'TR%_19' OR atom_id2 = 'TR%_19';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 281,
+          "completion_tokens": 38,
+          "timings": {
+            "generation_s": 1.5572274000005564,
+            "validation_s": 0.003136700004688464,
+            "execution_s": 0.002406399988103658
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 281,
+      "prompt_tokens": 281,
+      "completion_tokens": 38,
+      "timings": {
+        "generation_s": 1.5572274000005564,
+        "validation_s": 0.003136700004688464,
+        "execution_s": 0.002406399988103658
+      }
+    },
+    {
+      "id": 240,
+      "question": "List all the elements of the toxicology of the molecule \"TR004\".",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT DISTINCT T.element FROM atom AS T WHERE T.molecule_id = 'TR004'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "TR004 is the molecule id;",
+      "expected_result": [
+        [
+          "c"
+        ],
+        [
+          "h"
+        ],
+        [
+          "n"
+        ],
+        [
+          "o"
+        ],
+        [
+          "p"
+        ],
+        [
+          "s"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT DISTINCT a.element\nFROM atom a\nJOIN molecule m ON a.molecule_id = m.molecule_id\nWHERE m.label = 'TR004';",
+      "raw_response": "```sql\nSELECT DISTINCT a.element\nFROM atom a\nJOIN molecule m ON a.molecule_id = m.molecule_id\nWHERE m.label = 'TR004';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT DISTINCT a.element\nFROM atom a\nJOIN molecule m ON a.molecule_id = m.molecule_id\nWHERE m.label = 'TR004';",
+          "raw_response": "```sql\nSELECT DISTINCT a.element\nFROM atom a\nJOIN molecule m ON a.molecule_id = m.molecule_id\nWHERE m.label = 'TR004';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 274,
+          "completion_tokens": 38,
+          "timings": {
+            "generation_s": 1.5289564999984577,
+            "validation_s": 0.0032672999950591475,
+            "execution_s": 0.0017555999947944656
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 274,
+      "prompt_tokens": 274,
+      "completion_tokens": 38,
+      "timings": {
+        "generation_s": 1.5289564999984577,
+        "validation_s": 0.0032672999950591475,
+        "execution_s": 0.0017555999947944656
+      }
+    },
+    {
+      "id": 242,
+      "question": "Among all the atoms from 21 to 25, list all the molecules that are carcinogenic.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT DISTINCT T2.molecule_id FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE RIGHT(T1.atom_id, 2) BETWEEN '21' AND '25' AND T2.label = '+'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "molecule"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "atoms from 21 to 25 refers to SUBSTR(atom_id, 7, 2) between '21' and '25'; label = '+' mean molecules are carcinogenic",
+      "expected_result": [
+        [
+          "TR001"
+        ],
+        [
+          "TR006"
+        ],
+        [
+          "TR019"
+        ],
+        [
+          "TR020"
+        ],
+        [
+          "TR029"
+        ],
+        [
+          "TR039"
+        ],
+        [
+          "TR047"
+        ],
+        [
+          "TR049"
+        ],
+        [
+          "TR058"
+        ],
+        [
+          "TR072"
+        ],
+        [
+          "TR076"
+        ],
+        [
+          "TR084"
+        ],
+        [
+          "TR092"
+        ],
+        [
+          "TR093"
+        ],
+        [
+          "TR099"
+        ],
+        [
+          "TR105"
+        ],
+        [
+          "TR111"
+        ],
+        [
+          "TR115"
+        ],
+        [
+          "TR118"
+        ],
+        [
+          "TR128"
+        ],
+        [
+          "TR142"
+        ],
+        [
+          "TR144"
+        ],
+        [
+          "TR154"
+        ],
+        [
+          "TR160"
+        ],
+        [
+          "TR164"
+        ],
+        [
+          "TR181"
+        ],
+        [
+          "TR186"
+        ],
+        [
+          "TR190"
+        ],
+        [
+          "TR193"
+        ],
+        [
+          "TR196"
+        ],
+        [
+          "TR205"
+        ],
+        [
+          "TR207"
+        ],
+        [
+          "TR209"
+        ],
+        [
+          "TR216"
+        ],
+        [
+          "TR217"
+        ],
+        [
+          "TR222"
+        ],
+        [
+          "TR225"
+        ],
+        [
+          "TR226"
+        ],
+        [
+          "TR238"
+        ],
+        [
+          "TR248"
+        ],
+        [
+          "TR253"
+        ],
+        [
+          "TR257"
+        ],
+        [
+          "TR266"
+        ],
+        [
+          "TR285"
+        ],
+        [
+          "TR291"
+        ],
+        [
+          "TR298"
+        ],
+        [
+          "TR299"
+        ],
+        [
+          "TR304"
+        ],
+        [
+          "TR308"
+        ],
+        [
+          "TR309"
+        ],
+        [
+          "TR313"
+        ],
+        [
+          "TR341"
+        ],
+        [
+          "TR347"
+        ],
+        [
+          "TR358"
+        ],
+        [
+          "TR359"
+        ],
+        [
+          "TR362"
+        ],
+        [
+          "TR368"
+        ],
+        [
+          "TR372"
+        ],
+        [
+          "TR383"
+        ],
+        [
+          "TR390"
+        ],
+        [
+          "TR391"
+        ],
+        [
+          "TR397"
+        ],
+        [
+          "TR398"
+        ],
+        [
+          "TR405"
+        ],
+        [
+          "TR407"
+        ],
+        [
+          "TR409"
+        ],
+        [
+          "TR430"
+        ],
+        [
+          "TR456"
+        ],
+        [
+          "TR457"
+        ],
+        [
+          "TR458"
+        ],
+        [
+          "TR463"
+        ],
+        [
+          "TR465"
+        ],
+        [
+          "TR491"
+        ],
+        [
+          "TR494"
+        ],
+        [
+          "TR496"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT DISTINCT m.molecule_id, m.label\nFROM molecule m\nJOIN atom a ON m.molecule_id = a.molecule_id\nWHERE SUBSTR(a.atom_id, 7, 2) BETWEEN '21' AND '25'\nAND m.label = '+';",
+      "raw_response": "```sql\nSELECT DISTINCT m.molecule_id, m.label\nFROM molecule m\nJOIN atom a ON m.molecule_id = a.molecule_id\nWHERE SUBSTR(a.atom_id, 7, 2) BETWEEN '21' AND '25'\nAND m.label = '+';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "TR001",
+          "+"
+        ],
+        [
+          "TR006",
+          "+"
+        ],
+        [
+          "TR019",
+          "+"
+        ],
+        [
+          "TR020",
+          "+"
+        ],
+        [
+          "TR029",
+          "+"
+        ],
+        [
+          "TR039",
+          "+"
+        ],
+        [
+          "TR047",
+          "+"
+        ],
+        [
+          "TR049",
+          "+"
+        ],
+        [
+          "TR058",
+          "+"
+        ],
+        [
+          "TR072",
+          "+"
+        ],
+        [
+          "TR076",
+          "+"
+        ],
+        [
+          "TR084",
+          "+"
+        ],
+        [
+          "TR092",
+          "+"
+        ],
+        [
+          "TR093",
+          "+"
+        ],
+        [
+          "TR099",
+          "+"
+        ],
+        [
+          "TR105",
+          "+"
+        ],
+        [
+          "TR111",
+          "+"
+        ],
+        [
+          "TR115",
+          "+"
+        ],
+        [
+          "TR118",
+          "+"
+        ],
+        [
+          "TR128",
+          "+"
+        ],
+        [
+          "TR142",
+          "+"
+        ],
+        [
+          "TR144",
+          "+"
+        ],
+        [
+          "TR154",
+          "+"
+        ],
+        [
+          "TR160",
+          "+"
+        ],
+        [
+          "TR164",
+          "+"
+        ],
+        [
+          "TR181",
+          "+"
+        ],
+        [
+          "TR186",
+          "+"
+        ],
+        [
+          "TR190",
+          "+"
+        ],
+        [
+          "TR193",
+          "+"
+        ],
+        [
+          "TR196",
+          "+"
+        ],
+        [
+          "TR205",
+          "+"
+        ],
+        [
+          "TR207",
+          "+"
+        ],
+        [
+          "TR209",
+          "+"
+        ],
+        [
+          "TR216",
+          "+"
+        ],
+        [
+          "TR217",
+          "+"
+        ],
+        [
+          "TR222",
+          "+"
+        ],
+        [
+          "TR225",
+          "+"
+        ],
+        [
+          "TR226",
+          "+"
+        ],
+        [
+          "TR238",
+          "+"
+        ],
+        [
+          "TR248",
+          "+"
+        ],
+        [
+          "TR253",
+          "+"
+        ],
+        [
+          "TR257",
+          "+"
+        ],
+        [
+          "TR266",
+          "+"
+        ],
+        [
+          "TR285",
+          "+"
+        ],
+        [
+          "TR291",
+          "+"
+        ],
+        [
+          "TR298",
+          "+"
+        ],
+        [
+          "TR299",
+          "+"
+        ],
+        [
+          "TR304",
+          "+"
+        ],
+        [
+          "TR308",
+          "+"
+        ],
+        [
+          "TR309",
+          "+"
+        ],
+        [
+          "TR313",
+          "+"
+        ],
+        [
+          "TR341",
+          "+"
+        ],
+        [
+          "TR347",
+          "+"
+        ],
+        [
+          "TR358",
+          "+"
+        ],
+        [
+          "TR359",
+          "+"
+        ],
+        [
+          "TR362",
+          "+"
+        ],
+        [
+          "TR368",
+          "+"
+        ],
+        [
+          "TR372",
+          "+"
+        ],
+        [
+          "TR383",
+          "+"
+        ],
+        [
+          "TR390",
+          "+"
+        ],
+        [
+          "TR391",
+          "+"
+        ],
+        [
+          "TR397",
+          "+"
+        ],
+        [
+          "TR398",
+          "+"
+        ],
+        [
+          "TR405",
+          "+"
+        ],
+        [
+          "TR407",
+          "+"
+        ],
+        [
+          "TR409",
+          "+"
+        ],
+        [
+          "TR430",
+          "+"
+        ],
+        [
+          "TR456",
+          "+"
+        ],
+        [
+          "TR457",
+          "+"
+        ],
+        [
+          "TR458",
+          "+"
+        ],
+        [
+          "TR463",
+          "+"
+        ],
+        [
+          "TR465",
+          "+"
+        ],
+        [
+          "TR491",
+          "+"
+        ],
+        [
+          "TR494",
+          "+"
+        ],
+        [
+          "TR496",
+          "+"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": true,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT DISTINCT m.molecule_id, m.label\nFROM molecule m\nJOIN atom a ON m.molecule_id = a.molecule_id\nWHERE SUBSTR(a.atom_id, 7, 2) BETWEEN '21' AND '25'\nAND m.label = '+';",
+          "raw_response": "```sql\nSELECT DISTINCT m.molecule_id, m.label\nFROM molecule m\nJOIN atom a ON m.molecule_id = a.molecule_id\nWHERE SUBSTR(a.atom_id, 7, 2) BETWEEN '21' AND '25'\nAND m.label = '+';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 311,
+          "completion_tokens": 62,
+          "timings": {
+            "generation_s": 2.5102410999970743,
+            "validation_s": 0.004774999993969686,
+            "execution_s": 0.0037532999995164573
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 311,
+      "prompt_tokens": 311,
+      "completion_tokens": 62,
+      "timings": {
+        "generation_s": 2.5102410999970743,
+        "validation_s": 0.004774999993969686,
+        "execution_s": 0.0037532999995164573
+      }
+    },
+    {
+      "id": 243,
+      "question": "What are the bonds that have phosphorus and nitrogen as their atom elements?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T2.bond_id FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id WHERE T2.bond_id IN (SELECT T3.bond_id FROM connected AS T3 INNER JOIN atom AS T4 ON T3.atom_id = T4.atom_id WHERE T4.element = 'p') AND T1.element = 'n'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "connected"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "have phosphorus as atom elements refers to element = 'p'; have nitrogen as atom elements refers to element = 'n'",
+      "expected_result": [
+        [
+          "TR032_2_3"
+        ],
+        [
+          "TR032_3_5"
+        ],
+        [
+          "TR058_1_3"
+        ],
+        [
+          "TR058_1_4"
+        ],
+        [
+          "TR058_1_5"
+        ],
+        [
+          "TR298_1_5"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT b.bond_id, b.bond_type\nFROM bond b\nJOIN connected c ON b.bond_id = c.bond_id\nJOIN atom a1 ON c.atom_id = a1.atom_id AND a1.element = 'p'\nJOIN atom a2 ON c.atom_id2 = a2.atom_id AND a2.element = 'n';",
+      "raw_response": "```sql\nSELECT b.bond_id, b.bond_type\nFROM bond b\nJOIN connected c ON b.bond_id = c.bond_id\nJOIN atom a1 ON c.atom_id = a1.atom_id AND a1.element = 'p'\nJOIN atom a2 ON c.atom_id2 = a2.atom_id AND a2.element = 'n';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "TR032_2_3",
+          "-"
+        ],
+        [
+          "TR032_3_5",
+          "-"
+        ],
+        [
+          "TR058_1_3",
+          "-"
+        ],
+        [
+          "TR058_1_4",
+          "-"
+        ],
+        [
+          "TR058_1_5",
+          "-"
+        ],
+        [
+          "TR298_1_5",
+          "-"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": true,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT b.bond_id, b.bond_type\nFROM bond b\nJOIN connected c ON b.bond_id = c.bond_id\nJOIN atom a1 ON c.atom_id = a1.atom_id AND a1.element = 'p'\nJOIN atom a2 ON c.atom_id2 = a2.atom_id AND a2.element = 'n';",
+          "raw_response": "```sql\nSELECT b.bond_id, b.bond_type\nFROM bond b\nJOIN connected c ON b.bond_id = c.bond_id\nJOIN atom a1 ON c.atom_id = a1.atom_id AND a1.element = 'p'\nJOIN atom a2 ON c.atom_id2 = a2.atom_id AND a2.element = 'n';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 288,
+          "completion_tokens": 77,
+          "timings": {
+            "generation_s": 3.096842300001299,
+            "validation_s": 0.003937199988286011,
+            "execution_s": 0.004117000004043803
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 288,
+      "prompt_tokens": 288,
+      "completion_tokens": 77,
+      "timings": {
+        "generation_s": 3.096842300001299,
+        "validation_s": 0.003937199988286011,
+        "execution_s": 0.004117000004043803
+      }
+    },
+    {
+      "id": 244,
+      "question": "Is the molecule with the most double bonds carcinogenic?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T1.label FROM molecule AS T1 INNER JOIN (SELECT T.molecule_id, COUNT(T.bond_type) FROM bond AS T WHERE T.bond_type = '=' GROUP BY T.molecule_id ORDER BY COUNT(T.bond_type) DESC NULLS LAST LIMIT 1) AS T2 ON T1.molecule_id = T2.molecule_id",
+      "order_sensitive": false,
+      "gold_tables": [
+        "bond",
+        "molecule"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "double bond refers to bond_type = ' = '; label = '+' mean molecules are carcinogenic",
+      "expected_result": [
+        [
+          "+"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT m.label\nFROM molecule m\nJOIN bond b ON m.molecule_id = b.molecule_id\nWHERE b.bond_type = ' = '\nORDER BY (SELECT COUNT(*) FROM connected WHERE bond_id = b.bond_id) DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT m.label\nFROM molecule m\nJOIN bond b ON m.molecule_id = b.molecule_id\nWHERE b.bond_type = ' = '\nORDER BY (SELECT COUNT(*) FROM connected WHERE bond_id = b.bond_id) DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT m.label\nFROM molecule m\nJOIN bond b ON m.molecule_id = b.molecule_id\nWHERE b.bond_type = ' = '\nORDER BY (SELECT COUNT(*) FROM connected WHERE bond_id = b.bond_id) DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT m.label\nFROM molecule m\nJOIN bond b ON m.molecule_id = b.molecule_id\nWHERE b.bond_type = ' = '\nORDER BY (SELECT COUNT(*) FROM connected WHERE bond_id = b.bond_id) DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 278,
+          "completion_tokens": 59,
+          "timings": {
+            "generation_s": 2.599295299994992,
+            "validation_s": 0.0038340000028256327,
+            "execution_s": 0.0025101000064751133
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 278,
+      "prompt_tokens": 278,
+      "completion_tokens": 59,
+      "timings": {
+        "generation_s": 2.599295299994992,
+        "validation_s": 0.0038340000028256327,
+        "execution_s": 0.0025101000064751133
+      }
+    },
+    {
+      "id": 245,
+      "question": "What is the average number of bonds the atoms with the element iodine have?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT CAST(COUNT(T2.bond_id) AS REAL) / NULLIF(COUNT(T1.atom_id), 0) FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id WHERE T1.element = 'i'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "connected"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "atoms with the element iodine refers to element = 'i'; average = DIVIDE(COUND(bond_id), COUNT(atom_id)) where element = 'i'",
+      "expected_result": [
+        [
+          1.0
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT AVG(COUNT(b.bond_id)) AS average_bonds_per_iodine_atom\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id AND a.atom_id IN (b.atom1, b.atom2);",
+      "raw_response": "```sql\nSELECT AVG(COUNT(b.bond_id)) AS average_bonds_per_iodine_atom\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id AND a.atom_id IN (b.atom1, b.atom2);\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column b.atom1 does not exist\nLINE 3: ...N a.molecule_id = b.molecule_id AND a.atom_id IN (b.atom1, b...\n                                                             ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 2,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT AVG(COUNT(bond_id)) AS average_bonds_per_iodine_atom\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id AND a.atom_id = b.atom_id\nWHERE a.element = 'i';",
+          "raw_response": "```sql\nSELECT AVG(COUNT(bond_id)) AS average_bonds_per_iodine_atom\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id AND a.atom_id = b.atom_id\nWHERE a.element = 'i';\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column b.atom_id does not exist\nLINE 3: ...b ON a.molecule_id = b.molecule_id AND a.atom_id = b.atom_id\n                                                              ^\nHINT:  Perhaps you meant to reference the column \"a.atom_id\".",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 297,
+          "completion_tokens": 56,
+          "timings": {
+            "generation_s": 2.2642544000118505,
+            "validation_s": 0.003802399995038286
+          }
+        },
+        {
+          "sql": "SELECT AVG(COUNT(b.bond_id)) AS average_bonds_per_iodine_atom\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id AND a.atom_id = b.atom1;",
+          "raw_response": "```sql\nSELECT AVG(COUNT(b.bond_id)) AS average_bonds_per_iodine_atom\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id AND a.atom_id = b.atom1;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column b.atom1 does not exist\nLINE 3: ... b ON a.molecule_id = b.molecule_id AND a.atom_id = b.atom1;\n                                                               ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 454,
+          "completion_tokens": 50,
+          "timings": {
+            "generation_s": 2.1128782000014326,
+            "validation_s": 0.0030559999868273735
+          }
+        },
+        {
+          "sql": "SELECT AVG(COUNT(b.bond_id)) AS average_bonds_per_iodine_atom\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id AND a.atom_id IN (b.atom1, b.atom2);",
+          "raw_response": "```sql\nSELECT AVG(COUNT(b.bond_id)) AS average_bonds_per_iodine_atom\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id AND a.atom_id IN (b.atom1, b.atom2);\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column b.atom1 does not exist\nLINE 3: ...N a.molecule_id = b.molecule_id AND a.atom_id IN (b.atom1, b...\n                                                             ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 590,
+          "completion_tokens": 55,
+          "timings": {
+            "generation_s": 2.440351199998986,
+            "validation_s": 0.003016199989360757
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 590,
+      "prompt_tokens": 1341,
+      "completion_tokens": 161,
+      "timings": {
+        "generation_s": 6.817483800012269,
+        "validation_s": 0.009874599971226417
+      }
+    },
+    {
+      "id": 247,
+      "question": "List all the elements of atoms that can not bond with any other atoms.",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT DISTINCT T.element FROM atom AS T WHERE NOT T.element IN (SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id)",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "connected"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": " atoms cannot bond with other atoms means atom_id NOT in connected table;",
+      "expected_result": [
+        [
+          "k"
+        ],
+        [
+          "zn"
+        ],
+        [
+          "na"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT element \nFROM atom \nWHERE atom_id NOT IN (SELECT atom_id FROM connected);",
+      "raw_response": "```sql\nSELECT element \nFROM atom \nWHERE atom_id NOT IN (SELECT atom_id FROM connected);\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "cl"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "h"
+        ],
+        [
+          "zn"
+        ],
+        [
+          "cl"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "k"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ],
+        [
+          "cl"
+        ],
+        [
+          "na"
+        ],
+        [
+          "na"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT element \nFROM atom \nWHERE atom_id NOT IN (SELECT atom_id FROM connected);",
+          "raw_response": "```sql\nSELECT element \nFROM atom \nWHERE atom_id NOT IN (SELECT atom_id FROM connected);\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 277,
+          "completion_tokens": 23,
+          "timings": {
+            "generation_s": 1.1190496000053827,
+            "validation_s": 0.004041799998958595,
+            "execution_s": 0.007995299994945526
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 277,
+      "prompt_tokens": 277,
+      "completion_tokens": 23,
+      "timings": {
+        "generation_s": 1.1190496000053827,
+        "validation_s": 0.004041799998958595,
+        "execution_s": 0.007995299994945526
+      }
+    },
+    {
+      "id": 248,
+      "question": "What are the atoms of the triple bond with the molecule \"TR041\"?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT T2.atom_id, T2.atom_id2 FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id INNER JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_type = '#' AND T3.molecule_id = 'TR041'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "bond",
+        "connected"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "TR041 is the molecule id; triple bond refers to bond_type = '#';",
+      "expected_result": [
+        [
+          "TR041_10",
+          "TR041_7"
+        ],
+        [
+          "TR041_7",
+          "TR041_10"
+        ],
+        [
+          "TR041_8",
+          "TR041_9"
+        ],
+        [
+          "TR041_9",
+          "TR041_8"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT a.element\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id\nWHERE b.molecule_id = 'TR041' AND b.bond_type = '#';",
+      "raw_response": "```sql\nSELECT a.element\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id\nWHERE b.molecule_id = 'TR041' AND b.bond_type = '#';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "c"
+        ],
+        [
+          "n"
+        ],
+        [
+          "cl"
+        ],
+        [
+          "cl"
+        ],
+        [
+          "cl"
+        ],
+        [
+          "cl"
+        ],
+        [
+          "c"
+        ],
+        [
+          "c"
+        ],
+        [
+          "c"
+        ],
+        [
+          "c"
+        ],
+        [
+          "c"
+        ],
+        [
+          "c"
+        ],
+        [
+          "c"
+        ],
+        [
+          "n"
+        ],
+        [
+          "c"
+        ],
+        [
+          "n"
+        ],
+        [
+          "cl"
+        ],
+        [
+          "cl"
+        ],
+        [
+          "cl"
+        ],
+        [
+          "cl"
+        ],
+        [
+          "c"
+        ],
+        [
+          "c"
+        ],
+        [
+          "c"
+        ],
+        [
+          "c"
+        ],
+        [
+          "c"
+        ],
+        [
+          "c"
+        ],
+        [
+          "c"
+        ],
+        [
+          "n"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT a.element\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id\nWHERE b.molecule_id = 'TR041' AND b.bond_type = '#';",
+          "raw_response": "```sql\nSELECT a.element\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id\nWHERE b.molecule_id = 'TR041' AND b.bond_type = '#';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 283,
+          "completion_tokens": 47,
+          "timings": {
+            "generation_s": 1.9925994999939576,
+            "validation_s": 0.0032992000051308423,
+            "execution_s": 0.0032002999942051247
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 283,
+      "prompt_tokens": 283,
+      "completion_tokens": 47,
+      "timings": {
+        "generation_s": 1.9925994999939576,
+        "validation_s": 0.0032992000051308423,
+        "execution_s": 0.0032002999942051247
+      }
+    },
+    {
+      "id": 249,
+      "question": "What are the elements of the atoms of TR144_8_19?",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT T2.element FROM connected AS T1 INNER JOIN atom AS T2 ON T1.atom_id = T2.atom_id WHERE T1.bond_id = 'TR144_8_19'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "connected"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "TR144_8_19 is the bond id; ",
+      "expected_result": [
+        [
+          "h"
+        ],
+        [
+          "c"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT a.element\nFROM atom a\nJOIN connected c ON a.atom_id = c.atom_id\nWHERE c.bond_id = 'TR144_8_19';",
+      "raw_response": "```sql\nSELECT a.element\nFROM atom a\nJOIN connected c ON a.atom_id = c.atom_id\nWHERE c.bond_id = 'TR144_8_19';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "h"
+        ],
+        [
+          "c"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT a.element\nFROM atom a\nJOIN connected c ON a.atom_id = c.atom_id\nWHERE c.bond_id = 'TR144_8_19';",
+          "raw_response": "```sql\nSELECT a.element\nFROM atom a\nJOIN connected c ON a.atom_id = c.atom_id\nWHERE c.bond_id = 'TR144_8_19';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 281,
+          "completion_tokens": 42,
+          "timings": {
+            "generation_s": 1.6855438999918988,
+            "validation_s": 0.0031495000002905726,
+            "execution_s": 0.0030971000087447464
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 281,
+      "prompt_tokens": 281,
+      "completion_tokens": 42,
+      "timings": {
+        "generation_s": 1.6855438999918988,
+        "validation_s": 0.0031495000002905726,
+        "execution_s": 0.0030971000087447464
+      }
+    },
+    {
+      "id": 253,
+      "question": "List the elements of all the triple bonds.",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT DISTINCT T3.element FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id INNER JOIN atom AS T3 ON T2.atom_id = T3.atom_id WHERE T1.bond_type = '#'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "bond",
+        "connected"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "triple bond refers to bond_type = '#';",
+      "expected_result": [
+        [
+          "c"
+        ],
+        [
+          "n"
+        ],
+        [
+          "p"
+        ],
+        [
+          "y"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT DISTINCT a.element\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id\nWHERE b.bond_type = '#';",
+      "raw_response": "```sql\nSELECT DISTINCT a.element\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id\nWHERE b.bond_type = '#';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "p"
+        ],
+        [
+          "h"
+        ],
+        [
+          "cl"
+        ],
+        [
+          "c"
+        ],
+        [
+          "y"
+        ],
+        [
+          "n"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT DISTINCT a.element\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id\nWHERE b.bond_type = '#';",
+          "raw_response": "```sql\nSELECT DISTINCT a.element\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id\nWHERE b.bond_type = '#';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 267,
+          "completion_tokens": 36,
+          "timings": {
+            "generation_s": 1.5154240999981994,
+            "validation_s": 0.004384299987577833,
+            "execution_s": 0.004336000012699515
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 267,
+      "prompt_tokens": 267,
+      "completion_tokens": 36,
+      "timings": {
+        "generation_s": 1.5154240999981994,
+        "validation_s": 0.004384299987577833,
+        "execution_s": 0.004336000012699515
+      }
+    },
+    {
+      "id": 255,
+      "question": "What proportion of single bonds are carcinogenic? Please provide your answer as a percentage with five decimal places.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT ROUND(CAST((CAST(COUNT(CASE WHEN T2.label = '+' THEN T1.bond_id ELSE NULL END) AS REAL) * 100 / NULLIF(COUNT(T1.bond_id), 0)) AS NUMERIC), 5) AS percentage FROM bond AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.bond_type = '-'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "bond",
+        "molecule"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "single bond refers to bond_type = '-'; label = '+' mean molecules are carcinogenic; proportion = DIVIDE(SUM(label = '+') * 100, COUNT(bond_id)) where bond_type = '-'",
+      "expected_result": [
+        [
+          39.752
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT ROUND((SUM(CASE WHEN T1.label = '+' THEN 1 ELSE 0 END) * 100.0 / COUNT(T2.bond_id)), 5) AS proportion\nFROM molecule AS T1\nJOIN bond AS T2 ON T1.molecule_id = T2.molecule_id\nWHERE T2.bond_type = '-';",
+      "raw_response": "```sql\nSELECT ROUND((SUM(CASE WHEN T1.label = '+' THEN 1 ELSE 0 END) * 100.0 / COUNT(T2.bond_id)), 5) AS proportion\nFROM molecule AS T1\nJOIN bond AS T2 ON T1.molecule_id = T2.molecule_id\nWHERE T2.bond_type = '-';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          39.752
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT ROUND((SUM(CASE WHEN T1.label = '+' THEN 1 ELSE 0 END) * 100.0 / COUNT(T2.bond_id)), 5) AS proportion\nFROM molecule AS T1\nJOIN bond AS T2 ON T1.molecule_id = T2.molecule_id\nWHERE T2.bond_type = '-';",
+          "raw_response": "```sql\nSELECT ROUND((SUM(CASE WHEN T1.label = '+' THEN 1 ELSE 0 END) * 100.0 / COUNT(T2.bond_id)), 5) AS proportion\nFROM molecule AS T1\nJOIN bond AS T2 ON T1.molecule_id = T2.molecule_id\nWHERE T2.bond_type = '-';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 314,
+          "completion_tokens": 78,
+          "timings": {
+            "generation_s": 3.3454098000074737,
+            "validation_s": 0.004667900007916614,
+            "execution_s": 0.003806400010944344
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 314,
+      "prompt_tokens": 314,
+      "completion_tokens": 78,
+      "timings": {
+        "generation_s": 3.3454098000074737,
+        "validation_s": 0.004667900007916614,
+        "execution_s": 0.003806400010944344
+      }
+    },
+    {
+      "id": 260,
+      "question": "Calculate the total atoms with triple-bond molecules containing the element phosphorus or bromine.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT COUNT(T1.atom_id) FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id INNER JOIN bond AS T3 ON T2.molecule_id = T3.molecule_id WHERE T3.bond_type = '#' AND T1.element IN ('p', 'br')",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "bond",
+        "molecule"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "triple bond refers to bond_type = '#'; phosphorus refers to element = 'p'; bromine refers to element = 'br'",
+      "expected_result": [
+        [
+          1
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT COUNT(DISTINCT a.atom_id)\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id\nJOIN connected c ON a.atom_id = c.atom_id\nWHERE b.bond_type = '#' AND (a.element = 'p' OR a.element = 'br');",
+      "raw_response": "```sql\nSELECT COUNT(DISTINCT a.atom_id)\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id\nJOIN connected c ON a.atom_id = c.atom_id\nWHERE b.bond_type = '#' AND (a.element = 'p' OR a.element = 'br');\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          1
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT COUNT(DISTINCT a.atom_id)\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id\nJOIN connected c ON a.atom_id = c.atom_id\nWHERE b.bond_type = '#' AND (a.element = 'p' OR a.element = 'br');",
+          "raw_response": "```sql\nSELECT COUNT(DISTINCT a.atom_id)\nFROM atom a\nJOIN bond b ON a.molecule_id = b.molecule_id\nJOIN connected c ON a.atom_id = c.atom_id\nWHERE b.bond_type = '#' AND (a.element = 'p' OR a.element = 'br');\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 294,
+          "completion_tokens": 66,
+          "timings": {
+            "generation_s": 2.915191699998104,
+            "validation_s": 0.007124800002202392,
+            "execution_s": 0.009326399987912737
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 294,
+      "prompt_tokens": 294,
+      "completion_tokens": 66,
+      "timings": {
+        "generation_s": 2.915191699998104,
+        "validation_s": 0.007124800002202392,
+        "execution_s": 0.009326399987912737
+      }
+    },
+    {
+      "id": 263,
+      "question": "What is the composition of element chlorine in percentage among the single bond molecules?",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT CAST(COUNT(CASE WHEN T.element = 'cl' THEN T.atom_id ELSE NULL END) AS REAL) * 100 / NULLIF(COUNT(T.atom_id), 0) FROM (SELECT T1.atom_id, T1.element FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id INNER JOIN bond AS T3 ON T2.molecule_id = T3.molecule_id WHERE T3.bond_type = '-') AS T",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "bond",
+        "molecule"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "element chlorine refers to element = 'cl'; single bond refers to bond_type = '-'; percentage = DIVIDE(SUM(element = 'cl'), COUNT(atom_id)) as percent where bond_type = '-'",
+      "expected_result": [
+        [
+          2.684
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT \n    (CAST(SUM(CASE WHEN a.element = 'cl' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(a.atom_id)) * 100 AS percent\nFROM \n    atom a\nJOIN \n    bond b ON a.molecule_id = b.molecule_id\nJOIN \n    connected c ON a.atom_id = c.atom_id\nWHERE \n    b.bond_type = '-';",
+      "raw_response": "```sql\nSELECT \n    (CAST(SUM(CASE WHEN a.element = 'cl' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(a.atom_id)) * 100 AS percent\nFROM \n    atom a\nJOIN \n    bond b ON a.molecule_id = b.molecule_id\nJOIN \n    connected c ON a.atom_id = c.atom_id\nWHERE \n    b.bond_type = '-';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          1.3047
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT \n    (CAST(SUM(CASE WHEN a.element = 'cl' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(a.atom_id)) * 100 AS percent\nFROM \n    atom a\nJOIN \n    bond b ON a.molecule_id = b.molecule_id\nJOIN \n    connected c ON a.atom_id = c.atom_id\nWHERE \n    b.bond_type = '-';",
+          "raw_response": "```sql\nSELECT \n    (CAST(SUM(CASE WHEN a.element = 'cl' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(a.atom_id)) * 100 AS percent\nFROM \n    atom a\nJOIN \n    bond b ON a.molecule_id = b.molecule_id\nJOIN \n    connected c ON a.atom_id = c.atom_id\nWHERE \n    b.bond_type = '-';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 304,
+          "completion_tokens": 91,
+          "timings": {
+            "generation_s": 4.395309100000304,
+            "validation_s": 0.0064544000051682815,
+            "execution_s": 0.08408390000113286
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 304,
+      "prompt_tokens": 304,
+      "completion_tokens": 91,
+      "timings": {
+        "generation_s": 4.395309100000304,
+        "validation_s": 0.0064544000051682815,
+        "execution_s": 0.08408390000113286
+      }
+    },
+    {
+      "id": 268,
+      "question": "What are the elements for bond id TR001_10_11?",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT T2.element FROM connected AS T1 INNER JOIN atom AS T2 ON T1.atom_id = T2.atom_id WHERE T1.bond_id = 'TR001_10_11'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "connected"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "TR001_10_11 is the bond id;",
+      "expected_result": [
+        [
+          "c"
+        ],
+        [
+          "o"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT a1.element, a2.element\nFROM atom a1\nJOIN connected c ON a1.atom_id = c.atom_id\nJOIN bond b ON c.bond_id = b.bond_id\nJOIN atom a2 ON c.atom_id2 = a2.atom_id\nWHERE b.bond_id = 'TR001_10_11';",
+      "raw_response": "```sql\nSELECT a1.element, a2.element\nFROM atom a1\nJOIN connected c ON a1.atom_id = c.atom_id\nJOIN bond b ON c.bond_id = b.bond_id\nJOIN atom a2 ON c.atom_id2 = a2.atom_id\nWHERE b.bond_id = 'TR001_10_11';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "c",
+          "o"
+        ],
+        [
+          "o",
+          "c"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": true,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT a1.element, a2.element\nFROM atom a1\nJOIN connected c ON a1.atom_id = c.atom_id\nJOIN bond b ON c.bond_id = b.bond_id\nJOIN atom a2 ON c.atom_id2 = a2.atom_id\nWHERE b.bond_id = 'TR001_10_11';",
+          "raw_response": "```sql\nSELECT a1.element, a2.element\nFROM atom a1\nJOIN connected c ON a1.atom_id = c.atom_id\nJOIN bond b ON c.bond_id = b.bond_id\nJOIN atom a2 ON c.atom_id2 = a2.atom_id\nWHERE b.bond_id = 'TR001_10_11';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 281,
+          "completion_tokens": 79,
+          "timings": {
+            "generation_s": 3.2881885999959195,
+            "validation_s": 0.004644199987524189,
+            "execution_s": 0.003041599993593991
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 281,
+      "prompt_tokens": 281,
+      "completion_tokens": 79,
+      "timings": {
+        "generation_s": 3.2881885999959195,
+        "validation_s": 0.004644199987524189,
+        "execution_s": 0.003041599993593991
+      }
+    },
+    {
+      "id": 273,
+      "question": "What is the percentage of element chlorine in carcinogenic molecules?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT CAST(COUNT(CASE WHEN T1.element = 'cl' THEN T1.element ELSE NULL END) AS REAL) * 100 / NULLIF(COUNT(T1.element), 0) FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.label = '+'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "molecule"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "chlorine refers to element = 'cl'; label = '+' mean molecules are carcinogenic; percentage = DIVIDE(SUM(element = 'pb'); COUNT(molecule_id)) as percentage where label = '+'",
+      "expected_result": [
+        [
+          3.1419
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT \n    (CAST(SUM(CASE WHEN a.element = 'cl' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(m.molecule_id)) * 100 AS percentage\nFROM \n    molecule m\nJOIN \n    atom a ON m.molecule_id = a.molecule_id\nWHERE \n    m.label = '+';",
+      "raw_response": "```sql\nSELECT \n    (CAST(SUM(CASE WHEN a.element = 'cl' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(m.molecule_id)) * 100 AS percentage\nFROM \n    molecule m\nJOIN \n    atom a ON m.molecule_id = a.molecule_id\nWHERE \n    m.label = '+';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          3.1419
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT \n    (CAST(SUM(CASE WHEN a.element = 'cl' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(m.molecule_id)) * 100 AS percentage\nFROM \n    molecule m\nJOIN \n    atom a ON m.molecule_id = a.molecule_id\nWHERE \n    m.label = '+';",
+          "raw_response": "```sql\nSELECT \n    (CAST(SUM(CASE WHEN a.element = 'cl' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(m.molecule_id)) * 100 AS percentage\nFROM \n    molecule m\nJOIN \n    atom a ON m.molecule_id = a.molecule_id\nWHERE \n    m.label = '+';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 301,
+          "completion_tokens": 77,
+          "timings": {
+            "generation_s": 3.181263599995873,
+            "validation_s": 0.0040643999964231625,
+            "execution_s": 0.0028049000102328137
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 301,
+      "prompt_tokens": 301,
+      "completion_tokens": 77,
+      "timings": {
+        "generation_s": 3.181263599995873,
+        "validation_s": 0.0040643999964231625,
+        "execution_s": 0.0028049000102328137
+      }
+    },
+    {
+      "id": 281,
+      "question": "Tally the toxicology element of the 4th atom of each molecule that was carcinogenic.",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT DISTINCT T1.element FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.label = '+' AND RIGHT(T1.atom_id, 1) = '4' AND LENGTH(T1.atom_id) = 7",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "molecule"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "label = '+' means molecules are carcinogenic; 4th atom of each molecule refers to substr(atom_id, 7, 1) = '4'; ",
+      "expected_result": [
+        [
+          "br"
+        ],
+        [
+          "c"
+        ],
+        [
+          "cl"
+        ],
+        [
+          "f"
+        ],
+        [
+          "h"
+        ],
+        [
+          "n"
+        ],
+        [
+          "o"
+        ],
+        [
+          "s"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT a.element, COUNT(*) AS toxicology_count\nFROM atom a\nJOIN molecule m ON a.molecule_id = m.molecule_id\nWHERE a.atom_id LIKE '4%' AND m.label = '+'\nGROUP BY a.element;",
+      "raw_response": "```sql\nSELECT a.element, COUNT(*) AS toxicology_count\nFROM atom a\nJOIN molecule m ON a.molecule_id = m.molecule_id\nWHERE a.atom_id LIKE '4%' AND m.label = '+'\nGROUP BY a.element;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT a.element, COUNT(*) AS toxicology_count\nFROM atom a\nJOIN molecule m ON a.molecule_id = m.molecule_id\nWHERE a.atom_id LIKE '4%' AND m.label = '+'\nGROUP BY a.element;",
+          "raw_response": "```sql\nSELECT a.element, COUNT(*) AS toxicology_count\nFROM atom a\nJOIN molecule m ON a.molecule_id = m.molecule_id\nWHERE a.atom_id LIKE '4%' AND m.label = '+'\nGROUP BY a.element;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 301,
+          "completion_tokens": 53,
+          "timings": {
+            "generation_s": 2.091395700001158,
+            "validation_s": 0.004368800000520423,
+            "execution_s": 0.00276319999829866
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 301,
+      "prompt_tokens": 301,
+      "completion_tokens": 53,
+      "timings": {
+        "generation_s": 2.091395700001158,
+        "validation_s": 0.004368800000520423,
+        "execution_s": 0.00276319999829866
+      }
+    },
+    {
+      "id": 282,
+      "question": "What is the ratio of Hydrogen elements in molecule ID TR006? List the ratio with its label.",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "WITH SubQuery AS (SELECT DISTINCT T1.atom_id, T1.element, T1.molecule_id, T2.label FROM atom AS T1 INNER JOIN molecule AS T2 ON T1.molecule_id = T2.molecule_id WHERE T2.molecule_id = 'TR006') SELECT CAST(COUNT(CASE WHEN element = 'h' THEN atom_id ELSE NULL END) AS REAL) / NULLIF(COUNT(atom_id), 0) AS ratio, label FROM SubQuery GROUP BY label",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "molecule"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "hydrogen refers to element = 'h'; ratio = DIVIDE(SUM(element = 'h'), count(element)) where molecule_id = 'TR006' ; label = '+' mean molecules are carcinogenic; label = '-' means molecules are non-carcinogenic",
+      "expected_result": [
+        [
+          0.3617,
+          "+"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT \n    (SUM(CASE WHEN element = 'h' THEN 1 ELSE 0 END) * 1.0 / COUNT(element)) AS hydrogen_ratio,\n    CASE \n        WHEN (SELECT label FROM molecule WHERE molecule_id = 'TR006') = '+' THEN '+'\n        ELSE '-'\n    END AS label\nFROM \n    atom\nWHERE \n    molecule_id = 'TR006';",
+      "raw_response": "```sql\nSELECT \n    (SUM(CASE WHEN element = 'h' THEN 1 ELSE 0 END) * 1.0 / COUNT(element)) AS hydrogen_ratio,\n    CASE \n        WHEN (SELECT label FROM molecule WHERE molecule_id = 'TR006') = '+' THEN '+'\n        ELSE '-'\n    END AS label\nFROM \n    atom\nWHERE \n    molecule_id = 'TR006';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          0.3617,
+          "+"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 1,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT \n    DIVIDE(SUM(CASE WHEN element = 'h' THEN 1 ELSE 0 END), COUNT(element)) AS hydrogen_ratio,\n    CASE \n        WHEN (SELECT label FROM molecule WHERE molecule_id = 'TR006') = '+' THEN '+'\n        ELSE '-'\n    END AS label\nFROM \n    atom\nWHERE \n    molecule_id = 'TR006';",
+          "raw_response": "```sql\nSELECT \n    DIVIDE(SUM(CASE WHEN element = 'h' THEN 1 ELSE 0 END), COUNT(element)) AS hydrogen_ratio,\n    CASE \n        WHEN (SELECT label FROM molecule WHERE molecule_id = 'TR006') = '+' THEN '+'\n        ELSE '-'\n    END AS label\nFROM \n    atom\nWHERE \n    molecule_id = 'TR006';\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: function divide(bigint, bigint) does not exist\nLINE 2:     DIVIDE(SUM(CASE WHEN element = 'h' THEN 1 ELSE 0 END), C...\n            ^\nHINT:  No function matches the given name and argument types. You might need to add explicit type casts.",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 326,
+          "completion_tokens": 86,
+          "timings": {
+            "generation_s": 3.5391958999971393,
+            "validation_s": 0.005512399991857819
+          }
+        },
+        {
+          "sql": "SELECT \n    (SUM(CASE WHEN element = 'h' THEN 1 ELSE 0 END) * 1.0 / COUNT(element)) AS hydrogen_ratio,\n    CASE \n        WHEN (SELECT label FROM molecule WHERE molecule_id = 'TR006') = '+' THEN '+'\n        ELSE '-'\n    END AS label\nFROM \n    atom\nWHERE \n    molecule_id = 'TR006';",
+          "raw_response": "```sql\nSELECT \n    (SUM(CASE WHEN element = 'h' THEN 1 ELSE 0 END) * 1.0 / COUNT(element)) AS hydrogen_ratio,\n    CASE \n        WHEN (SELECT label FROM molecule WHERE molecule_id = 'TR006') = '+' THEN '+'\n        ELSE '-'\n    END AS label\nFROM \n    atom\nWHERE \n    molecule_id = 'TR006';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 525,
+          "completion_tokens": 90,
+          "timings": {
+            "generation_s": 3.608151899999939,
+            "validation_s": 0.003886399994371459,
+            "execution_s": 0.0020022999960929155
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 525,
+      "prompt_tokens": 851,
+      "completion_tokens": 176,
+      "timings": {
+        "generation_s": 7.147347799997078,
+        "validation_s": 0.009398799986229278,
+        "execution_s": 0.0020022999960929155
+      }
+    },
+    {
+      "id": 327,
+      "question": "Which non-carcinogenic molecules consisted more than 5 atoms?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T.molecule_id FROM (SELECT T1.molecule_id, COUNT(T2.atom_id) FROM molecule AS T1 INNER JOIN atom AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.label = '-' GROUP BY T1.molecule_id HAVING COUNT(T2.atom_id) > 5) AS t",
+      "order_sensitive": false,
+      "gold_tables": [
+        "atom",
+        "molecule"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "label = '-' means molecules are non-carcinogenic; molecules consisted more than 5 atoms refers to COUNT(molecule_id) > 5",
+      "expected_result": [
+        [
+          "TR424"
+        ],
+        [
+          "TR165"
+        ],
+        [
+          "TR035"
+        ],
+        [
+          "TR478"
+        ],
+        [
+          "TR156"
+        ],
+        [
+          "TR477"
+        ],
+        [
+          "TR129"
+        ],
+        [
+          "TR203"
+        ],
+        [
+          "TR175"
+        ],
+        [
+          "TR134"
+        ],
+        [
+          "TR336"
+        ],
+        [
+          "TR284"
+        ],
+        [
+          "TR025"
+        ],
+        [
+          "TR036"
+        ],
+        [
+          "TR247"
+        ],
+        [
+          "TR208"
+        ],
+        [
+          "TR173"
+        ],
+        [
+          "TR439"
+        ],
+        [
+          "TR281"
+        ],
+        [
+          "TR191"
+        ],
+        [
+          "TR174"
+        ],
+        [
+          "TR121"
+        ],
+        [
+          "TR010"
+        ],
+        [
+          "TR146"
+        ],
+        [
+          "TR183"
+        ],
+        [
+          "TR195"
+        ],
+        [
+          "TR112"
+        ],
+        [
+          "TR101"
+        ],
+        [
+          "TR214"
+        ],
+        [
+          "TR168"
+        ],
+        [
+          "TR150"
+        ],
+        [
+          "TR031"
+        ],
+        [
+          "TR014"
+        ],
+        [
+          "TR061"
+        ],
+        [
+          "TR425"
+        ],
+        [
+          "TR228"
+        ],
+        [
+          "TR143"
+        ],
+        [
+          "TR161"
+        ],
+        [
+          "TR401"
+        ],
+        [
+          "TR330"
+        ],
+        [
+          "TR124"
+        ],
+        [
+          "TR211"
+        ],
+        [
+          "TR141"
+        ],
+        [
+          "TR235"
+        ],
+        [
+          "TR435"
+        ],
+        [
+          "TR046"
+        ],
+        [
+          "TR117"
+        ],
+        [
+          "TR219"
+        ],
+        [
+          "TR377"
+        ],
+        [
+          "TR126"
+        ],
+        [
+          "TR102"
+        ],
+        [
+          "TR412"
+        ],
+        [
+          "TR353"
+        ],
+        [
+          "TR157"
+        ],
+        [
+          "TR357"
+        ],
+        [
+          "TR223"
+        ],
+        [
+          "TR179"
+        ],
+        [
+          "TR078"
+        ],
+        [
+          "TR048"
+        ],
+        [
+          "TR122"
+        ],
+        [
+          "TR104"
+        ],
+        [
+          "TR322"
+        ],
+        [
+          "TR220"
+        ],
+        [
+          "TR172"
+        ],
+        [
+          "TR132"
+        ],
+        [
+          "TR077"
+        ],
+        [
+          "TR022"
+        ],
+        [
+          "TR159"
+        ],
+        [
+          "TR180"
+        ],
+        [
+          "TR021"
+        ],
+        [
+          "TR379"
+        ],
+        [
+          "TR373"
+        ],
+        [
+          "TR024"
+        ],
+        [
+          "TR394"
+        ],
+        [
+          "TR023"
+        ],
+        [
+          "TR185"
+        ],
+        [
+          "TR151"
+        ],
+        [
+          "TR171"
+        ],
+        [
+          "TR212"
+        ],
+        [
+          "TR098"
+        ],
+        [
+          "TR091"
+        ],
+        [
+          "TR074"
+        ],
+        [
+          "TR192"
+        ],
+        [
+          "TR109"
+        ],
+        [
+          "TR123"
+        ],
+        [
+          "TR073"
+        ],
+        [
+          "TR480"
+        ],
+        [
+          "TR343"
+        ],
+        [
+          "TR461"
+        ],
+        [
+          "TR473"
+        ],
+        [
+          "TR431"
+        ],
+        [
+          "TR445"
+        ],
+        [
+          "TR145"
+        ],
+        [
+          "TR204"
+        ],
+        [
+          "TR158"
+        ],
+        [
+          "TR015"
+        ],
+        [
+          "TR272"
+        ],
+        [
+          "TR166"
+        ],
+        [
+          "TR387"
+        ],
+        [
+          "TR472"
+        ],
+        [
+          "TR011"
+        ],
+        [
+          "TR004"
+        ],
+        [
+          "TR064"
+        ],
+        [
+          "TR437"
+        ],
+        [
+          "TR314"
+        ],
+        [
+          "TR133"
+        ],
+        [
+          "TR050"
+        ],
+        [
+          "TR446"
+        ],
+        [
+          "TR082"
+        ],
+        [
+          "TR045"
+        ],
+        [
+          "TR033"
+        ],
+        [
+          "TR187"
+        ],
+        [
+          "TR030"
+        ],
+        [
+          "TR071"
+        ],
+        [
+          "TR490"
+        ],
+        [
+          "TR068"
+        ],
+        [
+          "TR056"
+        ],
+        [
+          "TR305"
+        ],
+        [
+          "TR293"
+        ],
+        [
+          "TR233"
+        ],
+        [
+          "TR455"
+        ],
+        [
+          "TR333"
+        ],
+        [
+          "TR060"
+        ],
+        [
+          "TR114"
+        ],
+        [
+          "TR484"
+        ],
+        [
+          "TR255"
+        ],
+        [
+          "TR017"
+        ],
+        [
+          "TR312"
+        ],
+        [
+          "TR395"
+        ],
+        [
+          "TR137"
+        ],
+        [
+          "TR396"
+        ],
+        [
+          "TR442"
+        ],
+        [
+          "TR307"
+        ],
+        [
+          "TR135"
+        ],
+        [
+          "TR083"
+        ],
+        [
+          "TR147"
+        ],
+        [
+          "TR378"
+        ],
+        [
+          "TR125"
+        ],
+        [
+          "TR103"
+        ],
+        [
+          "TR012"
+        ],
+        [
+          "TR008"
+        ],
+        [
+          "TR335"
+        ],
+        [
+          "TR459"
+        ],
+        [
+          "TR096"
+        ],
+        [
+          "TR120"
+        ],
+        [
+          "TR481"
+        ],
+        [
+          "TR275"
+        ],
+        [
+          "TR113"
+        ],
+        [
+          "TR493"
+        ],
+        [
+          "TR178"
+        ],
+        [
+          "TR131"
+        ],
+        [
+          "TR348"
+        ],
+        [
+          "TR148"
+        ],
+        [
+          "TR501"
+        ],
+        [
+          "TR438"
+        ],
+        [
+          "TR032"
+        ],
+        [
+          "TR344"
+        ],
+        [
+          "TR040"
+        ],
+        [
+          "TR403"
+        ],
+        [
+          "TR354"
+        ],
+        [
+          "TR371"
+        ],
+        [
+          "TR352"
+        ],
+        [
+          "TR090"
+        ],
+        [
+          "TR136"
+        ],
+        [
+          "TR464"
+        ],
+        [
+          "TR059"
+        ],
+        [
+          "TR370"
+        ],
+        [
+          "TR236"
+        ],
+        [
+          "TR184"
+        ],
+        [
+          "TR433"
+        ],
+        [
+          "TR406"
+        ],
+        [
+          "TR276"
+        ],
+        [
+          "TR138"
+        ],
+        [
+          "TR034"
+        ],
+        [
+          "TR263"
+        ],
+        [
+          "TR007"
+        ],
+        [
+          "TR177"
+        ],
+        [
+          "TR066"
+        ],
+        [
+          "TR002"
+        ],
+        [
+          "TR427"
+        ],
+        [
+          "TR169"
+        ],
+        [
+          "TR200"
+        ],
+        [
+          "TR009"
+        ],
+        [
+          "TR107"
+        ],
+        [
+          "TR051"
+        ],
+        [
+          "TR139"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT m.molecule_id, m.label\nFROM molecule m\nJOIN atom a ON m.molecule_id = a.molecule_id\nWHERE m.label = '-'\nGROUP BY m.molecule_id, m.label\nHAVING COUNT(a.atom_id) > 5;",
+      "raw_response": "```sql\nSELECT m.molecule_id, m.label\nFROM molecule m\nJOIN atom a ON m.molecule_id = a.molecule_id\nWHERE m.label = '-'\nGROUP BY m.molecule_id, m.label\nHAVING COUNT(a.atom_id) > 5;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "TR424",
+          "-"
+        ],
+        [
+          "TR165",
+          "-"
+        ],
+        [
+          "TR035",
+          "-"
+        ],
+        [
+          "TR478",
+          "-"
+        ],
+        [
+          "TR156",
+          "-"
+        ],
+        [
+          "TR477",
+          "-"
+        ],
+        [
+          "TR129",
+          "-"
+        ],
+        [
+          "TR203",
+          "-"
+        ],
+        [
+          "TR175",
+          "-"
+        ],
+        [
+          "TR134",
+          "-"
+        ],
+        [
+          "TR336",
+          "-"
+        ],
+        [
+          "TR284",
+          "-"
+        ],
+        [
+          "TR025",
+          "-"
+        ],
+        [
+          "TR036",
+          "-"
+        ],
+        [
+          "TR247",
+          "-"
+        ],
+        [
+          "TR208",
+          "-"
+        ],
+        [
+          "TR173",
+          "-"
+        ],
+        [
+          "TR439",
+          "-"
+        ],
+        [
+          "TR281",
+          "-"
+        ],
+        [
+          "TR191",
+          "-"
+        ],
+        [
+          "TR174",
+          "-"
+        ],
+        [
+          "TR121",
+          "-"
+        ],
+        [
+          "TR010",
+          "-"
+        ],
+        [
+          "TR146",
+          "-"
+        ],
+        [
+          "TR183",
+          "-"
+        ],
+        [
+          "TR195",
+          "-"
+        ],
+        [
+          "TR112",
+          "-"
+        ],
+        [
+          "TR101",
+          "-"
+        ],
+        [
+          "TR214",
+          "-"
+        ],
+        [
+          "TR168",
+          "-"
+        ],
+        [
+          "TR150",
+          "-"
+        ],
+        [
+          "TR031",
+          "-"
+        ],
+        [
+          "TR014",
+          "-"
+        ],
+        [
+          "TR061",
+          "-"
+        ],
+        [
+          "TR425",
+          "-"
+        ],
+        [
+          "TR228",
+          "-"
+        ],
+        [
+          "TR143",
+          "-"
+        ],
+        [
+          "TR161",
+          "-"
+        ],
+        [
+          "TR401",
+          "-"
+        ],
+        [
+          "TR330",
+          "-"
+        ],
+        [
+          "TR124",
+          "-"
+        ],
+        [
+          "TR211",
+          "-"
+        ],
+        [
+          "TR141",
+          "-"
+        ],
+        [
+          "TR235",
+          "-"
+        ],
+        [
+          "TR435",
+          "-"
+        ],
+        [
+          "TR046",
+          "-"
+        ],
+        [
+          "TR117",
+          "-"
+        ],
+        [
+          "TR219",
+          "-"
+        ],
+        [
+          "TR377",
+          "-"
+        ],
+        [
+          "TR126",
+          "-"
+        ],
+        [
+          "TR102",
+          "-"
+        ],
+        [
+          "TR412",
+          "-"
+        ],
+        [
+          "TR353",
+          "-"
+        ],
+        [
+          "TR157",
+          "-"
+        ],
+        [
+          "TR357",
+          "-"
+        ],
+        [
+          "TR223",
+          "-"
+        ],
+        [
+          "TR179",
+          "-"
+        ],
+        [
+          "TR078",
+          "-"
+        ],
+        [
+          "TR048",
+          "-"
+        ],
+        [
+          "TR122",
+          "-"
+        ],
+        [
+          "TR104",
+          "-"
+        ],
+        [
+          "TR322",
+          "-"
+        ],
+        [
+          "TR220",
+          "-"
+        ],
+        [
+          "TR172",
+          "-"
+        ],
+        [
+          "TR132",
+          "-"
+        ],
+        [
+          "TR077",
+          "-"
+        ],
+        [
+          "TR022",
+          "-"
+        ],
+        [
+          "TR159",
+          "-"
+        ],
+        [
+          "TR180",
+          "-"
+        ],
+        [
+          "TR021",
+          "-"
+        ],
+        [
+          "TR379",
+          "-"
+        ],
+        [
+          "TR373",
+          "-"
+        ],
+        [
+          "TR024",
+          "-"
+        ],
+        [
+          "TR394",
+          "-"
+        ],
+        [
+          "TR023",
+          "-"
+        ],
+        [
+          "TR185",
+          "-"
+        ],
+        [
+          "TR151",
+          "-"
+        ],
+        [
+          "TR171",
+          "-"
+        ],
+        [
+          "TR212",
+          "-"
+        ],
+        [
+          "TR098",
+          "-"
+        ],
+        [
+          "TR091",
+          "-"
+        ],
+        [
+          "TR074",
+          "-"
+        ],
+        [
+          "TR192",
+          "-"
+        ],
+        [
+          "TR109",
+          "-"
+        ],
+        [
+          "TR123",
+          "-"
+        ],
+        [
+          "TR073",
+          "-"
+        ],
+        [
+          "TR480",
+          "-"
+        ],
+        [
+          "TR343",
+          "-"
+        ],
+        [
+          "TR461",
+          "-"
+        ],
+        [
+          "TR473",
+          "-"
+        ],
+        [
+          "TR431",
+          "-"
+        ],
+        [
+          "TR445",
+          "-"
+        ],
+        [
+          "TR145",
+          "-"
+        ],
+        [
+          "TR204",
+          "-"
+        ],
+        [
+          "TR158",
+          "-"
+        ],
+        [
+          "TR015",
+          "-"
+        ],
+        [
+          "TR272",
+          "-"
+        ],
+        [
+          "TR166",
+          "-"
+        ],
+        [
+          "TR387",
+          "-"
+        ],
+        [
+          "TR472",
+          "-"
+        ],
+        [
+          "TR011",
+          "-"
+        ],
+        [
+          "TR004",
+          "-"
+        ],
+        [
+          "TR064",
+          "-"
+        ],
+        [
+          "TR437",
+          "-"
+        ],
+        [
+          "TR314",
+          "-"
+        ],
+        [
+          "TR133",
+          "-"
+        ],
+        [
+          "TR050",
+          "-"
+        ],
+        [
+          "TR446",
+          "-"
+        ],
+        [
+          "TR082",
+          "-"
+        ],
+        [
+          "TR045",
+          "-"
+        ],
+        [
+          "TR033",
+          "-"
+        ],
+        [
+          "TR187",
+          "-"
+        ],
+        [
+          "TR030",
+          "-"
+        ],
+        [
+          "TR071",
+          "-"
+        ],
+        [
+          "TR490",
+          "-"
+        ],
+        [
+          "TR068",
+          "-"
+        ],
+        [
+          "TR056",
+          "-"
+        ],
+        [
+          "TR305",
+          "-"
+        ],
+        [
+          "TR293",
+          "-"
+        ],
+        [
+          "TR233",
+          "-"
+        ],
+        [
+          "TR455",
+          "-"
+        ],
+        [
+          "TR333",
+          "-"
+        ],
+        [
+          "TR060",
+          "-"
+        ],
+        [
+          "TR114",
+          "-"
+        ],
+        [
+          "TR484",
+          "-"
+        ],
+        [
+          "TR255",
+          "-"
+        ],
+        [
+          "TR017",
+          "-"
+        ],
+        [
+          "TR312",
+          "-"
+        ],
+        [
+          "TR395",
+          "-"
+        ],
+        [
+          "TR137",
+          "-"
+        ],
+        [
+          "TR396",
+          "-"
+        ],
+        [
+          "TR442",
+          "-"
+        ],
+        [
+          "TR307",
+          "-"
+        ],
+        [
+          "TR135",
+          "-"
+        ],
+        [
+          "TR083",
+          "-"
+        ],
+        [
+          "TR147",
+          "-"
+        ],
+        [
+          "TR378",
+          "-"
+        ],
+        [
+          "TR125",
+          "-"
+        ],
+        [
+          "TR103",
+          "-"
+        ],
+        [
+          "TR012",
+          "-"
+        ],
+        [
+          "TR008",
+          "-"
+        ],
+        [
+          "TR335",
+          "-"
+        ],
+        [
+          "TR459",
+          "-"
+        ],
+        [
+          "TR096",
+          "-"
+        ],
+        [
+          "TR120",
+          "-"
+        ],
+        [
+          "TR481",
+          "-"
+        ],
+        [
+          "TR275",
+          "-"
+        ],
+        [
+          "TR113",
+          "-"
+        ],
+        [
+          "TR493",
+          "-"
+        ],
+        [
+          "TR178",
+          "-"
+        ],
+        [
+          "TR131",
+          "-"
+        ],
+        [
+          "TR348",
+          "-"
+        ],
+        [
+          "TR148",
+          "-"
+        ],
+        [
+          "TR501",
+          "-"
+        ],
+        [
+          "TR438",
+          "-"
+        ],
+        [
+          "TR032",
+          "-"
+        ],
+        [
+          "TR344",
+          "-"
+        ],
+        [
+          "TR040",
+          "-"
+        ],
+        [
+          "TR403",
+          "-"
+        ],
+        [
+          "TR354",
+          "-"
+        ],
+        [
+          "TR371",
+          "-"
+        ],
+        [
+          "TR352",
+          "-"
+        ],
+        [
+          "TR090",
+          "-"
+        ],
+        [
+          "TR136",
+          "-"
+        ],
+        [
+          "TR464",
+          "-"
+        ],
+        [
+          "TR059",
+          "-"
+        ],
+        [
+          "TR370",
+          "-"
+        ],
+        [
+          "TR236",
+          "-"
+        ],
+        [
+          "TR184",
+          "-"
+        ],
+        [
+          "TR433",
+          "-"
+        ],
+        [
+          "TR406",
+          "-"
+        ],
+        [
+          "TR276",
+          "-"
+        ],
+        [
+          "TR138",
+          "-"
+        ],
+        [
+          "TR034",
+          "-"
+        ],
+        [
+          "TR263",
+          "-"
+        ],
+        [
+          "TR007",
+          "-"
+        ],
+        [
+          "TR177",
+          "-"
+        ],
+        [
+          "TR066",
+          "-"
+        ],
+        [
+          "TR002",
+          "-"
+        ],
+        [
+          "TR427",
+          "-"
+        ],
+        [
+          "TR169",
+          "-"
+        ],
+        [
+          "TR200",
+          "-"
+        ],
+        [
+          "TR009",
+          "-"
+        ],
+        [
+          "TR107",
+          "-"
+        ],
+        [
+          "TR051",
+          "-"
+        ],
+        [
+          "TR139",
+          "-"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": true,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT m.molecule_id, m.label\nFROM molecule m\nJOIN atom a ON m.molecule_id = a.molecule_id\nWHERE m.label = '-'\nGROUP BY m.molecule_id, m.label\nHAVING COUNT(a.atom_id) > 5;",
+          "raw_response": "```sql\nSELECT m.molecule_id, m.label\nFROM molecule m\nJOIN atom a ON m.molecule_id = a.molecule_id\nWHERE m.label = '-'\nGROUP BY m.molecule_id, m.label\nHAVING COUNT(a.atom_id) > 5;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 292,
+          "completion_tokens": 59,
+          "timings": {
+            "generation_s": 2.3978429999988293,
+            "validation_s": 0.00435299999662675,
+            "execution_s": 0.003371199985849671
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 292,
+      "prompt_tokens": 292,
+      "completion_tokens": 59,
+      "timings": {
+        "generation_s": 2.3978429999988293,
+        "validation_s": 0.00435299999662675,
+        "execution_s": 0.003371199985849671
+      }
+    }
+  ]
+}

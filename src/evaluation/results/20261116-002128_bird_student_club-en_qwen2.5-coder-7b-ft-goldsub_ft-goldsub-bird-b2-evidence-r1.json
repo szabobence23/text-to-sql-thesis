@@ -1,0 +1,4290 @@
+{
+  "run": {
+    "started_at": "2026-11-16T00:21:28",
+    "git": {
+      "commit": "ada7880a9437e943d5ce7b2f94f7de95332c64eb",
+      "dirty": true
+    },
+    "pipeline": {
+      "dataset": "bird_student_club",
+      "llm": {
+        "model": "qwen2.5-coder-7b-ft-goldsub",
+        "temperature": 0.0,
+        "seed": 42,
+        "num_ctx": 8192
+      },
+      "schema_hints": true,
+      "column_values": false,
+      "column_values_max": 50,
+      "schema_retrieval": "full",
+      "retrieval_k": 5,
+      "retrieval_fk_expansion": true,
+      "retrieval_descriptions": false,
+      "translate_for_retrieval": false,
+      "table_selection": false,
+      "table_selection_style": "strict",
+      "selection_keep_top": 0,
+      "selection_examples": 0,
+      "example_candidates": false,
+      "selection_examples_in_prompt": true,
+      "sql_examples": 0,
+      "question_evidence": true,
+      "embedding_model": "bge-m3",
+      "block_functions": true,
+      "max_correction_rounds": 0,
+      "natural_language_answer": false,
+      "answer_max_rows": 50
+    },
+    "model_digest": "f1c681974baedc85b8ef39be05b0d64098dafdbed61db75d5e6ca25d81c6d413",
+    "embedding_model_digest": null,
+    "translate_prompt_sha256": null,
+    "table_selection_prompt_sha256": null,
+    "table_selection_examples_sha256": null,
+    "sql_examples_sha256": null,
+    "evidence_sha256": "9bb0816972a7b4b9bbbea2b6828c975c7d30cb692a4b498048f906b874b191a4",
+    "examples_sha256": null,
+    "prompt_sha256": "99da7ecb190dc2876f2c31f4b8f13f51687394725a30debe1632895b058b2d4a",
+    "correction_prompt_sha256": "18936e160c444acb215efe64089ac135fadb9dbaf3ddecba9dcd16f6af912024",
+    "answer_prompt_sha256": "f45181a3fceda6ac5f3ec0794f6effb5c87233571d961c573d9e6d8034f96eb9",
+    "database": "bird_student_club",
+    "db_user": "text2sql_reader",
+    "test_cases_file": "datasets\\bird_student_club\\test_cases\\en.json",
+    "test_cases_language": "en",
+    "test_cases_sha256": "a103847c2f1d18d5fa6d3f0051c497a2d9fb28d6d6dc12b0c9a9d92b59ed5cea",
+    "schema_sha256": "3e15b3cc02c551ee7502af26e0287cb3430fd053ed1f597625a641ef4987a6be",
+    "schema_text": "Database: bird_student_club\n\nTable: attendance\n- link_to_event text\n- link_to_member text\nTable: budget\n- budget_id text\n- category text\n- spent real\n- remaining real\n- amount bigint\n- event_status text\n- link_to_event text\nTable: event\n- event_id text\n- event_name text\n- event_date text\n- type text\n- notes text\n- location text\n- status text\nTable: expense\n- expense_id text\n- expense_description text\n- expense_date text\n- cost real\n- approved text\n- link_to_member text\n- link_to_budget text\nTable: income\n- income_id text\n- date_received text\n- amount bigint\n- source text\n- notes text\n- link_to_member text\nTable: major\n- major_id text\n- major_name text\n- department text\n- college text\nTable: member\n- member_id text\n- first_name text\n- last_name text\n- email text\n- position text\n- t_shirt_size text\n- phone text\n- zip bigint\n- link_to_major text\nTable: zip_code\n- zip_code bigint\n- type text\n- city text\n- county text\n- state text\n- short_state text\n\nRelationships:\n- attendance.link_to_event -> event.event_id\n- attendance.link_to_member -> member.member_id\n- budget.link_to_event -> event.event_id\n- expense.link_to_budget -> budget.budget_id\n- expense.link_to_member -> member.member_id\n- income.link_to_member -> member.member_id\n- member.link_to_major -> major.major_id\n- member.zip -> zip_code.zip_code\n"
+  },
+  "summary": {
+    "total_questions": 48,
+    "valid_sql": {
+      "count": 38,
+      "total": 48,
+      "rate": 0.7916666666666666
+    },
+    "execution_success": {
+      "count": 38,
+      "total": 48,
+      "rate": 0.7916666666666666
+    },
+    "strict_ex": {
+      "count": 29,
+      "total": 48,
+      "rate": 0.6041666666666666
+    },
+    "relaxed_ex": {
+      "count": 29,
+      "total": 48,
+      "rate": 0.6041666666666666
+    },
+    "set_ex": {
+      "count": 31,
+      "total": 48,
+      "rate": 0.6458333333333334
+    },
+    "first_attempt": {
+      "execution_success": {
+        "count": 38,
+        "total": 48,
+        "rate": 0.7916666666666666
+      },
+      "strict_ex": {
+        "count": 29,
+        "total": 48,
+        "rate": 0.6041666666666666
+      },
+      "relaxed_ex": {
+        "count": 29,
+        "total": 48,
+        "rate": 0.6041666666666666
+      },
+      "set_ex": {
+        "count": 31,
+        "total": 48,
+        "rate": 0.6458333333333334
+      }
+    },
+    "correction": {
+      "triggered": 0,
+      "fixed_execution": 0,
+      "fixed_strict": 0,
+      "fixed_relaxed": 0,
+      "mean_rounds_when_triggered": 0
+    },
+    "answer": {
+      "answered": 0,
+      "mean_answer_s": 0,
+      "mean_prompt_tokens": 0,
+      "mean_completion_tokens": 0
+    },
+    "by_category": {
+      "bird": {
+        "strict_ex": {
+          "count": 29,
+          "total": 48,
+          "rate": 0.6041666666666666
+        },
+        "relaxed_ex": {
+          "count": 29,
+          "total": 48,
+          "rate": 0.6041666666666666
+        },
+        "set_ex": {
+          "count": 31,
+          "total": 48,
+          "rate": 0.6458333333333334
+        }
+      }
+    },
+    "by_difficulty": {
+      "challenging": {
+        "strict_ex": {
+          "count": 4,
+          "total": 5,
+          "rate": 0.8
+        },
+        "relaxed_ex": {
+          "count": 4,
+          "total": 5,
+          "rate": 0.8
+        },
+        "set_ex": {
+          "count": 4,
+          "total": 5,
+          "rate": 0.8
+        }
+      },
+      "moderate": {
+        "strict_ex": {
+          "count": 8,
+          "total": 22,
+          "rate": 0.36363636363636365
+        },
+        "relaxed_ex": {
+          "count": 8,
+          "total": 22,
+          "rate": 0.36363636363636365
+        },
+        "set_ex": {
+          "count": 9,
+          "total": 22,
+          "rate": 0.4090909090909091
+        }
+      },
+      "simple": {
+        "strict_ex": {
+          "count": 17,
+          "total": 21,
+          "rate": 0.8095238095238095
+        },
+        "relaxed_ex": {
+          "count": 17,
+          "total": 21,
+          "rate": 0.8095238095238095
+        },
+        "set_ex": {
+          "count": 18,
+          "total": 21,
+          "rate": 0.8571428571428571
+        }
+      }
+    },
+    "mean_table_recall": 1.0,
+    "tables_complete": {
+      "count": 48,
+      "total": 48,
+      "rate": 1.0
+    },
+    "mean_generation_s": 2.3376854729176557,
+    "mean_prompt_tokens": 509.0,
+    "mean_completion_tokens": 60.354166666666664
+  },
+  "results": [
+    {
+      "id": 1312,
+      "question": "What's Angela Sanders's major?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT T2.major_name FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T1.first_name = 'Angela' AND T1.last_name = 'Sanders'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "major",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "Angela Sanders is the full name; full name refers to first_name, last_name; major refers to major_name.",
+      "expected_result": [
+        [
+          "Business"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  t2.major_name\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t1.first_name = 'Angela' AND t1.last_name = 'Sanders';",
+      "raw_response": "```sql\nSELECT\n  t2.major_name\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t1.first_name = 'Angela' AND t1.last_name = 'Sanders';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Business"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t2.major_name\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t1.first_name = 'Angela' AND t1.last_name = 'Sanders';",
+          "raw_response": "```sql\nSELECT\n  t2.major_name\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t1.first_name = 'Angela' AND t1.last_name = 'Sanders';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 496,
+          "completion_tokens": 60,
+          "timings": {
+            "generation_s": 2.5426237999927253,
+            "validation_s": 0.00380619999486953,
+            "execution_s": 0.0017040000238921493
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 496,
+      "prompt_tokens": 496,
+      "completion_tokens": 60,
+      "timings": {
+        "generation_s": 2.5426237999927253,
+        "validation_s": 0.00380619999486953,
+        "execution_s": 0.0017040000238921493
+      }
+    },
+    {
+      "id": 1317,
+      "question": "Among the students from the Student_Club who attended the event \"Women's Soccer\", how many of them want a T-shirt that's in medium size?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT COUNT(T1.event_id) FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event INNER JOIN member AS T3 ON T2.link_to_member = T3.member_id WHERE T1.event_name = 'Women''s Soccer' AND T3.t_shirt_size = 'Medium'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "attendance",
+        "event",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "Women's Soccer is an event name; T-shirt that is in medium size refers to t_shirt_size = 'Medium'",
+      "expected_result": [
+        [
+          7
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  COUNT(t1.member_id)\nFROM member AS t1\nINNER JOIN attendance AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t2.link_to_event = 'Women_s_Soccer' AND t1.t_shirt_size = 'Medium';",
+      "raw_response": "```sql\nSELECT\n  COUNT(t1.member_id)\nFROM member AS t1\nINNER JOIN attendance AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t2.link_to_event = 'Women_s_Soccer' AND t1.t_shirt_size = 'Medium';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          0
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(t1.member_id)\nFROM member AS t1\nINNER JOIN attendance AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t2.link_to_event = 'Women_s_Soccer' AND t1.t_shirt_size = 'Medium';",
+          "raw_response": "```sql\nSELECT\n  COUNT(t1.member_id)\nFROM member AS t1\nINNER JOIN attendance AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t2.link_to_event = 'Women_s_Soccer' AND t1.t_shirt_size = 'Medium';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 521,
+          "completion_tokens": 66,
+          "timings": {
+            "generation_s": 2.547408300015377,
+            "validation_s": 0.003959800000302494,
+            "execution_s": 0.0018977000145241618
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 521,
+      "prompt_tokens": 521,
+      "completion_tokens": 66,
+      "timings": {
+        "generation_s": 2.547408300015377,
+        "validation_s": 0.003959800000302494,
+        "execution_s": 0.0018977000145241618
+      }
+    },
+    {
+      "id": 1322,
+      "question": "Among the events attended by more than 10 members of the Student_Club, how many of them are meetings?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T1.event_name FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 10 EXCEPT SELECT T1.event_name FROM event AS T1 WHERE T1.type = 'Meeting'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "attendance",
+        "event"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "meetings events refers to type = 'Meeting'; attended by more than 10 members refers to COUNT(event_id) > 10",
+      "expected_result": [
+        [
+          "Food Bank"
+        ],
+        [
+          "Registration"
+        ],
+        [
+          "Community Theater"
+        ],
+        [
+          "Football game"
+        ],
+        [
+          "September Speaker"
+        ],
+        [
+          "Women's Soccer"
+        ],
+        [
+          "November Speaker"
+        ],
+        [
+          "Laugh Out Loud"
+        ],
+        [
+          "October Speaker"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  COUNT(t1.event_id)\nFROM event AS t1\nINNER JOIN attendance AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.type = 'Meeting' AND COUNT(t2.link_to_member) > 10;",
+      "raw_response": "```sql\nSELECT\n  COUNT(t1.event_id)\nFROM event AS t1\nINNER JOIN attendance AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.type = 'Meeting' AND COUNT(t2.link_to_member) > 10;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: aggregate functions are not allowed in WHERE\nLINE 7:   t1.type = 'Meeting' AND COUNT(t2.link_to_member) > 10;\n                                  ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(t1.event_id)\nFROM event AS t1\nINNER JOIN attendance AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.type = 'Meeting' AND COUNT(t2.link_to_member) > 10;",
+          "raw_response": "```sql\nSELECT\n  COUNT(t1.event_id)\nFROM event AS t1\nINNER JOIN attendance AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.type = 'Meeting' AND COUNT(t2.link_to_member) > 10;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: aggregate functions are not allowed in WHERE\nLINE 7:   t1.type = 'Meeting' AND COUNT(t2.link_to_member) > 10;\n                                  ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 518,
+          "completion_tokens": 63,
+          "timings": {
+            "generation_s": 2.4017308999900706,
+            "validation_s": 0.003165600006468594
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 518,
+      "prompt_tokens": 518,
+      "completion_tokens": 63,
+      "timings": {
+        "generation_s": 2.4017308999900706,
+        "validation_s": 0.003165600006468594
+      }
+    },
+    {
+      "id": 1323,
+      "question": "List all the names of events that had an attendance of over 20 students but were not fundraisers.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T1.event_name FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event GROUP BY T1.event_id HAVING COUNT(T2.link_to_event) > 20 EXCEPT SELECT T1.event_name FROM event AS T1 WHERE T1.type = 'Fundraiser'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "attendance",
+        "event"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "name of events refers to event_name; attendance of over 20 students COUNT(event_id) > 20.",
+      "expected_result": [
+        [
+          "September Speaker"
+        ],
+        [
+          "November Meeting"
+        ],
+        [
+          "September Meeting"
+        ],
+        [
+          "October Meeting"
+        ],
+        [
+          "November Speaker"
+        ],
+        [
+          "Yearly Kickoff"
+        ],
+        [
+          "October Speaker"
+        ],
+        [
+          "Registration"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT DISTINCT\n  t1.event_name\nFROM event AS t1\nINNER JOIN attendance AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  COUNT(t2.link_to_member) > 20 AND NOT t1.type LIKE 'fundraiser';",
+      "raw_response": "```sql\nSELECT DISTINCT\n  t1.event_name\nFROM event AS t1\nINNER JOIN attendance AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  COUNT(t2.link_to_member) > 20 AND NOT t1.type LIKE 'fundraiser';\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: aggregate functions are not allowed in WHERE\nLINE 7:   COUNT(t2.link_to_member) > 20 AND NOT t1.type LIKE 'fundra...\n          ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT DISTINCT\n  t1.event_name\nFROM event AS t1\nINNER JOIN attendance AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  COUNT(t2.link_to_member) > 20 AND NOT t1.type LIKE 'fundraiser';",
+          "raw_response": "```sql\nSELECT DISTINCT\n  t1.event_name\nFROM event AS t1\nINNER JOIN attendance AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  COUNT(t2.link_to_member) > 20 AND NOT t1.type LIKE 'fundraiser';\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: aggregate functions are not allowed in WHERE\nLINE 7:   COUNT(t2.link_to_member) > 20 AND NOT t1.type LIKE 'fundra...\n          ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 511,
+          "completion_tokens": 65,
+          "timings": {
+            "generation_s": 2.509068799990928,
+            "validation_s": 0.003826799977105111
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 511,
+      "prompt_tokens": 511,
+      "completion_tokens": 65,
+      "timings": {
+        "generation_s": 2.509068799990928,
+        "validation_s": 0.003826799977105111
+      }
+    },
+    {
+      "id": 1331,
+      "question": "What is the amount of the funds that the Vice President received?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT T2.amount FROM member AS T1 INNER JOIN income AS T2 ON T1.member_id = T2.link_to_member WHERE T1.position = 'Vice President'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "income",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "'Vice President' is a position of Student Club; funds received refers to amount.",
+      "expected_result": [
+        [
+          50
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  SUM(t1.amount)\nFROM income AS t1\nINNER JOIN member AS t2\n  ON t1.link_to_member = t2.member_id\nWHERE\n  t2.position = 'Vice President';",
+      "raw_response": "```sql\nSELECT\n  SUM(t1.amount)\nFROM income AS t1\nINNER JOIN member AS t2\n  ON t1.link_to_member = t2.member_id\nWHERE\n  t2.position = 'Vice President';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          50.0
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  SUM(t1.amount)\nFROM income AS t1\nINNER JOIN member AS t2\n  ON t1.link_to_member = t2.member_id\nWHERE\n  t2.position = 'Vice President';",
+          "raw_response": "```sql\nSELECT\n  SUM(t1.amount)\nFROM income AS t1\nINNER JOIN member AS t2\n  ON t1.link_to_member = t2.member_id\nWHERE\n  t2.position = 'Vice President';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 496,
+          "completion_tokens": 51,
+          "timings": {
+            "generation_s": 2.0042324000096414,
+            "validation_s": 0.0034687000152189285,
+            "execution_s": 0.0016371999809052795
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 496,
+      "prompt_tokens": 496,
+      "completion_tokens": 51,
+      "timings": {
+        "generation_s": 2.0042324000096414,
+        "validation_s": 0.0034687000152189285,
+        "execution_s": 0.0016371999809052795
+      }
+    },
+    {
+      "id": 1334,
+      "question": "List the full name of the Student_Club members that grew up in Illinois state.",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT T1.first_name, T1.last_name FROM member AS T1 INNER JOIN zip_code AS T2 ON T1.zip = T2.zip_code WHERE T2.state = 'Illinois'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "member",
+        "zip_code"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "full name of member refers to first_name, last_name",
+      "expected_result": [
+        [
+          "Trent",
+          "Smith"
+        ],
+        [
+          "Tyler",
+          "Hewitt"
+        ],
+        [
+          "Annabella",
+          "Warren"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT DISTINCT\n  t1.first_name,\n  t1.last_name\nFROM member AS t1\nINNER JOIN zip_code AS t2\n  ON t1.zip = t2.zip_code\nWHERE\n  t2.state = 'IL';",
+      "raw_response": "```sql\nSELECT DISTINCT\n  t1.first_name,\n  t1.last_name\nFROM member AS t1\nINNER JOIN zip_code AS t2\n  ON t1.zip = t2.zip_code\nWHERE\n  t2.state = 'IL';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT DISTINCT\n  t1.first_name,\n  t1.last_name\nFROM member AS t1\nINNER JOIN zip_code AS t2\n  ON t1.zip = t2.zip_code\nWHERE\n  t2.state = 'IL';",
+          "raw_response": "```sql\nSELECT DISTINCT\n  t1.first_name,\n  t1.last_name\nFROM member AS t1\nINNER JOIN zip_code AS t2\n  ON t1.zip = t2.zip_code\nWHERE\n  t2.state = 'IL';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 494,
+          "completion_tokens": 55,
+          "timings": {
+            "generation_s": 2.124860700016143,
+            "validation_s": 0.003172400000039488,
+            "execution_s": 0.0017275999998673797
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 494,
+      "prompt_tokens": 494,
+      "completion_tokens": 55,
+      "timings": {
+        "generation_s": 2.124860700016143,
+        "validation_s": 0.003172400000039488,
+        "execution_s": 0.0017275999998673797
+      }
+    },
+    {
+      "id": 1338,
+      "question": "Was each expense in October Meeting on October 8, 2019 approved?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T3.approved FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget WHERE T1.event_name = 'October Meeting' AND T1.event_date LIKE '2019-10-08%'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "budget",
+        "event",
+        "expense"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "event_name = 'October Meeting' where event_date = '2019-10-08'; approved = True means expenses was approved; approved = False means expenses was not approved",
+      "expected_result": [
+        [
+          "true"
+        ],
+        [
+          "true"
+        ],
+        [
+          "true"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT DISTINCT\n  t1.approved\nFROM expense AS t1\nINNER JOIN event AS t2\n  ON t1.link_to_event = t2.event_id\nWHERE\n  t2.event_date = '2019-10-08' AND t2.event_name = 'October Meeting';",
+      "raw_response": "```sql\nSELECT DISTINCT\n  t1.approved\nFROM expense AS t1\nINNER JOIN event AS t2\n  ON t1.link_to_event = t2.event_id\nWHERE\n  t2.event_date = '2019-10-08' AND t2.event_name = 'October Meeting';\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column t1.link_to_event does not exist\nLINE 5:   ON t1.link_to_event = t2.event_id\n             ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT DISTINCT\n  t1.approved\nFROM expense AS t1\nINNER JOIN event AS t2\n  ON t1.link_to_event = t2.event_id\nWHERE\n  t2.event_date = '2019-10-08' AND t2.event_name = 'October Meeting';",
+          "raw_response": "```sql\nSELECT DISTINCT\n  t1.approved\nFROM expense AS t1\nINNER JOIN event AS t2\n  ON t1.link_to_event = t2.event_id\nWHERE\n  t2.event_date = '2019-10-08' AND t2.event_name = 'October Meeting';\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column t1.link_to_event does not exist\nLINE 5:   ON t1.link_to_event = t2.event_id\n             ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 523,
+          "completion_tokens": 71,
+          "timings": {
+            "generation_s": 2.7200080000038724,
+            "validation_s": 0.0038949999725446105
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 523,
+      "prompt_tokens": 523,
+      "completion_tokens": 71,
+      "timings": {
+        "generation_s": 2.7200080000038724,
+        "validation_s": 0.0038949999725446105
+      }
+    },
+    {
+      "id": 1339,
+      "question": "Calculate the total average cost that Elijah Allen spent in the events on September and October.",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT AVG(T2.cost) FROM member AS T1 INNER JOIN expense AS T2 ON T1.member_id = T2.link_to_member WHERE T1.last_name = 'Allen' AND T1.first_name = 'Elijah' AND (SUBSTR(T2.expense_date, 6, 2) = '09' OR SUBSTR(T2.expense_date, 6, 2) = '10')",
+      "order_sensitive": false,
+      "gold_tables": [
+        "expense",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "Elijah Allen is the full name; full name refers to first_name, last_name; The 5th and 6th string of the expense_date in the expense table can refer to month; events in September and October refers to month(expense_date) = 9 OR month(expense_date) = 10",
+      "expected_result": [
+        [
+          74.0775
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  SUM(t1.cost) / COUNT(t1.expense_id)\nFROM expense AS t1\nINNER JOIN member AS t2\n  ON t1.link_to_member = t2.member_id\nWHERE\n  t2.first_name = 'Elijah'\n  AND t2.last_name = 'Allen'\n  AND TO_CHAR(CAST(t1.expense_date AS TIMESTAMP), 'MM') IN ('09', '10');",
+      "raw_response": "```sql\nSELECT\n  SUM(t1.cost) / COUNT(t1.expense_id)\nFROM expense AS t1\nINNER JOIN member AS t2\n  ON t1.link_to_member = t2.member_id\nWHERE\n  t2.first_name = 'Elijah'\n  AND t2.last_name = 'Allen'\n  AND TO_CHAR(CAST(t1.expense_date AS TIMESTAMP), 'MM') IN ('09', '10');\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          74.0775
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  SUM(t1.cost) / COUNT(t1.expense_id)\nFROM expense AS t1\nINNER JOIN member AS t2\n  ON t1.link_to_member = t2.member_id\nWHERE\n  t2.first_name = 'Elijah'\n  AND t2.last_name = 'Allen'\n  AND TO_CHAR(CAST(t1.expense_date AS TIMESTAMP), 'MM') IN ('09', '10');",
+          "raw_response": "```sql\nSELECT\n  SUM(t1.cost) / COUNT(t1.expense_id)\nFROM expense AS t1\nINNER JOIN member AS t2\n  ON t1.link_to_member = t2.member_id\nWHERE\n  t2.first_name = 'Elijah'\n  AND t2.last_name = 'Allen'\n  AND TO_CHAR(CAST(t1.expense_date AS TIMESTAMP), 'MM') IN ('09', '10');\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 548,
+          "completion_tokens": 95,
+          "timings": {
+            "generation_s": 3.6271137000003364,
+            "validation_s": 0.004774900007760152,
+            "execution_s": 0.0018853999790735543
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 548,
+      "prompt_tokens": 548,
+      "completion_tokens": 95,
+      "timings": {
+        "generation_s": 3.6271137000003364,
+        "validation_s": 0.004774900007760152,
+        "execution_s": 0.0018853999790735543
+      }
+    },
+    {
+      "id": 1340,
+      "question": "Calculate the difference of the total amount spent in all events by the Student_Club in year 2019 and 2020.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT SUM(CASE WHEN SUBSTR(T1.event_date, 1, 4) = '2019' THEN T2.spent ELSE 0 END) - SUM(CASE WHEN SUBSTR(T1.event_date, 1, 4) = '2020' THEN T2.spent ELSE 0 END) AS num FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event",
+      "order_sensitive": false,
+      "gold_tables": [
+        "budget",
+        "event"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "The first 4 strings of the event_date values in the event table can represent year; The difference of the total amount spent = SUBTRACT(spent where YEAR(event_date) = 2019, spent where YEAR(event_date) = 2020)",
+      "expected_result": [
+        [
+          2086.05
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  SUM(CASE WHEN TO_CHAR(CAST(event_date AS TIMESTAMP), 'YYYY') = '2019' THEN spent ELSE 0 END) - SUM(\n    CASE\n      WHEN TO_CHAR(CAST(event_date AS TIMESTAMP), 'YYYY') = '2020'\n      THEN spent\n      ELSE 0\n    END\n  ) AS diff\nFROM budget;",
+      "raw_response": "```sql\nSELECT\n  SUM(CASE WHEN TO_CHAR(CAST(event_date AS TIMESTAMP), 'YYYY') = '2019' THEN spent ELSE 0 END) - SUM(\n    CASE\n      WHEN TO_CHAR(CAST(event_date AS TIMESTAMP), 'YYYY') = '2020'\n      THEN spent\n      ELSE 0\n    END\n  ) AS diff\nFROM budget;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column \"event_date\" does not exist\nLINE 2:   SUM(CASE WHEN TO_CHAR(CAST(event_date AS TIMESTAMP), 'YYYY...\n                                     ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  SUM(CASE WHEN TO_CHAR(CAST(event_date AS TIMESTAMP), 'YYYY') = '2019' THEN spent ELSE 0 END) - SUM(\n    CASE\n      WHEN TO_CHAR(CAST(event_date AS TIMESTAMP), 'YYYY') = '2020'\n      THEN spent\n      ELSE 0\n    END\n  ) AS diff\nFROM budget;",
+          "raw_response": "```sql\nSELECT\n  SUM(CASE WHEN TO_CHAR(CAST(event_date AS TIMESTAMP), 'YYYY') = '2019' THEN spent ELSE 0 END) - SUM(\n    CASE\n      WHEN TO_CHAR(CAST(event_date AS TIMESTAMP), 'YYYY') = '2020'\n      THEN spent\n      ELSE 0\n    END\n  ) AS diff\nFROM budget;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column \"event_date\" does not exist\nLINE 2:   SUM(CASE WHEN TO_CHAR(CAST(event_date AS TIMESTAMP), 'YYYY...\n                                     ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 550,
+          "completion_tokens": 85,
+          "timings": {
+            "generation_s": 3.2736610999854747,
+            "validation_s": 0.004303699999582022
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 550,
+      "prompt_tokens": 550,
+      "completion_tokens": 85,
+      "timings": {
+        "generation_s": 3.2736610999854747,
+        "validation_s": 0.004303699999582022
+      }
+    },
+    {
+      "id": 1344,
+      "question": "What was the notes of the fundraising on 2019/9/14?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT notes FROM income WHERE source = 'Fundraising' AND date_received = '2019-09-14'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "income"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "fundraising on 2019/9/14 refers to source = 'Fundraising' where date_received = '2019-09-14'",
+      "expected_result": [
+        [
+          "Secured donations to help pay for speaker gifts."
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  notes\nFROM income\nWHERE\n  date_received = '2019-09-14' AND source = 'Fundraising';",
+      "raw_response": "```sql\nSELECT\n  notes\nFROM income\nWHERE\n  date_received = '2019-09-14' AND source = 'Fundraising';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Secured donations to help pay for speaker gifts."
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  notes\nFROM income\nWHERE\n  date_received = '2019-09-14' AND source = 'Fundraising';",
+          "raw_response": "```sql\nSELECT\n  notes\nFROM income\nWHERE\n  date_received = '2019-09-14' AND source = 'Fundraising';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 521,
+          "completion_tokens": 38,
+          "timings": {
+            "generation_s": 1.5313681999978144,
+            "validation_s": 0.003107700002146885,
+            "execution_s": 0.001518200006103143
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 521,
+      "prompt_tokens": 521,
+      "completion_tokens": 38,
+      "timings": {
+        "generation_s": 1.5313681999978144,
+        "validation_s": 0.003107700002146885,
+        "execution_s": 0.001518200006103143
+      }
+    },
+    {
+      "id": 1346,
+      "question": "Tell the phone number of \"Carlo Jacobs\".",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT phone FROM member WHERE first_name = 'Carlo' AND last_name = 'Jacobs'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "Carlo Jacobs is the full name; full name refers to first_name, last_name;",
+      "expected_result": [
+        [
+          "928-555-2577"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  phone\nFROM member\nWHERE\n  first_name = 'Carlo' AND last_name = 'Jacobs';",
+      "raw_response": "```sql\nSELECT\n  phone\nFROM member\nWHERE\n  first_name = 'Carlo' AND last_name = 'Jacobs';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "928-555-2577"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  phone\nFROM member\nWHERE\n  first_name = 'Carlo' AND last_name = 'Jacobs';",
+          "raw_response": "```sql\nSELECT\n  phone\nFROM member\nWHERE\n  first_name = 'Carlo' AND last_name = 'Jacobs';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 493,
+          "completion_tokens": 31,
+          "timings": {
+            "generation_s": 1.250389599998016,
+            "validation_s": 0.0028964000230189413,
+            "execution_s": 0.0014124000153969973
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 493,
+      "prompt_tokens": 493,
+      "completion_tokens": 31,
+      "timings": {
+        "generation_s": 1.250389599998016,
+        "validation_s": 0.0028964000230189413,
+        "execution_s": 0.0014124000153969973
+      }
+    },
+    {
+      "id": 1350,
+      "question": "What is the status of the event which bought \"Post Cards, Posters\" on 2019/8/20?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T1.event_status FROM budget AS T1 INNER JOIN expense AS T2 ON T1.budget_id = T2.link_to_budget WHERE T2.expense_description = 'Post Cards, Posters' AND T2.expense_date = '2019-08-20'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "budget",
+        "expense"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "'Post Cards, Posters' is an expense description; on 2019/8/20 refers to expense_date = '2019-8-20'; status of event refers to event_status",
+      "expected_result": [
+        [
+          "Closed"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT DISTINCT\n  t1.event_status\nFROM budget AS t1\nINNER JOIN expense AS t2\n  ON t1.budget_id = t2.link_to_budget\nWHERE\n  t2.expense_date LIKE '2019-8-20' AND t2.expense_description LIKE 'Post Cards, Posters';",
+      "raw_response": "```sql\nSELECT DISTINCT\n  t1.event_status\nFROM budget AS t1\nINNER JOIN expense AS t2\n  ON t1.budget_id = t2.link_to_budget\nWHERE\n  t2.expense_date LIKE '2019-8-20' AND t2.expense_description LIKE 'Post Cards, Posters';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT DISTINCT\n  t1.event_status\nFROM budget AS t1\nINNER JOIN expense AS t2\n  ON t1.budget_id = t2.link_to_budget\nWHERE\n  t2.expense_date LIKE '2019-8-20' AND t2.expense_description LIKE 'Post Cards, Posters';",
+          "raw_response": "```sql\nSELECT DISTINCT\n  t1.event_status\nFROM budget AS t1\nINNER JOIN expense AS t2\n  ON t1.budget_id = t2.link_to_budget\nWHERE\n  t2.expense_date LIKE '2019-8-20' AND t2.expense_description LIKE 'Post Cards, Posters';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 540,
+          "completion_tokens": 75,
+          "timings": {
+            "generation_s": 2.889039600006072,
+            "validation_s": 0.003061600000364706,
+            "execution_s": 0.0014414000033866614
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 540,
+      "prompt_tokens": 540,
+      "completion_tokens": 75,
+      "timings": {
+        "generation_s": 2.889039600006072,
+        "validation_s": 0.003061600000364706,
+        "execution_s": 0.0014414000033866614
+      }
+    },
+    {
+      "id": 1351,
+      "question": "What was Brent Thomason's major?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT T2.major_name FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T1.first_name = 'Brent' AND T1.last_name = 'Thomason'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "major",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "Brent Thomason is the full name; full name refers to first_name, last_name; major refers to major_name",
+      "expected_result": [
+        [
+          "Business Education"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  t2.major_name\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t1.first_name = 'Brent' AND t1.last_name = 'Thomason';",
+      "raw_response": "```sql\nSELECT\n  t2.major_name\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t1.first_name = 'Brent' AND t1.last_name = 'Thomason';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Business Education"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t2.major_name\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t1.first_name = 'Brent' AND t1.last_name = 'Thomason';",
+          "raw_response": "```sql\nSELECT\n  t2.major_name\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t1.first_name = 'Brent' AND t1.last_name = 'Thomason';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 498,
+          "completion_tokens": 62,
+          "timings": {
+            "generation_s": 2.3950221000122838,
+            "validation_s": 0.0033411999756935984,
+            "execution_s": 0.0016462999919895083
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 498,
+      "prompt_tokens": 498,
+      "completion_tokens": 62,
+      "timings": {
+        "generation_s": 2.3950221000122838,
+        "validation_s": 0.0033411999756935984,
+        "execution_s": 0.0016462999919895083
+      }
+    },
+    {
+      "id": 1352,
+      "question": "For all the club members from \"Business\" major, how many of them wear medium size t-shirt?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT COUNT(T1.member_id) FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T2.major_name = 'Business' AND T1.t_shirt_size = 'Medium'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "major",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "'Business' is a major name; wear medium size t-shirt refers to t_shirt_size = 'Medium'",
+      "expected_result": [
+        [
+          1
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  COUNT(t1.member_id)\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t2.major_name = 'Business' AND t1.t_shirt_size = 'Medium';",
+      "raw_response": "```sql\nSELECT\n  COUNT(t1.member_id)\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t2.major_name = 'Business' AND t1.t_shirt_size = 'Medium';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          1
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(t1.member_id)\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t2.major_name = 'Business' AND t1.t_shirt_size = 'Medium';",
+          "raw_response": "```sql\nSELECT\n  COUNT(t1.member_id)\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t2.major_name = 'Business' AND t1.t_shirt_size = 'Medium';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 509,
+          "completion_tokens": 62,
+          "timings": {
+            "generation_s": 2.429682899994077,
+            "validation_s": 0.0037028999940957874,
+            "execution_s": 0.001760800019837916
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 509,
+      "prompt_tokens": 509,
+      "completion_tokens": 62,
+      "timings": {
+        "generation_s": 2.429682899994077,
+        "validation_s": 0.0037028999940957874,
+        "execution_s": 0.001760800019837916
+      }
+    },
+    {
+      "id": 1356,
+      "question": "Which department was the President of the club in?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT T2.department FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T1.position = 'President'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "major",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "'President' is a position of Student Club",
+      "expected_result": [
+        [
+          "Liberal Arts Program"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT DISTINCT\n  t2.department\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t1.position = 'President';",
+      "raw_response": "```sql\nSELECT DISTINCT\n  t2.department\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t1.position = 'President';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Liberal Arts Program"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT DISTINCT\n  t2.department\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t1.position = 'President';",
+          "raw_response": "```sql\nSELECT DISTINCT\n  t2.department\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t1.position = 'President';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 485,
+          "completion_tokens": 49,
+          "timings": {
+            "generation_s": 1.8969036000198685,
+            "validation_s": 0.00302689999807626,
+            "execution_s": 0.0016986000118777156
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 485,
+      "prompt_tokens": 485,
+      "completion_tokens": 49,
+      "timings": {
+        "generation_s": 1.8969036000198685,
+        "validation_s": 0.00302689999807626,
+        "execution_s": 0.0016986000118777156
+      }
+    },
+    {
+      "id": 1357,
+      "question": "State the date Connor Hilton paid his/her dues.",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT T2.date_received FROM member AS T1 INNER JOIN income AS T2 ON T1.member_id = T2.link_to_member WHERE T1.first_name = 'Connor' AND T1.last_name = 'Hilton' AND T2.source = 'Dues'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "income",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "Connor Hilton is the full name; full name refers to first_name, last_name; date the dues was paid refers to date_received where source = 'Dues';",
+      "expected_result": [
+        [
+          "2019-10-02"
+        ],
+        [
+          "2019-09-12"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  t2.date_received\nFROM member AS t1\nINNER JOIN income AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t1.first_name = 'Connor' AND t1.last_name = 'Hilton' AND t2.source = 'Dues';",
+      "raw_response": "```sql\nSELECT\n  t2.date_received\nFROM member AS t1\nINNER JOIN income AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t1.first_name = 'Connor' AND t1.last_name = 'Hilton' AND t2.source = 'Dues';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "2019-10-02"
+        ],
+        [
+          "2019-09-12"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t2.date_received\nFROM member AS t1\nINNER JOIN income AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t1.first_name = 'Connor' AND t1.last_name = 'Hilton' AND t2.source = 'Dues';",
+          "raw_response": "```sql\nSELECT\n  t2.date_received\nFROM member AS t1\nINNER JOIN income AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t1.first_name = 'Connor' AND t1.last_name = 'Hilton' AND t2.source = 'Dues';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 508,
+          "completion_tokens": 69,
+          "timings": {
+            "generation_s": 2.6523312000208534,
+            "validation_s": 0.003250100009609014,
+            "execution_s": 0.0014903999981470406
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 508,
+      "prompt_tokens": 508,
+      "completion_tokens": 69,
+      "timings": {
+        "generation_s": 2.6523312000208534,
+        "validation_s": 0.003250100009609014,
+        "execution_s": 0.0014903999981470406
+      }
+    },
+    {
+      "id": 1359,
+      "question": "How many times was the budget in Advertisement for \"Yearly Kickoff\" meeting more than \"October Meeting\"?",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT CAST(SUM(CASE WHEN T2.event_name = 'Yearly Kickoff' THEN T1.amount ELSE 0 END) AS REAL) / NULLIF(SUM(CASE WHEN T2.event_name = 'October Meeting' THEN T1.amount ELSE 0 END), 0) FROM budget AS T1 INNER JOIN event AS T2 ON T1.link_to_event = T2.event_id WHERE T1.category = 'Advertisement' AND T2.type = 'Meeting'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "budget",
+        "event"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "budget in Advertisement refer to category = 'Advertisement' in the budget table; DIVIDE(SUM(amount when event_name = 'Yearly Kickoff'), SUM(amount when event_name = 'October Meeting'))",
+      "expected_result": [
+        [
+          2.7273
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  SUM(CASE WHEN t1.event_name = 'Yearly Kickoff' THEN t2.amount ELSE 0 END) / SUM(CASE WHEN t1.event_name = 'October Meeting' THEN t2.amount ELSE 0 END)\nFROM event AS t1\nINNER JOIN budget AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t2.category = 'Advertisement';",
+      "raw_response": "```sql\nSELECT\n  SUM(CASE WHEN t1.event_name = 'Yearly Kickoff' THEN t2.amount ELSE 0 END) / SUM(CASE WHEN t1.event_name = 'October Meeting' THEN t2.amount ELSE 0 END)\nFROM event AS t1\nINNER JOIN budget AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t2.category = 'Advertisement';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          2.7273
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  SUM(CASE WHEN t1.event_name = 'Yearly Kickoff' THEN t2.amount ELSE 0 END) / SUM(CASE WHEN t1.event_name = 'October Meeting' THEN t2.amount ELSE 0 END)\nFROM event AS t1\nINNER JOIN budget AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t2.category = 'Advertisement';",
+          "raw_response": "```sql\nSELECT\n  SUM(CASE WHEN t1.event_name = 'Yearly Kickoff' THEN t2.amount ELSE 0 END) / SUM(CASE WHEN t1.event_name = 'October Meeting' THEN t2.amount ELSE 0 END)\nFROM event AS t1\nINNER JOIN budget AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t2.category = 'Advertisement';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 527,
+          "completion_tokens": 91,
+          "timings": {
+            "generation_s": 3.4925176999822725,
+            "validation_s": 0.0039031000051181763,
+            "execution_s": 0.0014621999871451408
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 527,
+      "prompt_tokens": 527,
+      "completion_tokens": 91,
+      "timings": {
+        "generation_s": 3.4925176999822725,
+        "validation_s": 0.0039031000051181763,
+        "execution_s": 0.0014621999871451408
+      }
+    },
+    {
+      "id": 1361,
+      "question": "What is the total cost of the pizzas for all the events?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT SUM(cost) FROM expense WHERE expense_description = 'Pizza'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "expense"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "total cost of the pizzas refers to SUM(cost) where expense_description = 'Pizza'",
+      "expected_result": [
+        [
+          600.11
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  SUM(cost)\nFROM expense\nWHERE\n  expense_description = 'Pizza';",
+      "raw_response": "```sql\nSELECT\n  SUM(cost)\nFROM expense\nWHERE\n  expense_description = 'Pizza';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          600.11
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  SUM(cost)\nFROM expense\nWHERE\n  expense_description = 'Pizza';",
+          "raw_response": "```sql\nSELECT\n  SUM(cost)\nFROM expense\nWHERE\n  expense_description = 'Pizza';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 495,
+          "completion_tokens": 23,
+          "timings": {
+            "generation_s": 0.9642465000215452,
+            "validation_s": 0.0028745000017806888,
+            "execution_s": 0.0015411000058520585
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 495,
+      "prompt_tokens": 495,
+      "completion_tokens": 23,
+      "timings": {
+        "generation_s": 0.9642465000215452,
+        "validation_s": 0.0028745000017806888,
+        "execution_s": 0.0015411000058520585
+      }
+    },
+    {
+      "id": 1362,
+      "question": "How many cities are there in Orange County, Virginia?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT COUNT(city) FROM zip_code WHERE county = 'Orange County' AND state = 'Virginia'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "zip_code"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "Orange County is the county name, Virginia is the state name",
+      "expected_result": [
+        [
+          7
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  COUNT(DISTINCT city)\nFROM zip_code\nWHERE\n  county = 'Orange County' AND state = 'Virginia';",
+      "raw_response": "```sql\nSELECT\n  COUNT(DISTINCT city)\nFROM zip_code\nWHERE\n  county = 'Orange County' AND state = 'Virginia';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          7
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(DISTINCT city)\nFROM zip_code\nWHERE\n  county = 'Orange County' AND state = 'Virginia';",
+          "raw_response": "```sql\nSELECT\n  COUNT(DISTINCT city)\nFROM zip_code\nWHERE\n  county = 'Orange County' AND state = 'Virginia';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 489,
+          "completion_tokens": 33,
+          "timings": {
+            "generation_s": 1.337890700000571,
+            "validation_s": 0.0030048000044189394,
+            "execution_s": 0.0038468999846372753
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 489,
+      "prompt_tokens": 489,
+      "completion_tokens": 33,
+      "timings": {
+        "generation_s": 1.337890700000571,
+        "validation_s": 0.0030048000044189394,
+        "execution_s": 0.0038468999846372753
+      }
+    },
+    {
+      "id": 1368,
+      "question": "What does the person with the phone number \"809-555-3360\" major in?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT T2.major_name FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T1.phone = '809-555-3360'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "major",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "major in refers to major_name",
+      "expected_result": [
+        [
+          "Agricultural Education"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  t2.major_name\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t1.phone = '809-555-3360';",
+      "raw_response": "```sql\nSELECT\n  t2.major_name\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t1.phone = '809-555-3360';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Agricultural Education"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t2.major_name\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t1.phone = '809-555-3360';",
+          "raw_response": "```sql\nSELECT\n  t2.major_name\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t1.phone = '809-555-3360';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 497,
+          "completion_tokens": 60,
+          "timings": {
+            "generation_s": 2.2994412000116426,
+            "validation_s": 0.003434599988395348,
+            "execution_s": 0.0017599999846424907
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 497,
+      "prompt_tokens": 497,
+      "completion_tokens": 60,
+      "timings": {
+        "generation_s": 2.2994412000116426,
+        "validation_s": 0.003434599988395348,
+        "execution_s": 0.0017599999846424907
+      }
+    },
+    {
+      "id": 1371,
+      "question": "How many members attended the \"Women's Soccer\" event?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT COUNT(T2.link_to_member) FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event WHERE T1.event_name = 'Women''s Soccer'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "attendance",
+        "event"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "'Women's Soccer' is the event name;",
+      "expected_result": [
+        [
+          17
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  COUNT(t1.link_to_member)\nFROM attendance AS t1\nINNER JOIN event AS t2\n  ON t1.link_to_event = t2.event_id\nWHERE\n  t2.event_name = 'Women''s Soccer';",
+      "raw_response": "```sql\nSELECT\n  COUNT(t1.link_to_member)\nFROM attendance AS t1\nINNER JOIN event AS t2\n  ON t1.link_to_event = t2.event_id\nWHERE\n  t2.event_name = 'Women''s Soccer';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          17
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(t1.link_to_member)\nFROM attendance AS t1\nINNER JOIN event AS t2\n  ON t1.link_to_event = t2.event_id\nWHERE\n  t2.event_name = 'Women''s Soccer';",
+          "raw_response": "```sql\nSELECT\n  COUNT(t1.link_to_member)\nFROM attendance AS t1\nINNER JOIN event AS t2\n  ON t1.link_to_event = t2.event_id\nWHERE\n  t2.event_name = 'Women''s Soccer';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 487,
+          "completion_tokens": 55,
+          "timings": {
+            "generation_s": 2.1107155999925453,
+            "validation_s": 0.0036912999930791557,
+            "execution_s": 0.0017904999840538949
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 487,
+      "prompt_tokens": 487,
+      "completion_tokens": 55,
+      "timings": {
+        "generation_s": 2.1107155999925453,
+        "validation_s": 0.0036912999930791557,
+        "execution_s": 0.0017904999840538949
+      }
+    },
+    {
+      "id": 1375,
+      "question": "List all the members of the \"School of Applied Sciences, Technology and Education\" department.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T1.first_name, T1.last_name FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T2.department = 'School of Applied Sciences, Technology and Education'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "major",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "list all members means to list all the full name; full name refers to first_name, last_name;",
+      "expected_result": [
+        [
+          "Angela",
+          "Sanders"
+        ],
+        [
+          "Dean",
+          "O'Reilly"
+        ],
+        [
+          "Edwardo",
+          "Ing"
+        ],
+        [
+          "Mccauley",
+          "Nash"
+        ],
+        [
+          "Brent",
+          "Thomason"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  t1.first_name,\n  t1.last_name\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t2.department = 'School of Applied Sciences, Technology and Education';",
+      "raw_response": "```sql\nSELECT\n  t1.first_name,\n  t1.last_name\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t2.department = 'School of Applied Sciences, Technology and Education';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Angela",
+          "Sanders"
+        ],
+        [
+          "Dean",
+          "O'Reilly"
+        ],
+        [
+          "Edwardo",
+          "Ing"
+        ],
+        [
+          "Mccauley",
+          "Nash"
+        ],
+        [
+          "Brent",
+          "Thomason"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t1.first_name,\n  t1.last_name\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t2.department = 'School of Applied Sciences, Technology and Education';",
+          "raw_response": "```sql\nSELECT\n  t1.first_name,\n  t1.last_name\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t2.department = 'School of Applied Sciences, Technology and Education';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 504,
+          "completion_tokens": 62,
+          "timings": {
+            "generation_s": 2.3979952999798115,
+            "validation_s": 0.0031912999984342605,
+            "execution_s": 0.0017433000029996037
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 504,
+      "prompt_tokens": 504,
+      "completion_tokens": 62,
+      "timings": {
+        "generation_s": 2.3979952999798115,
+        "validation_s": 0.0031912999984342605,
+        "execution_s": 0.0017433000029996037
+      }
+    },
+    {
+      "id": 1376,
+      "question": "Among all the closed events, which event has the highest spend-to-budget ratio?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T2.event_name FROM budget AS T1 INNER JOIN event AS T2 ON T1.link_to_event = T2.event_id WHERE T2.status = 'Closed' ORDER BY T1.spent / NULLIF(T1.amount, 0) DESC NULLS LAST LIMIT 1",
+      "order_sensitive": true,
+      "gold_tables": [
+        "budget",
+        "event"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "closed events refers to event_name where status = 'Closed'; highest spend-to budget ratio refers to MAX(DIVIDE(spent, amount))",
+      "expected_result": [
+        [
+          "September Speaker"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  t1.event_name\nFROM event AS t1\nINNER JOIN budget AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.status = 'Closed'\nORDER BY\n  CAST(t2.spent AS REAL) / t2.amount DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  t1.event_name\nFROM event AS t1\nINNER JOIN budget AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.status = 'Closed'\nORDER BY\n  CAST(t2.spent AS REAL) / t2.amount DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "September Speaker"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t1.event_name\nFROM event AS t1\nINNER JOIN budget AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.status = 'Closed'\nORDER BY\n  CAST(t2.spent AS REAL) / t2.amount DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  t1.event_name\nFROM event AS t1\nINNER JOIN budget AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.status = 'Closed'\nORDER BY\n  CAST(t2.spent AS REAL) / t2.amount DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 509,
+          "completion_tokens": 71,
+          "timings": {
+            "generation_s": 2.742314899980556,
+            "validation_s": 0.0041203000000678,
+            "execution_s": 0.0016687999886926264
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 509,
+      "prompt_tokens": 509,
+      "completion_tokens": 71,
+      "timings": {
+        "generation_s": 2.742314899980556,
+        "validation_s": 0.0041203000000678,
+        "execution_s": 0.0016687999886926264
+      }
+    },
+    {
+      "id": 1378,
+      "question": "What is the highest amount of budget spend for an event?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT MAX(spent) FROM budget",
+      "order_sensitive": false,
+      "gold_tables": [
+        "budget"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "highest amount of budget spend refers to MAX(spent)",
+      "expected_result": [
+        [
+          327.07
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  MAX(spent)\nFROM budget;",
+      "raw_response": "```sql\nSELECT\n  MAX(spent)\nFROM budget;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          327.07
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  MAX(spent)\nFROM budget;",
+          "raw_response": "```sql\nSELECT\n  MAX(spent)\nFROM budget;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 488,
+          "completion_tokens": 15,
+          "timings": {
+            "generation_s": 0.6711928000149783,
+            "validation_s": 0.0029232999950181693,
+            "execution_s": 0.00133050000295043
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 488,
+      "prompt_tokens": 488,
+      "completion_tokens": 15,
+      "timings": {
+        "generation_s": 0.6711928000149783,
+        "validation_s": 0.0029232999950181693,
+        "execution_s": 0.00133050000295043
+      }
+    },
+    {
+      "id": 1380,
+      "question": "What is the total amount of money spent for food?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT SUM(spent) FROM budget WHERE category = 'Food'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "budget"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "total amount of money spent refers to SUM(spent); spent for food refers to category = 'Food'",
+      "expected_result": [
+        [
+          1234.7299
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  SUM(spent)\nFROM budget\nWHERE\n  category = 'Food';",
+      "raw_response": "```sql\nSELECT\n  SUM(spent)\nFROM budget\nWHERE\n  category = 'Food';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          1234.7299
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  SUM(spent)\nFROM budget\nWHERE\n  category = 'Food';",
+          "raw_response": "```sql\nSELECT\n  SUM(spent)\nFROM budget\nWHERE\n  category = 'Food';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 497,
+          "completion_tokens": 23,
+          "timings": {
+            "generation_s": 0.966250299999956,
+            "validation_s": 0.0030260999919846654,
+            "execution_s": 0.001441000000340864
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 497,
+      "prompt_tokens": 497,
+      "completion_tokens": 23,
+      "timings": {
+        "generation_s": 0.966250299999956,
+        "validation_s": 0.0030260999919846654,
+        "execution_s": 0.001441000000340864
+      }
+    },
+    {
+      "id": 1381,
+      "question": "List the name of students that have attended more than 7 events.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T1.first_name, T1.last_name FROM member AS T1 INNER JOIN attendance AS T2 ON T1.member_id = T2.link_to_member GROUP BY T1.member_id, T1.first_name, T1.last_name HAVING COUNT(T2.link_to_event) > 7",
+      "order_sensitive": false,
+      "gold_tables": [
+        "attendance",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "name of students means the full name; full name refers to first_name, last_name; attended more than 7 events refers to COUNT(link_to_event) > 7",
+      "expected_result": [
+        [
+          "Luisa",
+          "Guidi"
+        ],
+        [
+          "Vincent",
+          "Ratcliffe"
+        ],
+        [
+          "Rafi",
+          "Mckee"
+        ],
+        [
+          "Carlo",
+          "Jacobs"
+        ],
+        [
+          "Matthew",
+          "Snay"
+        ],
+        [
+          "Tyler",
+          "Hewitt"
+        ],
+        [
+          "Kevin",
+          "Pierce"
+        ],
+        [
+          "Garrett",
+          "Gerke"
+        ],
+        [
+          "Mccauley",
+          "Nash"
+        ],
+        [
+          "Annabella",
+          "Warren"
+        ],
+        [
+          "Sherri",
+          "Ramsey"
+        ],
+        [
+          "Emily",
+          "Jaquith"
+        ],
+        [
+          "Dean",
+          "O'Reilly"
+        ],
+        [
+          "Amy",
+          "Firth"
+        ],
+        [
+          "Connor",
+          "Hilton"
+        ],
+        [
+          "Casey",
+          "Mason"
+        ],
+        [
+          "Keith",
+          "Dunlop"
+        ],
+        [
+          "Edwardo",
+          "Ing"
+        ],
+        [
+          "Adela",
+          "O'Gallagher"
+        ],
+        [
+          "Elijah",
+          "Allen"
+        ],
+        [
+          "Sacha",
+          "Harrison"
+        ],
+        [
+          "Trent",
+          "Smith"
+        ],
+        [
+          "Maya",
+          "Mclean"
+        ],
+        [
+          "Katy",
+          "Balentine"
+        ],
+        [
+          "Grant",
+          "Gilmour"
+        ],
+        [
+          "Madelyn",
+          "Nicholson"
+        ],
+        [
+          "Keaton",
+          "Mccray"
+        ],
+        [
+          "Adele",
+          "Deleon"
+        ],
+        [
+          "Phillip",
+          "Cullen"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT DISTINCT\n  t1.first_name,\n  t1.last_name\nFROM member AS t1\nINNER JOIN attendance AS t2\n  ON t1.member_id = t2.link_to_member\nGROUP BY\n  t1.first_name,\n  t1.last_name\nHAVING\n  COUNT(t2.link_to_event) > 7;",
+      "raw_response": "```sql\nSELECT DISTINCT\n  t1.first_name,\n  t1.last_name\nFROM member AS t1\nINNER JOIN attendance AS t2\n  ON t1.member_id = t2.link_to_member\nGROUP BY\n  t1.first_name,\n  t1.last_name\nHAVING\n  COUNT(t2.link_to_event) > 7;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Edwardo",
+          "Ing"
+        ],
+        [
+          "Mccauley",
+          "Nash"
+        ],
+        [
+          "Connor",
+          "Hilton"
+        ],
+        [
+          "Katy",
+          "Balentine"
+        ],
+        [
+          "Trent",
+          "Smith"
+        ],
+        [
+          "Amy",
+          "Firth"
+        ],
+        [
+          "Adele",
+          "Deleon"
+        ],
+        [
+          "Adela",
+          "O'Gallagher"
+        ],
+        [
+          "Tyler",
+          "Hewitt"
+        ],
+        [
+          "Keith",
+          "Dunlop"
+        ],
+        [
+          "Casey",
+          "Mason"
+        ],
+        [
+          "Emily",
+          "Jaquith"
+        ],
+        [
+          "Annabella",
+          "Warren"
+        ],
+        [
+          "Phillip",
+          "Cullen"
+        ],
+        [
+          "Sherri",
+          "Ramsey"
+        ],
+        [
+          "Carlo",
+          "Jacobs"
+        ],
+        [
+          "Kevin",
+          "Pierce"
+        ],
+        [
+          "Matthew",
+          "Snay"
+        ],
+        [
+          "Luisa",
+          "Guidi"
+        ],
+        [
+          "Sacha",
+          "Harrison"
+        ],
+        [
+          "Grant",
+          "Gilmour"
+        ],
+        [
+          "Keaton",
+          "Mccray"
+        ],
+        [
+          "Madelyn",
+          "Nicholson"
+        ],
+        [
+          "Maya",
+          "Mclean"
+        ],
+        [
+          "Rafi",
+          "Mckee"
+        ],
+        [
+          "Vincent",
+          "Ratcliffe"
+        ],
+        [
+          "Dean",
+          "O'Reilly"
+        ],
+        [
+          "Elijah",
+          "Allen"
+        ],
+        [
+          "Garrett",
+          "Gerke"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT DISTINCT\n  t1.first_name,\n  t1.last_name\nFROM member AS t1\nINNER JOIN attendance AS t2\n  ON t1.member_id = t2.link_to_member\nGROUP BY\n  t1.first_name,\n  t1.last_name\nHAVING\n  COUNT(t2.link_to_event) > 7;",
+          "raw_response": "```sql\nSELECT DISTINCT\n  t1.first_name,\n  t1.last_name\nFROM member AS t1\nINNER JOIN attendance AS t2\n  ON t1.member_id = t2.link_to_member\nGROUP BY\n  t1.first_name,\n  t1.last_name\nHAVING\n  COUNT(t2.link_to_event) > 7;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 514,
+          "completion_tokens": 76,
+          "timings": {
+            "generation_s": 2.881179299991345,
+            "validation_s": 0.0033100000000558794,
+            "execution_s": 0.0016864999779500067
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 514,
+      "prompt_tokens": 514,
+      "completion_tokens": 76,
+      "timings": {
+        "generation_s": 2.881179299991345,
+        "validation_s": 0.0033100000000558794,
+        "execution_s": 0.0016864999779500067
+      }
+    },
+    {
+      "id": 1387,
+      "question": "Which student has been entrusted to manage the budget for the Yearly Kickoff?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T4.first_name, T4.last_name FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget INNER JOIN member AS T4 ON T3.link_to_member = T4.member_id WHERE T1.event_name = 'Yearly Kickoff'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "budget",
+        "event",
+        "expense",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "name of students means the full name; full name refers to first_name, last_name;'Yearly Kickoff' is an event name;",
+      "expected_result": [
+        [
+          "Sacha",
+          "Harrison"
+        ],
+        [
+          "Elijah",
+          "Allen"
+        ],
+        [
+          "Elijah",
+          "Allen"
+        ],
+        [
+          "Sacha",
+          "Harrison"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT DISTINCT\n  t1.first_name,\n  t1.last_name\nFROM member AS t1\nINNER JOIN budget AS t2\n  ON t1.member_id = t2.link_to_member\nINNER JOIN event AS t3\n  ON t2.link_to_event = t3.event_id\nWHERE\n  t3.event_name = 'Yearly Kickoff';",
+      "raw_response": "```sql\nSELECT DISTINCT\n  t1.first_name,\n  t1.last_name\nFROM member AS t1\nINNER JOIN budget AS t2\n  ON t1.member_id = t2.link_to_member\nINNER JOIN event AS t3\n  ON t2.link_to_event = t3.event_id\nWHERE\n  t3.event_name = 'Yearly Kickoff';\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column t2.link_to_member does not exist\nLINE 6:   ON t1.member_id = t2.link_to_member\n                            ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT DISTINCT\n  t1.first_name,\n  t1.last_name\nFROM member AS t1\nINNER JOIN budget AS t2\n  ON t1.member_id = t2.link_to_member\nINNER JOIN event AS t3\n  ON t2.link_to_event = t3.event_id\nWHERE\n  t3.event_name = 'Yearly Kickoff';",
+          "raw_response": "```sql\nSELECT DISTINCT\n  t1.first_name,\n  t1.last_name\nFROM member AS t1\nINNER JOIN budget AS t2\n  ON t1.member_id = t2.link_to_member\nINNER JOIN event AS t3\n  ON t2.link_to_event = t3.event_id\nWHERE\n  t3.event_name = 'Yearly Kickoff';\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column t2.link_to_member does not exist\nLINE 6:   ON t1.member_id = t2.link_to_member\n                            ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 509,
+          "completion_tokens": 80,
+          "timings": {
+            "generation_s": 3.050668999989284,
+            "validation_s": 0.00310990001889877
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 509,
+      "prompt_tokens": 509,
+      "completion_tokens": 80,
+      "timings": {
+        "generation_s": 3.050668999989284,
+        "validation_s": 0.00310990001889877
+      }
+    },
+    {
+      "id": 1389,
+      "question": "Which event has the lowest cost?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT T1.event_name FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget ORDER BY T3.cost NULLS FIRST LIMIT 1",
+      "order_sensitive": true,
+      "gold_tables": [
+        "budget",
+        "event",
+        "expense"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "event refers to event_name; lowest cost means MIN(cost)",
+      "expected_result": [
+        [
+          "November Speaker"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t1.event_name\nFROM event AS t1\nINNER JOIN expense AS t2\n  ON t1.event_id = t2.link_to_event\nORDER BY\n  t2.cost ASC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  t1.event_name\nFROM event AS t1\nINNER JOIN expense AS t2\n  ON t1.event_id = t2.link_to_event\nORDER BY\n  t2.cost ASC\nLIMIT 1;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column t2.link_to_event does not exist\nLINE 5:   ON t1.event_id = t2.link_to_event\n                           ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t1.event_name\nFROM event AS t1\nINNER JOIN expense AS t2\n  ON t1.event_id = t2.link_to_event\nORDER BY\n  t2.cost ASC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  t1.event_name\nFROM event AS t1\nINNER JOIN expense AS t2\n  ON t1.event_id = t2.link_to_event\nORDER BY\n  t2.cost ASC\nLIMIT 1;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column t2.link_to_event does not exist\nLINE 5:   ON t1.event_id = t2.link_to_event\n                           ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 484,
+          "completion_tokens": 52,
+          "timings": {
+            "generation_s": 2.0132857999997213,
+            "validation_s": 0.0027917999832425267
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 484,
+      "prompt_tokens": 484,
+      "completion_tokens": 52,
+      "timings": {
+        "generation_s": 2.0132857999997213,
+        "validation_s": 0.0027917999832425267
+      }
+    },
+    {
+      "id": 1390,
+      "question": "Based on the total cost for all event, what is the percentage of cost for Yearly Kickoff event?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT CAST(SUM(CASE WHEN T1.event_name = 'Yearly Kickoff' THEN T3.cost ELSE 0 END) AS REAL) * 100 / NULLIF(SUM(T3.cost), 0) FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget",
+      "order_sensitive": false,
+      "gold_tables": [
+        "budget",
+        "event",
+        "expense"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "percentage = DIVIDE(SUM(cost where event_name = 'Yearly Kickoff'), SUM(cost)) * 100",
+      "expected_result": [
+        [
+          21.5302
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  CAST(SUM(CASE WHEN t1.event_name = 'Yearly Kickoff' THEN t2.cost ELSE 0 END) AS REAL) * 100 / SUM(t2.cost)\nFROM event AS t1\nINNER JOIN expense AS t2\n  ON t1.event_id = t2.link_to_event;",
+      "raw_response": "```sql\nSELECT\n  CAST(SUM(CASE WHEN t1.event_name = 'Yearly Kickoff' THEN t2.cost ELSE 0 END) AS REAL) * 100 / SUM(t2.cost)\nFROM event AS t1\nINNER JOIN expense AS t2\n  ON t1.event_id = t2.link_to_event;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column t2.link_to_event does not exist\nLINE 5:   ON t1.event_id = t2.link_to_event;\n                           ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  CAST(SUM(CASE WHEN t1.event_name = 'Yearly Kickoff' THEN t2.cost ELSE 0 END) AS REAL) * 100 / SUM(t2.cost)\nFROM event AS t1\nINNER JOIN expense AS t2\n  ON t1.event_id = t2.link_to_event;",
+          "raw_response": "```sql\nSELECT\n  CAST(SUM(CASE WHEN t1.event_name = 'Yearly Kickoff' THEN t2.cost ELSE 0 END) AS REAL) * 100 / SUM(t2.cost)\nFROM event AS t1\nINNER JOIN expense AS t2\n  ON t1.event_id = t2.link_to_event;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column t2.link_to_event does not exist\nLINE 5:   ON t1.event_id = t2.link_to_event;\n                           ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 513,
+          "completion_tokens": 74,
+          "timings": {
+            "generation_s": 2.8197910000162665,
+            "validation_s": 0.003386199998203665
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 513,
+      "prompt_tokens": 513,
+      "completion_tokens": 74,
+      "timings": {
+        "generation_s": 2.8197910000162665,
+        "validation_s": 0.003386199998203665
+      }
+    },
+    {
+      "id": 1392,
+      "question": "Indicate the top source of funds received in September 2019 based on their amount.",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT source FROM income WHERE date_received BETWEEN '2019-09-01' AND '2019-09-30' ORDER BY source DESC NULLS LAST LIMIT 1",
+      "order_sensitive": true,
+      "gold_tables": [
+        "income"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "top source funds refers to MAX(source); September 2019 means date_received BETWEEN '2019-09-01' and '2019-09-30'",
+      "expected_result": [
+        [
+          "School Appropration"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  source\nFROM income\nWHERE\n  date_received LIKE '2019-09-%'\nORDER BY\n  amount DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  source\nFROM income\nWHERE\n  date_received LIKE '2019-09-%'\nORDER BY\n  amount DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "School Appropration"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  source\nFROM income\nWHERE\n  date_received LIKE '2019-09-%'\nORDER BY\n  amount DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  source\nFROM income\nWHERE\n  date_received LIKE '2019-09-%'\nORDER BY\n  amount DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 528,
+          "completion_tokens": 40,
+          "timings": {
+            "generation_s": 1.592859900003532,
+            "validation_s": 0.003000400000018999,
+            "execution_s": 0.0016181000100914389
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 528,
+      "prompt_tokens": 528,
+      "completion_tokens": 40,
+      "timings": {
+        "generation_s": 1.592859900003532,
+        "validation_s": 0.003000400000018999,
+        "execution_s": 0.0016181000100914389
+      }
+    },
+    {
+      "id": 1394,
+      "question": "How many members of the Student_Club have major in 'Physics Teaching'?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT COUNT(T2.member_id) FROM major AS T1 INNER JOIN member AS T2 ON T1.major_id = T2.link_to_major WHERE T1.major_name = 'Physics Teaching'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "major",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "'Physics Teaching' is the major_name;",
+      "expected_result": [
+        [
+          1
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  COUNT(t1.major_id)\nFROM major AS t1\nINNER JOIN member AS t2\n  ON t1.major_id = t2.link_to_major\nWHERE\n  t1.major_name = 'Physics Teaching';",
+      "raw_response": "```sql\nSELECT\n  COUNT(t1.major_id)\nFROM major AS t1\nINNER JOIN member AS t2\n  ON t1.major_id = t2.link_to_major\nWHERE\n  t1.major_name = 'Physics Teaching';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          1
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(t1.major_id)\nFROM major AS t1\nINNER JOIN member AS t2\n  ON t1.major_id = t2.link_to_major\nWHERE\n  t1.major_name = 'Physics Teaching';",
+          "raw_response": "```sql\nSELECT\n  COUNT(t1.major_id)\nFROM major AS t1\nINNER JOIN member AS t2\n  ON t1.major_id = t2.link_to_major\nWHERE\n  t1.major_name = 'Physics Teaching';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 490,
+          "completion_tokens": 52,
+          "timings": {
+            "generation_s": 2.0518554000009317,
+            "validation_s": 0.0036548000061884522,
+            "execution_s": 0.0018733000033535063
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 490,
+      "prompt_tokens": 490,
+      "completion_tokens": 52,
+      "timings": {
+        "generation_s": 2.0518554000009317,
+        "validation_s": 0.0036548000061884522,
+        "execution_s": 0.0018733000033535063
+      }
+    },
+    {
+      "id": 1398,
+      "question": "Name the event with the highest amount spent on advertisement.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T2.event_name FROM budget AS T1 INNER JOIN event AS T2 ON T1.link_to_event = T2.event_id WHERE T1.category = 'Advertisement' ORDER BY T1.spent DESC NULLS LAST LIMIT 1",
+      "order_sensitive": true,
+      "gold_tables": [
+        "budget",
+        "event"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "Name of event refers to event_name; highest amount spent on advertisement refers to MAX(spent) where category = 'Advertisement'",
+      "expected_result": [
+        [
+          "Yearly Kickoff"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  t1.event_name\nFROM event AS t1\nINNER JOIN budget AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t2.category = 'Advertisement'\nORDER BY\n  t2.spent DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  t1.event_name\nFROM event AS t1\nINNER JOIN budget AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t2.category = 'Advertisement'\nORDER BY\n  t2.spent DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Yearly Kickoff"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t1.event_name\nFROM event AS t1\nINNER JOIN budget AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t2.category = 'Advertisement'\nORDER BY\n  t2.spent DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  t1.event_name\nFROM event AS t1\nINNER JOIN budget AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t2.category = 'Advertisement'\nORDER BY\n  t2.spent DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 501,
+          "completion_tokens": 63,
+          "timings": {
+            "generation_s": 2.4325517999823205,
+            "validation_s": 0.006463900004746392,
+            "execution_s": 0.0016466999950353056
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 501,
+      "prompt_tokens": 501,
+      "completion_tokens": 63,
+      "timings": {
+        "generation_s": 2.4325517999823205,
+        "validation_s": 0.006463900004746392,
+        "execution_s": 0.0016466999950353056
+      }
+    },
+    {
+      "id": 1399,
+      "question": "Did Maya Mclean attend the 'Women's Soccer' event?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT CASE WHEN T3.event_name = 'Women''s Soccer' THEN 'YES' END AS result FROM member AS T1 INNER JOIN attendance AS T2 ON T1.member_id = T2.link_to_member INNER JOIN event AS T3 ON T2.link_to_event = T3.event_id WHERE T1.first_name = 'Maya' AND T1.last_name = 'Mclean'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "attendance",
+        "event",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "Maya Mclean is the full name; full name refers to first_name, last_name; 'Women's Soccer' is an event_name",
+      "expected_result": [
+        [
+          "YES"
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  CASE WHEN t1.first_name = 'Maya' AND t1.last_name = 'Mclean' THEN 'Yes' ELSE 'No' END AS result\nFROM member AS t1\nINNER JOIN attendance AS t2\n  ON t1.member_id = t2.link_to_member\nINNER JOIN event AS t3\n  ON t3.event_id = t2.link_to_event\nWHERE\n  t3.event_name = 'Women''s Soccer';",
+      "raw_response": "```sql\nSELECT\n  CASE WHEN t1.first_name = 'Maya' AND t1.last_name = 'Mclean' THEN 'Yes' ELSE 'No' END AS result\nFROM member AS t1\nINNER JOIN attendance AS t2\n  ON t1.member_id = t2.link_to_member\nINNER JOIN event AS t3\n  ON t3.event_id = t2.link_to_event\nWHERE\n  t3.event_name = 'Women''s Soccer';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "No"
+        ],
+        [
+          "No"
+        ],
+        [
+          "No"
+        ],
+        [
+          "No"
+        ],
+        [
+          "Yes"
+        ],
+        [
+          "No"
+        ],
+        [
+          "No"
+        ],
+        [
+          "No"
+        ],
+        [
+          "No"
+        ],
+        [
+          "No"
+        ],
+        [
+          "No"
+        ],
+        [
+          "No"
+        ],
+        [
+          "No"
+        ],
+        [
+          "No"
+        ],
+        [
+          "No"
+        ],
+        [
+          "No"
+        ],
+        [
+          "No"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  CASE WHEN t1.first_name = 'Maya' AND t1.last_name = 'Mclean' THEN 'Yes' ELSE 'No' END AS result\nFROM member AS t1\nINNER JOIN attendance AS t2\n  ON t1.member_id = t2.link_to_member\nINNER JOIN event AS t3\n  ON t3.event_id = t2.link_to_event\nWHERE\n  t3.event_name = 'Women''s Soccer';",
+          "raw_response": "```sql\nSELECT\n  CASE WHEN t1.first_name = 'Maya' AND t1.last_name = 'Mclean' THEN 'Yes' ELSE 'No' END AS result\nFROM member AS t1\nINNER JOIN attendance AS t2\n  ON t1.member_id = t2.link_to_member\nINNER JOIN event AS t3\n  ON t3.event_id = t2.link_to_event\nWHERE\n  t3.event_name = 'Women''s Soccer';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 507,
+          "completion_tokens": 101,
+          "timings": {
+            "generation_s": 3.7823478000063915,
+            "validation_s": 0.0038432999863289297,
+            "execution_s": 0.0017872999887913465
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 507,
+      "prompt_tokens": 507,
+      "completion_tokens": 101,
+      "timings": {
+        "generation_s": 3.7823478000063915,
+        "validation_s": 0.0038432999863289297,
+        "execution_s": 0.0017872999887913465
+      }
+    },
+    {
+      "id": 1401,
+      "question": "Indicate the cost of posters for 'September Speaker' event.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T3.cost FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget WHERE T1.event_name = 'September Speaker' AND T3.expense_description = 'Posters'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "budget",
+        "event",
+        "expense"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "'Posters' is the expense description; 'September Speaker' is an event name",
+      "expected_result": [
+        [
+          67.81
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t2.cost\nFROM event AS t1\nINNER JOIN expense AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.event_name = 'September Speaker' AND t2.expense_description = 'Posters';",
+      "raw_response": "```sql\nSELECT\n  t2.cost\nFROM event AS t1\nINNER JOIN expense AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.event_name = 'September Speaker' AND t2.expense_description = 'Posters';\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column t2.link_to_event does not exist\nLINE 5:   ON t1.event_id = t2.link_to_event\n                           ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t2.cost\nFROM event AS t1\nINNER JOIN expense AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.event_name = 'September Speaker' AND t2.expense_description = 'Posters';",
+          "raw_response": "```sql\nSELECT\n  t2.cost\nFROM event AS t1\nINNER JOIN expense AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.event_name = 'September Speaker' AND t2.expense_description = 'Posters';\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column t2.link_to_event does not exist\nLINE 5:   ON t1.event_id = t2.link_to_event\n                           ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 496,
+          "completion_tokens": 61,
+          "timings": {
+            "generation_s": 2.335431300016353,
+            "validation_s": 0.003109999990556389
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 496,
+      "prompt_tokens": 496,
+      "completion_tokens": 61,
+      "timings": {
+        "generation_s": 2.335431300016353,
+        "validation_s": 0.003109999990556389
+      }
+    },
+    {
+      "id": 1403,
+      "question": "Indicate the name of the closed event whose cost has exceeded the budget the most.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T2.event_name FROM budget AS T1 INNER JOIN event AS T2 ON T2.event_id = T1.link_to_event WHERE T1.event_status = 'Closed' AND T1.remaining < 0 ORDER BY T1.remaining NULLS FIRST LIMIT 1",
+      "order_sensitive": true,
+      "gold_tables": [
+        "budget",
+        "event"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "closed events refers to event_name where status = 'Closed'; exceed the budget the most refers to MIN(remaining) where remaining < 0",
+      "expected_result": [
+        [
+          "September Speaker"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  t1.event_name\nFROM event AS t1\nINNER JOIN budget AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.status = 'Closed' AND t2.remaining < 0\nORDER BY\n  t2.remaining ASC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  t1.event_name\nFROM event AS t1\nINNER JOIN budget AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.status = 'Closed' AND t2.remaining < 0\nORDER BY\n  t2.remaining ASC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "September Speaker"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t1.event_name\nFROM event AS t1\nINNER JOIN budget AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.status = 'Closed' AND t2.remaining < 0\nORDER BY\n  t2.remaining ASC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  t1.event_name\nFROM event AS t1\nINNER JOIN budget AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.status = 'Closed' AND t2.remaining < 0\nORDER BY\n  t2.remaining ASC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 511,
+          "completion_tokens": 70,
+          "timings": {
+            "generation_s": 2.7013469000230543,
+            "validation_s": 0.003283299971371889,
+            "execution_s": 0.0014688000082969666
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 511,
+      "prompt_tokens": 511,
+      "completion_tokens": 70,
+      "timings": {
+        "generation_s": 2.7013469000230543,
+        "validation_s": 0.003283299971371889,
+        "execution_s": 0.0014688000082969666
+      }
+    },
+    {
+      "id": 1404,
+      "question": "Identify the type of expenses and their total value approved for 'October Meeting' event.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T1.type, SUM(T3.cost) FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event INNER JOIN expense AS T3 ON T2.budget_id = T3.link_to_budget WHERE T1.event_name = 'October Meeting' GROUP BY T1.type",
+      "order_sensitive": false,
+      "gold_tables": [
+        "budget",
+        "event",
+        "expense"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "total value refers to SUM(cost); 'October Meeting' is an event name;",
+      "expected_result": [
+        [
+          "Meeting",
+          175.39
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t1.type,\n  SUM(t2.cost)\nFROM event AS t1\nINNER JOIN expense AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.event_name = 'October Meeting' AND t2.approved = 'yes';",
+      "raw_response": "```sql\nSELECT\n  t1.type,\n  SUM(t2.cost)\nFROM event AS t1\nINNER JOIN expense AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.event_name = 'October Meeting' AND t2.approved = 'yes';\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column t2.link_to_event does not exist\nLINE 6:   ON t1.event_id = t2.link_to_event\n                           ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t1.type,\n  SUM(t2.cost)\nFROM event AS t1\nINNER JOIN expense AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.event_name = 'October Meeting' AND t2.approved = 'yes';",
+          "raw_response": "```sql\nSELECT\n  t1.type,\n  SUM(t2.cost)\nFROM event AS t1\nINNER JOIN expense AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.event_name = 'October Meeting' AND t2.approved = 'yes';\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column t2.link_to_event does not exist\nLINE 6:   ON t1.event_id = t2.link_to_event\n                           ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 499,
+          "completion_tokens": 66,
+          "timings": {
+            "generation_s": 2.5180820999958087,
+            "validation_s": 0.0036137000133749098
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 499,
+      "prompt_tokens": 499,
+      "completion_tokens": 66,
+      "timings": {
+        "generation_s": 2.5180820999958087,
+        "validation_s": 0.0036137000133749098
+      }
+    },
+    {
+      "id": 1405,
+      "question": "Calculate the amount budgeted for 'April Speaker' event. List all the budgeted categories for said event in an ascending order based on their amount budgeted.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T2.category, SUM(T2.amount) FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event WHERE T1.event_name = 'April Speaker' GROUP BY T2.category ORDER BY SUM(T2.amount) ASC",
+      "order_sensitive": true,
+      "gold_tables": [
+        "budget",
+        "event"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "'April Speaker' is an event name; amount budgeted refers to SUM(amount); budget categories refers to category",
+      "expected_result": [
+        [
+          "Parking",
+          10.0
+        ],
+        [
+          "Speaker Gifts",
+          25.0
+        ],
+        [
+          "Advertisement",
+          75.0
+        ],
+        [
+          "Food",
+          150.0
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  t1.category,\n  SUM(t1.amount) AS amount_budgeted\nFROM budget AS t1\nINNER JOIN event AS t2\n  ON t1.link_to_event = t2.event_id\nWHERE\n  t2.event_name = 'April Speaker'\nGROUP BY\n  t1.category\nORDER BY\n  amount_budgeted ASC;",
+      "raw_response": "```sql\nSELECT\n  t1.category,\n  SUM(t1.amount) AS amount_budgeted\nFROM budget AS t1\nINNER JOIN event AS t2\n  ON t1.link_to_event = t2.event_id\nWHERE\n  t2.event_name = 'April Speaker'\nGROUP BY\n  t1.category\nORDER BY\n  amount_budgeted ASC;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Parking",
+          10.0
+        ],
+        [
+          "Speaker Gifts",
+          25.0
+        ],
+        [
+          "Advertisement",
+          75.0
+        ],
+        [
+          "Food",
+          150.0
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t1.category,\n  SUM(t1.amount) AS amount_budgeted\nFROM budget AS t1\nINNER JOIN event AS t2\n  ON t1.link_to_event = t2.event_id\nWHERE\n  t2.event_name = 'April Speaker'\nGROUP BY\n  t1.category\nORDER BY\n  amount_budgeted ASC;",
+          "raw_response": "```sql\nSELECT\n  t1.category,\n  SUM(t1.amount) AS amount_budgeted\nFROM budget AS t1\nINNER JOIN event AS t2\n  ON t1.link_to_event = t2.event_id\nWHERE\n  t2.event_name = 'April Speaker'\nGROUP BY\n  t1.category\nORDER BY\n  amount_budgeted ASC;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 520,
+          "completion_tokens": 78,
+          "timings": {
+            "generation_s": 2.961004299984779,
+            "validation_s": 0.004272399994079024,
+            "execution_s": 0.0015712000022176653
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 520,
+      "prompt_tokens": 520,
+      "completion_tokens": 78,
+      "timings": {
+        "generation_s": 2.961004299984779,
+        "validation_s": 0.004272399994079024,
+        "execution_s": 0.0015712000022176653
+      }
+    },
+    {
+      "id": 1409,
+      "question": "Mention the total expense used on 8/20/2019.",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT SUM(cost) FROM expense WHERE expense_date = '2019-08-20'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "expense"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "total expense refers SUM(cost) where expense_date = '2019-08-20'",
+      "expected_result": [
+        [
+          122.06
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  SUM(cost)\nFROM expense\nWHERE\n  expense_date = '2019-08-20';",
+      "raw_response": "```sql\nSELECT\n  SUM(cost)\nFROM expense\nWHERE\n  expense_date = '2019-08-20';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          122.06
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  SUM(cost)\nFROM expense\nWHERE\n  expense_date = '2019-08-20';",
+          "raw_response": "```sql\nSELECT\n  SUM(cost)\nFROM expense\nWHERE\n  expense_date = '2019-08-20';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 505,
+          "completion_tokens": 32,
+          "timings": {
+            "generation_s": 1.288421000004746,
+            "validation_s": 0.0027754000038839877,
+            "execution_s": 0.0014876000059302896
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 505,
+      "prompt_tokens": 505,
+      "completion_tokens": 32,
+      "timings": {
+        "generation_s": 1.288421000004746,
+        "validation_s": 0.0027754000038839877,
+        "execution_s": 0.0014876000059302896
+      }
+    },
+    {
+      "id": 1410,
+      "question": "List out the full name and total cost that member id \"rec4BLdZHS2Blfp4v\" incurred?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT T1.first_name, T1.last_name, SUM(T2.cost) FROM member AS T1 INNER JOIN expense AS T2 ON T1.member_id = T2.link_to_member WHERE T1.member_id = 'rec4BLdZHS2Blfp4v' GROUP BY T1.first_name, T1.last_name",
+      "order_sensitive": false,
+      "gold_tables": [
+        "expense",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "full name refers to first_name, last name",
+      "expected_result": [
+        [
+          "Sacha",
+          "Harrison",
+          866.2501
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  SUM(t1.cost)\nFROM expense AS t1\nINNER JOIN member AS t2\n  ON t1.link_to_member = t2.member_id\nWHERE\n  t2.member_id = 'rec4BLdZHS2Blfp4v';",
+      "raw_response": "```sql\nSELECT\n  SUM(t1.cost)\nFROM expense AS t1\nINNER JOIN member AS t2\n  ON t1.link_to_member = t2.member_id\nWHERE\n  t2.member_id = 'rec4BLdZHS2Blfp4v';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          866.2501
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  SUM(t1.cost)\nFROM expense AS t1\nINNER JOIN member AS t2\n  ON t1.link_to_member = t2.member_id\nWHERE\n  t2.member_id = 'rec4BLdZHS2Blfp4v';",
+          "raw_response": "```sql\nSELECT\n  SUM(t1.cost)\nFROM expense AS t1\nINNER JOIN member AS t2\n  ON t1.link_to_member = t2.member_id\nWHERE\n  t2.member_id = 'rec4BLdZHS2Blfp4v';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 501,
+          "completion_tokens": 60,
+          "timings": {
+            "generation_s": 2.3218120000092313,
+            "validation_s": 0.003200499981176108,
+            "execution_s": 0.0014799000055063516
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 501,
+      "prompt_tokens": 501,
+      "completion_tokens": 60,
+      "timings": {
+        "generation_s": 2.3218120000092313,
+        "validation_s": 0.003200499981176108,
+        "execution_s": 0.0014799000055063516
+      }
+    },
+    {
+      "id": 1411,
+      "question": "State what kind of expenses that Sacha Harrison incurred?",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT T2.expense_description FROM member AS T1 INNER JOIN expense AS T2 ON T1.member_id = T2.link_to_member WHERE T1.first_name = 'Sacha' AND T1.last_name = 'Harrison'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "expense",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "kind of expenses refers to expense_description; Sacha Harrison is the full name; full name refers to first_name, last_name;",
+      "expected_result": [
+        [
+          "Post Cards, Posters"
+        ],
+        [
+          "Posters"
+        ],
+        [
+          "Water, chips, cookies"
+        ],
+        [
+          "Posters"
+        ],
+        [
+          "Water, chips, cookies"
+        ],
+        [
+          "Pizza"
+        ],
+        [
+          "Water, chips, cookies"
+        ],
+        [
+          "Travel Mug"
+        ],
+        [
+          "Alumni Glass"
+        ],
+        [
+          "Posters"
+        ],
+        [
+          "Travel Mug"
+        ],
+        [
+          "Bakery - Donuts, muffins"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT DISTINCT\n  t2.expense_description\nFROM member AS t1\nINNER JOIN expense AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t1.first_name = 'Sacha' AND t1.last_name = 'Harrison';",
+      "raw_response": "```sql\nSELECT DISTINCT\n  t2.expense_description\nFROM member AS t1\nINNER JOIN expense AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t1.first_name = 'Sacha' AND t1.last_name = 'Harrison';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Alumni Glass"
+        ],
+        [
+          "Bakery - Donuts, muffins"
+        ],
+        [
+          "Pizza"
+        ],
+        [
+          "Post Cards, Posters"
+        ],
+        [
+          "Posters"
+        ],
+        [
+          "Travel Mug"
+        ],
+        [
+          "Water, chips, cookies"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT DISTINCT\n  t2.expense_description\nFROM member AS t1\nINNER JOIN expense AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t1.first_name = 'Sacha' AND t1.last_name = 'Harrison';",
+          "raw_response": "```sql\nSELECT DISTINCT\n  t2.expense_description\nFROM member AS t1\nINNER JOIN expense AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t1.first_name = 'Sacha' AND t1.last_name = 'Harrison';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 502,
+          "completion_tokens": 63,
+          "timings": {
+            "generation_s": 2.4514900999784004,
+            "validation_s": 0.0037483000196516514,
+            "execution_s": 0.0016546999977435917
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 502,
+      "prompt_tokens": 502,
+      "completion_tokens": 63,
+      "timings": {
+        "generation_s": 2.4514900999784004,
+        "validation_s": 0.0037483000196516514,
+        "execution_s": 0.0016546999977435917
+      }
+    },
+    {
+      "id": 1422,
+      "question": "State the category of events were held at MU 215.",
+      "category": "bird",
+      "difficulty": "simple",
+      "ground_truth_sql": "SELECT DISTINCT T2.category FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event WHERE T1.location = 'MU 215'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "budget",
+        "event"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "'MU 215' is the location of event; ",
+      "expected_result": [
+        [
+          "Parking"
+        ],
+        [
+          "Speaker Gifts"
+        ],
+        [
+          "Advertisement"
+        ],
+        [
+          "Food"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT DISTINCT\n  t2.category\nFROM event AS t1\nINNER JOIN budget AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.location = 'MU 215';",
+      "raw_response": "```sql\nSELECT DISTINCT\n  t2.category\nFROM event AS t1\nINNER JOIN budget AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.location = 'MU 215';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Parking"
+        ],
+        [
+          "Speaker Gifts"
+        ],
+        [
+          "Advertisement"
+        ],
+        [
+          "Food"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT DISTINCT\n  t2.category\nFROM event AS t1\nINNER JOIN budget AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.location = 'MU 215';",
+          "raw_response": "```sql\nSELECT DISTINCT\n  t2.category\nFROM event AS t1\nINNER JOIN budget AS t2\n  ON t1.event_id = t2.link_to_event\nWHERE\n  t1.location = 'MU 215';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 493,
+          "completion_tokens": 53,
+          "timings": {
+            "generation_s": 2.0605113999918103,
+            "validation_s": 0.0030891999776940793,
+            "execution_s": 0.0015713000029791147
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 493,
+      "prompt_tokens": 493,
+      "completion_tokens": 53,
+      "timings": {
+        "generation_s": 2.0605113999918103,
+        "validation_s": 0.0030891999776940793,
+        "execution_s": 0.0015713000029791147
+      }
+    },
+    {
+      "id": 1426,
+      "question": "List the last name of members with a major in environmental engineering and include its department and college name.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT T2.last_name, T1.department, T1.college FROM major AS T1 INNER JOIN member AS T2 ON T1.major_id = T2.link_to_major WHERE T2.position = 'Member' AND T1.major_name = 'Environmental Engineering'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "major",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "'Environmental Engineering' is the major_name;",
+      "expected_result": [
+        [
+          "Hewitt",
+          "Civil and Environmental Engineering Department",
+          "College of Engineering"
+        ],
+        [
+          "Mclean",
+          "Civil and Environmental Engineering Department",
+          "College of Engineering"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  t1.last_name,\n  t2.department,\n  t2.college\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t2.major_name = 'Environmental Engineering';",
+      "raw_response": "```sql\nSELECT\n  t1.last_name,\n  t2.department,\n  t2.college\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t2.major_name = 'Environmental Engineering';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Hewitt",
+          "Civil and Environmental Engineering Department",
+          "College of Engineering"
+        ],
+        [
+          "Mclean",
+          "Civil and Environmental Engineering Department",
+          "College of Engineering"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t1.last_name,\n  t2.department,\n  t2.college\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t2.major_name = 'Environmental Engineering';",
+          "raw_response": "```sql\nSELECT\n  t1.last_name,\n  t2.department,\n  t2.college\nFROM member AS t1\nINNER JOIN major AS t2\n  ON t1.link_to_major = t2.major_id\nWHERE\n  t2.major_name = 'Environmental Engineering';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 494,
+          "completion_tokens": 62,
+          "timings": {
+            "generation_s": 2.367035200004466,
+            "validation_s": 0.0032698999857529998,
+            "execution_s": 0.0017654999974183738
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 494,
+      "prompt_tokens": 494,
+      "completion_tokens": 62,
+      "timings": {
+        "generation_s": 2.367035200004466,
+        "validation_s": 0.0032698999857529998,
+        "execution_s": 0.0017654999974183738
+      }
+    },
+    {
+      "id": 1427,
+      "question": "What are the budget category of the events located at MU 215 and a guest speaker type with a 0 budget spent?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT DISTINCT T2.category, T1.type FROM event AS T1 INNER JOIN budget AS T2 ON T1.event_id = T2.link_to_event WHERE T1.location = 'MU 215' AND T2.spent = 0 AND T1.type = 'Guest Speaker'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "budget",
+        "event"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "budget category refers to category; events located at refers to location; type = 'Guest Speaker'; 0 budget spent refers to spent = 0; ",
+      "expected_result": [
+        [
+          "Advertisement",
+          "Guest Speaker"
+        ],
+        [
+          "Food",
+          "Guest Speaker"
+        ],
+        [
+          "Parking",
+          "Guest Speaker"
+        ],
+        [
+          "Speaker Gifts",
+          "Guest Speaker"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT DISTINCT\n  t1.category\nFROM budget AS t1\nINNER JOIN event AS t2\n  ON t1.link_to_event = t2.event_id\nWHERE\n  t2.location = 'MU 215' AND t2.type = 'Guest Speaker' AND t1.spent = 0;",
+      "raw_response": "```sql\nSELECT DISTINCT\n  t1.category\nFROM budget AS t1\nINNER JOIN event AS t2\n  ON t1.link_to_event = t2.event_id\nWHERE\n  t2.location = 'MU 215' AND t2.type = 'Guest Speaker' AND t1.spent = 0;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Advertisement"
+        ],
+        [
+          "Food"
+        ],
+        [
+          "Parking"
+        ],
+        [
+          "Speaker Gifts"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT DISTINCT\n  t1.category\nFROM budget AS t1\nINNER JOIN event AS t2\n  ON t1.link_to_event = t2.event_id\nWHERE\n  t2.location = 'MU 215' AND t2.type = 'Guest Speaker' AND t1.spent = 0;",
+          "raw_response": "```sql\nSELECT DISTINCT\n  t1.category\nFROM budget AS t1\nINNER JOIN event AS t2\n  ON t1.link_to_event = t2.event_id\nWHERE\n  t2.location = 'MU 215' AND t2.type = 'Guest Speaker' AND t1.spent = 0;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 523,
+          "completion_tokens": 71,
+          "timings": {
+            "generation_s": 2.7243442999897525,
+            "validation_s": 0.003286799998022616,
+            "execution_s": 0.0015782999980729073
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 523,
+      "prompt_tokens": 523,
+      "completion_tokens": 71,
+      "timings": {
+        "generation_s": 2.7243442999897525,
+        "validation_s": 0.003286799998022616,
+        "execution_s": 0.0015782999980729073
+      }
+    },
+    {
+      "id": 1432,
+      "question": "Among the members with t-shirt size of medium, what is the percentage of the amount 50 received by the Student_Club?",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT CAST(SUM(CASE WHEN T2.amount = 50 THEN 1.0 ELSE 0 END) AS REAL) * 100 / NULLIF(COUNT(T2.income_id), 0) FROM member AS T1 INNER JOIN income AS T2 ON T1.member_id = T2.link_to_member WHERE T1.position = 'Member' AND T1.t_shirt_size = 'Medium'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "income",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "t_shirt_size = 'Medium' where position = 'Member'; percentage = DIVIDE(COUNT(amount = 50), COUNT(member_id)) * 100",
+      "expected_result": [
+        [
+          100.0
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  CAST(SUM(CASE WHEN t_shirt_size = 'Medium' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(member_id)\nFROM income;",
+      "raw_response": "```sql\nSELECT\n  CAST(SUM(CASE WHEN t_shirt_size = 'Medium' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(member_id)\nFROM income;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column \"t_shirt_size\" does not exist\nLINE 2:   CAST(SUM(CASE WHEN t_shirt_size = 'Medium' THEN 1 ELSE 0 E...\n                             ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  CAST(SUM(CASE WHEN t_shirt_size = 'Medium' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(member_id)\nFROM income;",
+          "raw_response": "```sql\nSELECT\n  CAST(SUM(CASE WHEN t_shirt_size = 'Medium' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(member_id)\nFROM income;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column \"t_shirt_size\" does not exist\nLINE 2:   CAST(SUM(CASE WHEN t_shirt_size = 'Medium' THEN 1 ELSE 0 E...\n                             ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 528,
+          "completion_tokens": 46,
+          "timings": {
+            "generation_s": 1.8144717999966815,
+            "validation_s": 0.0029676999838557094
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 528,
+      "prompt_tokens": 528,
+      "completion_tokens": 46,
+      "timings": {
+        "generation_s": 1.8144717999966815,
+        "validation_s": 0.0029676999838557094
+      }
+    },
+    {
+      "id": 1435,
+      "question": "List the names of closed event as \"game\" that was closed from 3/15/2019 to 3/20/2020.",
+      "category": "bird",
+      "difficulty": "moderate",
+      "ground_truth_sql": "SELECT DISTINCT event_name FROM event WHERE type = 'Game' AND DATE(SUBSTR(event_date, 1, 10)) BETWEEN '2019-03-15' AND '2020-03-20' AND status = 'Closed'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "event"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "name of events refers event_name; game event that was closed refers to type = 'Game' where status = 'Closed'; event_date BETWEEN '2019-03-15' and '2020-03-20'; ",
+      "expected_result": [
+        [
+          "Football game"
+        ],
+        [
+          "Women's Soccer"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  event_name\nFROM event\nWHERE\n  type = 'Game' AND status = 'Closed'\n  AND event_date BETWEEN '2019-03-15' AND '2020-03-20';",
+      "raw_response": "```sql\nSELECT\n  event_name\nFROM event\nWHERE\n  type = 'Game' AND status = 'Closed'\n  AND event_date BETWEEN '2019-03-15' AND '2020-03-20';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Women's Soccer"
+        ],
+        [
+          "Football game"
+        ],
+        [
+          "Football game"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  event_name\nFROM event\nWHERE\n  type = 'Game' AND status = 'Closed'\n  AND event_date BETWEEN '2019-03-15' AND '2020-03-20';",
+          "raw_response": "```sql\nSELECT\n  event_name\nFROM event\nWHERE\n  type = 'Game' AND status = 'Closed'\n  AND event_date BETWEEN '2019-03-15' AND '2020-03-20';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 555,
+          "completion_tokens": 58,
+          "timings": {
+            "generation_s": 2.2760169999965,
+            "validation_s": 0.0032013000163715333,
+            "execution_s": 0.0014812999870628119
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 555,
+      "prompt_tokens": 555,
+      "completion_tokens": 58,
+      "timings": {
+        "generation_s": 2.2760169999965,
+        "validation_s": 0.0032013000163715333,
+        "execution_s": 0.0014812999870628119
+      }
+    },
+    {
+      "id": 1457,
+      "question": "Give the full name and contact number of members who had to spend more than average on each expense.",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT DISTINCT T3.first_name, T3.last_name, T3.phone FROM expense AS T1 INNER JOIN budget AS T2 ON T1.link_to_budget = T2.budget_id INNER JOIN member AS T3 ON T3.member_id = T1.link_to_member WHERE T1.cost > (SELECT AVG(T1.cost) FROM expense AS T1 INNER JOIN budget AS T2 ON T1.link_to_budget = T2.budget_id INNER JOIN member AS T3 ON T3.member_id = T1.link_to_member)",
+      "order_sensitive": false,
+      "gold_tables": [
+        "budget",
+        "expense",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "full name refers to first_name, last_name; contact number refers to phone; had spent more than average on each expense refers to cost > AVG(cost)",
+      "expected_result": [
+        [
+          "Phillip",
+          "Cullen",
+          "905-555-5035"
+        ],
+        [
+          "Elijah",
+          "Allen",
+          "724-555-5721"
+        ],
+        [
+          "Sacha",
+          "Harrison",
+          "840-555-4781"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT DISTINCT\n  t1.first_name,\n  t1.last_name,\n  t1.phone\nFROM member AS t1\nINNER JOIN expense AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t2.cost > (\n    SELECT\n      AVG(cost)\n    FROM expense\n  );",
+      "raw_response": "```sql\nSELECT DISTINCT\n  t1.first_name,\n  t1.last_name,\n  t1.phone\nFROM member AS t1\nINNER JOIN expense AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t2.cost > (\n    SELECT\n      AVG(cost)\n    FROM expense\n  );\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Phillip",
+          "Cullen",
+          "905-555-5035"
+        ],
+        [
+          "Elijah",
+          "Allen",
+          "724-555-5721"
+        ],
+        [
+          "Sacha",
+          "Harrison",
+          "840-555-4781"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT DISTINCT\n  t1.first_name,\n  t1.last_name,\n  t1.phone\nFROM member AS t1\nINNER JOIN expense AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t2.cost > (\n    SELECT\n      AVG(cost)\n    FROM expense\n  );",
+          "raw_response": "```sql\nSELECT DISTINCT\n  t1.first_name,\n  t1.last_name,\n  t1.phone\nFROM member AS t1\nINNER JOIN expense AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t2.cost > (\n    SELECT\n      AVG(cost)\n    FROM expense\n  );\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 516,
+          "completion_tokens": 72,
+          "timings": {
+            "generation_s": 2.7463340000249445,
+            "validation_s": 0.0033013000211212784,
+            "execution_s": 0.0015402999997604638
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 516,
+      "prompt_tokens": 516,
+      "completion_tokens": 72,
+      "timings": {
+        "generation_s": 2.7463340000249445,
+        "validation_s": 0.0033013000211212784,
+        "execution_s": 0.0015402999997604638
+      }
+    },
+    {
+      "id": 1460,
+      "question": "Write the full name of the member who spent money for water, veggie tray and supplies and include the cost of it.",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT T2.first_name, T2.last_name, T1.cost FROM expense AS T1 INNER JOIN member AS T2 ON T1.link_to_member = T2.member_id WHERE T1.expense_description = 'Water, Veggie tray, supplies'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "expense",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "full name refers to first_name, last name; spent money for refers expense description; expense_description = 'Water, Veggie tray, supplies'",
+      "expected_result": [
+        [
+          "Elijah",
+          "Allen",
+          28.15
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT DISTINCT\n  t1.first_name,\n  t1.last_name,\n  t2.cost\nFROM member AS t1\nINNER JOIN expense AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t2.expense_description = 'Water, Veggie tray, supplies';",
+      "raw_response": "```sql\nSELECT DISTINCT\n  t1.first_name,\n  t1.last_name,\n  t2.cost\nFROM member AS t1\nINNER JOIN expense AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t2.expense_description = 'Water, Veggie tray, supplies';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Elijah",
+          "Allen",
+          28.15
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT DISTINCT\n  t1.first_name,\n  t1.last_name,\n  t2.cost\nFROM member AS t1\nINNER JOIN expense AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t2.expense_description = 'Water, Veggie tray, supplies';",
+          "raw_response": "```sql\nSELECT DISTINCT\n  t1.first_name,\n  t1.last_name,\n  t2.cost\nFROM member AS t1\nINNER JOIN expense AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t2.expense_description = 'Water, Veggie tray, supplies';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 519,
+          "completion_tokens": 69,
+          "timings": {
+            "generation_s": 2.623150400002487,
+            "validation_s": 0.0031888000085018575,
+            "execution_s": 0.0016660000255797058
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 519,
+      "prompt_tokens": 519,
+      "completion_tokens": 69,
+      "timings": {
+        "generation_s": 2.623150400002487,
+        "validation_s": 0.0031888000085018575,
+        "execution_s": 0.0016660000255797058
+      }
+    },
+    {
+      "id": 1464,
+      "question": "Write the full names of students who received funds on the date of 9/9/2019 and include the amount received.",
+      "category": "bird",
+      "difficulty": "challenging",
+      "ground_truth_sql": "SELECT DISTINCT T3.first_name, T3.last_name, T4.amount FROM event AS T1 INNER JOIN attendance AS T2 ON T1.event_id = T2.link_to_event INNER JOIN member AS T3 ON T3.member_id = T2.link_to_member INNER JOIN income AS T4 ON T4.link_to_member = T3.member_id WHERE T4.date_received = '2019-09-09'",
+      "order_sensitive": false,
+      "gold_tables": [
+        "attendance",
+        "event",
+        "income",
+        "member"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": "full name refers to first_name, last_name, amount of funds received refers to amount, received funds on date refers to date_received",
+      "expected_result": [
+        [
+          "Carlo",
+          "Jacobs",
+          50
+        ],
+        [
+          "Sacha",
+          "Harrison",
+          50
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t1.first_name,\n  t1.last_name,\n  t2.amount\nFROM member AS t1\nINNER JOIN income AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t2.date_received = '9/9/2019';",
+      "raw_response": "```sql\nSELECT\n  t1.first_name,\n  t1.last_name,\n  t2.amount\nFROM member AS t1\nINNER JOIN income AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t2.date_received = '9/9/2019';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t1.first_name,\n  t1.last_name,\n  t2.amount\nFROM member AS t1\nINNER JOIN income AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t2.date_received = '9/9/2019';",
+          "raw_response": "```sql\nSELECT\n  t1.first_name,\n  t1.last_name,\n  t2.amount\nFROM member AS t1\nINNER JOIN income AS t2\n  ON t1.member_id = t2.link_to_member\nWHERE\n  t2.date_received = '9/9/2019';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 520,
+          "completion_tokens": 68,
+          "timings": {
+            "generation_s": 2.616901000001235,
+            "validation_s": 0.003009699983522296,
+            "execution_s": 0.0015292000025510788
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 520,
+      "prompt_tokens": 520,
+      "completion_tokens": 68,
+      "timings": {
+        "generation_s": 2.616901000001235,
+        "validation_s": 0.003009699983522296,
+        "execution_s": 0.0015292000025510788
+      }
+    }
+  ]
+}

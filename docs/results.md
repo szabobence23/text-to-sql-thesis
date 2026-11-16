@@ -167,3 +167,5 @@ Az `attacks.json` 27 kézzel írt, támadó célú lekérdezést tartalmaz. Ezek
 5. **Az orákulum séma (tökéletes táblakeresés) csak +8 kérdést adna.** Ez szinte teljesen az AdventureWorksből jön (79 → 86), és nem szignifikáns. A hátralévő ~20% hibát tehát nem a táblakeresés okozza, hanem az SQL-logika: aggregálás, holtversenyek, domain-szabályok.
 6. **Az oszlopértékek nem hoznak semmit** a teljes beállítás mellett (+3/−3). A few-shot példák már megmutatják a kategóriák helyes írásmódját.
 7. **A magyar kérdések minden beállításban nehezebbek:** 15–26 kérdéssel kevesebb helyes a 150-ből. A módszerek ezt a különbséget nem tüntetik el.
+
+A BIRD train készletén, a gold válaszokon finomhangolt modell ugyanezeken a beállításokon (m1, m4, m7) mindenhol szignifikánsan rosszabb az alapmodellnél. A saját helyes válaszain finomhangolt modell ugyanannyit ér, mint az alapmodell: [finetune-results.md](finetune-results.md).

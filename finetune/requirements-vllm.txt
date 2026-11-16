@@ -1,0 +1,6 @@
+# vLLM for generate_vllm.py (self-distillation candidates) on the rented GPU
+# machine, in its own venv: it brings its own torch and a newer transformers
+# than requirements-train.txt pins. transformers is pinned below 5, which
+# vLLM 0.11 does not run with (Qwen2Tokenizer.all_special_tokens_extended).
+vllm==0.11.0
+transformers==4.57.1

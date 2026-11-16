@@ -12,3 +12,6 @@ datasets/adventureworks/data/
 
 # Web UI chat history (src/chat_store.py)
 .chat_history/
+
+# Fine-tuning outputs (finetune/import_bird_train.py, ...)
+finetune/data/

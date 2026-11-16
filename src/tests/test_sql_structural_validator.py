@@ -82,6 +82,14 @@ from sql_structural_validator import validate_sql_structure
             False,
         ),
 
+        # 8b. Unterminated quoted identifier: fails in sqlglot's tokenizer
+        # (TokenError, not ParseError); still a syntax error, not a crash.
+        (
+            "SELECT a FROM \"Sales Orders\" JOIN s ON \"Sales Orders]._id = s.id "
+            "WHERE \"Sales Orders\".\"Sales Channel\" = 'In-Store';",
+            False,
+        ),
+
         # 9. DROP
         (
             "DROP TABLE orders;",

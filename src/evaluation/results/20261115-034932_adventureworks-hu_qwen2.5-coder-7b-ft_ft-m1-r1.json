@@ -1,0 +1,4286 @@
+{
+  "run": {
+    "started_at": "2026-11-15T03:49:32",
+    "git": {
+      "commit": "ada7880a9437e943d5ce7b2f94f7de95332c64eb",
+      "dirty": true
+    },
+    "pipeline": {
+      "dataset": "adventureworks",
+      "llm": {
+        "model": "qwen2.5-coder-7b-ft",
+        "temperature": 0.0,
+        "seed": 42,
+        "num_ctx": 8192
+      },
+      "schema_hints": true,
+      "column_values": false,
+      "column_values_max": 50,
+      "schema_retrieval": "full",
+      "retrieval_k": 5,
+      "retrieval_fk_expansion": true,
+      "retrieval_descriptions": false,
+      "translate_for_retrieval": false,
+      "table_selection": false,
+      "table_selection_style": "strict",
+      "selection_keep_top": 0,
+      "selection_examples": 0,
+      "example_candidates": false,
+      "selection_examples_in_prompt": true,
+      "sql_examples": 0,
+      "question_evidence": false,
+      "embedding_model": "bge-m3",
+      "block_functions": true,
+      "max_correction_rounds": 0,
+      "natural_language_answer": false,
+      "answer_max_rows": 50
+    },
+    "model_digest": "b3c410783d2db0c1c5ebf3302527d0b9a5f4f790a223e92951a5a73b1d200ca6",
+    "embedding_model_digest": null,
+    "translate_prompt_sha256": null,
+    "table_selection_prompt_sha256": null,
+    "table_selection_examples_sha256": null,
+    "sql_examples_sha256": null,
+    "evidence_sha256": null,
+    "examples_sha256": null,
+    "prompt_sha256": "99da7ecb190dc2876f2c31f4b8f13f51687394725a30debe1632895b058b2d4a",
+    "correction_prompt_sha256": "18936e160c444acb215efe64089ac135fadb9dbaf3ddecba9dcd16f6af912024",
+    "answer_prompt_sha256": "f45181a3fceda6ac5f3ec0794f6effb5c87233571d961c573d9e6d8034f96eb9",
+    "database": "adventureworks_db",
+    "db_user": "text2sql_reader",
+    "test_cases_file": "datasets\\adventureworks\\test_cases\\hu.json",
+    "test_cases_language": "hu",
+    "test_cases_sha256": "b22ebaab29c45732dc1b88a9be4d689a72fd1e4f966d6ffc2a85b1f8f9da627b",
+    "schema_sha256": "4a2242218b5c6861c6345180c650cff4930be5719638ea2f35a054cb2cf53c4d",
+    "schema_text": "Database: adventureworks_db\n\nTable: humanresources.department\n- departmentid integer\n- name character varying\n- groupname character varying\n- modifieddate timestamp without time zone\nTable: humanresources.employee\n- businessentityid integer\n- nationalidnumber character varying\n- loginid character varying\n- jobtitle character varying\n- birthdate date\n- maritalstatus character\n- gender character\n- hiredate date\n- salariedflag boolean\n- vacationhours smallint\n- sickleavehours smallint\n- currentflag boolean\n- rowguid uuid\n- modifieddate timestamp without time zone\n- organizationnode character varying\nTable: humanresources.employeedepartmenthistory\n- businessentityid integer\n- departmentid smallint\n- shiftid smallint\n- startdate date\n- enddate date\n- modifieddate timestamp without time zone\nTable: humanresources.employeepayhistory\n- businessentityid integer\n- ratechangedate timestamp without time zone\n- rate numeric\n- payfrequency smallint\n- modifieddate timestamp without time zone\nTable: humanresources.jobcandidate\n- jobcandidateid integer\n- businessentityid integer\n- resume xml\n- modifieddate timestamp without time zone\nTable: humanresources.shift\n- shiftid integer\n- name character varying\n- starttime time without time zone\n- endtime time without time zone\n- modifieddate timestamp without time zone\nTable: person.address\n- addressid integer\n- addressline1 character varying\n- addressline2 character varying\n- city character varying\n- stateprovinceid integer\n- postalcode character varying\n- spatiallocation bytea\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: person.addresstype\n- addresstypeid integer\n- name character varying\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: person.businessentity\n- businessentityid integer\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: person.businessentityaddress\n- businessentityid integer\n- addressid integer\n- addresstypeid integer\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: person.businessentitycontact\n- businessentityid integer\n- personid integer\n- contacttypeid integer\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: person.contacttype\n- contacttypeid integer\n- name character varying\n- modifieddate timestamp without time zone\nTable: person.countryregion\n- countryregioncode character varying\n- name character varying\n- modifieddate timestamp without time zone\nTable: person.emailaddress\n- businessentityid integer\n- emailaddressid integer\n- emailaddress character varying\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: person.password\n- businessentityid integer\n- passwordhash character varying\n- passwordsalt character varying\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: person.person\n- businessentityid integer\n- persontype character\n- namestyle boolean\n- title character varying\n- firstname character varying\n- middlename character varying\n- lastname character varying\n- suffix character varying\n- emailpromotion integer\n- additionalcontactinfo xml\n- demographics xml\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: person.personphone\n- businessentityid integer\n- phonenumber character varying\n- phonenumbertypeid integer\n- modifieddate timestamp without time zone\nTable: person.phonenumbertype\n- phonenumbertypeid integer\n- name character varying\n- modifieddate timestamp without time zone\nTable: person.stateprovince\n- stateprovinceid integer\n- stateprovincecode character\n- countryregioncode character varying\n- isonlystateprovinceflag boolean\n- name character varying\n- territoryid integer\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: production.billofmaterials\n- billofmaterialsid integer\n- productassemblyid integer\n- componentid integer\n- startdate timestamp without time zone\n- enddate timestamp without time zone\n- unitmeasurecode character\n- bomlevel smallint\n- perassemblyqty numeric\n- modifieddate timestamp without time zone\nTable: production.culture\n- cultureid character\n- name character varying\n- modifieddate timestamp without time zone\nTable: production.document\n- title character varying\n- owner integer\n- folderflag boolean\n- filename character varying\n- fileextension character varying\n- revision character\n- changenumber integer\n- status smallint\n- documentsummary text\n- document bytea\n- rowguid uuid\n- modifieddate timestamp without time zone\n- documentnode character varying\nTable: production.illustration\n- illustrationid integer\n- diagram xml\n- modifieddate timestamp without time zone\nTable: production.location\n- locationid integer\n- name character varying\n- costrate numeric\n- availability numeric\n- modifieddate timestamp without time zone\nTable: production.product\n- productid integer\n- name character varying\n- productnumber character varying\n- makeflag boolean\n- finishedgoodsflag boolean\n- color character varying\n- safetystocklevel smallint\n- reorderpoint smallint\n- standardcost numeric\n- listprice numeric\n- size character varying\n- sizeunitmeasurecode character\n- weightunitmeasurecode character\n- weight numeric\n- daystomanufacture integer\n- productline character\n- class character\n- style character\n- productsubcategoryid integer\n- productmodelid integer\n- sellstartdate timestamp without time zone\n- sellenddate timestamp without time zone\n- discontinueddate timestamp without time zone\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: production.productcategory\n- productcategoryid integer\n- name character varying\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: production.productcosthistory\n- productid integer\n- startdate timestamp without time zone\n- enddate timestamp without time zone\n- standardcost numeric\n- modifieddate timestamp without time zone\nTable: production.productdescription\n- productdescriptionid integer\n- description character varying\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: production.productdocument\n- productid integer\n- modifieddate timestamp without time zone\n- documentnode character varying\nTable: production.productinventory\n- productid integer\n- locationid smallint\n- shelf character varying\n- bin smallint\n- quantity smallint\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: production.productlistpricehistory\n- productid integer\n- startdate timestamp without time zone\n- enddate timestamp without time zone\n- listprice numeric\n- modifieddate timestamp without time zone\nTable: production.productmodel\n- productmodelid integer\n- name character varying\n- catalogdescription xml\n- instructions xml\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: production.productmodelillustration\n- productmodelid integer\n- illustrationid integer\n- modifieddate timestamp without time zone\nTable: production.productmodelproductdescriptionculture\n- productmodelid integer\n- productdescriptionid integer\n- cultureid character\n- modifieddate timestamp without time zone\nTable: production.productphoto\n- productphotoid integer\n- thumbnailphoto bytea\n- thumbnailphotofilename character varying\n- largephoto bytea\n- largephotofilename character varying\n- modifieddate timestamp without time zone\nTable: production.productproductphoto\n- productid integer\n- productphotoid integer\n- primary boolean\n- modifieddate timestamp without time zone\nTable: production.productreview\n- productreviewid integer\n- productid integer\n- reviewername character varying\n- reviewdate timestamp without time zone\n- emailaddress character varying\n- rating integer\n- comments character varying\n- modifieddate timestamp without time zone\nTable: production.productsubcategory\n- productsubcategoryid integer\n- productcategoryid integer\n- name character varying\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: production.scrapreason\n- scrapreasonid integer\n- name character varying\n- modifieddate timestamp without time zone\nTable: production.transactionhistory\n- transactionid integer\n- productid integer\n- referenceorderid integer\n- referenceorderlineid integer\n- transactiondate timestamp without time zone\n- transactiontype character\n- quantity integer\n- actualcost numeric\n- modifieddate timestamp without time zone\nTable: production.transactionhistoryarchive\n- transactionid integer\n- productid integer\n- referenceorderid integer\n- referenceorderlineid integer\n- transactiondate timestamp without time zone\n- transactiontype character\n- quantity integer\n- actualcost numeric\n- modifieddate timestamp without time zone\nTable: production.unitmeasure\n- unitmeasurecode character\n- name character varying\n- modifieddate timestamp without time zone\nTable: production.workorder\n- workorderid integer\n- productid integer\n- orderqty integer\n- scrappedqty smallint\n- startdate timestamp without time zone\n- enddate timestamp without time zone\n- duedate timestamp without time zone\n- scrapreasonid smallint\n- modifieddate timestamp without time zone\nTable: production.workorderrouting\n- workorderid integer\n- productid integer\n- operationsequence smallint\n- locationid smallint\n- scheduledstartdate timestamp without time zone\n- scheduledenddate timestamp without time zone\n- actualstartdate timestamp without time zone\n- actualenddate timestamp without time zone\n- actualresourcehrs numeric\n- plannedcost numeric\n- actualcost numeric\n- modifieddate timestamp without time zone\nTable: purchasing.productvendor\n- productid integer\n- businessentityid integer\n- averageleadtime integer\n- standardprice numeric\n- lastreceiptcost numeric\n- lastreceiptdate timestamp without time zone\n- minorderqty integer\n- maxorderqty integer\n- onorderqty integer\n- unitmeasurecode character\n- modifieddate timestamp without time zone\nTable: purchasing.purchaseorderdetail\n- purchaseorderid integer\n- purchaseorderdetailid integer\n- duedate timestamp without time zone\n- orderqty smallint\n- productid integer\n- unitprice numeric\n- receivedqty numeric\n- rejectedqty numeric\n- modifieddate timestamp without time zone\nTable: purchasing.purchaseorderheader\n- purchaseorderid integer\n- revisionnumber smallint\n- status smallint\n- employeeid integer\n- vendorid integer\n- shipmethodid integer\n- orderdate timestamp without time zone\n- shipdate timestamp without time zone\n- subtotal numeric\n- taxamt numeric\n- freight numeric\n- modifieddate timestamp without time zone\nTable: purchasing.shipmethod\n- shipmethodid integer\n- name character varying\n- shipbase numeric\n- shiprate numeric\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: purchasing.vendor\n- businessentityid integer\n- accountnumber character varying\n- name character varying\n- creditrating smallint\n- preferredvendorstatus boolean\n- activeflag boolean\n- purchasingwebserviceurl character varying\n- modifieddate timestamp without time zone\nTable: sales.countryregioncurrency\n- countryregioncode character varying\n- currencycode character\n- modifieddate timestamp without time zone\nTable: sales.creditcard\n- creditcardid integer\n- cardtype character varying\n- cardnumber character varying\n- expmonth smallint\n- expyear smallint\n- modifieddate timestamp without time zone\nTable: sales.currency\n- currencycode character\n- name character varying\n- modifieddate timestamp without time zone\nTable: sales.currencyrate\n- currencyrateid integer\n- currencyratedate timestamp without time zone\n- fromcurrencycode character\n- tocurrencycode character\n- averagerate numeric\n- endofdayrate numeric\n- modifieddate timestamp without time zone\nTable: sales.customer\n- customerid integer\n- personid integer\n- storeid integer\n- territoryid integer\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: sales.personcreditcard\n- businessentityid integer\n- creditcardid integer\n- modifieddate timestamp without time zone\nTable: sales.salesorderdetail\n- salesorderid integer\n- salesorderdetailid integer\n- carriertrackingnumber character varying\n- orderqty smallint\n- productid integer\n- specialofferid integer\n- unitprice numeric\n- unitpricediscount numeric\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: sales.salesorderheader\n- salesorderid integer\n- revisionnumber smallint\n- orderdate timestamp without time zone\n- duedate timestamp without time zone\n- shipdate timestamp without time zone\n- status smallint\n- onlineorderflag boolean\n- purchaseordernumber character varying\n- accountnumber character varying\n- customerid integer\n- salespersonid integer\n- territoryid integer\n- billtoaddressid integer\n- shiptoaddressid integer\n- shipmethodid integer\n- creditcardid integer\n- creditcardapprovalcode character varying\n- currencyrateid integer\n- subtotal numeric\n- taxamt numeric\n- freight numeric\n- totaldue numeric\n- comment character varying\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: sales.salesorderheadersalesreason\n- salesorderid integer\n- salesreasonid integer\n- modifieddate timestamp without time zone\nTable: sales.salesperson\n- businessentityid integer\n- territoryid integer\n- salesquota numeric\n- bonus numeric\n- commissionpct numeric\n- salesytd numeric\n- saleslastyear numeric\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: sales.salespersonquotahistory\n- businessentityid integer\n- quotadate timestamp without time zone\n- salesquota numeric\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: sales.salesreason\n- salesreasonid integer\n- name character varying\n- reasontype character varying\n- modifieddate timestamp without time zone\nTable: sales.salestaxrate\n- salestaxrateid integer\n- stateprovinceid integer\n- taxtype smallint\n- taxrate numeric\n- name character varying\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: sales.salesterritory\n- territoryid integer\n- name character varying\n- countryregioncode character varying\n- group character varying\n- salesytd numeric\n- saleslastyear numeric\n- costytd numeric\n- costlastyear numeric\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: sales.salesterritoryhistory\n- businessentityid integer\n- territoryid integer\n- startdate timestamp without time zone\n- enddate timestamp without time zone\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: sales.shoppingcartitem\n- shoppingcartitemid integer\n- shoppingcartid character varying\n- quantity integer\n- productid integer\n- datecreated timestamp without time zone\n- modifieddate timestamp without time zone\nTable: sales.specialoffer\n- specialofferid integer\n- description character varying\n- discountpct numeric\n- type character varying\n- category character varying\n- startdate timestamp without time zone\n- enddate timestamp without time zone\n- minqty integer\n- maxqty integer\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: sales.specialofferproduct\n- specialofferid integer\n- productid integer\n- rowguid uuid\n- modifieddate timestamp without time zone\nTable: sales.store\n- businessentityid integer\n- name character varying\n- salespersonid integer\n- demographics xml\n- rowguid uuid\n- modifieddate timestamp without time zone\n\nRelationships:\n- humanresources.employee.businessentityid -> person.person.businessentityid\n- humanresources.employeedepartmenthistory.businessentityid -> humanresources.employee.businessentityid\n- humanresources.employeedepartmenthistory.departmentid -> humanresources.department.departmentid\n- humanresources.employeedepartmenthistory.shiftid -> humanresources.shift.shiftid\n- humanresources.employeepayhistory.businessentityid -> humanresources.employee.businessentityid\n- humanresources.jobcandidate.businessentityid -> humanresources.employee.businessentityid\n- person.address.stateprovinceid -> person.stateprovince.stateprovinceid\n- person.businessentityaddress.addressid -> person.address.addressid\n- person.businessentityaddress.addresstypeid -> person.addresstype.addresstypeid\n- person.businessentityaddress.businessentityid -> person.businessentity.businessentityid\n- person.businessentitycontact.businessentityid -> person.businessentity.businessentityid\n- person.businessentitycontact.contacttypeid -> person.contacttype.contacttypeid\n- person.businessentitycontact.personid -> person.person.businessentityid\n- person.emailaddress.businessentityid -> person.person.businessentityid\n- person.password.businessentityid -> person.person.businessentityid\n- person.person.businessentityid -> person.businessentity.businessentityid\n- person.personphone.businessentityid -> person.person.businessentityid\n- person.personphone.phonenumbertypeid -> person.phonenumbertype.phonenumbertypeid\n- person.stateprovince.countryregioncode -> person.countryregion.countryregioncode\n- person.stateprovince.territoryid -> sales.salesterritory.territoryid\n- production.billofmaterials.componentid -> production.product.productid\n- production.billofmaterials.productassemblyid -> production.product.productid\n- production.billofmaterials.unitmeasurecode -> production.unitmeasure.unitmeasurecode\n- production.document.owner -> humanresources.employee.businessentityid\n- production.product.productmodelid -> production.productmodel.productmodelid\n- production.product.productsubcategoryid -> production.productsubcategory.productsubcategoryid\n- production.product.sizeunitmeasurecode -> production.unitmeasure.unitmeasurecode\n- production.product.weightunitmeasurecode -> production.unitmeasure.unitmeasurecode\n- production.productcosthistory.productid -> production.product.productid\n- production.productdocument.documentnode -> production.document.documentnode\n- production.productdocument.productid -> production.product.productid\n- production.productinventory.locationid -> production.location.locationid\n- production.productinventory.productid -> production.product.productid\n- production.productlistpricehistory.productid -> production.product.productid\n- production.productmodelillustration.illustrationid -> production.illustration.illustrationid\n- production.productmodelillustration.productmodelid -> production.productmodel.productmodelid\n- production.productmodelproductdescriptionculture.cultureid -> production.culture.cultureid\n- production.productmodelproductdescriptionculture.productdescriptionid -> production.productdescription.productdescriptionid\n- production.productmodelproductdescriptionculture.productmodelid -> production.productmodel.productmodelid\n- production.productproductphoto.productid -> production.product.productid\n- production.productproductphoto.productphotoid -> production.productphoto.productphotoid\n- production.productreview.productid -> production.product.productid\n- production.productsubcategory.productcategoryid -> production.productcategory.productcategoryid\n- production.transactionhistory.productid -> production.product.productid\n- production.workorder.productid -> production.product.productid\n- production.workorder.scrapreasonid -> production.scrapreason.scrapreasonid\n- production.workorderrouting.locationid -> production.location.locationid\n- production.workorderrouting.workorderid -> production.workorder.workorderid\n- purchasing.productvendor.businessentityid -> purchasing.vendor.businessentityid\n- purchasing.productvendor.productid -> production.product.productid\n- purchasing.productvendor.unitmeasurecode -> production.unitmeasure.unitmeasurecode\n- purchasing.purchaseorderdetail.productid -> production.product.productid\n- purchasing.purchaseorderdetail.purchaseorderid -> purchasing.purchaseorderheader.purchaseorderid\n- purchasing.purchaseorderheader.employeeid -> humanresources.employee.businessentityid\n- purchasing.purchaseorderheader.shipmethodid -> purchasing.shipmethod.shipmethodid\n- purchasing.purchaseorderheader.vendorid -> purchasing.vendor.businessentityid\n- purchasing.vendor.businessentityid -> person.businessentity.businessentityid\n- sales.countryregioncurrency.countryregioncode -> person.countryregion.countryregioncode\n- sales.countryregioncurrency.currencycode -> sales.currency.currencycode\n- sales.currencyrate.fromcurrencycode -> sales.currency.currencycode\n- sales.currencyrate.tocurrencycode -> sales.currency.currencycode\n- sales.customer.personid -> person.person.businessentityid\n- sales.customer.storeid -> sales.store.businessentityid\n- sales.customer.territoryid -> sales.salesterritory.territoryid\n- sales.personcreditcard.businessentityid -> person.person.businessentityid\n- sales.personcreditcard.creditcardid -> sales.creditcard.creditcardid\n- sales.salesorderdetail.productid -> sales.specialofferproduct.productid\n- sales.salesorderdetail.salesorderid -> sales.salesorderheader.salesorderid\n- sales.salesorderdetail.specialofferid -> sales.specialofferproduct.specialofferid\n- sales.salesorderheader.billtoaddressid -> person.address.addressid\n- sales.salesorderheader.creditcardid -> sales.creditcard.creditcardid\n- sales.salesorderheader.currencyrateid -> sales.currencyrate.currencyrateid\n- sales.salesorderheader.customerid -> sales.customer.customerid\n- sales.salesorderheader.salespersonid -> sales.salesperson.businessentityid\n- sales.salesorderheader.shipmethodid -> purchasing.shipmethod.shipmethodid\n- sales.salesorderheader.shiptoaddressid -> person.address.addressid\n- sales.salesorderheader.territoryid -> sales.salesterritory.territoryid\n- sales.salesorderheadersalesreason.salesorderid -> sales.salesorderheader.salesorderid\n- sales.salesorderheadersalesreason.salesreasonid -> sales.salesreason.salesreasonid\n- sales.salesperson.businessentityid -> humanresources.employee.businessentityid\n- sales.salesperson.territoryid -> sales.salesterritory.territoryid\n- sales.salespersonquotahistory.businessentityid -> sales.salesperson.businessentityid\n- sales.salestaxrate.stateprovinceid -> person.stateprovince.stateprovinceid\n- sales.salesterritory.countryregioncode -> person.countryregion.countryregioncode\n- sales.salesterritoryhistory.businessentityid -> sales.salesperson.businessentityid\n- sales.salesterritoryhistory.territoryid -> sales.salesterritory.territoryid\n- sales.shoppingcartitem.productid -> production.product.productid\n- sales.specialofferproduct.productid -> production.product.productid\n- sales.specialofferproduct.specialofferid -> sales.specialoffer.specialofferid\n- sales.store.businessentityid -> person.businessentity.businessentityid\n- sales.store.salespersonid -> sales.salesperson.businessentityid\n"
+  },
+  "summary": {
+    "total_questions": 50,
+    "valid_sql": {
+      "count": 34,
+      "total": 50,
+      "rate": 0.68
+    },
+    "execution_success": {
+      "count": 34,
+      "total": 50,
+      "rate": 0.68
+    },
+    "strict_ex": {
+      "count": 13,
+      "total": 50,
+      "rate": 0.26
+    },
+    "relaxed_ex": {
+      "count": 13,
+      "total": 50,
+      "rate": 0.26
+    },
+    "set_ex": {
+      "count": 13,
+      "total": 50,
+      "rate": 0.26
+    },
+    "first_attempt": {
+      "execution_success": {
+        "count": 34,
+        "total": 50,
+        "rate": 0.68
+      },
+      "strict_ex": {
+        "count": 13,
+        "total": 50,
+        "rate": 0.26
+      },
+      "relaxed_ex": {
+        "count": 13,
+        "total": 50,
+        "rate": 0.26
+      },
+      "set_ex": {
+        "count": 13,
+        "total": 50,
+        "rate": 0.26
+      }
+    },
+    "correction": {
+      "triggered": 0,
+      "fixed_execution": 0,
+      "fixed_strict": 0,
+      "fixed_relaxed": 0,
+      "mean_rounds_when_triggered": 0
+    },
+    "answer": {
+      "answered": 0,
+      "mean_answer_s": 0,
+      "mean_prompt_tokens": 0,
+      "mean_completion_tokens": 0
+    },
+    "by_category": {
+      "aggregation": {
+        "strict_ex": {
+          "count": 3,
+          "total": 7,
+          "rate": 0.42857142857142855
+        },
+        "relaxed_ex": {
+          "count": 3,
+          "total": 7,
+          "rate": 0.42857142857142855
+        },
+        "set_ex": {
+          "count": 3,
+          "total": 7,
+          "rate": 0.42857142857142855
+        }
+      },
+      "date": {
+        "strict_ex": {
+          "count": 2,
+          "total": 6,
+          "rate": 0.3333333333333333
+        },
+        "relaxed_ex": {
+          "count": 2,
+          "total": 6,
+          "rate": 0.3333333333333333
+        },
+        "set_ex": {
+          "count": 2,
+          "total": 6,
+          "rate": 0.3333333333333333
+        }
+      },
+      "filtering": {
+        "strict_ex": {
+          "count": 3,
+          "total": 6,
+          "rate": 0.5
+        },
+        "relaxed_ex": {
+          "count": 3,
+          "total": 6,
+          "rate": 0.5
+        },
+        "set_ex": {
+          "count": 3,
+          "total": 6,
+          "rate": 0.5
+        }
+      },
+      "grouping": {
+        "strict_ex": {
+          "count": 0,
+          "total": 6,
+          "rate": 0.0
+        },
+        "relaxed_ex": {
+          "count": 0,
+          "total": 6,
+          "rate": 0.0
+        },
+        "set_ex": {
+          "count": 0,
+          "total": 6,
+          "rate": 0.0
+        }
+      },
+      "join_aggregation": {
+        "strict_ex": {
+          "count": 2,
+          "total": 12,
+          "rate": 0.16666666666666666
+        },
+        "relaxed_ex": {
+          "count": 2,
+          "total": 12,
+          "rate": 0.16666666666666666
+        },
+        "set_ex": {
+          "count": 2,
+          "total": 12,
+          "rate": 0.16666666666666666
+        }
+      },
+      "sorting": {
+        "strict_ex": {
+          "count": 1,
+          "total": 6,
+          "rate": 0.16666666666666666
+        },
+        "relaxed_ex": {
+          "count": 1,
+          "total": 6,
+          "rate": 0.16666666666666666
+        },
+        "set_ex": {
+          "count": 1,
+          "total": 6,
+          "rate": 0.16666666666666666
+        }
+      },
+      "subquery": {
+        "strict_ex": {
+          "count": 2,
+          "total": 7,
+          "rate": 0.2857142857142857
+        },
+        "relaxed_ex": {
+          "count": 2,
+          "total": 7,
+          "rate": 0.2857142857142857
+        },
+        "set_ex": {
+          "count": 2,
+          "total": 7,
+          "rate": 0.2857142857142857
+        }
+      }
+    },
+    "by_difficulty": {
+      "easy": {
+        "strict_ex": {
+          "count": 7,
+          "total": 10,
+          "rate": 0.7
+        },
+        "relaxed_ex": {
+          "count": 7,
+          "total": 10,
+          "rate": 0.7
+        },
+        "set_ex": {
+          "count": 7,
+          "total": 10,
+          "rate": 0.7
+        }
+      },
+      "hard": {
+        "strict_ex": {
+          "count": 1,
+          "total": 12,
+          "rate": 0.08333333333333333
+        },
+        "relaxed_ex": {
+          "count": 1,
+          "total": 12,
+          "rate": 0.08333333333333333
+        },
+        "set_ex": {
+          "count": 1,
+          "total": 12,
+          "rate": 0.08333333333333333
+        }
+      },
+      "medium": {
+        "strict_ex": {
+          "count": 5,
+          "total": 28,
+          "rate": 0.17857142857142858
+        },
+        "relaxed_ex": {
+          "count": 5,
+          "total": 28,
+          "rate": 0.17857142857142858
+        },
+        "set_ex": {
+          "count": 5,
+          "total": 28,
+          "rate": 0.17857142857142858
+        }
+      }
+    },
+    "mean_table_recall": 1.0,
+    "tables_complete": {
+      "count": 50,
+      "total": 50,
+      "rate": 1.0
+    },
+    "mean_generation_s": 3.1374756399994657,
+    "mean_prompt_tokens": 4774.18,
+    "mean_completion_tokens": 60.54
+  },
+  "results": [
+    {
+      "id": 1,
+      "question": "Hány alkalmazottja van a cégnek?",
+      "category": "aggregation",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT COUNT(*) AS employee_count FROM humanresources.employee;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "humanresources.employee"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          290
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  COUNT(businessentityid)\nFROM person.businessentity;",
+      "raw_response": "```sql\nSELECT\n  COUNT(businessentityid)\nFROM person.businessentity;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          20777
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(businessentityid)\nFROM person.businessentity;",
+          "raw_response": "```sql\nSELECT\n  COUNT(businessentityid)\nFROM person.businessentity;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4760,
+          "completion_tokens": 19,
+          "timings": {
+            "generation_s": 4.4994884000043385,
+            "validation_s": 0.002969699999084696,
+            "execution_s": 0.01941439999791328
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4760,
+      "prompt_tokens": 4760,
+      "completion_tokens": 19,
+      "timings": {
+        "generation_s": 4.4994884000043385,
+        "validation_s": 0.002969699999084696,
+        "execution_s": 0.01941439999791328
+      }
+    },
+    {
+      "id": 2,
+      "question": "Hány termék szerepel a termékkatalógusban?",
+      "category": "aggregation",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT COUNT(*) AS product_count FROM production.product;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "production.product"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          504
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  COUNT(productmodelid)\nFROM production.productmodel;",
+      "raw_response": "```sql\nSELECT\n  COUNT(productmodelid)\nFROM production.productmodel;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          128
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(productmodelid)\nFROM production.productmodel;",
+          "raw_response": "```sql\nSELECT\n  COUNT(productmodelid)\nFROM production.productmodel;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4763,
+          "completion_tokens": 18,
+          "timings": {
+            "generation_s": 1.021217000001343,
+            "validation_s": 0.0030885000014677644,
+            "execution_s": 0.016151799994986504
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4763,
+      "prompt_tokens": 4763,
+      "completion_tokens": 18,
+      "timings": {
+        "generation_s": 1.021217000001343,
+        "validation_s": 0.0030885000014677644,
+        "execution_s": 0.016151799994986504
+      }
+    },
+    {
+      "id": 3,
+      "question": "Hány vásárló szerepel az adatbázisban?",
+      "category": "aggregation",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT COUNT(*) AS customer_count FROM sales.customer;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "sales.customer"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          19820
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  COUNT(customerid)\nFROM sales.customer;",
+      "raw_response": "```sql\nSELECT\n  COUNT(customerid)\nFROM sales.customer;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          19820
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(customerid)\nFROM sales.customer;",
+          "raw_response": "```sql\nSELECT\n  COUNT(customerid)\nFROM sales.customer;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4765,
+          "completion_tokens": 16,
+          "timings": {
+            "generation_s": 0.9171502999961376,
+            "validation_s": 0.0027394999997341074,
+            "execution_s": 0.0024843999999575317
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4765,
+      "prompt_tokens": 4765,
+      "completion_tokens": 16,
+      "timings": {
+        "generation_s": 0.9171502999961376,
+        "validation_s": 0.0027394999997341074,
+        "execution_s": 0.0024843999999575317
+      }
+    },
+    {
+      "id": 4,
+      "question": "Mennyi a legdrágább termék listaára?",
+      "category": "aggregation",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT MAX(listprice) AS max_list_price FROM production.product;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "production.product"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          3578.27
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  MAX(listprice)\nFROM production.product;",
+      "raw_response": "```sql\nSELECT\n  MAX(listprice)\nFROM production.product;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          3578.27
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  MAX(listprice)\nFROM production.product;",
+          "raw_response": "```sql\nSELECT\n  MAX(listprice)\nFROM production.product;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4761,
+          "completion_tokens": 16,
+          "timings": {
+            "generation_s": 0.9297634000031394,
+            "validation_s": 0.0027762999961851165,
+            "execution_s": 0.0014588999983971007
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4761,
+      "prompt_tokens": 4761,
+      "completion_tokens": 16,
+      "timings": {
+        "generation_s": 0.9297634000031394,
+        "validation_s": 0.0027762999961851165,
+        "execution_s": 0.0014588999983971007
+      }
+    },
+    {
+      "id": 5,
+      "question": "Hány vásárlói rendelés érkezett 2024-ben?",
+      "category": "date",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COUNT(*) AS order_count FROM sales.salesorderheader WHERE orderdate >= '2024-01-01' AND orderdate < '2025-01-01';",
+      "order_sensitive": false,
+      "gold_tables": [
+        "sales.salesorderheader"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          14244
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  COUNT(salesorderid)\nFROM sales.salesorderheader\nWHERE\n  TO_CHAR(CAST(orderdate AS TIMESTAMP), 'YYYY') = '2024';",
+      "raw_response": "```sql\nSELECT\n  COUNT(salesorderid)\nFROM sales.salesorderheader\nWHERE\n  TO_CHAR(CAST(orderdate AS TIMESTAMP), 'YYYY') = '2024';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          14244
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(salesorderid)\nFROM sales.salesorderheader\nWHERE\n  TO_CHAR(CAST(orderdate AS TIMESTAMP), 'YYYY') = '2024';",
+          "raw_response": "```sql\nSELECT\n  COUNT(salesorderid)\nFROM sales.salesorderheader\nWHERE\n  TO_CHAR(CAST(orderdate AS TIMESTAMP), 'YYYY') = '2024';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4770,
+          "completion_tokens": 41,
+          "timings": {
+            "generation_s": 2.099152700000559,
+            "validation_s": 0.017912600000272505,
+            "execution_s": 0.008012599995709024
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4770,
+      "prompt_tokens": 4770,
+      "completion_tokens": 41,
+      "timings": {
+        "generation_s": 2.099152700000559,
+        "validation_s": 0.017912600000272505,
+        "execution_s": 0.008012599995709024
+      }
+    },
+    {
+      "id": 6,
+      "question": "Melyik részlegben dolgozik jelenleg a legtöbb alkalmazott?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT d.name, COUNT(*) AS employee_count FROM humanresources.employeedepartmenthistory edh JOIN humanresources.department d ON edh.departmentid = d.departmentid WHERE edh.enddate IS NULL GROUP BY d.departmentid, d.name ORDER BY employee_count DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "humanresources.department",
+        "humanresources.employeedepartmenthistory"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Production",
+          179
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t2.departmentid\nFROM humanresources.employee AS t1\nINNER JOIN humanresources.employeedepartmenthistory AS t2\n  ON t1.businessentityid = t2.businessentityid\nWHERE\n  t2.enddate IS NULL\nGROUP BY\n  t2.departmentid\nORDER BY\n  COUNT(t2.businessentityid) DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  t2.departmentid\nFROM humanresources.employee AS t1\nINNER JOIN humanresources.employeedepartmenthistory AS t2\n  ON t1.businessentityid = t2.businessentityid\nWHERE\n  t2.enddate IS NULL\nGROUP BY\n  t2.departmentid\nORDER BY\n  COUNT(t2.businessentityid) DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          7
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t2.departmentid\nFROM humanresources.employee AS t1\nINNER JOIN humanresources.employeedepartmenthistory AS t2\n  ON t1.businessentityid = t2.businessentityid\nWHERE\n  t2.enddate IS NULL\nGROUP BY\n  t2.departmentid\nORDER BY\n  COUNT(t2.businessentityid) DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  t2.departmentid\nFROM humanresources.employee AS t1\nINNER JOIN humanresources.employeedepartmenthistory AS t2\n  ON t1.businessentityid = t2.businessentityid\nWHERE\n  t2.enddate IS NULL\nGROUP BY\n  t2.departmentid\nORDER BY\n  COUNT(t2.businessentityid) DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4770,
+          "completion_tokens": 85,
+          "timings": {
+            "generation_s": 4.220622999993793,
+            "validation_s": 0.0035675999970408157,
+            "execution_s": 0.0019887999951606616
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4770,
+      "prompt_tokens": 4770,
+      "completion_tokens": 85,
+      "timings": {
+        "generation_s": 4.220622999993793,
+        "validation_s": 0.0035675999970408157,
+        "execution_s": 0.0019887999951606616
+      }
+    },
+    {
+      "id": 7,
+      "question": "Melyik termékből adták el a legtöbb darabot?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT p.name, SUM(sod.orderqty) AS total_quantity FROM sales.salesorderdetail sod JOIN production.product p ON sod.productid = p.productid GROUP BY p.productid, p.name ORDER BY total_quantity DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "production.product",
+        "sales.salesorderdetail"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "AWC Logo Cap",
+          8311
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t1.name\nFROM product AS t1\nINNER JOIN transactionhistory AS t2\n  ON t1.productid = t2.productid\nGROUP BY\n  t1.name\nORDER BY\n  COUNT(t2.transactionid) DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  t1.name\nFROM product AS t1\nINNER JOIN transactionhistory AS t2\n  ON t1.productid = t2.productid\nGROUP BY\n  t1.name\nORDER BY\n  COUNT(t2.transactionid) DESC\nLIMIT 1;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: relation \"product\" does not exist\nLINE 3: FROM product AS t1\n             ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t1.name\nFROM product AS t1\nINNER JOIN transactionhistory AS t2\n  ON t1.productid = t2.productid\nGROUP BY\n  t1.name\nORDER BY\n  COUNT(t2.transactionid) DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  t1.name\nFROM product AS t1\nINNER JOIN transactionhistory AS t2\n  ON t1.productid = t2.productid\nGROUP BY\n  t1.name\nORDER BY\n  COUNT(t2.transactionid) DESC\nLIMIT 1;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: relation \"product\" does not exist\nLINE 3: FROM product AS t1\n             ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 4768,
+          "completion_tokens": 62,
+          "timings": {
+            "generation_s": 3.1155374000009033,
+            "validation_s": 0.0032678000061423518
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4768,
+      "prompt_tokens": 4768,
+      "completion_tokens": 62,
+      "timings": {
+        "generation_s": 3.1155374000009033,
+        "validation_s": 0.0032678000061423518
+      }
+    },
+    {
+      "id": 8,
+      "question": "Melyik értékesítési területen volt a legnagyobb a rendelések végösszegének összege?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT st.name, SUM(soh.totaldue) AS total_due FROM sales.salesorderheader soh JOIN sales.salesterritory st ON soh.territoryid = st.territoryid GROUP BY st.territoryid, st.name ORDER BY total_due DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "sales.salesorderheader",
+        "sales.salesterritory"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Southwest",
+          27150594.5893
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t2.name\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.salesterritory AS t2\n  ON t1.territoryid = t2.territoryid\nGROUP BY\n  t2.name\nORDER BY\n  SUM(t1.totaldue) DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  t2.name\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.salesterritory AS t2\n  ON t1.territoryid = t2.territoryid\nGROUP BY\n  t2.name\nORDER BY\n  SUM(t1.totaldue) DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Southwest"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t2.name\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.salesterritory AS t2\n  ON t1.territoryid = t2.territoryid\nGROUP BY\n  t2.name\nORDER BY\n  SUM(t1.totaldue) DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  t2.name\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.salesterritory AS t2\n  ON t1.territoryid = t2.territoryid\nGROUP BY\n  t2.name\nORDER BY\n  SUM(t1.totaldue) DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4785,
+          "completion_tokens": 72,
+          "timings": {
+            "generation_s": 3.54973350000364,
+            "validation_s": 0.0037308000028133392,
+            "execution_s": 0.012468799999624025
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4785,
+      "prompt_tokens": 4785,
+      "completion_tokens": 72,
+      "timings": {
+        "generation_s": 3.54973350000364,
+        "validation_s": 0.0037308000028133392,
+        "execution_s": 0.012468799999624025
+      }
+    },
+    {
+      "id": 9,
+      "question": "Melyik beszállítótól rendeltek a legnagyobb összértékben, adóval és szállítással együtt?",
+      "category": "join_aggregation",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT v.name, SUM(poh.subtotal + poh.taxamt + poh.freight) AS total_due FROM purchasing.purchaseorderheader poh JOIN purchasing.vendor v ON poh.vendorid = v.businessentityid GROUP BY v.businessentityid, v.name ORDER BY total_due DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "purchasing.purchaseorderheader",
+        "purchasing.vendor"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Superior Bicycles",
+          5034266.74
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t2.name\nFROM purchasing.purchaseorderheader AS t1\nINNER JOIN purchasing.vendor AS t2\n  ON t1.vendorid = t2.businessentityid\nORDER BY\n  t1.freight + t1.taxamt + t1.subtotal DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  t2.name\nFROM purchasing.purchaseorderheader AS t1\nINNER JOIN purchasing.vendor AS t2\n  ON t1.vendorid = t2.businessentityid\nORDER BY\n  t1.freight + t1.taxamt + t1.subtotal DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Integrated Sport Products"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t2.name\nFROM purchasing.purchaseorderheader AS t1\nINNER JOIN purchasing.vendor AS t2\n  ON t1.vendorid = t2.businessentityid\nORDER BY\n  t1.freight + t1.taxamt + t1.subtotal DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  t2.name\nFROM purchasing.purchaseorderheader AS t1\nINNER JOIN purchasing.vendor AS t2\n  ON t1.vendorid = t2.businessentityid\nORDER BY\n  t1.freight + t1.taxamt + t1.subtotal DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4786,
+          "completion_tokens": 66,
+          "timings": {
+            "generation_s": 3.32566229999793,
+            "validation_s": 0.003355300003022421,
+            "execution_s": 0.003272199995990377
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4786,
+      "prompt_tokens": 4786,
+      "completion_tokens": 66,
+      "timings": {
+        "generation_s": 3.32566229999793,
+        "validation_s": 0.003355300003022421,
+        "execution_s": 0.003272199995990377
+      }
+    },
+    {
+      "id": 10,
+      "question": "Melyik öt magánszemély vásárló költötte a legtöbbet a rendelések végösszege alapján?",
+      "category": "sorting",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT p.firstname, p.lastname, SUM(soh.totaldue) AS total_spent FROM sales.salesorderheader soh JOIN sales.customer c ON soh.customerid = c.customerid JOIN person.person p ON c.personid = p.businessentityid WHERE c.storeid IS NULL GROUP BY c.customerid, p.firstname, p.lastname ORDER BY total_spent DESC LIMIT 5;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "person.person",
+        "sales.customer",
+        "sales.salesorderheader"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Nichole",
+          "Nara",
+          14691.395
+        ],
+        [
+          "Kaitlyn",
+          "Henderson",
+          14690.1686
+        ],
+        [
+          "Margaret",
+          "He",
+          14662.5435
+        ],
+        [
+          "Randall",
+          "Dominguez",
+          14658.9191
+        ],
+        [
+          "Adriana",
+          "Gonzalez",
+          14633.1836
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t1.firstname,\n  t1.middlename,\n  t1.lastname\nFROM person.person AS t1\nINNER JOIN sales.customer AS t2\n  ON t1.businessentityid = t2.personid\nGROUP BY\n  t1.firstname,\n  t1.middlename,\n  t1.lastname\nORDER BY\n  SUM(t2.salesorderid) DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  t1.firstname,\n  t1.middlename,\n  t1.lastname\nFROM person.person AS t1\nINNER JOIN sales.customer AS t2\n  ON t1.businessentityid = t2.personid\nGROUP BY\n  t1.firstname,\n  t1.middlename,\n  t1.lastname\nORDER BY\n  SUM(t2.salesorderid) DESC\nLIMIT 1;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column t2.salesorderid does not exist\nLINE 13:   SUM(t2.salesorderid) DESC\n               ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t1.firstname,\n  t1.middlename,\n  t1.lastname\nFROM person.person AS t1\nINNER JOIN sales.customer AS t2\n  ON t1.businessentityid = t2.personid\nGROUP BY\n  t1.firstname,\n  t1.middlename,\n  t1.lastname\nORDER BY\n  SUM(t2.salesorderid) DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  t1.firstname,\n  t1.middlename,\n  t1.lastname\nFROM person.person AS t1\nINNER JOIN sales.customer AS t2\n  ON t1.businessentityid = t2.personid\nGROUP BY\n  t1.firstname,\n  t1.middlename,\n  t1.lastname\nORDER BY\n  SUM(t2.salesorderid) DESC\nLIMIT 1;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column t2.salesorderid does not exist\nLINE 13:   SUM(t2.salesorderid) DESC\n               ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 4789,
+          "completion_tokens": 88,
+          "timings": {
+            "generation_s": 4.387648399999307,
+            "validation_s": 0.0036452999993343838
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4789,
+      "prompt_tokens": 4789,
+      "completion_tokens": 88,
+      "timings": {
+        "generation_s": 4.387648399999307,
+        "validation_s": 0.0036452999993343838
+      }
+    },
+    {
+      "id": 11,
+      "question": "Hány beszállító szerepel az adatbázisban?",
+      "category": "aggregation",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT COUNT(*) AS vendor_count FROM purchasing.vendor;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "purchasing.vendor"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          104
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  COUNT(businessentityid)\nFROM purchasing.vendor;",
+      "raw_response": "```sql\nSELECT\n  COUNT(businessentityid)\nFROM purchasing.vendor;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          104
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(businessentityid)\nFROM purchasing.vendor;",
+          "raw_response": "```sql\nSELECT\n  COUNT(businessentityid)\nFROM purchasing.vendor;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4765,
+          "completion_tokens": 18,
+          "timings": {
+            "generation_s": 1.0392990999971516,
+            "validation_s": 0.002888100003474392,
+            "execution_s": 0.0013585999986389652
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4765,
+      "prompt_tokens": 4765,
+      "completion_tokens": 18,
+      "timings": {
+        "generation_s": 1.0392990999971516,
+        "validation_s": 0.002888100003474392,
+        "execution_s": 0.0013585999986389652
+      }
+    },
+    {
+      "id": 12,
+      "question": "Mennyi az átlagos listaár a nullánál drágább termékek között?",
+      "category": "aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT AVG(listprice) AS avg_list_price FROM production.product WHERE listprice > 0;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "production.product"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          727.2625
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  AVG(listprice)\nFROM productlistpricehistory\nWHERE\n  listprice < (\n    SELECT\n      MAX(listprice)\n    FROM productlistpricehistory\n  );",
+      "raw_response": "```sql\nSELECT\n  AVG(listprice)\nFROM productlistpricehistory\nWHERE\n  listprice < (\n    SELECT\n      MAX(listprice)\n    FROM productlistpricehistory\n  );\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: relation \"productlistpricehistory\" does not exist\nLINE 3: FROM productlistpricehistory\n             ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  AVG(listprice)\nFROM productlistpricehistory\nWHERE\n  listprice < (\n    SELECT\n      MAX(listprice)\n    FROM productlistpricehistory\n  );",
+          "raw_response": "```sql\nSELECT\n  AVG(listprice)\nFROM productlistpricehistory\nWHERE\n  listprice < (\n    SELECT\n      MAX(listprice)\n    FROM productlistpricehistory\n  );\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: relation \"productlistpricehistory\" does not exist\nLINE 3: FROM productlistpricehistory\n             ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 4769,
+          "completion_tokens": 42,
+          "timings": {
+            "generation_s": 2.1377376000018558,
+            "validation_s": 0.0027126999993924983
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4769,
+      "prompt_tokens": 4769,
+      "completion_tokens": 42,
+      "timings": {
+        "generation_s": 2.1377376000018558,
+        "validation_s": 0.0027126999993924983
+      }
+    },
+    {
+      "id": 13,
+      "question": "Összesen hány darab terméket rendeltek a vásárlók?",
+      "category": "aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT SUM(orderqty) AS total_quantity FROM sales.salesorderdetail;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "sales.salesorderdetail"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          274914
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  COUNT(DISTINCT productid)\nFROM purchasing.productvendor;",
+      "raw_response": "```sql\nSELECT\n  COUNT(DISTINCT productid)\nFROM purchasing.productvendor;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          265
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(DISTINCT productid)\nFROM purchasing.productvendor;",
+          "raw_response": "```sql\nSELECT\n  COUNT(DISTINCT productid)\nFROM purchasing.productvendor;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4769,
+          "completion_tokens": 20,
+          "timings": {
+            "generation_s": 1.1499131999953534,
+            "validation_s": 0.002843300004315097,
+            "execution_s": 0.0015163999996730126
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4769,
+      "prompt_tokens": 4769,
+      "completion_tokens": 20,
+      "timings": {
+        "generation_s": 1.1499131999953534,
+        "validation_s": 0.002843300004315097,
+        "execution_s": 0.0015163999996730126
+      }
+    },
+    {
+      "id": 14,
+      "question": "Hány fekete színű termék van?",
+      "category": "filtering",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT COUNT(*) AS product_count FROM production.product WHERE color = 'Black';",
+      "order_sensitive": false,
+      "gold_tables": [
+        "production.product"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          93
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  COUNT(productid)\nFROM production.product\nWHERE\n  color = 'Black';",
+      "raw_response": "```sql\nSELECT\n  COUNT(productid)\nFROM production.product\nWHERE\n  color = 'Black';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          93
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(productid)\nFROM production.product\nWHERE\n  color = 'Black';",
+          "raw_response": "```sql\nSELECT\n  COUNT(productid)\nFROM production.product\nWHERE\n  color = 'Black';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4759,
+          "completion_tokens": 24,
+          "timings": {
+            "generation_s": 1.2845366999972612,
+            "validation_s": 0.003037000002223067,
+            "execution_s": 0.0016092000005301088
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4759,
+      "prompt_tokens": 4759,
+      "completion_tokens": 24,
+      "timings": {
+        "generation_s": 1.2845366999972612,
+        "validation_s": 0.003037000002223067,
+        "execution_s": 0.0016092000005301088
+      }
+    },
+    {
+      "id": 15,
+      "question": "Hány női alkalmazott van?",
+      "category": "filtering",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT COUNT(*) AS employee_count FROM humanresources.employee WHERE gender = 'F';",
+      "order_sensitive": false,
+      "gold_tables": [
+        "humanresources.employee"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          84
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  COUNT(businessentityid)\nFROM humanresources.employee\nWHERE\n  gender = 'F';",
+      "raw_response": "```sql\nSELECT\n  COUNT(businessentityid)\nFROM humanresources.employee\nWHERE\n  gender = 'F';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          84
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(businessentityid)\nFROM humanresources.employee\nWHERE\n  gender = 'F';",
+          "raw_response": "```sql\nSELECT\n  COUNT(businessentityid)\nFROM humanresources.employee\nWHERE\n  gender = 'F';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4758,
+          "completion_tokens": 27,
+          "timings": {
+            "generation_s": 1.4430284999980358,
+            "validation_s": 0.0032105999998748302,
+            "execution_s": 0.0015057999989949167
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4758,
+      "prompt_tokens": 4758,
+      "completion_tokens": 27,
+      "timings": {
+        "generation_s": 1.4430284999980358,
+        "validation_s": 0.0032105999998748302,
+        "execution_s": 0.0015057999989949167
+      }
+    },
+    {
+      "id": 16,
+      "question": "Mely termékek listaára haladja meg a 3000-et?",
+      "category": "filtering",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT name FROM production.product WHERE listprice > 3000;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "production.product"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Road-150 Red, 62"
+        ],
+        [
+          "Road-150 Red, 44"
+        ],
+        [
+          "Road-150 Red, 48"
+        ],
+        [
+          "Road-150 Red, 52"
+        ],
+        [
+          "Road-150 Red, 56"
+        ],
+        [
+          "Mountain-100 Silver, 38"
+        ],
+        [
+          "Mountain-100 Silver, 42"
+        ],
+        [
+          "Mountain-100 Silver, 44"
+        ],
+        [
+          "Mountain-100 Silver, 48"
+        ],
+        [
+          "Mountain-100 Black, 38"
+        ],
+        [
+          "Mountain-100 Black, 42"
+        ],
+        [
+          "Mountain-100 Black, 44"
+        ],
+        [
+          "Mountain-100 Black, 48"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t1.name\nFROM product AS t1\nINNER JOIN productcosthistory AS t2\n  ON t1.productid = t2.productid\nWHERE\n  t2.startdate = (\n    SELECT\n      MAX(t3.startdate)\n    FROM product AS t3\n    INNER JOIN productcosthistory AS t4\n      ON t3.productid = t4.productid\n    WHERE\n      t3.productid = t1.productid\n  )\nORDER BY\n  t2.standardcost DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  t1.name\nFROM product AS t1\nINNER JOIN productcosthistory AS t2\n  ON t1.productid = t2.productid\nWHERE\n  t2.startdate = (\n    SELECT\n      MAX(t3.startdate)\n    FROM product AS t3\n    INNER JOIN productcosthistory AS t4\n      ON t3.productid = t4.productid\n    WHERE\n      t3.productid = t1.productid\n  )\nORDER BY\n  t2.standardcost DESC\nLIMIT 1;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: relation \"product\" does not exist\nLINE 3: FROM product AS t1\n             ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t1.name\nFROM product AS t1\nINNER JOIN productcosthistory AS t2\n  ON t1.productid = t2.productid\nWHERE\n  t2.startdate = (\n    SELECT\n      MAX(t3.startdate)\n    FROM product AS t3\n    INNER JOIN productcosthistory AS t4\n      ON t3.productid = t4.productid\n    WHERE\n      t3.productid = t1.productid\n  )\nORDER BY\n  t2.standardcost DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  t1.name\nFROM product AS t1\nINNER JOIN productcosthistory AS t2\n  ON t1.productid = t2.productid\nWHERE\n  t2.startdate = (\n    SELECT\n      MAX(t3.startdate)\n    FROM product AS t3\n    INNER JOIN productcosthistory AS t4\n      ON t3.productid = t4.productid\n    WHERE\n      t3.productid = t1.productid\n  )\nORDER BY\n  t2.standardcost DESC\nLIMIT 1;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: relation \"product\" does not exist\nLINE 3: FROM product AS t1\n             ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 4767,
+          "completion_tokens": 117,
+          "timings": {
+            "generation_s": 5.808789900002012,
+            "validation_s": 0.0035502999962773174
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4767,
+      "prompt_tokens": 4767,
+      "completion_tokens": 117,
+      "timings": {
+        "generation_s": 5.808789900002012,
+        "validation_s": 0.0035502999962773174
+      }
+    },
+    {
+      "id": 17,
+      "question": "Hány vásárlói rendelést adtak le online?",
+      "category": "filtering",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COUNT(*) AS order_count FROM sales.salesorderheader WHERE onlineorderflag;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "sales.salesorderheader"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          27659
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  COUNT(salesorderid)\nFROM sales.salesorderheader\nWHERE\n  onlineorderflag = TRUE;",
+      "raw_response": "```sql\nSELECT\n  COUNT(salesorderid)\nFROM sales.salesorderheader\nWHERE\n  onlineorderflag = TRUE;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          27659
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(salesorderid)\nFROM sales.salesorderheader\nWHERE\n  onlineorderflag = TRUE;",
+          "raw_response": "```sql\nSELECT\n  COUNT(salesorderid)\nFROM sales.salesorderheader\nWHERE\n  onlineorderflag = TRUE;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4763,
+          "completion_tokens": 28,
+          "timings": {
+            "generation_s": 1.543122899995069,
+            "validation_s": 0.003304400001070462,
+            "execution_s": 0.003988300006312784
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4763,
+      "prompt_tokens": 4763,
+      "completion_tokens": 28,
+      "timings": {
+        "generation_s": 1.543122899995069,
+        "validation_s": 0.003304400001070462,
+        "execution_s": 0.003988300006312784
+      }
+    },
+    {
+      "id": 18,
+      "question": "Hány termék értékesítése ért már véget (van értékesítési záró dátuma)?",
+      "category": "filtering",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COUNT(*) AS product_count FROM production.product WHERE sellenddate IS NOT NULL;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "production.product"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          98
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  COUNT(productid)\nFROM production.productcosthistory\nWHERE\n  NOT enddate IS NULL;",
+      "raw_response": "```sql\nSELECT\n  COUNT(productid)\nFROM production.productcosthistory\nWHERE\n  NOT enddate IS NULL;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          200
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(productid)\nFROM production.productcosthistory\nWHERE\n  NOT enddate IS NULL;",
+          "raw_response": "```sql\nSELECT\n  COUNT(productid)\nFROM production.productcosthistory\nWHERE\n  NOT enddate IS NULL;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4778,
+          "completion_tokens": 27,
+          "timings": {
+            "generation_s": 1.429175999997824,
+            "validation_s": 0.0031608999997843057,
+            "execution_s": 0.0029386000023805536
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4778,
+      "prompt_tokens": 4778,
+      "completion_tokens": 27,
+      "timings": {
+        "generation_s": 1.429175999997824,
+        "validation_s": 0.0031608999997843057,
+        "execution_s": 0.0029386000023805536
+      }
+    },
+    {
+      "id": 19,
+      "question": "Hány alkalmazott született 1980 előtt?",
+      "category": "filtering",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COUNT(*) AS employee_count FROM humanresources.employee WHERE birthdate < '1980-01-01';",
+      "order_sensitive": false,
+      "gold_tables": [
+        "humanresources.employee"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          156
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  COUNT(businessentityid)\nFROM humanresources.employee\nWHERE\n  TO_CHAR(CAST(hiredate AS TIMESTAMP), 'YYYY') < '1980';",
+      "raw_response": "```sql\nSELECT\n  COUNT(businessentityid)\nFROM humanresources.employee\nWHERE\n  TO_CHAR(CAST(hiredate AS TIMESTAMP), 'YYYY') < '1980';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          0
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(businessentityid)\nFROM humanresources.employee\nWHERE\n  TO_CHAR(CAST(hiredate AS TIMESTAMP), 'YYYY') < '1980';",
+          "raw_response": "```sql\nSELECT\n  COUNT(businessentityid)\nFROM humanresources.employee\nWHERE\n  TO_CHAR(CAST(hiredate AS TIMESTAMP), 'YYYY') < '1980';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4765,
+          "completion_tokens": 42,
+          "timings": {
+            "generation_s": 2.14014060000045,
+            "validation_s": 0.00398000000132015,
+            "execution_s": 0.001628900005016476
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4765,
+      "prompt_tokens": 4765,
+      "completion_tokens": 42,
+      "timings": {
+        "generation_s": 2.14014060000045,
+        "validation_s": 0.00398000000132015,
+        "execution_s": 0.001628900005016476
+      }
+    },
+    {
+      "id": 20,
+      "question": "Hány termék van az egyes színekből, a szín nélküli termékeket nem számítva?",
+      "category": "grouping",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT color, COUNT(*) AS product_count FROM production.product WHERE color IS NOT NULL GROUP BY color;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "production.product"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Silver",
+          43
+        ],
+        [
+          "Yellow",
+          36
+        ],
+        [
+          "Red",
+          38
+        ],
+        [
+          "Grey",
+          1
+        ],
+        [
+          "Multi",
+          8
+        ],
+        [
+          "White",
+          4
+        ],
+        [
+          "Black",
+          93
+        ],
+        [
+          "Blue",
+          26
+        ],
+        [
+          "Silver/Black",
+          7
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  COUNT(*)\nFROM production.product AS t1\nWHERE\n  NOT t1.color IS NULL;",
+      "raw_response": "```sql\nSELECT\n  COUNT(*)\nFROM production.product AS t1\nWHERE\n  NOT t1.color IS NULL;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          256
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(*)\nFROM production.product AS t1\nWHERE\n  NOT t1.color IS NULL;",
+          "raw_response": "```sql\nSELECT\n  COUNT(*)\nFROM production.product AS t1\nWHERE\n  NOT t1.color IS NULL;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4779,
+          "completion_tokens": 28,
+          "timings": {
+            "generation_s": 1.502922399995441,
+            "validation_s": 0.002923499996541068,
+            "execution_s": 0.0014110000047367066
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4779,
+      "prompt_tokens": 4779,
+      "completion_tokens": 28,
+      "timings": {
+        "generation_s": 1.502922399995441,
+        "validation_s": 0.002923499996541068,
+        "execution_s": 0.0014110000047367066
+      }
+    },
+    {
+      "id": 21,
+      "question": "Melyik szállítási móddal adták fel a legtöbb vásárlói rendelést?",
+      "category": "grouping",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT sm.name, COUNT(*) AS order_count FROM sales.salesorderheader soh JOIN purchasing.shipmethod sm ON soh.shipmethodid = sm.shipmethodid GROUP BY sm.shipmethodid, sm.name ORDER BY order_count DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "purchasing.shipmethod",
+        "sales.salesorderheader"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "XRQ - TRUCK GROUND",
+          27659
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t2.name\nFROM sales.salesorderheader AS t1\nINNER JOIN purchasing.shipmethod AS t2\n  ON t1.shipmethodid = t2.shipmethodid\nGROUP BY\n  t2.name\nORDER BY\n  COUNT(t1.salesorderid) DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  t2.name\nFROM sales.salesorderheader AS t1\nINNER JOIN purchasing.shipmethod AS t2\n  ON t1.shipmethodid = t2.shipmethodid\nGROUP BY\n  t2.name\nORDER BY\n  COUNT(t1.salesorderid) DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "XRQ - TRUCK GROUND"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t2.name\nFROM sales.salesorderheader AS t1\nINNER JOIN purchasing.shipmethod AS t2\n  ON t1.shipmethodid = t2.shipmethodid\nGROUP BY\n  t2.name\nORDER BY\n  COUNT(t1.salesorderid) DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  t2.name\nFROM sales.salesorderheader AS t1\nINNER JOIN purchasing.shipmethod AS t2\n  ON t1.shipmethodid = t2.shipmethodid\nGROUP BY\n  t2.name\nORDER BY\n  COUNT(t1.salesorderid) DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4777,
+          "completion_tokens": 68,
+          "timings": {
+            "generation_s": 3.3757394999993267,
+            "validation_s": 0.0038912999953026883,
+            "execution_s": 0.009303999999247026
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4777,
+      "prompt_tokens": 4777,
+      "completion_tokens": 68,
+      "timings": {
+        "generation_s": 3.3757394999993267,
+        "validation_s": 0.0038912999953026883,
+        "execution_s": 0.009303999999247026
+      }
+    },
+    {
+      "id": 22,
+      "question": "Hány vásárlói rendelés érkezett az egyes értékesítési területekről?",
+      "category": "grouping",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT st.name, COUNT(*) AS order_count FROM sales.salesorderheader soh JOIN sales.salesterritory st ON soh.territoryid = st.territoryid GROUP BY st.territoryid, st.name;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "sales.salesorderheader",
+        "sales.salesterritory"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Germany",
+          2623
+        ],
+        [
+          "United Kingdom",
+          3219
+        ],
+        [
+          "Australia",
+          6843
+        ],
+        [
+          "France",
+          2672
+        ],
+        [
+          "Northwest",
+          4594
+        ],
+        [
+          "Southeast",
+          486
+        ],
+        [
+          "Northeast",
+          352
+        ],
+        [
+          "Southwest",
+          6224
+        ],
+        [
+          "Canada",
+          4067
+        ],
+        [
+          "Central",
+          385
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t2.territoryid,\n  COUNT(t1.salesorderid)\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.salesterritory AS t2\n  ON t1.territoryid = t2.territoryid\nGROUP BY\n  t2.territoryid;",
+      "raw_response": "```sql\nSELECT\n  t2.territoryid,\n  COUNT(t1.salesorderid)\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.salesterritory AS t2\n  ON t1.territoryid = t2.territoryid\nGROUP BY\n  t2.territoryid;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          8,
+          2623
+        ],
+        [
+          10,
+          3219
+        ],
+        [
+          9,
+          6843
+        ],
+        [
+          7,
+          2672
+        ],
+        [
+          1,
+          4594
+        ],
+        [
+          5,
+          486
+        ],
+        [
+          2,
+          352
+        ],
+        [
+          4,
+          6224
+        ],
+        [
+          6,
+          4067
+        ],
+        [
+          3,
+          385
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t2.territoryid,\n  COUNT(t1.salesorderid)\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.salesterritory AS t2\n  ON t1.territoryid = t2.territoryid\nGROUP BY\n  t2.territoryid;",
+          "raw_response": "```sql\nSELECT\n  t2.territoryid,\n  COUNT(t1.salesorderid)\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.salesterritory AS t2\n  ON t1.territoryid = t2.territoryid\nGROUP BY\n  t2.territoryid;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4779,
+          "completion_tokens": 69,
+          "timings": {
+            "generation_s": 3.4806765999965137,
+            "validation_s": 0.003133400001388509,
+            "execution_s": 0.008179199998266995
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4779,
+      "prompt_tokens": 4779,
+      "completion_tokens": 69,
+      "timings": {
+        "generation_s": 3.4806765999965137,
+        "validation_s": 0.003133400001388509,
+        "execution_s": 0.008179199998266995
+      }
+    },
+    {
+      "id": 23,
+      "question": "Melyik bankkártyatípussal fizették a legtöbb vásárlói rendelést?",
+      "category": "grouping",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT cc.cardtype, COUNT(*) AS order_count FROM sales.salesorderheader soh JOIN sales.creditcard cc ON soh.creditcardid = cc.creditcardid GROUP BY cc.cardtype ORDER BY order_count DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "sales.creditcard",
+        "sales.salesorderheader"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "ColonialVoice",
+          7678
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t2.cardtype\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.creditcard AS t2\n  ON t1.creditcardid = t2.creditcardid\nGROUP BY\n  t2.cardtype\nORDER BY\n  COUNT(t1.salesorderid) DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  t2.cardtype\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.creditcard AS t2\n  ON t1.creditcardid = t2.creditcardid\nGROUP BY\n  t2.cardtype\nORDER BY\n  COUNT(t1.salesorderid) DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "ColonialVoice"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t2.cardtype\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.creditcard AS t2\n  ON t1.creditcardid = t2.creditcardid\nGROUP BY\n  t2.cardtype\nORDER BY\n  COUNT(t1.salesorderid) DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  t2.cardtype\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.creditcard AS t2\n  ON t1.creditcardid = t2.creditcardid\nGROUP BY\n  t2.cardtype\nORDER BY\n  COUNT(t1.salesorderid) DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4776,
+          "completion_tokens": 70,
+          "timings": {
+            "generation_s": 3.51300629999605,
+            "validation_s": 0.003946600001654588,
+            "execution_s": 0.013452799998049159
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4776,
+      "prompt_tokens": 4776,
+      "completion_tokens": 70,
+      "timings": {
+        "generation_s": 3.51300629999605,
+        "validation_s": 0.003946600001654588,
+        "execution_s": 0.013452799998049159
+      }
+    },
+    {
+      "id": 24,
+      "question": "Hány termék tartozik az egyes termékkategóriákba?",
+      "category": "grouping",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT pc.name, COUNT(*) AS product_count FROM production.product p JOIN production.productsubcategory ps ON p.productsubcategoryid = ps.productsubcategoryid JOIN production.productcategory pc ON ps.productcategoryid = pc.productcategoryid GROUP BY pc.productcategoryid, pc.name;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "production.product",
+        "production.productcategory",
+        "production.productsubcategory"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Bikes",
+          97
+        ],
+        [
+          "Clothing",
+          35
+        ],
+        [
+          "Accessories",
+          29
+        ],
+        [
+          "Components",
+          134
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t1.name,\n  COUNT(t2.productid)\nFROM production.productcategory AS t1\nINNER JOIN production.productsubcategory AS t2\n  ON t1.productcategoryid = t2.productcategoryid\nGROUP BY\n  t1.name;",
+      "raw_response": "```sql\nSELECT\n  t1.name,\n  COUNT(t2.productid)\nFROM production.productcategory AS t1\nINNER JOIN production.productsubcategory AS t2\n  ON t1.productcategoryid = t2.productcategoryid\nGROUP BY\n  t1.name;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column t2.productid does not exist\nLINE 3:   COUNT(t2.productid)\n                ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t1.name,\n  COUNT(t2.productid)\nFROM production.productcategory AS t1\nINNER JOIN production.productsubcategory AS t2\n  ON t1.productcategoryid = t2.productcategoryid\nGROUP BY\n  t1.name;",
+          "raw_response": "```sql\nSELECT\n  t1.name,\n  COUNT(t2.productid)\nFROM production.productcategory AS t1\nINNER JOIN production.productsubcategory AS t2\n  ON t1.productcategoryid = t2.productcategoryid\nGROUP BY\n  t1.name;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column t2.productid does not exist\nLINE 3:   COUNT(t2.productid)\n                ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 4766,
+          "completion_tokens": 58,
+          "timings": {
+            "generation_s": 2.922962999997253,
+            "validation_s": 0.00414930000260938
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4766,
+      "prompt_tokens": 4766,
+      "completion_tokens": 58,
+      "timings": {
+        "generation_s": 2.922962999997253,
+        "validation_s": 0.00414930000260938
+      }
+    },
+    {
+      "id": 25,
+      "question": "Hány alkalmazott dolgozik jelenleg az egyes műszakokban?",
+      "category": "grouping",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT s.name, COUNT(*) AS employee_count FROM humanresources.employeedepartmenthistory edh JOIN humanresources.shift s ON edh.shiftid = s.shiftid WHERE edh.enddate IS NULL GROUP BY s.shiftid, s.name;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "humanresources.employeedepartmenthistory",
+        "humanresources.shift"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Day",
+          176
+        ],
+        [
+          "Night",
+          52
+        ],
+        [
+          "Evening",
+          62
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t2.name,\n  COUNT(t1.businessentityid)\nFROM humanresources.employeedepartmenthistory AS t1\nINNER JOIN humanresources.department AS t2\n  ON t1.departmentid = t2.departmentid\nWHERE\n  t1.enddate IS NULL\nGROUP BY\n  t2.name;",
+      "raw_response": "```sql\nSELECT\n  t2.name,\n  COUNT(t1.businessentityid)\nFROM humanresources.employeedepartmenthistory AS t1\nINNER JOIN humanresources.department AS t2\n  ON t1.departmentid = t2.departmentid\nWHERE\n  t1.enddate IS NULL\nGROUP BY\n  t2.name;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Quality Assurance",
+          6
+        ],
+        [
+          "Sales",
+          18
+        ],
+        [
+          "Production Control",
+          6
+        ],
+        [
+          "Research and Development",
+          4
+        ],
+        [
+          "Document Control",
+          5
+        ],
+        [
+          "Engineering",
+          6
+        ],
+        [
+          "Executive",
+          2
+        ],
+        [
+          "Purchasing",
+          12
+        ],
+        [
+          "Finance",
+          10
+        ],
+        [
+          "Facilities and Maintenance",
+          7
+        ],
+        [
+          "Information Services",
+          10
+        ],
+        [
+          "Human Resources",
+          6
+        ],
+        [
+          "Tool Design",
+          4
+        ],
+        [
+          "Shipping and Receiving",
+          6
+        ],
+        [
+          "Production",
+          179
+        ],
+        [
+          "Marketing",
+          9
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t2.name,\n  COUNT(t1.businessentityid)\nFROM humanresources.employeedepartmenthistory AS t1\nINNER JOIN humanresources.department AS t2\n  ON t1.departmentid = t2.departmentid\nWHERE\n  t1.enddate IS NULL\nGROUP BY\n  t2.name;",
+          "raw_response": "```sql\nSELECT\n  t2.name,\n  COUNT(t1.businessentityid)\nFROM humanresources.employeedepartmenthistory AS t1\nINNER JOIN humanresources.department AS t2\n  ON t1.departmentid = t2.departmentid\nWHERE\n  t1.enddate IS NULL\nGROUP BY\n  t2.name;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4769,
+          "completion_tokens": 72,
+          "timings": {
+            "generation_s": 3.5976159000056214,
+            "validation_s": 0.003805699998338241,
+            "execution_s": 0.0016331999941030517
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4769,
+      "prompt_tokens": 4769,
+      "completion_tokens": 72,
+      "timings": {
+        "generation_s": 3.5976159000056214,
+        "validation_s": 0.003805699998338241,
+        "execution_s": 0.0016331999941030517
+      }
+    },
+    {
+      "id": 26,
+      "question": "Melyik termékkategóriából adták el a legtöbb darabot?",
+      "category": "join_aggregation",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT pc.name, SUM(sod.orderqty) AS total_quantity FROM sales.salesorderdetail sod JOIN production.product p ON sod.productid = p.productid JOIN production.productsubcategory ps ON p.productsubcategoryid = ps.productsubcategoryid JOIN production.productcategory pc ON ps.productcategoryid = pc.productcategoryid GROUP BY pc.productcategoryid, pc.name ORDER BY total_quantity DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "production.product",
+        "production.productcategory",
+        "production.productsubcategory",
+        "sales.salesorderdetail"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Bikes",
+          90268
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t1.name\nFROM productcategory AS t1\nINNER JOIN productsubcategory AS t2\n  ON t1.productcategoryid = t2.productcategoryid\nGROUP BY\n  t1.name\nORDER BY\n  COUNT(t2.productsubcategoryid) DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  t1.name\nFROM productcategory AS t1\nINNER JOIN productsubcategory AS t2\n  ON t1.productcategoryid = t2.productcategoryid\nGROUP BY\n  t1.name\nORDER BY\n  COUNT(t2.productsubcategoryid) DESC\nLIMIT 1;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: relation \"productcategory\" does not exist\nLINE 3: FROM productcategory AS t1\n             ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t1.name\nFROM productcategory AS t1\nINNER JOIN productsubcategory AS t2\n  ON t1.productcategoryid = t2.productcategoryid\nGROUP BY\n  t1.name\nORDER BY\n  COUNT(t2.productsubcategoryid) DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  t1.name\nFROM productcategory AS t1\nINNER JOIN productsubcategory AS t2\n  ON t1.productcategoryid = t2.productcategoryid\nGROUP BY\n  t1.name\nORDER BY\n  COUNT(t2.productsubcategoryid) DESC\nLIMIT 1;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: relation \"productcategory\" does not exist\nLINE 3: FROM productcategory AS t1\n             ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 4771,
+          "completion_tokens": 66,
+          "timings": {
+            "generation_s": 3.285069100005785,
+            "validation_s": 0.0031149999995250255
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4771,
+      "prompt_tokens": 4771,
+      "completion_tokens": 66,
+      "timings": {
+        "generation_s": 3.285069100005785,
+        "validation_s": 0.0031149999995250255
+      }
+    },
+    {
+      "id": 27,
+      "question": "Melyik termékkategória hozta a legnagyobb bevételt, ha a bevétel az egységár, a mennyiség és az (1 - kedvezmény) szorzata?",
+      "category": "join_aggregation",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT pc.name, SUM(sod.unitprice * sod.orderqty * (1 - sod.unitpricediscount)) AS revenue FROM sales.salesorderdetail sod JOIN production.product p ON sod.productid = p.productid JOIN production.productsubcategory ps ON p.productsubcategoryid = ps.productsubcategoryid JOIN production.productcategory pc ON ps.productcategoryid = pc.productcategoryid GROUP BY pc.productcategoryid, pc.name ORDER BY revenue DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "production.product",
+        "production.productcategory",
+        "production.productsubcategory",
+        "sales.salesorderdetail"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Bikes",
+          94651172.7047
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t1.name\nFROM productcategory AS t1\nINNER JOIN productsubcategory AS t2\n  ON t1.productcategoryid = t2.productcategoryid\nINNER JOIN product AS t3\n  ON t2.productsubcategoryid = t3.productsubcategoryid\nINNER JOIN specialofferproduct AS t4\n  ON t3.productid = t4.productid\nINNER JOIN salesorderdetail AS t5\n  ON t4.specialofferid = t5.specialofferid\nGROUP BY\n  t1.name\nORDER BY\n  SUM(t5.unitprice * t5.orderqty * (1 - t5.unitpricediscount)) DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  t1.name\nFROM productcategory AS t1\nINNER JOIN productsubcategory AS t2\n  ON t1.productcategoryid = t2.productcategoryid\nINNER JOIN product AS t3\n  ON t2.productsubcategoryid = t3.productsubcategoryid\nINNER JOIN specialofferproduct AS t4\n  ON t3.productid = t4.productid\nINNER JOIN salesorderdetail AS t5\n  ON t4.specialofferid = t5.specialofferid\nGROUP BY\n  t1.name\nORDER BY\n  SUM(t5.unitprice * t5.orderqty * (1 - t5.unitpricediscount)) DESC\nLIMIT 1;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: relation \"productcategory\" does not exist\nLINE 3: FROM productcategory AS t1\n             ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t1.name\nFROM productcategory AS t1\nINNER JOIN productsubcategory AS t2\n  ON t1.productcategoryid = t2.productcategoryid\nINNER JOIN product AS t3\n  ON t2.productsubcategoryid = t3.productsubcategoryid\nINNER JOIN specialofferproduct AS t4\n  ON t3.productid = t4.productid\nINNER JOIN salesorderdetail AS t5\n  ON t4.specialofferid = t5.specialofferid\nGROUP BY\n  t1.name\nORDER BY\n  SUM(t5.unitprice * t5.orderqty * (1 - t5.unitpricediscount)) DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  t1.name\nFROM productcategory AS t1\nINNER JOIN productsubcategory AS t2\n  ON t1.productcategoryid = t2.productcategoryid\nINNER JOIN product AS t3\n  ON t2.productsubcategoryid = t3.productsubcategoryid\nINNER JOIN specialofferproduct AS t4\n  ON t3.productid = t4.productid\nINNER JOIN salesorderdetail AS t5\n  ON t4.specialofferid = t5.specialofferid\nGROUP BY\n  t1.name\nORDER BY\n  SUM(t5.unitprice * t5.orderqty * (1 - t5.unitpricediscount)) DESC\nLIMIT 1;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: relation \"productcategory\" does not exist\nLINE 3: FROM productcategory AS t1\n             ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 4797,
+          "completion_tokens": 146,
+          "timings": {
+            "generation_s": 7.399777799997537,
+            "validation_s": 0.0039124000031733885
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4797,
+      "prompt_tokens": 4797,
+      "completion_tokens": 146,
+      "timings": {
+        "generation_s": 7.399777799997537,
+        "validation_s": 0.0039124000031733885
+      }
+    },
+    {
+      "id": 28,
+      "question": "Melyik üzletkötő bonyolította a legtöbb vásárlói rendelést?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT p.firstname, p.lastname, COUNT(*) AS order_count FROM sales.salesorderheader soh JOIN person.person p ON soh.salespersonid = p.businessentityid GROUP BY soh.salespersonid, p.firstname, p.lastname ORDER BY order_count DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "person.person",
+        "sales.salesorderheader"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Jillian",
+          "Carson",
+          473
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t1.businessentityid\nFROM sales.salesperson AS t1\nINNER JOIN sales.salesorderheader AS t2\n  ON t1.businessentityid = t2.salespersonid\nGROUP BY\n  t1.businessentityid\nORDER BY\n  COUNT(t2.salesorderid) DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  t1.businessentityid\nFROM sales.salesperson AS t1\nINNER JOIN sales.salesorderheader AS t2\n  ON t1.businessentityid = t2.salespersonid\nGROUP BY\n  t1.businessentityid\nORDER BY\n  COUNT(t2.salesorderid) DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          277
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t1.businessentityid\nFROM sales.salesperson AS t1\nINNER JOIN sales.salesorderheader AS t2\n  ON t1.businessentityid = t2.salespersonid\nGROUP BY\n  t1.businessentityid\nORDER BY\n  COUNT(t2.salesorderid) DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  t1.businessentityid\nFROM sales.salesperson AS t1\nINNER JOIN sales.salesorderheader AS t2\n  ON t1.businessentityid = t2.salespersonid\nGROUP BY\n  t1.businessentityid\nORDER BY\n  COUNT(t2.salesorderid) DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4774,
+          "completion_tokens": 72,
+          "timings": {
+            "generation_s": 3.6067326000047615,
+            "validation_s": 0.0033897999965120107,
+            "execution_s": 0.00467630000639474
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4774,
+      "prompt_tokens": 4774,
+      "completion_tokens": 72,
+      "timings": {
+        "generation_s": 3.6067326000047615,
+        "validation_s": 0.0033897999965120107,
+        "execution_s": 0.00467630000639474
+      }
+    },
+    {
+      "id": 29,
+      "question": "Hány vásárlói rendelés érkezett a kanadai értékesítési területről?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COUNT(*) AS order_count FROM sales.salesorderheader soh JOIN sales.salesterritory st ON soh.territoryid = st.territoryid WHERE st.name = 'Canada';",
+      "order_sensitive": false,
+      "gold_tables": [
+        "sales.salesorderheader",
+        "sales.salesterritory"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          4067
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  COUNT(t1.salesorderid)\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.salesterritory AS t2\n  ON t1.territoryid = t2.territoryid\nWHERE\n  t2.name = 'Canada';",
+      "raw_response": "```sql\nSELECT\n  COUNT(t1.salesorderid)\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.salesterritory AS t2\n  ON t1.territoryid = t2.territoryid\nWHERE\n  t2.name = 'Canada';\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          4067
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(t1.salesorderid)\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.salesterritory AS t2\n  ON t1.territoryid = t2.territoryid\nWHERE\n  t2.name = 'Canada';",
+          "raw_response": "```sql\nSELECT\n  COUNT(t1.salesorderid)\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.salesterritory AS t2\n  ON t1.territoryid = t2.territoryid\nWHERE\n  t2.name = 'Canada';\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4780,
+          "completion_tokens": 60,
+          "timings": {
+            "generation_s": 3.022420900000725,
+            "validation_s": 0.0036265000017010607,
+            "execution_s": 0.005004400001780596
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4780,
+      "prompt_tokens": 4780,
+      "completion_tokens": 60,
+      "timings": {
+        "generation_s": 3.022420900000725,
+        "validation_s": 0.0036265000017010607,
+        "execution_s": 0.005004400001780596
+      }
+    },
+    {
+      "id": 30,
+      "question": "Melyik államban vagy tartományban van a legtöbb magánszemély vásárló a címük alapján?",
+      "category": "join_aggregation",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT sp.name, COUNT(DISTINCT c.customerid) AS customer_count FROM sales.customer c JOIN person.businessentityaddress bea ON c.personid = bea.businessentityid JOIN person.address a ON bea.addressid = a.addressid JOIN person.stateprovince sp ON a.stateprovinceid = sp.stateprovinceid WHERE c.storeid IS NULL GROUP BY sp.stateprovinceid, sp.name ORDER BY customer_count DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "person.address",
+        "person.businessentityaddress",
+        "person.stateprovince",
+        "sales.customer"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "California",
+          4444
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t2.name,\n  t3.name\nFROM sales.customer AS t1\nINNER JOIN person.address AS t2\n  ON t1.billtoaddressid = t2.addressid\nINNER JOIN person.stateprovince AS t3\n  ON t2.stateprovinceid = t3.stateprovinceid\nGROUP BY\n  t2.city,\n  t3.name\nORDER BY\n  COUNT(t1.customerid) DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  t2.name,\n  t3.name\nFROM sales.customer AS t1\nINNER JOIN person.address AS t2\n  ON t1.billtoaddressid = t2.addressid\nINNER JOIN person.stateprovince AS t3\n  ON t2.stateprovinceid = t3.stateprovinceid\nGROUP BY\n  t2.city,\n  t3.name\nORDER BY\n  COUNT(t1.customerid) DESC\nLIMIT 1;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column t1.billtoaddressid does not exist\nLINE 6:   ON t1.billtoaddressid = t2.addressid\n             ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t2.name,\n  t3.name\nFROM sales.customer AS t1\nINNER JOIN person.address AS t2\n  ON t1.billtoaddressid = t2.addressid\nINNER JOIN person.stateprovince AS t3\n  ON t2.stateprovinceid = t3.stateprovinceid\nGROUP BY\n  t2.city,\n  t3.name\nORDER BY\n  COUNT(t1.customerid) DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  t2.name,\n  t3.name\nFROM sales.customer AS t1\nINNER JOIN person.address AS t2\n  ON t1.billtoaddressid = t2.addressid\nINNER JOIN person.stateprovince AS t3\n  ON t2.stateprovinceid = t3.stateprovinceid\nGROUP BY\n  t2.city,\n  t3.name\nORDER BY\n  COUNT(t1.customerid) DESC\nLIMIT 1;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column t1.billtoaddressid does not exist\nLINE 6:   ON t1.billtoaddressid = t2.addressid\n             ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 4784,
+          "completion_tokens": 98,
+          "timings": {
+            "generation_s": 4.894675800002005,
+            "validation_s": 0.028326100000413135
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4784,
+      "prompt_tokens": 4784,
+      "completion_tokens": 98,
+      "timings": {
+        "generation_s": 4.894675800002005,
+        "validation_s": 0.028326100000413135
+      }
+    },
+    {
+      "id": 31,
+      "question": "Melyik beszállítótól lehet a legtöbb különböző terméket beszerezni?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT v.name, COUNT(*) AS product_count FROM purchasing.productvendor pv JOIN purchasing.vendor v ON pv.businessentityid = v.businessentityid GROUP BY v.businessentityid, v.name ORDER BY product_count DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "purchasing.productvendor",
+        "purchasing.vendor"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Mountain Works",
+          30
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t2.name\nFROM productvendor AS t1\nINNER JOIN vendor AS t2\n  ON t1.businessentityid = t2.businessentityid\nGROUP BY\n  t2.name\nORDER BY\n  COUNT(t1.productid) DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  t2.name\nFROM productvendor AS t1\nINNER JOIN vendor AS t2\n  ON t1.businessentityid = t2.businessentityid\nGROUP BY\n  t2.name\nORDER BY\n  COUNT(t1.productid) DESC\nLIMIT 1;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: relation \"productvendor\" does not exist\nLINE 3: FROM productvendor AS t1\n             ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t2.name\nFROM productvendor AS t1\nINNER JOIN vendor AS t2\n  ON t1.businessentityid = t2.businessentityid\nGROUP BY\n  t2.name\nORDER BY\n  COUNT(t1.productid) DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  t2.name\nFROM productvendor AS t1\nINNER JOIN vendor AS t2\n  ON t1.businessentityid = t2.businessentityid\nGROUP BY\n  t2.name\nORDER BY\n  COUNT(t1.productid) DESC\nLIMIT 1;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: relation \"productvendor\" does not exist\nLINE 3: FROM productvendor AS t1\n             ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 4776,
+          "completion_tokens": 64,
+          "timings": {
+            "generation_s": 3.211919900000794,
+            "validation_s": 0.0031763000006321818
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4776,
+      "prompt_tokens": 4776,
+      "completion_tokens": 64,
+      "timings": {
+        "generation_s": 3.211919900000794,
+        "validation_s": 0.0031763000006321818
+      }
+    },
+    {
+      "id": 32,
+      "question": "Hány alkalmazott dolgozik jelenleg a Manufacturing részlegcsoportba tartozó részlegekben?",
+      "category": "join_aggregation",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COUNT(*) AS employee_count FROM humanresources.employeedepartmenthistory edh JOIN humanresources.department d ON edh.departmentid = d.departmentid WHERE edh.enddate IS NULL AND d.groupname = 'Manufacturing';",
+      "order_sensitive": false,
+      "gold_tables": [
+        "humanresources.department",
+        "humanresources.employeedepartmenthistory"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          185
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  COUNT(t1.businessentityid)\nFROM humanresources.employee AS t1\nINNER JOIN humanresources.employeedepartmenthistory AS t2\n  ON t1.businessentityid = t2.businessentityid\nINNER JOIN humanresources.department AS t3\n  ON t2.departmentid = t3.departmentid\nWHERE\n  t3.groupname = 'Manufacturing' AND t2.enddate IS NULL;",
+      "raw_response": "```sql\nSELECT\n  COUNT(t1.businessentityid)\nFROM humanresources.employee AS t1\nINNER JOIN humanresources.employeedepartmenthistory AS t2\n  ON t1.businessentityid = t2.businessentityid\nINNER JOIN humanresources.department AS t3\n  ON t2.departmentid = t3.departmentid\nWHERE\n  t3.groupname = 'Manufacturing' AND t2.enddate IS NULL;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          185
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(t1.businessentityid)\nFROM humanresources.employee AS t1\nINNER JOIN humanresources.employeedepartmenthistory AS t2\n  ON t1.businessentityid = t2.businessentityid\nINNER JOIN humanresources.department AS t3\n  ON t2.departmentid = t3.departmentid\nWHERE\n  t3.groupname = 'Manufacturing' AND t2.enddate IS NULL;",
+          "raw_response": "```sql\nSELECT\n  COUNT(t1.businessentityid)\nFROM humanresources.employee AS t1\nINNER JOIN humanresources.employeedepartmenthistory AS t2\n  ON t1.businessentityid = t2.businessentityid\nINNER JOIN humanresources.department AS t3\n  ON t2.departmentid = t3.departmentid\nWHERE\n  t3.groupname = 'Manufacturing' AND t2.enddate IS NULL;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4777,
+          "completion_tokens": 92,
+          "timings": {
+            "generation_s": 4.615153400001873,
+            "validation_s": 0.003817400000116322,
+            "execution_s": 0.0018446999965817668
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4777,
+      "prompt_tokens": 4777,
+      "completion_tokens": 92,
+      "timings": {
+        "generation_s": 4.615153400001873,
+        "validation_s": 0.003817400000116322,
+        "execution_s": 0.0018446999965817668
+      }
+    },
+    {
+      "id": 33,
+      "question": "Melyik alkalmazott adta fel a legtöbb beszerzési rendelést?",
+      "category": "join_aggregation",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT p.firstname, p.lastname, COUNT(*) AS order_count FROM purchasing.purchaseorderheader poh JOIN person.person p ON poh.employeeid = p.businessentityid GROUP BY poh.employeeid, p.firstname, p.lastname ORDER BY order_count DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "person.person",
+        "purchasing.purchaseorderheader"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Reinout",
+          "Hillmann",
+          401
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t1.firstname,\n  t1.middlename,\n  t1.lastname\nFROM person.person AS t1\nINNER JOIN purchasing.purchaseorderheader AS t2\n  ON t1.businessentityid = t2.employeeid\nGROUP BY\n  t1.firstname,\n  t1.middlename,\n  t1.lastname\nORDER BY\n  COUNT(t2.orderdate) DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  t1.firstname,\n  t1.middlename,\n  t1.lastname\nFROM person.person AS t1\nINNER JOIN purchasing.purchaseorderheader AS t2\n  ON t1.businessentityid = t2.employeeid\nGROUP BY\n  t1.firstname,\n  t1.middlename,\n  t1.lastname\nORDER BY\n  COUNT(t2.orderdate) DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Reinout",
+          "N",
+          "Hillmann"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t1.firstname,\n  t1.middlename,\n  t1.lastname\nFROM person.person AS t1\nINNER JOIN purchasing.purchaseorderheader AS t2\n  ON t1.businessentityid = t2.employeeid\nGROUP BY\n  t1.firstname,\n  t1.middlename,\n  t1.lastname\nORDER BY\n  COUNT(t2.orderdate) DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  t1.firstname,\n  t1.middlename,\n  t1.lastname\nFROM person.person AS t1\nINNER JOIN purchasing.purchaseorderheader AS t2\n  ON t1.businessentityid = t2.employeeid\nGROUP BY\n  t1.firstname,\n  t1.middlename,\n  t1.lastname\nORDER BY\n  COUNT(t2.orderdate) DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4771,
+          "completion_tokens": 90,
+          "timings": {
+            "generation_s": 4.538387200002035,
+            "validation_s": 0.003490299997793045,
+            "execution_s": 0.003184700006386265
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4771,
+      "prompt_tokens": 4771,
+      "completion_tokens": 90,
+      "timings": {
+        "generation_s": 4.538387200002035,
+        "validation_s": 0.003490299997793045,
+        "execution_s": 0.003184700006386265
+      }
+    },
+    {
+      "id": 34,
+      "question": "Melyik napon adták le az első vásárlói rendelést?",
+      "category": "date",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT MIN(orderdate) AS first_order FROM sales.salesorderheader;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "sales.salesorderheader"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "2022-05-30T00:00:00"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  orderdate\nFROM sales.salesorderheader\nORDER BY\n  orderdate ASC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  orderdate\nFROM sales.salesorderheader\nORDER BY\n  orderdate ASC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "2022-05-30T00:00:00"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  orderdate\nFROM sales.salesorderheader\nORDER BY\n  orderdate ASC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  orderdate\nFROM sales.salesorderheader\nORDER BY\n  orderdate ASC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4768,
+          "completion_tokens": 29,
+          "timings": {
+            "generation_s": 1.5452218999998877,
+            "validation_s": 0.0028582000013557263,
+            "execution_s": 0.003649900005257223
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4768,
+      "prompt_tokens": 4768,
+      "completion_tokens": 29,
+      "timings": {
+        "generation_s": 1.5452218999998877,
+        "validation_s": 0.0028582000013557263,
+        "execution_s": 0.003649900005257223
+      }
+    },
+    {
+      "id": 35,
+      "question": "Melyik hónapban (év és hónap) adták le a legtöbb vásárlói rendelést?",
+      "category": "date",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT date_trunc('month', orderdate) AS month, COUNT(*) AS order_count FROM sales.salesorderheader GROUP BY month ORDER BY order_count DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "sales.salesorderheader"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "2025-03-01T00:00:00",
+          2304
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  TO_CHAR(CAST(t1.orderdate AS TIMESTAMP), 'YYYY-MM')\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.customer AS t2\n  ON t1.customerid = t2.customerid\nGROUP BY\n  TO_CHAR(CAST(t1.orderdate AS TIMESTAMP), 'YYYY-MM')\nORDER BY\n  COUNT(t1.salesorderid) DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  TO_CHAR(CAST(t1.orderdate AS TIMESTAMP), 'YYYY-MM')\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.customer AS t2\n  ON t1.customerid = t2.customerid\nGROUP BY\n  TO_CHAR(CAST(t1.orderdate AS TIMESTAMP), 'YYYY-MM')\nORDER BY\n  COUNT(t1.salesorderid) DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "2025-03"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  TO_CHAR(CAST(t1.orderdate AS TIMESTAMP), 'YYYY-MM')\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.customer AS t2\n  ON t1.customerid = t2.customerid\nGROUP BY\n  TO_CHAR(CAST(t1.orderdate AS TIMESTAMP), 'YYYY-MM')\nORDER BY\n  COUNT(t1.salesorderid) DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  TO_CHAR(CAST(t1.orderdate AS TIMESTAMP), 'YYYY-MM')\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.customer AS t2\n  ON t1.customerid = t2.customerid\nGROUP BY\n  TO_CHAR(CAST(t1.orderdate AS TIMESTAMP), 'YYYY-MM')\nORDER BY\n  COUNT(t1.salesorderid) DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4779,
+          "completion_tokens": 87,
+          "timings": {
+            "generation_s": 4.359693399994285,
+            "validation_s": 0.003863000005367212,
+            "execution_s": 0.01797390000137966
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4779,
+      "prompt_tokens": 4779,
+      "completion_tokens": 87,
+      "timings": {
+        "generation_s": 4.359693399994285,
+        "validation_s": 0.003863000005367212,
+        "execution_s": 0.01797390000137966
+      }
+    },
+    {
+      "id": 36,
+      "question": "Átlagosan hány nap telt el a vásárlói rendelések leadása és kiszállítása között?",
+      "category": "date",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT AVG(EXTRACT(EPOCH FROM (shipdate - orderdate)) / 86400.0) AS avg_days FROM sales.salesorderheader;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "sales.salesorderheader"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          7.0003
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  AVG(t2.shipdate - t2.orderdate)\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.salesorderdetail AS t2\n  ON t1.salesorderid = t2.salesorderid;",
+      "raw_response": "```sql\nSELECT\n  AVG(t2.shipdate - t2.orderdate)\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.salesorderdetail AS t2\n  ON t1.salesorderid = t2.salesorderid;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column t2.shipdate does not exist\nLINE 2:   AVG(t2.shipdate - t2.orderdate)\n              ^\nHINT:  Perhaps you meant to reference the column \"t1.shipdate\".",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  AVG(t2.shipdate - t2.orderdate)\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.salesorderdetail AS t2\n  ON t1.salesorderid = t2.salesorderid;",
+          "raw_response": "```sql\nSELECT\n  AVG(t2.shipdate - t2.orderdate)\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.salesorderdetail AS t2\n  ON t1.salesorderid = t2.salesorderid;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column t2.shipdate does not exist\nLINE 2:   AVG(t2.shipdate - t2.orderdate)\n              ^\nHINT:  Perhaps you meant to reference the column \"t1.shipdate\".",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 4779,
+          "completion_tokens": 50,
+          "timings": {
+            "generation_s": 2.5359479999970063,
+            "validation_s": 0.016775699994468596
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4779,
+      "prompt_tokens": 4779,
+      "completion_tokens": 50,
+      "timings": {
+        "generation_s": 2.5359479999970063,
+        "validation_s": 0.016775699994468596
+      }
+    },
+    {
+      "id": 37,
+      "question": "Hány alkalmazottat vettek fel 2010-ben?",
+      "category": "date",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT COUNT(*) AS employee_count FROM humanresources.employee WHERE hiredate >= '2010-01-01' AND hiredate < '2011-01-01';",
+      "order_sensitive": false,
+      "gold_tables": [
+        "humanresources.employee"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          38
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  COUNT(t1.businessentityid)\nFROM employee AS t1\nINNER JOIN employeedepartmenthistory AS t2\n  ON t1.businessentityid = t2.businessentityid\nWHERE\n  TO_CHAR(CAST(t2.startdate AS TIMESTAMP), 'YYYY') = '2010';",
+      "raw_response": "```sql\nSELECT\n  COUNT(t1.businessentityid)\nFROM employee AS t1\nINNER JOIN employeedepartmenthistory AS t2\n  ON t1.businessentityid = t2.businessentityid\nWHERE\n  TO_CHAR(CAST(t2.startdate AS TIMESTAMP), 'YYYY') = '2010';\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: relation \"employee\" does not exist\nLINE 3: FROM employee AS t1\n             ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(t1.businessentityid)\nFROM employee AS t1\nINNER JOIN employeedepartmenthistory AS t2\n  ON t1.businessentityid = t2.businessentityid\nWHERE\n  TO_CHAR(CAST(t2.startdate AS TIMESTAMP), 'YYYY') = '2010';",
+          "raw_response": "```sql\nSELECT\n  COUNT(t1.businessentityid)\nFROM employee AS t1\nINNER JOIN employeedepartmenthistory AS t2\n  ON t1.businessentityid = t2.businessentityid\nWHERE\n  TO_CHAR(CAST(t2.startdate AS TIMESTAMP), 'YYYY') = '2010';\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: relation \"employee\" does not exist\nLINE 3: FROM employee AS t1\n             ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 4766,
+          "completion_tokens": 70,
+          "timings": {
+            "generation_s": 3.477543799999694,
+            "validation_s": 0.0035635999956866726
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4766,
+      "prompt_tokens": 4766,
+      "completion_tokens": 70,
+      "timings": {
+        "generation_s": 3.477543799999694,
+        "validation_s": 0.0035635999956866726
+      }
+    },
+    {
+      "id": 38,
+      "question": "Melyik évben volt a legnagyobb a vásárlói rendelések végösszegének összege?",
+      "category": "date",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT EXTRACT(YEAR FROM orderdate) AS year, SUM(totaldue) AS total_due FROM sales.salesorderheader GROUP BY year ORDER BY total_due DESC LIMIT 1;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "sales.salesorderheader"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          2024.0,
+          49020486.512
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  TO_CHAR(CAST(t1.orderdate AS TIMESTAMP), 'YYYY')\nFROM sales.salesorderheader AS t1\nORDER BY\n  t1.subtotal DESC NULLS LAST\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  TO_CHAR(CAST(t1.orderdate AS TIMESTAMP), 'YYYY')\nFROM sales.salesorderheader AS t1\nORDER BY\n  t1.subtotal DESC NULLS LAST\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "2024"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  TO_CHAR(CAST(t1.orderdate AS TIMESTAMP), 'YYYY')\nFROM sales.salesorderheader AS t1\nORDER BY\n  t1.subtotal DESC NULLS LAST\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  TO_CHAR(CAST(t1.orderdate AS TIMESTAMP), 'YYYY')\nFROM sales.salesorderheader AS t1\nORDER BY\n  t1.subtotal DESC NULLS LAST\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4781,
+          "completion_tokens": 48,
+          "timings": {
+            "generation_s": 2.474978399994143,
+            "validation_s": 0.003351999999722466,
+            "execution_s": 0.015758300003653858
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4781,
+      "prompt_tokens": 4781,
+      "completion_tokens": 48,
+      "timings": {
+        "generation_s": 2.474978399994143,
+        "validation_s": 0.003351999999722466,
+        "execution_s": 0.015758300003653858
+      }
+    },
+    {
+      "id": 39,
+      "question": "Melyik öt termékből adták el a legtöbb darabot?",
+      "category": "sorting",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT p.name, SUM(sod.orderqty) AS total_quantity FROM sales.salesorderdetail sod JOIN production.product p ON sod.productid = p.productid GROUP BY p.productid, p.name ORDER BY total_quantity DESC LIMIT 5;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "production.product",
+        "sales.salesorderdetail"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "AWC Logo Cap",
+          8311
+        ],
+        [
+          "Water Bottle - 30 oz.",
+          6815
+        ],
+        [
+          "Sport-100 Helmet, Blue",
+          6743
+        ],
+        [
+          "Long-Sleeve Logo Jersey, L",
+          6592
+        ],
+        [
+          "Sport-100 Helmet, Black",
+          6532
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t1.name\nFROM product AS t1\nINNER JOIN transactionhistory AS t2\n  ON t1.productid = t2.productid\nGROUP BY\n  t1.name\nORDER BY\n  SUM(t2.quantity) DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  t1.name\nFROM product AS t1\nINNER JOIN transactionhistory AS t2\n  ON t1.productid = t2.productid\nGROUP BY\n  t1.name\nORDER BY\n  SUM(t2.quantity) DESC\nLIMIT 1;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: relation \"product\" does not exist\nLINE 3: FROM product AS t1\n             ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t1.name\nFROM product AS t1\nINNER JOIN transactionhistory AS t2\n  ON t1.productid = t2.productid\nGROUP BY\n  t1.name\nORDER BY\n  SUM(t2.quantity) DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  t1.name\nFROM product AS t1\nINNER JOIN transactionhistory AS t2\n  ON t1.productid = t2.productid\nGROUP BY\n  t1.name\nORDER BY\n  SUM(t2.quantity) DESC\nLIMIT 1;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: relation \"product\" does not exist\nLINE 3: FROM product AS t1\n             ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 4770,
+          "completion_tokens": 61,
+          "timings": {
+            "generation_s": 3.067800700002408,
+            "validation_s": 0.0036121000011917204
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4770,
+      "prompt_tokens": 4770,
+      "completion_tokens": 61,
+      "timings": {
+        "generation_s": 3.067800700002408,
+        "validation_s": 0.0036121000011917204
+      }
+    },
+    {
+      "id": 40,
+      "question": "Melyik három értékesítési területről érkezett a legtöbb vásárlói rendelés?",
+      "category": "sorting",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT st.name, COUNT(*) AS order_count FROM sales.salesorderheader soh JOIN sales.salesterritory st ON soh.territoryid = st.territoryid GROUP BY st.territoryid, st.name ORDER BY order_count DESC LIMIT 3;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "sales.salesorderheader",
+        "sales.salesterritory"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Australia",
+          6843
+        ],
+        [
+          "Southwest",
+          6224
+        ],
+        [
+          "Northwest",
+          4594
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t2.name\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.salesterritory AS t2\n  ON t1.territoryid = t2.territoryid\nGROUP BY\n  t2.name\nORDER BY\n  COUNT(t1.salesorderid) DESC\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  t2.name\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.salesterritory AS t2\n  ON t1.territoryid = t2.territoryid\nGROUP BY\n  t2.name\nORDER BY\n  COUNT(t1.salesorderid) DESC\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Australia"
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t2.name\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.salesterritory AS t2\n  ON t1.territoryid = t2.territoryid\nGROUP BY\n  t2.name\nORDER BY\n  COUNT(t1.salesorderid) DESC\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  t2.name\nFROM sales.salesorderheader AS t1\nINNER JOIN sales.salesterritory AS t2\n  ON t1.territoryid = t2.territoryid\nGROUP BY\n  t2.name\nORDER BY\n  COUNT(t1.salesorderid) DESC\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4784,
+          "completion_tokens": 72,
+          "timings": {
+            "generation_s": 3.5893252000023494,
+            "validation_s": 0.003638700000010431,
+            "execution_s": 0.01015449999977136
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4784,
+      "prompt_tokens": 4784,
+      "completion_tokens": 72,
+      "timings": {
+        "generation_s": 3.5893252000023494,
+        "validation_s": 0.003638700000010431,
+        "execution_s": 0.01015449999977136
+      }
+    },
+    {
+      "id": 41,
+      "question": "Sorold fel a termékkategóriákat ábécérendben!",
+      "category": "sorting",
+      "difficulty": "easy",
+      "ground_truth_sql": "SELECT name FROM production.productcategory ORDER BY name;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "production.productcategory"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Accessories"
+        ],
+        [
+          "Bikes"
+        ],
+        [
+          "Clothing"
+        ],
+        [
+          "Components"
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  name\nFROM production.productcategory\nORDER BY\n  name;",
+      "raw_response": "```sql\nSELECT\n  name\nFROM production.productcategory\nORDER BY\n  name;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          "Accessories"
+        ],
+        [
+          "Bikes"
+        ],
+        [
+          "Clothing"
+        ],
+        [
+          "Components"
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  name\nFROM production.productcategory\nORDER BY\n  name;",
+          "raw_response": "```sql\nSELECT\n  name\nFROM production.productcategory\nORDER BY\n  name;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4767,
+          "completion_tokens": 21,
+          "timings": {
+            "generation_s": 1.1675909999976284,
+            "validation_s": 0.002817799999320414,
+            "execution_s": 0.001462699998228345
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4767,
+      "prompt_tokens": 4767,
+      "completion_tokens": 21,
+      "timings": {
+        "generation_s": 1.1675909999976284,
+        "validation_s": 0.002817799999320414,
+        "execution_s": 0.001462699998228345
+      }
+    },
+    {
+      "id": 42,
+      "question": "Melyik öt alkalmazott dolgozik a legrégebben a cégnél a felvétel dátuma alapján?",
+      "category": "sorting",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT p.firstname, p.lastname FROM humanresources.employee e JOIN person.person p ON e.businessentityid = p.businessentityid ORDER BY e.hiredate LIMIT 5;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "humanresources.employee",
+        "person.person"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Guy",
+          "Gilbert"
+        ],
+        [
+          "Kevin",
+          "Brown"
+        ],
+        [
+          "Roberto",
+          "Tamburello"
+        ],
+        [
+          "Rob",
+          "Walters"
+        ],
+        [
+          "Thierry",
+          "D'Hers"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  t1.businessentityid,\n  t1.hiredate\nFROM employee AS t1\nINNER JOIN employeedepartmenthistory AS t2\n  ON t1.businessentityid = t2.businessentityid\nORDER BY\n  t1.hiredate ASC\nLIMIT 5;",
+      "raw_response": "```sql\nSELECT\n  t1.businessentityid,\n  t1.hiredate\nFROM employee AS t1\nINNER JOIN employeedepartmenthistory AS t2\n  ON t1.businessentityid = t2.businessentityid\nORDER BY\n  t1.hiredate ASC\nLIMIT 5;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: relation \"employee\" does not exist\nLINE 4: FROM employee AS t1\n             ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  t1.businessentityid,\n  t1.hiredate\nFROM employee AS t1\nINNER JOIN employeedepartmenthistory AS t2\n  ON t1.businessentityid = t2.businessentityid\nORDER BY\n  t1.hiredate ASC\nLIMIT 5;",
+          "raw_response": "```sql\nSELECT\n  t1.businessentityid,\n  t1.hiredate\nFROM employee AS t1\nINNER JOIN employeedepartmenthistory AS t2\n  ON t1.businessentityid = t2.businessentityid\nORDER BY\n  t1.hiredate ASC\nLIMIT 5;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: relation \"employee\" does not exist\nLINE 4: FROM employee AS t1\n             ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 4781,
+          "completion_tokens": 67,
+          "timings": {
+            "generation_s": 3.3885599999994156,
+            "validation_s": 0.0027106999987154268
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4781,
+      "prompt_tokens": 4781,
+      "completion_tokens": 67,
+      "timings": {
+        "generation_s": 3.3885599999994156,
+        "validation_s": 0.0027106999987154268
+      }
+    },
+    {
+      "id": 43,
+      "question": "Melyik tíz vásárlói rendelésnek volt a legnagyobb a végösszege?",
+      "category": "sorting",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT salesorderid, totaldue FROM sales.salesorderheader ORDER BY totaldue DESC LIMIT 10;",
+      "order_sensitive": true,
+      "gold_tables": [
+        "sales.salesorderheader"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          51131,
+          187487.825
+        ],
+        [
+          55282,
+          182018.6272
+        ],
+        [
+          46616,
+          170512.6689
+        ],
+        [
+          46981,
+          166537.0808
+        ],
+        [
+          47395,
+          165028.7482
+        ],
+        [
+          47369,
+          158056.5449
+        ],
+        [
+          47355,
+          145741.8553
+        ],
+        [
+          51822,
+          145454.366
+        ],
+        [
+          44518,
+          142312.2199
+        ],
+        [
+          51858,
+          140042.1209
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  salesorderid\nFROM sales.salesorderheader\nORDER BY\n  totaldue DESC NULLS LAST\nLIMIT 1;",
+      "raw_response": "```sql\nSELECT\n  salesorderid\nFROM sales.salesorderheader\nORDER BY\n  totaldue DESC NULLS LAST\nLIMIT 1;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          51131
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  salesorderid\nFROM sales.salesorderheader\nORDER BY\n  totaldue DESC NULLS LAST\nLIMIT 1;",
+          "raw_response": "```sql\nSELECT\n  salesorderid\nFROM sales.salesorderheader\nORDER BY\n  totaldue DESC NULLS LAST\nLIMIT 1;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4775,
+          "completion_tokens": 32,
+          "timings": {
+            "generation_s": 1.695167700003367,
+            "validation_s": 0.0028311999994912185,
+            "execution_s": 0.008072000004176516
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4775,
+      "prompt_tokens": 4775,
+      "completion_tokens": 32,
+      "timings": {
+        "generation_s": 1.695167700003367,
+        "validation_s": 0.0028311999994912185,
+        "execution_s": 0.008072000004176516
+      }
+    },
+    {
+      "id": 44,
+      "question": "Hány olyan termék van, amelyet a vásárlók soha nem rendeltek meg?",
+      "category": "subquery",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COUNT(*) AS product_count FROM production.product p WHERE NOT EXISTS (SELECT 1 FROM sales.salesorderdetail sod WHERE sod.productid = p.productid);",
+      "order_sensitive": false,
+      "gold_tables": [
+        "production.product",
+        "sales.salesorderdetail"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          238
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  COUNT(*)\nFROM production.product AS t1\nINNER JOIN purchasing.productvendor AS t2\n  ON t1.productid = t2.productid\nWHERE\n  t2.onorderqty IS NULL;",
+      "raw_response": "```sql\nSELECT\n  COUNT(*)\nFROM production.product AS t1\nINNER JOIN purchasing.productvendor AS t2\n  ON t1.productid = t2.productid\nWHERE\n  t2.onorderqty IS NULL;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          305
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(*)\nFROM production.product AS t1\nINNER JOIN purchasing.productvendor AS t2\n  ON t1.productid = t2.productid\nWHERE\n  t2.onorderqty IS NULL;",
+          "raw_response": "```sql\nSELECT\n  COUNT(*)\nFROM production.product AS t1\nINNER JOIN purchasing.productvendor AS t2\n  ON t1.productid = t2.productid\nWHERE\n  t2.onorderqty IS NULL;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4774,
+          "completion_tokens": 50,
+          "timings": {
+            "generation_s": 2.4889513999951305,
+            "validation_s": 0.0033748999994713813,
+            "execution_s": 0.0019054999938816763
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4774,
+      "prompt_tokens": 4774,
+      "completion_tokens": 50,
+      "timings": {
+        "generation_s": 2.4889513999951305,
+        "validation_s": 0.0033748999994713813,
+        "execution_s": 0.0019054999938816763
+      }
+    },
+    {
+      "id": 45,
+      "question": "Hány termék listaára magasabb az összes termék átlagos listaáránál?",
+      "category": "subquery",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COUNT(*) AS product_count FROM production.product WHERE listprice > (SELECT AVG(listprice) FROM production.product);",
+      "order_sensitive": false,
+      "gold_tables": [
+        "production.product"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          136
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  COUNT(*)\nFROM (\n  SELECT\n    t1.productid\n  FROM production.product AS t1\n  INNER JOIN production.productlistpricehistory AS t2\n    ON t1.productid = t2.productid\n  GROUP BY\n    t1.productid,\n    t2.startdate\n  HAVING\n    t2.listprice > (\n      SELECT\n        AVG(listprice)\n      FROM production.productlistpricehistory\n    )\n) AS t3;",
+      "raw_response": "```sql\nSELECT\n  COUNT(*)\nFROM (\n  SELECT\n    t1.productid\n  FROM production.product AS t1\n  INNER JOIN production.productlistpricehistory AS t2\n    ON t1.productid = t2.productid\n  GROUP BY\n    t1.productid,\n    t2.startdate\n  HAVING\n    t2.listprice > (\n      SELECT\n        AVG(listprice)\n      FROM production.productlistpricehistory\n    )\n) AS t3;\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: column \"t2.listprice\" must appear in the GROUP BY clause or be used in an aggregate function\nLINE 13:     t2.listprice > (\n             ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(*)\nFROM (\n  SELECT\n    t1.productid\n  FROM production.product AS t1\n  INNER JOIN production.productlistpricehistory AS t2\n    ON t1.productid = t2.productid\n  GROUP BY\n    t1.productid,\n    t2.startdate\n  HAVING\n    t2.listprice > (\n      SELECT\n        AVG(listprice)\n      FROM production.productlistpricehistory\n    )\n) AS t3;",
+          "raw_response": "```sql\nSELECT\n  COUNT(*)\nFROM (\n  SELECT\n    t1.productid\n  FROM production.product AS t1\n  INNER JOIN production.productlistpricehistory AS t2\n    ON t1.productid = t2.productid\n  GROUP BY\n    t1.productid,\n    t2.startdate\n  HAVING\n    t2.listprice > (\n      SELECT\n        AVG(listprice)\n      FROM production.productlistpricehistory\n    )\n) AS t3;\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: column \"t2.listprice\" must appear in the GROUP BY clause or be used in an aggregate function\nLINE 13:     t2.listprice > (\n             ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 4771,
+          "completion_tokens": 104,
+          "timings": {
+            "generation_s": 5.181469800001651,
+            "validation_s": 0.005152400000952184
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4771,
+      "prompt_tokens": 4771,
+      "completion_tokens": 104,
+      "timings": {
+        "generation_s": 5.181469800001651,
+        "validation_s": 0.005152400000952184
+      }
+    },
+    {
+      "id": 46,
+      "question": "Mely üzletkötők év eleje óta elért értékesítése haladja meg az összes üzletkötő átlagát?",
+      "category": "subquery",
+      "difficulty": "hard",
+      "ground_truth_sql": "SELECT p.firstname, p.lastname FROM sales.salesperson sp JOIN person.person p ON sp.businessentityid = p.businessentityid WHERE sp.salesytd > (SELECT AVG(salesytd) FROM sales.salesperson);",
+      "order_sensitive": false,
+      "gold_tables": [
+        "person.person",
+        "sales.salesperson"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Michael",
+          "Blythe"
+        ],
+        [
+          "Linda",
+          "Mitchell"
+        ],
+        [
+          "Jillian",
+          "Carson"
+        ],
+        [
+          "Tsvi",
+          "Reiter"
+        ],
+        [
+          "Shu",
+          "Ito"
+        ],
+        [
+          "José",
+          "Saraiva"
+        ],
+        [
+          "Jae",
+          "Pak"
+        ],
+        [
+          "Ranjit",
+          "Varkey Chudukatil"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  COUNT(t1.businessentityid)\nFROM sales.salesperson AS t1\nINNER JOIN (\n  SELECT\n    businessentityid,\n    AVG(salesytd) AS avg_sales_ytd\n  FROM sales.salesperson\n  GROUP BY\n    businessentityid\n) AS t2\n  ON t1.businessentityid = t2.businessentityid\nWHERE\n  t1.salesytd > t2.avg_sales_ytd;",
+      "raw_response": "```sql\nSELECT\n  COUNT(t1.businessentityid)\nFROM sales.salesperson AS t1\nINNER JOIN (\n  SELECT\n    businessentityid,\n    AVG(salesytd) AS avg_sales_ytd\n  FROM sales.salesperson\n  GROUP BY\n    businessentityid\n) AS t2\n  ON t1.businessentityid = t2.businessentityid\nWHERE\n  t1.salesytd > t2.avg_sales_ytd;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          0
+        ]
+      ],
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(t1.businessentityid)\nFROM sales.salesperson AS t1\nINNER JOIN (\n  SELECT\n    businessentityid,\n    AVG(salesytd) AS avg_sales_ytd\n  FROM sales.salesperson\n  GROUP BY\n    businessentityid\n) AS t2\n  ON t1.businessentityid = t2.businessentityid\nWHERE\n  t1.salesytd > t2.avg_sales_ytd;",
+          "raw_response": "```sql\nSELECT\n  COUNT(t1.businessentityid)\nFROM sales.salesperson AS t1\nINNER JOIN (\n  SELECT\n    businessentityid,\n    AVG(salesytd) AS avg_sales_ytd\n  FROM sales.salesperson\n  GROUP BY\n    businessentityid\n) AS t2\n  ON t1.businessentityid = t2.businessentityid\nWHERE\n  t1.salesytd > t2.avg_sales_ytd;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4786,
+          "completion_tokens": 97,
+          "timings": {
+            "generation_s": 4.84359509999922,
+            "validation_s": 0.0038088000001152977,
+            "execution_s": 0.0015614000003552064
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4786,
+      "prompt_tokens": 4786,
+      "completion_tokens": 97,
+      "timings": {
+        "generation_s": 4.84359509999922,
+        "validation_s": 0.0038088000001152977,
+        "execution_s": 0.0015614000003552064
+      }
+    },
+    {
+      "id": 47,
+      "question": "Hány vásárló adott le az átlagosnál több rendelést, a rendelést leadó vásárlók átlagához mérve?",
+      "category": "subquery",
+      "difficulty": "hard",
+      "ground_truth_sql": "WITH orders_per_customer AS (SELECT customerid, COUNT(*) AS order_count FROM sales.salesorderheader GROUP BY customerid) SELECT COUNT(*) AS customer_count FROM orders_per_customer WHERE order_count > (SELECT AVG(order_count) FROM orders_per_customer);",
+      "order_sensitive": false,
+      "gold_tables": [
+        "sales.salesorderheader"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          7470
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT\n  COUNT(t1.customerid)\nFROM sales.customer AS t1\nINNER JOIN sales.salesorderheader AS t2\n  ON t1.customerid = t2.customerid\nGROUP BY\n  t1.customerid\nHAVING\n  COUNT(t2.customerid) > (\n    SELECT\n      AVG(COUNT(t2.customerid))\n    FROM sales.customer AS t1\n    INNER JOIN sales.salesorderheader AS t2\n      ON t1.customerid = t2.customerid\n    GROUP BY\n      t1.customerid\n  );",
+      "raw_response": "```sql\nSELECT\n  COUNT(t1.customerid)\nFROM sales.customer AS t1\nINNER JOIN sales.salesorderheader AS t2\n  ON t1.customerid = t2.customerid\nGROUP BY\n  t1.customerid\nHAVING\n  COUNT(t2.customerid) > (\n    SELECT\n      AVG(COUNT(t2.customerid))\n    FROM sales.customer AS t1\n    INNER JOIN sales.salesorderheader AS t2\n      ON t1.customerid = t2.customerid\n    GROUP BY\n      t1.customerid\n  );\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: aggregate function calls cannot be nested\nLINE 11:       AVG(COUNT(t2.customerid))\n                   ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(t1.customerid)\nFROM sales.customer AS t1\nINNER JOIN sales.salesorderheader AS t2\n  ON t1.customerid = t2.customerid\nGROUP BY\n  t1.customerid\nHAVING\n  COUNT(t2.customerid) > (\n    SELECT\n      AVG(COUNT(t2.customerid))\n    FROM sales.customer AS t1\n    INNER JOIN sales.salesorderheader AS t2\n      ON t1.customerid = t2.customerid\n    GROUP BY\n      t1.customerid\n  );",
+          "raw_response": "```sql\nSELECT\n  COUNT(t1.customerid)\nFROM sales.customer AS t1\nINNER JOIN sales.salesorderheader AS t2\n  ON t1.customerid = t2.customerid\nGROUP BY\n  t1.customerid\nHAVING\n  COUNT(t2.customerid) > (\n    SELECT\n      AVG(COUNT(t2.customerid))\n    FROM sales.customer AS t1\n    INNER JOIN sales.salesorderheader AS t2\n      ON t1.customerid = t2.customerid\n    GROUP BY\n      t1.customerid\n  );\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: aggregate function calls cannot be nested\nLINE 11:       AVG(COUNT(t2.customerid))\n                   ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 4791,
+          "completion_tokens": 119,
+          "timings": {
+            "generation_s": 5.99939589999849,
+            "validation_s": 0.003872000001138076
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4791,
+      "prompt_tokens": 4791,
+      "completion_tokens": 119,
+      "timings": {
+        "generation_s": 5.99939589999849,
+        "validation_s": 0.003872000001138076
+      }
+    },
+    {
+      "id": 48,
+      "question": "Hány alkalmazott legutóbbi órabére haladja meg az 50-et?",
+      "category": "subquery",
+      "difficulty": "hard",
+      "ground_truth_sql": "WITH latest AS (SELECT businessentityid, rate, ROW_NUMBER() OVER (PARTITION BY businessentityid ORDER BY ratechangedate DESC) AS rn FROM humanresources.employeepayhistory) SELECT COUNT(*) AS employee_count FROM latest WHERE rn = 1 AND rate > 50;",
+      "order_sensitive": false,
+      "gold_tables": [
+        "humanresources.employeepayhistory"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          7
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  COUNT(t1.businessentityid)\nFROM humanresources.employee AS t1\nINNER JOIN humanresources.employeepayhistory AS t2\n  ON t1.businessentityid = t2.businessentityid\nWHERE\n  t2.rate > 50;",
+      "raw_response": "```sql\nSELECT\n  COUNT(t1.businessentityid)\nFROM humanresources.employee AS t1\nINNER JOIN humanresources.employeepayhistory AS t2\n  ON t1.businessentityid = t2.businessentityid\nWHERE\n  t2.rate > 50;\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          7
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(t1.businessentityid)\nFROM humanresources.employee AS t1\nINNER JOIN humanresources.employeepayhistory AS t2\n  ON t1.businessentityid = t2.businessentityid\nWHERE\n  t2.rate > 50;",
+          "raw_response": "```sql\nSELECT\n  COUNT(t1.businessentityid)\nFROM humanresources.employee AS t1\nINNER JOIN humanresources.employeepayhistory AS t2\n  ON t1.businessentityid = t2.businessentityid\nWHERE\n  t2.rate > 50;\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4772,
+          "completion_tokens": 62,
+          "timings": {
+            "generation_s": 3.0974356000006082,
+            "validation_s": 0.0036332999952719547,
+            "execution_s": 0.001708900002995506
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4772,
+      "prompt_tokens": 4772,
+      "completion_tokens": 62,
+      "timings": {
+        "generation_s": 3.0974356000006082,
+        "validation_s": 0.0036332999952719547,
+        "execution_s": 0.001708900002995506
+      }
+    },
+    {
+      "id": 49,
+      "question": "Hány alkalmazottnak van az átlagosnál több szabadságórája?",
+      "category": "subquery",
+      "difficulty": "medium",
+      "ground_truth_sql": "SELECT COUNT(*) AS employee_count FROM humanresources.employee WHERE vacationhours > (SELECT AVG(vacationhours) FROM humanresources.employee);",
+      "order_sensitive": false,
+      "gold_tables": [
+        "humanresources.employee"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          147
+        ]
+      ],
+      "matched_ground_truth": 0,
+      "generated_sql": "SELECT\n  COUNT(businessentityid)\nFROM humanresources.employee\nWHERE\n  vacationhours > (\n    SELECT\n      AVG(vacationhours)\n    FROM humanresources.employee\n  );",
+      "raw_response": "```sql\nSELECT\n  COUNT(businessentityid)\nFROM humanresources.employee\nWHERE\n  vacationhours > (\n    SELECT\n      AVG(vacationhours)\n    FROM humanresources.employee\n  );\n```",
+      "valid_sql": true,
+      "validation_error": "",
+      "execution_success": true,
+      "execution_error": "",
+      "generated_result": [
+        [
+          147
+        ]
+      ],
+      "strict_match": true,
+      "relaxed_match": true,
+      "set_match": true,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": true,
+      "first_attempt_strict_match": true,
+      "first_attempt_relaxed_match": true,
+      "first_attempt_set_match": true,
+      "attempts": [
+        {
+          "sql": "SELECT\n  COUNT(businessentityid)\nFROM humanresources.employee\nWHERE\n  vacationhours > (\n    SELECT\n      AVG(vacationhours)\n    FROM humanresources.employee\n  );",
+          "raw_response": "```sql\nSELECT\n  COUNT(businessentityid)\nFROM humanresources.employee\nWHERE\n  vacationhours > (\n    SELECT\n      AVG(vacationhours)\n    FROM humanresources.employee\n  );\n```",
+          "is_valid": true,
+          "validation_error": "",
+          "executed": true,
+          "execution_error": "",
+          "prompt_tokens": 4772,
+          "completion_tokens": 44,
+          "timings": {
+            "generation_s": 2.2320366999992984,
+            "validation_s": 0.0033602000039536506,
+            "execution_s": 0.0015846000023884699
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4772,
+      "prompt_tokens": 4772,
+      "completion_tokens": 44,
+      "timings": {
+        "generation_s": 2.2320366999992984,
+        "validation_s": 0.0033602000039536506,
+        "execution_s": 0.0015846000023884699
+      }
+    },
+    {
+      "id": 50,
+      "question": "Mely termékkategóriák bevétele haladja meg a kategóriák átlagos bevételét, ha a bevétel az egységár, a mennyiség és az (1 - kedvezmény) szorzata?",
+      "category": "subquery",
+      "difficulty": "hard",
+      "ground_truth_sql": "WITH category_revenue AS (SELECT pc.name, SUM(sod.unitprice * sod.orderqty * (1 - sod.unitpricediscount)) AS revenue FROM sales.salesorderdetail sod JOIN production.product p ON sod.productid = p.productid JOIN production.productsubcategory ps ON p.productsubcategoryid = ps.productsubcategoryid JOIN production.productcategory pc ON ps.productcategoryid = pc.productcategoryid GROUP BY pc.productcategoryid, pc.name) SELECT name FROM category_revenue WHERE revenue > (SELECT AVG(revenue) FROM category_revenue);",
+      "order_sensitive": false,
+      "gold_tables": [
+        "production.product",
+        "production.productcategory",
+        "production.productsubcategory",
+        "sales.salesorderdetail"
+      ],
+      "schema_tables": null,
+      "table_recall": 1.0,
+      "tables_complete": true,
+      "retrieval_query": null,
+      "translation": null,
+      "candidate_tables": null,
+      "candidates_complete": null,
+      "table_selection": null,
+      "examples": null,
+      "sql_examples": null,
+      "evidence": null,
+      "expected_result": [
+        [
+          "Bikes"
+        ]
+      ],
+      "matched_ground_truth": null,
+      "generated_sql": "SELECT DISTINCT\n  t1.name\nFROM productcategory AS t1\nINNER JOIN productsubcategory AS t2\n  ON t1.productcategoryid = t2.productcategoryid\nINNER JOIN product AS t3\n  ON t2.productsubcategoryid = t3.productsubcategoryid\nINNER JOIN salesorderdetail AS t4\n  ON t3.productid = t4.productid\nWHERE\n  t4.unitpricediscount > (\n    SELECT\n      AVG(t4.unitprice * t4.orderqty * (1 - t4.unitpricediscount))\n    FROM salesorderdetail AS t4\n  );",
+      "raw_response": "```sql\nSELECT DISTINCT\n  t1.name\nFROM productcategory AS t1\nINNER JOIN productsubcategory AS t2\n  ON t1.productcategoryid = t2.productcategoryid\nINNER JOIN product AS t3\n  ON t2.productsubcategoryid = t3.productsubcategoryid\nINNER JOIN salesorderdetail AS t4\n  ON t3.productid = t4.productid\nWHERE\n  t4.unitpricediscount > (\n    SELECT\n      AVG(t4.unitprice * t4.orderqty * (1 - t4.unitpricediscount))\n    FROM salesorderdetail AS t4\n  );\n```",
+      "valid_sql": false,
+      "validation_error": "Schema validation failed: relation \"productcategory\" does not exist\nLINE 3: FROM productcategory AS t1\n             ^",
+      "execution_success": false,
+      "execution_error": "",
+      "generated_result": null,
+      "strict_match": false,
+      "relaxed_match": false,
+      "set_match": false,
+      "correction_rounds": 0,
+      "first_attempt_execution_success": false,
+      "first_attempt_strict_match": false,
+      "first_attempt_relaxed_match": false,
+      "first_attempt_set_match": false,
+      "attempts": [
+        {
+          "sql": "SELECT DISTINCT\n  t1.name\nFROM productcategory AS t1\nINNER JOIN productsubcategory AS t2\n  ON t1.productcategoryid = t2.productcategoryid\nINNER JOIN product AS t3\n  ON t2.productsubcategoryid = t3.productsubcategoryid\nINNER JOIN salesorderdetail AS t4\n  ON t3.productid = t4.productid\nWHERE\n  t4.unitpricediscount > (\n    SELECT\n      AVG(t4.unitprice * t4.orderqty * (1 - t4.unitpricediscount))\n    FROM salesorderdetail AS t4\n  );",
+          "raw_response": "```sql\nSELECT DISTINCT\n  t1.name\nFROM productcategory AS t1\nINNER JOIN productsubcategory AS t2\n  ON t1.productcategoryid = t2.productcategoryid\nINNER JOIN product AS t3\n  ON t2.productsubcategoryid = t3.productsubcategoryid\nINNER JOIN salesorderdetail AS t4\n  ON t3.productid = t4.productid\nWHERE\n  t4.unitpricediscount > (\n    SELECT\n      AVG(t4.unitprice * t4.orderqty * (1 - t4.unitpricediscount))\n    FROM salesorderdetail AS t4\n  );\n```",
+          "is_valid": false,
+          "validation_error": "Schema validation failed: relation \"productcategory\" does not exist\nLINE 3: FROM productcategory AS t1\n             ^",
+          "executed": false,
+          "execution_error": "",
+          "prompt_tokens": 4807,
+          "completion_tokens": 133,
+          "timings": {
+            "generation_s": 6.720286099996883,
+            "validation_s": 0.0038541000030818395
+          }
+        }
+      ],
+      "answer": null,
+      "max_prompt_tokens": 4807,
+      "prompt_tokens": 4807,
+      "completion_tokens": 133,
+      "timings": {
+        "generation_s": 6.720286099996883,
+        "validation_s": 0.0038541000030818395
+      }
+    }
+  ]
+}

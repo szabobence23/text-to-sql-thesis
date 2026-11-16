@@ -57,5 +57,7 @@ A kiértékelés minden futás eredményét egy JSON-fájlba menti a `src/evalua
 - [datasets/README.md](datasets/README.md): adatkészletek, és hogyan lehet újat hozzáadni
 - [docs/results.md](docs/results.md): a végső mérések táblázatai, szignifikanciatesztekkel
 - [docs/bird.md](docs/bird.md): mérés a BIRD Mini-Dev benchmarkon, összevetés a ranglistával
+- [docs/finetune.md](docs/finetune.md): finomhangolás (LoRA) bérelt GPU-n, lépésről lépésre
+- [docs/finetune-results.md](docs/finetune-results.md): a finomhangolt modellek mérése
 - [docs/mcp.md](docs/mcp.md): az MCP-szerver, a bekötés és a biztonság
 - [CLAUDE.md](CLAUDE.md): részletes architektúra és a mérések története (angolul)

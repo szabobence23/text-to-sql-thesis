@@ -1,0 +1,7 @@
+# Packages for train_lora.py / merge_lora.py on the rented GPU machine
+# (docs/finetune.md), on top of the PyTorch the machine image ships with.
+# Not needed for the rest of the project (requirements.txt).
+transformers==4.51.3
+peft==0.15.2
+accelerate==1.6.0
+bitsandbytes==0.45.5

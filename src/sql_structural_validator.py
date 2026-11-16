@@ -12,9 +12,11 @@ def validate_sql_structure(sql: str) -> tuple[bool, str]:
     if not sql or not sql.strip():
         return False, "Empty SQL query."
 
+    # TokenError: an unterminated quote ("a].b = 'x') fails already in the
+    # tokenizer, before the parser; both are syntax errors of the query.
     try:
         statements = sqlglot.parse(sql, read="postgres")
-    except sqlglot.errors.ParseError as e:
+    except (sqlglot.errors.ParseError, sqlglot.errors.TokenError) as e:
         return False, f"SQL syntax error: {e}"
 
     statements = [s for s in statements if s is not None]

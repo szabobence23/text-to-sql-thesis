@@ -61,7 +61,7 @@ def validate_sql_functions(sql: str, blocked=BLOCKED_FUNCTIONS) -> tuple[bool, s
     """
     try:
         tree = sqlglot.parse_one(sql, read="postgres")
-    except sqlglot.errors.ParseError as e:
+    except (sqlglot.errors.ParseError, sqlglot.errors.TokenError) as e:
         return False, f"SQL syntax error: {e}"
 
     # Dangerous functions are not built into sqlglot's grammar, so they
